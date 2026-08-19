@@ -28,6 +28,8 @@ const toHomeUrl = (path: string) =>
 const toAppUrl = (path: string) =>
   env.NEXT_PUBLIC_APP_URL.concat(path.startsWith("/") ? path : `/${path}`);
 
+const GITHUB_REPO_URL = "https://github.com/scibly-dev/scibly" as const;
+
 const BASE_AUTH_PATH = "/auth" as const;
 const BASE_PROFILE_PATH = "/profile" as const;
 const BASE_API_PATH = "/api" as const;
@@ -206,6 +208,12 @@ export const routes = {
 
   external: {
     docs: env.NEXT_PUBLIC_DOCS_URL,
+
+    github: {
+      repo: GITHUB_REPO_URL,
+      issues: `${GITHUB_REPO_URL}/issues` as const,
+      file: (path: string) => `${GITHUB_REPO_URL}/blob/main/${path}` as const,
+    },
   },
 
   pythonBackend: {

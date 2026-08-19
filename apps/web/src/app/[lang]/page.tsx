@@ -36,6 +36,11 @@ const ComplianceSection = dynamic(() =>
     (m) => m.ComplianceSection,
   ),
 );
+const OpenSourceSection = dynamic(() =>
+  import("./components/home-page-section/open-source/open-source").then(
+    (m) => m.OpenSourceSection,
+  ),
+);
 const CtaSection = dynamic(() =>
   import("./components/home-page-section/cta/cta").then((m) => m.CtaSection),
 );
@@ -88,6 +93,7 @@ export default async function Home(props: {
       <ProductPreviewSection t={dict.hero} locale={params.lang} />
       <FounderSection t={dict.founder} />
       <ComplianceSection t={dict.compliance} />
+      <OpenSourceSection t={dict.openSource} />
       <ComparisonSection t={dict.comparison} />
       <CtaSection t={dict.cta} />
       <FaqSection t={dict.faq} locale={params.lang} />
