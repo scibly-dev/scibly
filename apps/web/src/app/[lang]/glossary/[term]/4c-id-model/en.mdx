@@ -1,0 +1,86 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "4C/ID Model",
+  definition:
+    "Four-Component Instructional Design — a curriculum framework for designing complex learning environments around whole-task practice, supportive information, procedural guidance, and part-task training.",
+  keywords: [
+    "4C/ID model",
+    "four component instructional design",
+    "van Merriënboer",
+    "complex learning",
+    "curriculum design",
+  ],
+  relatedTerms: ["instructional-design", "addie", "cognitive-load-theory"],
+  relatedPost: "ten-steps-complex-learning",
+};
+
+<GlossaryLayout metadata={metadata} lang="en">
+
+The Four-Component Instructional Design model — known as 4C/ID — is a curriculum framework developed by Jeroen van Merriënboer, first published in 1992 and substantially refined through subsequent editions including the book "Ten Steps to Complex Learning" (with Paul Kirschner). It was designed specifically for domains where learners must acquire complex skills — the kind that require coordinating multiple sub-skills, applying judgment, and transferring knowledge to novel situations.
+
+## What makes it different from simpler models
+
+Most instructional design models were developed for relatively simple learning tasks: memorizing procedures, understanding defined concepts, completing fixed sequences. The 4C/ID model addresses a different problem — how to design training for whole-task performance, where no checklist fully captures what a skilled practitioner does.
+
+Examples include clinical reasoning in medicine, software architecture, troubleshooting complex systems, or managing people through ambiguous situations. These tasks cannot be learned by sequencing content topics. They require working through real problems in structured environments with decreasing support over time.
+
+The model also has strong roots in cognitive load theory. Its four components are designed together to manage intrinsic load (the complexity inherent in the task), reduce extraneous load (unnecessary complexity introduced by poor design), and support germane processing (the effort that actually builds schemas).
+
+## The four components
+
+### Learning Tasks
+
+Learning tasks are the core of the 4C/ID model. They are whole-task performances — realistic, meaningful problems or cases that represent the kind of work the learner will eventually do independently. Tasks are organized in task classes, progressing from simple to complex, with high support (worked examples, partial solutions, guidance) in early tasks that decreases as learners gain competence.
+
+The design principle is deliberate: learners must engage with the whole task from the beginning, not build up to it by mastering isolated sub-skills in sequence. This is the fundamental departure from topic-based or competency-by-competency approaches.
+
+### Supportive Information
+
+Supportive information is the content that helps learners approach non-routine aspects of tasks — the knowledge needed for problem-solving, reasoning, and decision-making. This includes domain models, case studies, cognitive strategies, and mental models. It is presented before or alongside a task class, not after.
+
+Unlike procedural information, supportive information is persistent — it remains relevant and applicable across multiple task classes as complexity grows.
+
+### Procedural Information
+
+Procedural information covers how to perform specific, routine sub-tasks that recur consistently across all learning tasks — step-by-step instructions, decision rules, or algorithms for well-defined operations. It is provided just-in-time, exactly when a learner needs it for a specific step, rather than taught as a block in advance.
+
+This distinction between supportive and procedural information reflects how expert knowledge actually works: some knowledge is applicable broadly across situations (supportive), while other knowledge governs specific, repeatable routines (procedural).
+
+### Part-Task Practice
+
+Part-task practice targets specific sub-skills that require a high degree of automaticity — the kind of routine operations that, if performed slowly or with effort, would overwhelm working memory during a whole task. It is used selectively, only for the sub-skills that genuinely need to become automatic, rather than as a default approach to all skills.
+
+<Callout type="info">
+  The 4C/ID model is designed for curriculum-level design — entire programs or
+  learning pathways — not for individual lesson planning. Applying it to a
+  single 30-minute module misses the point. Its power emerges when it shapes how
+  an entire skill domain is sequenced and scaffolded over time.
+</Callout>
+
+## When to use 4C/ID
+
+The model is well-suited to:
+
+- Professional training programs where the target skill is genuinely complex and non-routine
+- Healthcare, engineering, management, and technical domains where transfer to novel situations is essential
+- Programs with enough scope (weeks or months of development time, sustained learner engagement) to build full task classes
+
+It is probably unnecessary for:
+
+- Simple procedural training with clearly defined, repeatable steps
+- Compliance or awareness training with no performance transfer requirement
+- Short, single-session workshops
+
+<Callout type="tip">
+  If you're deciding whether 4C/ID is the right framework, ask: can a competent
+  practitioner fully describe the target skill as a checklist? If yes, a simpler
+  model will serve you better. If the answer is "it depends on the situation,"
+  4C/ID is worth the investment.
+</Callout>
+
+## Contrast with ADDIE and similar models
+
+ADDIE and most other standard ID models are process frameworks — they describe how to move through phases of design and development. The 4C/ID model is a design theory — it prescribes what the learning environment should contain and how its components should relate to each other. The two are not mutually exclusive; you can follow an ADDIE-style process while designing the product according to 4C/ID principles.
+
+</GlossaryLayout>

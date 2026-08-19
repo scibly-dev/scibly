@@ -1,0 +1,52 @@
+{
+  "orgMembers": {
+    "title": "Mitglieder",
+    "subtitle": "Verwalten Sie, wer Zugriff auf diese Organisation hat.",
+    "inviteMember": "Mitglied einladen",
+    "role": "Rolle",
+    "joined": "Beigetreten",
+    "owner": "Eigentümer",
+    "admin": "Administrator",
+    "member": "Mitglied",
+    "remove": "Aus Organisation entfernen",
+    "removeSuccess": "Mitglied erfolgreich entfernt",
+    "updateRoleSuccess": "Rolle erfolgreich aktualisiert",
+    "areYouSure": "Sind Sie sicher?",
+    "inviteModal": {
+      "title": "Mitglied einladen",
+      "description": "Laden Sie ein neues Mitglied in Ihre Organisation ein.",
+      "email": "E-Mail-Adresse",
+      "emailPlaceholder": "kollege@beispiel.de",
+      "role": "Rolle",
+      "submit": "Einladung senden",
+      "success": "Einladung erfolgreich gesendet",
+      "addEmail": "E-Mail hinzufügen",
+      "invalidEmail": "Ungültige E-Mail-Adresse",
+      "failedToInvite": "{{count}} Mitglied(er) konnten nicht eingeladen werden"
+    },
+    "invitations": {
+      "title": "Ausstehende Einladungen",
+      "expires": "Läuft ab",
+      "cancel": "Einladung abbrechen",
+      "cancelSuccess": "Einladung abgebrochen"
+    },
+    "table": {
+      "filter": "Filter",
+      "searchPlaceholder": "Suche nach Name oder E-Mail",
+      "allRoles": "Alle Rollen",
+      "allStatuses": "Alle Status",
+      "statusActive": "Aktiv",
+      "statusInvited": "Eingeladen",
+      "status": "Status",
+      "previous": "Zurück",
+      "next": "Weiter",
+      "viewingMembers": "Zeige {{start}}-{{end}} von {{total}} Mitglied(ern)",
+      "name": "Name",
+      "role": "Rolle",
+      "removeMember": "Aus der Organisation entfernen",
+      "loadMore": "Mehr laden",
+      "loading": "Wird geladen...",
+      "is": "ist"
+    }
+  }
+}

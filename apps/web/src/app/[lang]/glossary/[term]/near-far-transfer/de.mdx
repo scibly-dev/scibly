@@ -1,0 +1,43 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Naher vs. Weiter Transfer",
+  definition:
+    "Eine Unterscheidung innerhalb der Lerntransfer-Forschung: naher Transfer überträgt Gelerntes auf Situationen, die dem Trainingskontext sehr ähnlich sind, weiter Transfer überträgt es auf deutlich andere, neuartige Situationen – weiter Transfer ist schwerer zu erreichen und erfordert tieferes konzeptuelles Verständnis.",
+  keywords: [
+    "naher Transfer",
+    "weiter Transfer",
+    "Lerntransfer",
+    "Transfer of Training",
+    "konzeptuelles Verständnis",
+  ],
+  relatedTerms: [
+    "learning-transfer",
+    "productive-failure",
+    "kirkpatrick-model",
+  ],
+  relatedPost: "lernerfolg-messen",
+};
+
+<GlossaryLayout metadata={metadata} lang="de">
+
+Lerntransfer ist nicht einheitlich schwer. Naher Transfer bedeutet, Gelerntes auf eine Situation anzuwenden, die dem Übungskontext sehr ähnlich ist. Weiter Transfer bedeutet, dasselbe Wissen auf eine deutlich andere, in der Trainingssituation nicht vorgekommene Situation zu übertragen. Diese Unterscheidung erklärt, warum eine Schulung im Test gut funktioniert, im echten Arbeitsalltag aber trotzdem versagt.
+
+## Ein konkretes Beispiel
+
+Ein Kundenservice-Team wird darin geschult, eine bestimmte Beschwerde zu einem verspäteten Paket zu bearbeiten, mit genau dem Gesprächsleitfaden, der im Training verwendet wurde. Wird im Test dieselbe Art von Beschwerde mit leicht anderen Details gestellt, etwa ein anderes Produkt oder ein anderer Lieferdienst, handelt es sich um nahen Transfer, und die meisten Mitarbeitenden bestehen ihn nach dem Training zuverlässig. Kommt stattdessen eine völlig andere Beschwerdeart herein, etwa zu einem defekten Produkt statt zu einer Lieferverzögerung, verlangt das weiten Transfer: die zugrunde liegenden Prinzipien der Gesprächsführung müssen erkannt und auf eine neue Struktur übertragen werden. Viele Schulungen erzeugen zuverlässig nahen, aber kaum weiten Transfer.
+
+Ein zweites Beispiel aus der IT-Sicherheitsschulung zeigt denselben Punkt noch klarer. Lernende üben zunächst, Phishing-Merkmale an einer bestimmten Beispiel-E-Mail zu erkennen. Naher Transfer liegt vor, wenn sie dieselbe Betrugsmasche in einer leicht abgewandelten Version derselben E-Mail wiedererkennen. Weiter Transfer liegt vor, wenn sie eine völlig anders gestaltete, neue Nachricht beurteilen und selbst begründen können, welche Warnsignale auf einen Phishing-Versuch hindeuten, ganz ohne dass diese konkrete Gestaltung im Training vorkam. Nur die zweite Fähigkeit schützt tatsächlich im Arbeitsalltag, wo Angreifer ihre Nachrichten laufend verändern.
+
+## Warum diese Unterscheidung für Schulungsdesign wichtig ist
+
+Wenn ein Trainingsziel weiten Transfer verlangt, reicht es nicht, viele ähnliche Beispiele zu einer einzigen Situation zu üben. Notwendig ist, zugrunde liegende Prinzipien explizit zu benennen und an mehreren, bewusst unterschiedlichen Fällen zu üben, damit Lernende lernen, das Prinzip vom konkreten Einzelfall zu trennen.
+
+<Callout type="tip">
+  Ein einfacher Test für das eigene Schulungsdesign: Wird in der Prüfung oder im
+  Abschlussquiz nur eine leicht abgewandelte Version des Übungsbeispiels
+  abgefragt, wird faktisch nur naher Transfer gemessen, selbst wenn das
+  eigentliche Ziel weiter Transfer war.
+</Callout>
+
+</GlossaryLayout>

@@ -1,0 +1,48 @@
+{
+  "name": "@scibly/ee-organizations-billing",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@scibly/api": "workspace:*",
+    "@scibly/auth": "workspace:*",
+    "@scibly/db": "workspace:*",
+    "@scibly/ee-billing": "workspace:*",
+    "@scibly/lib": "workspace:*",
+    "@scibly/observability": "workspace:*",
+    "@scibly/routes": "workspace:*",
+    "@scibly/ui": "workspace:*",
+    "lucide-react": "^0.436.0",
+    "sonner": "^1.7.4"
+  },
+  "devDependencies": {
+    "@scibly/eslint-config": "workspace:*",
+    "@testing-library/react": "^16.2.0",
+    "@types/node": "^20.17.29",
+    "@types/react": "^19.2.14",
+    "@vitejs/plugin-react": "^6.0.1",
+    "eslint": "^9.39.2",
+    "jsdom": "^25.0.1",
+    "stripe": "^20.4.1",
+    "typescript": "^5.8.2",
+    "vitest": "^4.1.6"
+  },
+  "peerDependencies": {
+    "next": "^16.1.6",
+    "react": "^19.0.0"
+  },
+  "exports": {
+    "./screen": "./src/screen.tsx",
+    "./api/seat-purchase.operations": "./src/api/seat-purchase.operations.ts",
+    "./api/topup.operations": "./src/api/topup.operations.ts",
+    "./api/usage-overview.operations": "./src/api/usage-overview.operations.ts",
+    "./i18n/org-billing.types": "./src/i18n/org-billing.types.ts",
+    "./components/payment-lapse-banner": "./src/components/payment-lapse-banner.tsx",
+    "./components/plan-grid": "./src/components/plan-grid.tsx"
+  }
+}

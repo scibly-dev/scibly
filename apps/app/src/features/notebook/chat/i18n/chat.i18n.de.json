@@ -1,0 +1,111 @@
+{
+  "notebook": {
+    "chat": {
+      "inputPlaceholder": "Beschreibe eine Lektion, ein Quiz oder einen Kurs…",
+      "chipsOnlyPlaceholder": "Wähle unten einen Prompt zum Starten…",
+      "sendButton": "Senden",
+      "stopButton": "Generierung stoppen",
+      "scrollToBottom": "Zur neuesten Nachricht springen",
+      "error": "Fehler:",
+      "errorFallback": "Die KI-Anfrage ist fehlgeschlagen. Überprüfen Sie Ihren API-Schlüssel oder die Modellkonfiguration.",
+      "errorRetry": "Erneut versuchen",
+      "errorRetryPrompt": "Mach dort weiter, wo du aufgehört hast.",
+      "selectModel": "Modell auswählen",
+      "customModelsLabel": "Eigene Modelle",
+      "noCustomModelsHint": "Noch keine eigenen Modelle hinzugefügt.",
+      "sessionStartedHint": "Quellen hinzugefügt, stelle eine Frage, um loszulegen",
+      "summarizingHistory": "Fasse den bisherigen Verlauf zusammen…",
+      "multipleChoice": {
+        "noAnswerLabel": "Keine Antwort erfasst",
+        "otherLabel": "Etwas anderes",
+        "skip": "Überspringen",
+        "skippedLabel": "Übersprungen",
+        "replyDirectlyPlaceholder": "Oder direkt antworten…",
+        "pendingApproval": "Beantworte die Fragen im Assistenten, bevor du eine neue Nachricht sendest.",
+        "pendingApprovalPlaceholder": "Schließe zuerst die Fragen oben ab…",
+        "stepPagerShort": "{{current}} von {{total}}",
+        "questionPrefix": "F:",
+        "answerPrefix": "A:",
+        "submissionLabel": "Deine Auswahl",
+        "submissionHint": "Antwort auf Multiple Choice",
+        "submissionSingleDetail": "Deine Antwort auf die Frage oben",
+        "submissionBatchDetail": "Deine Antworten auf die Fragen oben",
+        "invalidQuestion": "Diese Frage konnte nicht angezeigt werden. Bitte den Assistenten, sie erneut zu stellen.",
+        "back": "Zurück",
+        "next": "Weiter",
+        "submitAnswers": "Antworten senden",
+        "chooseOrSkip": "Wähle eine Antwort oder überspringe diese Frage."
+      },
+      "planning": {
+        "confirm": "Plan bestätigen",
+        "deny": "Ablehnen",
+        "back": "Zurück",
+        "submitDenial": "Plan ablehnen",
+        "submitChanges": "Änderungen senden",
+        "addStep": "Schritt hinzufügen…",
+        "removeStep": "Schritt entfernen",
+        "stepCount": "{{count}} Schritte",
+        "stepLimitReached": "Maximale Anzahl an Schritten erreicht.",
+        "denyFeedbackLabel": "Warum lehnst du diesen Plan ab?",
+        "denyFeedbackPlaceholder": "Optional: sag dem Agenten, was stattdessen passieren soll…",
+        "adjustFeedbackLabel": "Zusätzliche Hinweise",
+        "adjustFeedbackPlaceholder": "Optional: erkläre, was du geändert hast oder was noch fehlt…",
+        "stepTitleLabel": "Schritt {{index}} Titel",
+        "stepDetailPlaceholder": "Beschreibung…",
+        "decisionConfirmed": "Plan bestätigt",
+        "decisionDenied": "Plan abgelehnt",
+        "decisionAdjusted": "Plan angepasst",
+        "feedbackLabel": "Hinweise",
+        "noResponseLabel": "Keine Antwort erfasst",
+        "submissionLabel": "Deine Plan-Antwort",
+        "submissionHint": "Antwort auf vorgeschlagenen Plan",
+        "pendingApproval": "Bestätige, lehne ab oder passe den vorgeschlagenen Plan an, bevor du eine neue Nachricht sendest.",
+        "invalidPlan": "Dieser Plan konnte nicht angezeigt werden. Bitte den Assistenten, ihn erneut vorzuschlagen."
+      },
+      "deletion": {
+        "pendingApproval": "Bestätige oder brich die Löschanfrage ab, bevor du eine neue Nachricht sendest."
+      },
+      "imageGeneration": {
+        "generating": "Bild wird erstellt",
+        "generated": "Generiertes Bild",
+        "insertIntoScene": "In Szene einfügen",
+        "openFullSize": "Vollbild öffnen",
+        "downloadImage": "Bild herunterladen",
+        "insertError": "Das Bild konnte nicht in die Szene eingefügt werden.",
+        "noCourseLinked": "Wählen Sie einen Kurs aus, bevor Sie Bilder einfügen.",
+        "openCourseBuilder": "Kurs auswählen",
+        "chooseSceneTitle": "In Szene einfügen",
+        "chooseSceneDescription": "Wählen Sie, wo dieses Bild in Ihrem Kurs angehängt werden soll.",
+        "insertedIntoScene": "Bild zu {{scene}} · {{lesson}} hinzugefügt",
+        "generationFailed": "Bildgenerierung fehlgeschlagen.",
+        "retryGeneration": "Erneut versuchen",
+        "openInImageEditor": "Im Bildeditor öffnen",
+        "moreActions": "Weitere Aktionen",
+        "pendingApproval": "Warten Sie, bis die Bildgenerierung abgeschlossen ist, bevor Sie eine neue Nachricht senden.",
+        "pendingApprovalPlaceholder": "Bild wird generiert…",
+        "metadata": {
+          "showDetails": "Bilddetails",
+          "title": "Bilddetails",
+          "alt": "Alt-Text",
+          "prompt": "Prompt",
+          "dimensions": "Abmessungen",
+          "fileSize": "Dateigröße",
+          "aspectRatio": "Seitenverhältnis",
+          "created": "Erstellt"
+        }
+      },
+      "thinking": {
+        "active": "Denkt nach…",
+        "idle": "Nachdenken",
+        "done": "Fertig"
+      },
+      "outOfCredits": {
+        "title": "Keine KI-Generierungen mehr verfügbar",
+        "description": "Ihre Organisation hat alle KI-Generierungen für diesen Abrechnungszeitraum aufgebraucht. Ein Administrator kann ein Top-up kaufen oder den Plan upgraden, um weiter zu chatten.",
+        "acknowledgeLabel": "Verstanden",
+        "manageDescription": "Ihre Organisation hat alle KI-Generierungen für diesen Abrechnungszeitraum aufgebraucht. Kaufen Sie ein Top-up-Paket, um sofort weiterzuarbeiten (Top-up-Generierungen verfallen nie), oder upgraden Sie den Plan, wenn das regelmäßig passiert.",
+        "billingLinkLabel": "Generierungen kaufen"
+      }
+    }
+  }
+}

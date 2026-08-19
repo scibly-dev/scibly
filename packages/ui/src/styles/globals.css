@@ -1,0 +1,528 @@
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
+@plugin "@tailwindcss/typography";
+
+/* Address rendered via CSS content — not selectable/copyable */
+.no-copy-address {
+  user-select: none;
+  cursor: default;
+}
+.no-copy-address::before {
+  content: attr(data-text);
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* v4: safelist */
+@source inline(
+  "{text-emerald-500,border-emerald-200,bg-emerald-500,bg-emerald-50,text-violet-500,border-violet-300,bg-violet-500,bg-violet-50,text-amber-500,border-amber-200,bg-amber-50,bg-amber-500}"
+);
+@source "../product-tokens.ts";
+@source "../design-language.ts";
+@source "../../../../node_modules/streamdown/dist/*.js";
+
+@theme {
+  --font-sans:
+    var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  /* Redesign families — both apps load the underlying fonts. */
+  --font-display: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  --font-serif-accent: var(--font-instrument), Georgia, serif;
+
+  /*
+   * v4 maps rounded-sm/md/lg to these tokens.
+   */
+  --radius-sm: var(--radius);
+  --radius-md: calc(var(--radius) + 2px);
+  --radius-lg: calc(var(--radius) + 4px);
+
+  /*
+   * Accent ramps, re-toned onto the five chapter hues the marketing site uses
+   * (see `marketing-tokens.ts`: import, channels, learner, analytics, byoai)
+   * plus its destructive red. The product app reaches for stock Tailwind
+   * accents for the same jobs the site names — icon tiles, status dots,
+   * banners — so anchoring the ramps here re-tones every one of them without
+   * touching a component, opacity variants included.
+   *
+   * Lightness steps keep Tailwind's structure, so a `-50` wash stays a wash.
+   * The rungs that land exactly on a site colour are marked.
+   */
+
+  /* import — the primary blue */
+  --color-blue-50: #eff5ff;
+  --color-blue-100: #dcebff;
+  --color-blue-200: #b9d7ff; /* pillar soft */
+  --color-blue-300: #94c4ff;
+  --color-blue-400: #7ab4ff; /* pillar lip */
+  --color-blue-500: #0066ff; /* primary action */
+  --color-blue-600: #0b52cc; /* link */
+  --color-blue-700: #0b4fb0; /* pillar accent */
+  --color-blue-800: #0c3f88;
+  --color-blue-900: #0d3266;
+  --color-blue-950: #08203f;
+
+  --color-sky-50: #f0f7ff;
+  --color-sky-100: #e0efff;
+  --color-sky-200: #c4e0ff;
+  --color-sky-300: #9dcbff;
+  --color-sky-400: #66aeff;
+  --color-sky-500: #2b8cff;
+  --color-sky-600: #0f6fe6;
+  --color-sky-700: #0b57b4;
+  --color-sky-800: #0d478d;
+  --color-sky-900: #0e3a6f;
+  --color-sky-950: #09244a;
+
+  /* channels — teal */
+  --color-emerald-50: #ecfcf7;
+  --color-emerald-100: #d5f8ee;
+  --color-emerald-200: #aeefe1; /* pillar soft */
+  --color-emerald-300: #86e6d2;
+  --color-emerald-400: #72dfc8; /* pillar lip */
+  --color-emerald-500: #2bbf9f;
+  --color-emerald-600: #159c80;
+  --color-emerald-700: #0c7a65;
+  --color-emerald-800: #055e4e; /* pillar accent */
+  --color-emerald-900: #044a3e;
+  --color-emerald-950: #022e26;
+
+  --color-teal-50: #ecfcf7;
+  --color-teal-100: #d5f8ee;
+  --color-teal-200: #aeefe1;
+  --color-teal-300: #86e6d2;
+  --color-teal-400: #72dfc8;
+  --color-teal-500: #2bbf9f;
+  --color-teal-600: #159c80;
+  --color-teal-700: #0c7a65;
+  --color-teal-800: #055e4e;
+  --color-teal-900: #044a3e;
+  --color-teal-950: #022e26;
+
+  /* learner — the green that also carries a correct answer */
+  --color-green-50: #f4fee9;
+  --color-green-100: #e7fcd1;
+  --color-green-200: #d3f7ab; /* pillar soft */
+  --color-green-300: #bcee85;
+  --color-green-400: #a3e163; /* pillar lip */
+  --color-green-500: #58cc02; /* correct */
+  --color-green-600: #4aab02;
+  --color-green-700: #376e00; /* pillar accent */
+  --color-green-800: #2c5800;
+  --color-green-900: #234500;
+  --color-green-950: #122600;
+
+  /* analytics — amber carries the notice yellow, orange the pillar itself */
+  --color-amber-50: #fff9ec;
+  --color-amber-100: #fff1d4;
+  --color-amber-200: #ffe2a8;
+  --color-amber-300: #ffd577;
+  --color-amber-400: #ffc800; /* notice */
+  --color-amber-500: #e0a800;
+  --color-amber-600: #b87f02;
+  --color-amber-700: #925f04;
+  --color-amber-800: #764b06;
+  --color-amber-900: #613e08;
+  --color-amber-950: #391f02;
+
+  --color-yellow-50: #fff9ec;
+  --color-yellow-100: #fff1d4;
+  --color-yellow-200: #ffe2a8;
+  --color-yellow-300: #ffd577;
+  --color-yellow-400: #ffc800;
+  --color-yellow-500: #e0a800;
+  --color-yellow-600: #b87f02;
+  --color-yellow-700: #925f04;
+  --color-yellow-800: #764b06;
+  --color-yellow-900: #613e08;
+  --color-yellow-950: #391f02;
+
+  --color-orange-50: #fff6ec;
+  --color-orange-100: #ffead3;
+  --color-orange-200: #ffd4a8; /* pillar soft */
+  --color-orange-300: #ffc489;
+  --color-orange-400: #ffb56b; /* pillar lip */
+  --color-orange-500: #f5871f;
+  --color-orange-600: #d96a09;
+  --color-orange-700: #9a4700; /* pillar accent */
+  --color-orange-800: #7d3a02;
+  --color-orange-900: #642f04;
+  --color-orange-950: #391900;
+
+  /*
+   * byoai — one purple. The site draws no distinction between purple, violet
+   * and indigo, so neither do these ramps.
+   */
+  --color-purple-50: #f5f2ff;
+  --color-purple-100: #ebe5ff;
+  --color-purple-200: #d5c9ff; /* pillar soft */
+  --color-purple-300: #c4b3ff;
+  --color-purple-400: #b39dff; /* pillar lip */
+  --color-purple-500: #8b6bf5;
+  --color-purple-600: #6f45e0;
+  --color-purple-700: #4b2bc4; /* pillar accent */
+  --color-purple-800: #3d229f;
+  --color-purple-900: #311c7d;
+  --color-purple-950: #1d0f4f;
+
+  --color-violet-50: #f5f2ff;
+  --color-violet-100: #ebe5ff;
+  --color-violet-200: #d5c9ff;
+  --color-violet-300: #c4b3ff;
+  --color-violet-400: #b39dff;
+  --color-violet-500: #8b6bf5;
+  --color-violet-600: #6f45e0;
+  --color-violet-700: #4b2bc4;
+  --color-violet-800: #3d229f;
+  --color-violet-900: #311c7d;
+  --color-violet-950: #1d0f4f;
+
+  --color-indigo-50: #f5f2ff;
+  --color-indigo-100: #ebe5ff;
+  --color-indigo-200: #d5c9ff;
+  --color-indigo-300: #c4b3ff;
+  --color-indigo-400: #b39dff;
+  --color-indigo-500: #8b6bf5;
+  --color-indigo-600: #6f45e0;
+  --color-indigo-700: #4b2bc4;
+  --color-indigo-800: #3d229f;
+  --color-indigo-900: #311c7d;
+  --color-indigo-950: #1d0f4f;
+
+  /* destructive — the red the Button and Badge already fill with */
+  --color-red-50: #fef2f2;
+  --color-red-100: #fde3e4;
+  --color-red-200: #fbc9cb;
+  --color-red-300: #f7a3a6;
+  --color-red-400: #f07579;
+  --color-red-500: #e5484d; /* destructive */
+  --color-red-600: #cc3237;
+  --color-red-700: #b0272c; /* destructive lip */
+  --color-red-800: #8f2024;
+  --color-red-900: #741d20;
+  --color-red-950: #400e10;
+
+  --color-rose-50: #fef2f2;
+  --color-rose-100: #fde3e4;
+  --color-rose-200: #fbc9cb;
+  --color-rose-300: #f7a3a6;
+  --color-rose-400: #f07579;
+  --color-rose-500: #e5484d;
+  --color-rose-600: #cc3237;
+  --color-rose-700: #b0272c;
+  --color-rose-800: #8f2024;
+  --color-rose-900: #741d20;
+  --color-rose-950: #400e10;
+
+  /*
+   * The neutral ramp is the ink family, not pure grey. The product app reaches
+   * for `neutral-*` in exactly the roles the redesign names — 900 is body ink,
+   * 500 muted copy, 200 a hairline, 100 the recessed ground — so re-toning the
+   * ramp here carries the palette into every screen at once, opacity variants
+   * included (those compile from the token, so they can't be re-toned at
+   * runtime). The surface end (50–300) is warm paper; from 400 down it is the
+   * cool ink family, so warm grounds carry navy type without either drifting.
+   */
+  --color-neutral-50: #faf9f7;
+  --color-neutral-100: #f7f6f3;
+  --color-neutral-200: #eceae4;
+  --color-neutral-300: #dedbd2;
+  --color-neutral-400: #8a94b4;
+  --color-neutral-500: #667085;
+  --color-neutral-600: #55608a;
+  --color-neutral-700: #3b4574;
+  --color-neutral-800: #263061;
+  --color-neutral-900: #131c46;
+  --color-neutral-950: #0a1030;
+
+  /*
+   * Redesign palette — one ink family, one hairline, one lip. Shared by the
+   * marketing site and the product app; see `../design-language.ts` for the
+   * surface vocabulary built on top of it.
+   */
+  --color-ink: #131c46;
+  --color-ink-muted: #55608a;
+  --color-ink-soft: #667085;
+  --color-ink-faint: #8a94b4;
+  --color-hairline: #eceae4;
+  /* The hairline one step darker, for an edge that has to read against a
+   * tinted face rather than against white. */
+  --color-edge: #dedbd2;
+  --color-lip: #f1efe9;
+  --color-ground: #f7f6f3;
+  --color-ground-soft: #faf9f7;
+  --color-link: #0b52cc;
+
+  /* The press easing every raised marketing surface animates on. */
+  --ease-press: cubic-bezier(0.32, 0.72, 0, 1);
+
+  /* A surface that idles rather than sits still. */
+  --animate-float: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -6px;
+  }
+}
+
+/* Nothing here idles for someone who asked for stillness. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-float {
+    animation: none;
+  }
+}
+
+@import "./404.css";
+@import "./loading.css";
+
+@layer base {
+  :root {
+    --highlight: 230 94% 82%;
+    --gray-bg: 40 20% 97%;
+    --text-color: 228 24% 44%;
+    --heading-color: 229 57% 17%;
+
+    --h1-size: 2.5rem;
+    --h1-weight: 500;
+    --h2-size: 2rem;
+    --h2-weight: 500;
+    --h3-size: 1.5rem;
+    --h3-weight: 500;
+
+    /* The semantic tokens resolve to the ink family — see the palette above. */
+    --background: 0 0% 100%;
+    --foreground: 229 57% 17%;
+    --card: 0 0% 100%;
+    --card-foreground: 229 57% 17%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 229 57% 17%;
+    --primary: 229 57% 17%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 220 53% 97%;
+    --secondary-foreground: 229 57% 17%;
+    --muted: 220 53% 97%;
+    --muted-foreground: 221 13% 46%;
+    --accent: 220 53% 97%;
+    --accent-foreground: 229 57% 17%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 98%;
+    --xp: 43 100% 50%;
+    --streak: 15 90% 55%;
+    --border: 223 47% 94%;
+    --input: 223 47% 94%;
+    --ring: 216 100% 50%;
+    /* Softer corners across the board; v4 maps rounded-sm/md/lg off this. */
+    --radius: 0.75rem;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --scrollthumb: 0 0% 70%;
+
+    --shadow: 0px 0px 12px 1.5px rgba(0, 0, 0, 0.15);
+
+    --brand-blue: 216 100% 50%;
+    --brand-blue-hover: 216 100% 40%;
+    --brand-blue-muted: 214 100% 97%;
+    --brand-surface: 240 20% 99%;
+    --brand-ink: 0 0% 4%;
+
+    --section-accent: 230 70% 55%;
+    --section-accent-light: 230 70% 95%;
+    --interactive-bg: 220 20% 97%;
+    --interactive-border: 220 15% 88%;
+  }
+
+  .dark {
+    --highlight: 230 94% 82%;
+    --gray-bg: 220 10% 17%;
+    --text-color: 220 8% 73%;
+    --heading-color: 220 20% 65%;
+
+    --background: 0 0% 10%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 15%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 98%;
+    --xp: 43 100% 60%;
+    --streak: 15 90% 65%;
+    --border: 240 3.7% 15.9%;
+    --input: 0 0% 70.1%;
+    --ring: 240 4.9% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --scrollthumb: 0 0% 30%;
+
+    --shadow: 0px 0px 12px 1.5px rgba(0, 0, 0, 0.15);
+
+    --section-accent: 230 65% 65%;
+    --section-accent-light: 230 30% 18%;
+    --interactive-bg: 220 10% 15%;
+    --interactive-border: 220 10% 25%;
+  }
+
+  *,
+  ::after,
+  ::before,
+  ::backdrop {
+    border-color: hsl(var(--border));
+  }
+
+  h1 {
+    font-size: var(--h1-size);
+    font-weight: var(--h1-weight);
+    letter-spacing: -0.04em;
+  }
+
+  h2 {
+    font-size: var(--h2-size);
+    font-weight: var(--h2-weight);
+    letter-spacing: -0.02em;
+  }
+
+  h3 {
+    font-size: var(--h3-size);
+    font-weight: var(--h3-weight);
+    letter-spacing: -0.01em;
+  }
+
+  button:hover {
+    cursor: pointer;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--scrollthumb) / 0.4);
+  border-radius: var(--radius);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: hsl(var(--scrollthumb) / 0.8);
+}
+
+/* Hide scrollbar utility */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Custom thin scrollbar for chat message list */
+@utility custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--scrollthumb) / 0.45) hsl(var(--scrollthumb) / 0.04);
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    display: block;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: hsl(var(--scrollthumb) / 0.04);
+    border-radius: 9999px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--scrollthumb) / 0.45);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--scrollthumb) / 0.75);
+  }
+}
+
+/*
+ * Focus and text wrapping, shared by both surfaces. Zero-specificity so
+ * components can still opt out or restyle, and unlayered so these beat the
+ * Tailwind utility layers.
+ */
+:where(
+  a,
+  button,
+  summary,
+  [role="button"],
+  [tabindex]:not([tabindex="-1"])
+):focus-visible {
+  outline: 2px solid #0066ff;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/*
+ * Layered, unlike the rule above: fields that bring their own focus treatment
+ * (the design language's ring, a lit-up container) style it with utilities, and
+ * a second hard outline on top of that just looks like a browser default. Bare
+ * fields still get this one.
+ */
+@layer base {
+  :where(input, select, textarea):focus-visible {
+    outline: 2px solid #0066ff;
+    outline-offset: 1px;
+  }
+}
+
+:where(h1, h2, h3, blockquote) {
+  text-wrap: balance;
+}
+
+:where(p, li, dd) {
+  text-wrap: pretty;
+}
+
+::-moz-selection {
+  background-color: rgba(0, 136, 255, 0.2);
+}
+
+::selection {
+  background-color: rgba(0, 136, 255, 0.2);
+}
+
+/* Fix Streamdown table flickering and z-index */
+[data-streamdown="table-wrapper"] {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+[data-streamdown="table-wrapper"] > div:last-child {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+[data-streamdown="table-fullscreen"] {
+  z-index: 99999 !important;
+}

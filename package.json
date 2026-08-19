@@ -1,0 +1,58 @@
+{
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "start": "turbo run start --filter=./apps/*",
+    "start:app": "turbo run start --filter=./apps/app",
+    "start:web": "turbo run start --filter=./apps/web",
+    "build": "turbo run build --filter=./apps/**",
+    "build:app": "turbo run build --filter=./apps/app",
+    "build:web": "turbo run build --filter=./apps/web",
+    "install:clean": "pnpm -r exec -- rm -rf node_modules .turbo .next; rm -rf node_modules .turbo && pnpm store prune && pnpm install",
+    "check": "turbo run typecheck lint format:check",
+    "format:write": "turbo run format:write",
+    "test:unit": "turbo run test",
+    "test:int": "bash scripts/int-test.sh",
+    "test:e2e": "pnpm --filter @scibly/app run test:e2e && pnpm --filter @scibly/web run test:e2e",
+    "test:all": "pnpm test:unit && pnpm test:e2e",
+    "validate": "pnpm check && pnpm test:all",
+    "prebuild": "pnpm check"
+  },
+  "devDependencies": {
+    "agent-browser": "^0.33.2",
+    "turbo": "^2.9.10"
+  },
+  "packageManager": "pnpm@10.33.0",
+  "pnpm": {
+    "overrides": {
+      "react-is": "^19.0.0",
+      "markdown-it": "13.0.2",
+      "zod": "^4.0.0",
+      "yjs": "^13.6.23",
+      "@tanstack/query-core": "5.100.9",
+      "@smithy/types": "4.15.0",
+      "@smithy/core": "3.25.0",
+      "@smithy/signature-v4": "5.5.0",
+      "@aws-sdk/client-s3": "3.1050.0",
+      "@aws-sdk/s3-presigned-post": "3.1050.0",
+      "@aws-sdk/s3-request-presigner": "3.1050.0"
+    },
+    "ignoredBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "@swc/core",
+      "@tsparticles/engine",
+      "aws-sdk",
+      "core-js",
+      "esbuild",
+      "prisma",
+      "puppeteer",
+      "unrs-resolver"
+    ],
+    "onlyBuiltDependencies": [
+      "sharp"
+    ]
+  }
+}

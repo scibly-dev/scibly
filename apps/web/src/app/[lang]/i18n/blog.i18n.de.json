@@ -1,0 +1,27 @@
+{
+  "blog": {
+    "metadata": {
+      "title": "Blog | Scibly",
+      "description": "Gedanken, Geschichten und Ideen vom Scibly-Team zu Bildung, Design und Technik."
+    },
+    "title": "Blog",
+    "subtitle": "Gedanken, Geschichten und Ideen vom Scibly-Team.",
+    "searchPlaceholder": "Beiträge suchen...",
+    "allCategories": "Alle",
+    "backToBlog": "Zurück zum Blog",
+    "publishedOn": "Veröffentlicht am",
+    "noPostsFound": "Keine Beiträge zu Ihrer Suche gefunden.",
+    "onThisPage": "Auf dieser Seite",
+    "shareThisPost": "Beitrag teilen",
+    "previousPost": "Vorheriger Beitrag",
+    "nextPost": "Nächster Beitrag",
+    "copied": "Kopiert!",
+    "categories": {
+      "education": "Bildung",
+      "product": "Produkt",
+      "engineering": "Entwicklung",
+      "design": "Design",
+      "company": "Unternehmen"
+    }
+  }
+}

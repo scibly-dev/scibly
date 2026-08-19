@@ -1,0 +1,128 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "Microsoft Teams as an LMS: What Works and What Doesn't",
+  description:
+    "Many organizations already use Microsoft Teams and wonder if it can replace an LMS. The honest answer: it can't. Here's what Teams does well for training, where it falls short, and what to use instead.",
+  date: "June 13, 2026",
+  readTime: 8,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1587614382346-4ec70e388b28?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "Microsoft Teams LMS",
+    "Teams as LMS",
+    "Teams learning platform",
+    "Microsoft Teams training",
+    "Teams replace LMS",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+"We already have Teams" — this is one of the most common responses when the topic of an LMS comes up in HR conversations. The logic makes sense: Microsoft 365 is already paid for, Teams is on every laptop, and employees already know how to use it. Why pay for another tool?
+
+The honest answer: Teams isn't an LMS. That's not a marketing claim from an LMS vendor — it's a technical fact that organizations tend to discover at the worst possible moment.
+
+## What Microsoft Teams actually does well for training
+
+Teams is a communication and collaboration tool. For informal knowledge sharing and quick training moments, it has genuine strengths:
+
+**Channels as knowledge hubs.** You can create dedicated channels — "Onboarding", "Safety Training", "Product Knowledge" — and collect documents, links, and explainer videos there. Employees can find material when they need it.
+
+**Recorded webinars and meetings.** Teams meetings can be recorded and shared afterward. This works well for synchronous training formats — all-hands briefings, product demos, live walkthroughs.
+
+**SharePoint integration.** SharePoint lets you build structured knowledge bases. Some organizations use this to create internal "training pages" with linked documentation.
+
+**Quick announcements.** Teams messages reach the whole organization quickly — useful for reminders, updates, and short notices.
+
+That sounds like a solid foundation. The problem is what's missing.
+
+## What Teams can't do — and why it matters
+
+### No tracking of who actually completed what
+
+This is the most critical gap. Teams tells you who attended a meeting. It doesn't tell you who watched a video to completion, who read a document, who finished a training — and who didn't.
+
+For informal knowledge sharing, that's fine. For any training where you need to prove employees completed it — safety, GDPR, compliance, anti-harassment — it's a problem. Without completion records, you have no documented participation. Without documented participation, you carry liability.
+
+<Callout type="warning">
+  Mandatory training (workplace safety, GDPR, data protection, fire safety)
+  requires verifiable completion records — timestamped, user-specific, and
+  ideally signed or digitally confirmed. Teams doesn't provide this.
+</Callout>
+
+### No structured learning paths
+
+An LMS lets you sequence content: Module 1 must be completed before Module 2 unlocks. Teams has no concept of this. You can create a folder structure, but whether employees work through it in the intended order is outside your control.
+
+### No automatic reminders and deadlines
+
+An LMS automatically assigns new employees to required courses, sets completion deadlines, and sends reminders when a deadline passes or a certificate is about to expire. Teams does none of this automatically. Every reminder is manual work — a Teams post, an email, a conversation.
+
+### No certificates
+
+Teams can't generate completion certificates. If you need to issue employees proof of completion — or if external partners, customers, or regulators ask for it — Teams has no answer.
+
+### No SCORM or xAPI
+
+If you're using professionally built e-learning content from an authoring tool (Articulate, iSpring, Lectora) or an off-the-shelf content library, it's typically packaged as SCORM or xAPI. Teams can't play these packages or receive their completion data. You could extract the video from a SCORM course and upload it separately — but you'd lose all interactive elements and all tracking in the process.
+
+### No per-person reporting
+
+"Who hasn't completed the data protection training yet?" — Teams can't answer that question. There's no view showing who has completed what at what status. You'd need to document it manually: maintain a spreadsheet, chase responses, follow up individually. That's error-prone and doesn't scale.
+
+### No real assessments
+
+Teams offers simple surveys through Forms integration, but not genuine assessments with pass/fail thresholds, automatic retakes, or score reporting tied to individual completion records.
+
+## When Teams is enough
+
+There are scenarios where Teams genuinely works for training purposes:
+
+- **Informal knowledge sharing**: tips, tricks, best practices, quick how-tos that don't require formal documentation
+- **Live training with synchronous attendance**: when everyone is present in real time and you track attendance from meeting records
+- **Very small teams**: when you have 5–10 people and the HR lead can personally track who's done what
+
+Once you have mandatory training, compliance requirements, growing headcount, or external audits, Teams runs out of runway.
+
+## What a proper LMS provides
+
+An [LMS](/en/blog/lms-auswahl) is built exactly for what Teams can't do:
+
+- **Automatic course assignment** by role, location, or hire date
+- **Completion tracking** with timestamp and user identity
+- **Certificate generation** with expiration dates and renewal reminders
+- **SCORM/xAPI support** for professionally built courses
+- **Reporting**: who completed what, when — filtered by department, location, or role
+- **Automatic reminders** for overdue or expiring training
+
+That sounds complex, but modern LMS platforms can be up and running in minutes — no IT department, no implementation project.
+
+<Callout type="info">
+  Scibly is built for teams without IT resources: create or import courses in
+  minutes, invite employees by link, automatic certificates and compliance
+  tracking included. No installation, no setup project.
+</Callout>
+
+## Can you use Teams and an LMS together?
+
+Yes — and for many organizations, that's the right answer. Teams stays the communication hub for announcements, discussions, and live events. The LMS handles structured learning, mandatory training, and compliance documentation.
+
+Many LMS platforms integrate directly as Teams apps, so employees access their assigned courses from within Teams — the best of both worlds, without anyone having to learn a new tool.
+
+## The most common trap
+
+Organizations spend months building a Teams-based training structure, then discover at the first audit or safety incident that they have no reliable completion records — and have to start over.
+
+An LMS project after a compliance problem is more expensive and stressful than one set up proactively. And it's almost always cheaper than trying to retrofit a Teams-based setup to actually meet compliance requirements.
+
+If you want to see what an [LMS without IT overhead](/en/blog/lms-ohne-it-abteilung) would look like for your team, take a look at [how Scibly handles employee training](/en).
+
+</PostLayout>

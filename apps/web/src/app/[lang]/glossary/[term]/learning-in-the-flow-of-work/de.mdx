@@ -1,0 +1,79 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Lernen im Arbeitsfluss",
+  definition:
+    "Josh Bersins Konzept, dass effektives Lernen in den Arbeitsablauf eingebettet stattfindet – kurz, relevant und zum Zeitpunkt des Bedarfs abrufbar – statt in geplanten Schulungsveranstaltungen.",
+  keywords: [
+    "Lernen im Arbeitsfluss",
+    "Josh Bersin",
+    "Just-in-time-Lernen",
+    "Performance Support",
+    "Arbeitsplatzlernen",
+  ],
+  relatedTerms: ["microlearning", "70-20-10", "blended-learning"],
+  relatedPost: "learning-in-the-flow-of-work",
+};
+
+<GlossaryLayout metadata={metadata} lang="de">
+
+2018 prägte Josh Bersin den Begriff „Learning in the Flow of Work", um eine Entwicklung zu beschreiben, die in leistungsstarken Unternehmen bereits im Gange war: die Abkehr von geplanten Schulungsveranstaltungen hin zu Lernen, das in die Arbeit selbst eingebettet ist. Die Grundidee ist denkbar schlicht – Menschen lernen am besten, wenn sie die richtige Information genau in dem Moment erhalten, in dem sie sie brauchen. Nicht zwei Wochen zuvor in einem Seminarraum und nicht zwei Wochen später in einem Nachbereitungsgespräch.
+
+## Warum Push-Lernen an seine Grenzen stößt
+
+Der größte Teil betrieblicher Weiterbildung folgt dem Push-Prinzip: Die L&D-Abteilung entwickelt einen Kurs, plant eine Schulung und stellt diese Mitarbeitenden zur Verfügung, die das Wissen zum gegebenen Zeitpunkt möglicherweise gar nicht benötigen. Das strukturelle Problem ist das Timing. Ein neuer Mitarbeitender, der in der ersten Woche einen Compliance-Kurs absolviert, wird davon nur einen Bruchteil behalten, wenn er drei Monate später mit relevanten Situationen konfrontiert wird. Die Vergessenskurve nach Ebbinghaus ist keine Metapher – sie beschreibt zuverlässig, wie Gedächtnis funktioniert, und sie bestraft Schulungen, die von der tatsächlichen Anwendung losgelöst sind.
+
+Bob Mosher und Conrad Gottfredson haben dieses Timing-Problem mit ihrem Framework der „5 Moments of Need" formalisiert. Es beschreibt die fünf Situationen, in denen Menschen tatsächlich lernen wollen:
+
+1. **Erstes Lernen** – beim Begegnen eines neuen Konzepts oder einer neuen Fähigkeit
+2. **Vertiefung** – wenn jemand bereits Vorwissen hat und tiefer einsteigen möchte
+3. **Anwenden** – wenn Gelerntes auf eine konkrete Aufgabe übertragen werden muss
+4. **Problemlösung** – wenn etwas nicht wie erwartet funktioniert
+5. **Veränderung** – wenn sich ein Prozess, ein System oder eine Anforderung geändert hat
+
+Klassische Schulungen decken die Momente eins und zwei leidlich ab. Die Momente drei bis fünf hingegen – in denen die meisten tatsächlichen Leistungsprobleme auftreten – werden kaum erreicht.
+
+<Callout type="info">
+  Moshers und Gottfredsons Forschung legt nahe, dass 80 % der Situationen, in
+  denen Mitarbeitende Lernunterstützung benötigen, auf die Momente drei, vier
+  und fünf entfallen – genau dort, wo geplante Schulungen am schwächsten wirken.
+</Callout>
+
+## Pull-Lernen statt Push-Training
+
+Die Alternative zum Push-Training ist das Pull-Lernen: Ressourcen so gestalten, dass Mitarbeitende sie aktiv aufrufen, wenn ein konkreter Bedarf entsteht. Suchbasierte Hilfe-Center, eingebettete Guided-Experiences, kontextuelle Job Aids und kurze Referenzvideos folgen dieser Pull-Logik. Der Mitarbeitende initiiert – das System antwortet.
+
+Diese Unterscheidung ist designentscheidend. Eine Pull-Ressource muss auffindbar sein (gute Informationsarchitektur), schnell (niemand hat mitten in einer Aufgabe zehn Minuten Zeit) und spezifisch (sie beantwortet die genaue Frage, kein allgemeines Überblickswissen). Ein fünfminütiges Erklärungsvideo zu einem Prozess, der als 30-sekündige Schritt-für-Schritt-Checkliste hätte aufbereitet werden können, ist keine Performance-Support-Ressource – es ist ein verkleinerter Kurs.
+
+## Praktische Umsetzungsbeispiele
+
+**Suchbasierte Hilfe**: Interne Dokumentation und Wissensdatenbanken, die Mitarbeitende mitten in einer Aufgabe abfragen können. Tools wie Confluence, Notion oder spezialisierte Help-Center funktionieren hier gut. Das Designprinzip lautet: die Frage beantworten – und dann aufhören.
+
+**Eingebettete Guided Experiences**: Walkthrough-Tools (Pendo, WalkMe, Appcues), die kontextuelle Anweisungen direkt in einer Anwendung einblenden, während der Mitarbeitende darin navigiert. Besonders wirksam bei der Einführung neuer Software und bei Prozessänderungen.
+
+**Microlearning am Punkt der Aufgabe**: Ein 90-sekündiges Video, das an einen konkreten Schritt in einem Workflow gebunden ist – abrufbar über QR-Code, einen Link in einem Job Aid oder ein Popup in einem System. Der entscheidende Unterschied zu allgemeinem Microlearning: Es ist an eine spezifische Handlung gekoppelt, nicht an ein Thema.
+
+**Führungskraftgestützte Verstärkung**: Strukturierte Gesprächsleitfäden, die Führungskräfte bei der Nachbesprechung realer Arbeitssituationen unterstützen – nach Projekten, Kundengesprächen oder Verhandlungen. So bleibt Lernen mit echter Erfahrung verknüpft, statt mit simulierten Szenarien.
+
+## Abgrenzung zu LMS-lastigen Schulungsarchitekturen
+
+Lernmanagementsysteme sind für bestimmte Aufgaben hervorragend geeignet: Einschreibung, Compliance-Tracking, Kursabschlüsse, Zertifizierungsmanagement. Für Lernen im Arbeitsfluss sind sie wenig geeignet, weil sie auf einem eigenen Workflow laufen – getrennt von der eigentlichen Arbeit. Sich mitten in einer Aufgabe in ein LMS einzuloggen erzeugt genau dort Reibung, wo Reibung am teuersten ist.
+
+Das bedeutet nicht, dass LMSs überflüssig sind – es bedeutet, dass sie eine andere Funktion erfüllen. Strukturierte Programme wie Onboarding, regulatorische Compliance und technische Zertifizierungen gehören ins LMS. Unterstützung im Bedarfsmoment gehört näher an die Arbeit.
+
+<Callout type="tip">
+  Eine praktische Bestandsaufnahme: Analysieren Sie, welche Support-Tickets oder
+  Führungskraft-Eskalationen in Ihrem Unternehmen am häufigsten auftreten. Jede
+  einzelne davon steht für einen gescheiterten Bedarfsmoment – eine Situation,
+  in der ein Mitarbeitender eine Information brauchte und nicht schnell genug
+  fand. Diese Lücken sind die wertvollsten Ansatzpunkte für
+  Flow-of-Work-Lerndesign.
+</Callout>
+
+## Was das für L&D-Praktiker bedeutet
+
+Der Wandel hin zum Lernen im Arbeitsfluss stellt andere Anforderungen an L&D-Teams: weniger Kursproduktion, mehr Infrastrukturdenken. Eine durchsuchbare Wissensdatenbank aufzubauen, mit Produkt- und IT-Teams zusammenzuarbeiten, um Lernhilfen in Systeme einzubetten, und Job Aids zu gestalten, die wirklich mit der Arbeit mitreisen – das erfordert andere Kompetenzen als die Entwicklung eines 45-minütigen E-Learning-Moduls.
+
+Es erfordert auch eine veränderte Beziehung zu Stakeholdern. Die Frage lautet nicht mehr „Was sollen wir schulen?", sondern „Wo treten Leistungslücken tatsächlich auf, und wie bringen wir die richtige Unterstützung genau dorthin?" Diese Neuausrichtung – von der Inhaltsvermittlung zur Performanceunterstützung – ist der Kern dessen, was Bersins Konzept von der L&D-Funktion verlangt.
+
+</GlossaryLayout>

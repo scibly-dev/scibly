@@ -1,0 +1,40 @@
+# See apps/app/Dockerfile for the rationale (same monorepo, same trade-offs).
+FROM node:24-alpine
+
+RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
+
+WORKDIR /app
+COPY . .
+
+RUN pnpm install --frozen-lockfile --filter "@scibly/web..." --ignore-scripts
+
+# NEXT_PUBLIC_* values are inlined into the client bundle at build time, not
+# read again at runtime — override via the matching vars in the root .env,
+# which docker compose forwards as build args, for a real domain.
+ARG NEXT_PUBLIC_BASE_URL=http://localhost:3000
+ARG NEXT_PUBLIC_APP_URL=http://localhost:3001
+ARG NEXT_PUBLIC_WEB_URL=http://localhost:3000
+ARG NEXT_PUBLIC_DOCS_URL=http://localhost:3000/docs
+ARG NEXT_PUBLIC_ENV=production
+ARG NEXT_PUBLIC_PYTHON_BACKEND_BASE_URL=
+ENV NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL \
+    NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL \
+    NEXT_PUBLIC_WEB_URL=$NEXT_PUBLIC_WEB_URL \
+    NEXT_PUBLIC_DOCS_URL=$NEXT_PUBLIC_DOCS_URL \
+    NEXT_PUBLIC_ENV=$NEXT_PUBLIC_ENV \
+    NEXT_PUBLIC_PYTHON_BACKEND_BASE_URL=$NEXT_PUBLIC_PYTHON_BACKEND_BASE_URL
+
+# DATABASE_URL is only required by env.js's schema and never connected to
+# during build; SKIP_ENV_VALIDATION lets the third-party credentials stay
+# unset — see docs/setup.md's "Optional integrations". The real DATABASE_URL
+# is supplied at container runtime by docker-compose.
+ENV DATABASE_URL="postgresql://localhost/build" \
+    SKIP_ENV_VALIDATION=true
+
+RUN pnpm --filter @scibly/web run i18n:merge \
+    && pnpm --filter @scibly/db run generate \
+    && pnpm --filter @scibly/web run build
+
+ENV NODE_ENV=production
+EXPOSE 3000
+CMD ["pnpm", "--filter", "@scibly/web", "run", "start"]

@@ -1,0 +1,90 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Kolb's Experiential Learning Cycle",
+  definition:
+    "David Kolb's four-stage model in which learning proceeds from Concrete Experience through Reflective Observation and Abstract Conceptualization to Active Experimentation — emphasizing that experience, not content delivery, is the source of learning.",
+  keywords: [
+    "Kolb experiential learning",
+    "experiential learning cycle",
+    "Kolb model",
+    "learning styles",
+    "adult learning",
+  ],
+  relatedTerms: ["andragogy", "learning-theories", "70-20-10"],
+  relatedPost: "didaktische-grundlagen",
+};
+
+<GlossaryLayout metadata={metadata} lang="en">
+
+David Kolb introduced his experiential learning theory in 1984, drawing on the work of John Dewey, Kurt Lewin, and Jean Piaget. The central argument is straightforward but often overlooked in practice: learning is not the passive reception of content — it is a process created by the tension between experience and reflection. Knowledge is not transmitted; it is constructed through a cycle of experience, reflection, conceptualization, and experimentation.
+
+For L&D practitioners, the cycle is both a theory of learning and a practical design model. It provides a structure for how to design a learning experience that produces genuine capability development rather than mere content exposure.
+
+## The four stages
+
+### Stage 1: Concrete Experience (CE)
+
+The learner encounters a real or simulated experience — something they do, observe, or that happens to them. This is the entry point of the cycle, and it is important: the experience must feel real and personally relevant, not abstract or hypothetical. A case study that closely mirrors the learner's actual work context, a role-play scenario, a live mistake made in a safe simulation — all serve as concrete experiences.
+
+Workplace example: A new sales manager makes their first attempt at a difficult performance conversation with a direct report. The experience does not go well.
+
+### Stage 2: Reflective Observation (RO)
+
+The learner observes and reflects on the experience from multiple perspectives — what happened, what their reactions were, what others' reactions were, what went differently than expected. Reflection without structure tends toward rationalization rather than learning; design that prompts specific reflective questions (What surprised you? What would you do differently? What assumptions drove your approach?) makes this stage productive.
+
+Workplace example: The manager reviews the conversation — what they intended to say, what came out, the direct report's reaction, and why the feedback wasn't received as intended.
+
+### Stage 3: Abstract Conceptualization (AC)
+
+The learner forms or refines a mental model — a theory or concept that makes sense of the experience. This is where frameworks, models, and explicit instruction serve their purpose: not as front-loaded content, but as conceptual tools for making sense of experience already had. The sequence matters: a framework introduced before experience is abstract; the same framework introduced after experience feels like an explanation of something real.
+
+Workplace example: The manager reads about the distinction between evaluative and coaching feedback, and the SBI (Situation-Behavior-Impact) framework. The concepts now connect to something lived, not just described.
+
+### Stage 4: Active Experimentation (AE)
+
+The learner applies the new mental model in a new situation — testing it, experimenting with it, trying out the new approach. This generates a new concrete experience, and the cycle begins again. Transfer happens at this stage, which is why learning that stops at conceptualization rarely produces lasting behavior change.
+
+Workplace example: The manager plans their next performance conversation using the SBI framework and tries it. The experience becomes the next cycle's starting point.
+
+## Designing eLearning that cycles through all four stages
+
+Most eLearning covers only stage 3 (Abstract Conceptualization) — it presents frameworks, models, and information. Some adds stage 4 practice via multiple-choice questions, though recognition questions are a thin proxy for real experimentation. The stages most consistently absent are CE and RO.
+
+A module that cycles through all four stages might be structured as:
+
+1. **CE:** An opening scenario that places learners in a situation before they've seen any theory (not "here's the framework" but "here's the situation — what would you do?")
+2. **RO:** Structured reflection on the consequences of their initial approach, prompted by targeted questions
+3. **AC:** Introduction of the relevant framework or concept, framed as an explanation of what they just experienced
+4. **AE:** A new scenario requiring them to apply the framework, generating a new experience and another reflection cycle
+
+This sequencing produces more durable learning than a content-first approach because it leverages the way human memory actually encodes information — anchored to concrete, emotionally salient experience rather than decontextualized propositions.
+
+## The learning styles debate: intellectual honesty required
+
+Kolb's model is closely associated with the concept of "learning styles" — the idea that different learners have different preferred stages in the cycle (Divergers prefer CE and RO; Convergers prefer AC and AE; etc.) and should be taught in alignment with those preferences.
+
+The learning styles hypothesis, in this form, does not hold up empirically. Decades of research have failed to find consistent evidence that matching instruction to a learner's preferred style improves outcomes. The influential Pashler et al. (2008) review concluded that the evidence required to justify learning styles-based instruction simply does not exist.
+
+<Callout type="info">
+  The important distinction: Kolb's experiential learning cycle as a design
+  framework — the idea that learning should progress through CE, RO, AC, and AE
+  — has solid theoretical grounding and practical support. The claim that
+  individual learners have stable, measurable style preferences that should
+  drive instructional design decisions does not. You can use the cycle without
+  endorsing the styles typology.
+</Callout>
+
+## Connection to 70-20-10
+
+The experiential learning cycle helps explain why the 70-20-10 model distributes development heavily toward experience. The 70% of learning attributed to on-the-job experience is, in Kolb's terms, a long series of experiential learning cycles driven by real work. The 20% from relationships and feedback represents the reflective observation and conceptualization stages being supported socially. The 10% from formal training is most effective when it functions as a conceptualization tool for experiences learners are already having — rather than front-loaded content delivered in advance of any experience.
+
+<Callout type="tip">
+  When designing a formal learning program, ask: what concrete experiences are
+  learners already having at work that this training should help them make sense
+  of? If the training introduces concepts before learners have any relevant
+  experience, consider whether a flipped approach — anchor the formal content to
+  a real recent experience first — would produce better retention and transfer.
+</Callout>
+
+</GlossaryLayout>

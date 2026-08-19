@@ -1,0 +1,21 @@
+{
+  "editorUi": {
+    "blockOptions": {
+      "more": "More",
+      "optional": "Optional",
+      "alignLeft": "Left",
+      "alignCenter": "Centered",
+      "alignRight": "Right",
+      "align": "Align",
+      "documentation": "Documentation",
+      "openOriginal": "Open original",
+      "preventLearnerEdit": "Prevent learners from editing this block",
+      "allowLearnerEdit": "Allow learners to edit this block",
+      "settings": "Settings",
+      "delete": "Delete",
+      "duplicate": "Duplicate",
+      "copiedSuccess": "Copied to clipboard",
+      "spLabel": "SP reward"
+    }
+  }
+}

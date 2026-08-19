@@ -1,0 +1,95 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "Leaving ADDIE for SAM: Agile Instructional Design Explained – A Summary",
+  description:
+    "Allen and Sites make a precise case for why ADDIE's linear structure produces late, costly rework — and how SAM's iterative process fixes that without abandoning rigor.",
+  date: "May 21, 2026",
+  readTime: 7,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "Leaving ADDIE for SAM",
+    "SAM model",
+    "ADDIE instructional design",
+    "agile instructional design",
+    "Michael Allen",
+    "iterative learning design",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+ADDIE is the most widely taught and most widely used instructional design model. It's also widely criticized — and the criticism, when it's specific rather than fashionable, tends to focus on the same structural weaknesses. Leaving ADDIE for SAM by Michael Allen and Richard Sites is the most systematic treatment of those weaknesses and the clearest articulation of what a better process looks like.
+
+The book is not hostile to ADDIE as a concept — analysis, design, development, implementation, and evaluation remain the right activities. The argument is that organizing them as a linear sequence creates predictable, costly problems, and that the Successive Approximation Model (SAM) addresses those problems without abandoning the underlying logic.
+
+## What's actually wrong with ADDIE
+
+The critique of ADDIE as Allen and Sites present it is structural, not philosophical. A few specific problems recur:
+
+**Decisions made too early.** ADDIE's linear structure requires significant design decisions in the Design phase — before any content exists, before stakeholders have seen anything to react to, and often before the learning requirements are fully understood. These decisions are then carried forward into Development, where changing them becomes expensive.
+
+**Stakeholder feedback arrives too late.** In standard ADDIE practice, clients and subject matter experts see completed or near-completed modules at the end of the Development phase. At this point, structural changes are costly and timeline pressure is high. Feedback tends to be limited to surface corrections rather than substantive design input.
+
+**Rework is expensive and demoralizing.** When late-stage feedback reveals fundamental design problems — misaligned objectives, wrong tone, incorrect assumption about learner prior knowledge — the cost of fixing them is disproportionately high. The work must be unwound from a finished state rather than adjusted from a draft.
+
+**Risk accumulates silently.** Because stakeholders don't see working content until late in the process, problems that would be immediately obvious in a prototype can remain invisible for months. By the time they surface, the project is committed.
+
+None of these problems are inevitable features of good instructional design. They're artifacts of the linear sequence.
+
+## What SAM changes
+
+The Successive Approximation Model replaces the linear sequence with iterative cycles. The model has three phases: Preparation, Iterative Design, and Iterative Development.
+
+**Preparation** is a compressed, time-boxed period for gathering the information needed to begin designing. Unlike ADDIE's Analysis phase, which can extend for weeks and produce extensive documentation, the Preparation phase aims to gather enough information to start — not to achieve comprehensive understanding before anything is built. The principle is that working through design problems reveals requirements that no amount of upfront analysis can fully anticipate.
+
+**Iterative Design** begins immediately with a Savvy Start — a structured collaborative session bringing together stakeholders, subject matter experts, and designers to generate design ideas rapidly. The output is rough sketches, sample scenarios, and early prototype concepts. These are not final designs; they're thinking tools. The Savvy Start compresses what ADDIE would spread across weeks of analysis and design documents into a concentrated working session.
+
+Design then proceeds through short cycles: each cycle produces a prototype that stakeholders can react to, and feedback informs the next cycle. Problems are caught early, when they're cheap to fix. Stakeholders stay engaged rather than reviewing once at the end.
+
+**Iterative Development** follows the same logic: short cycles producing increasingly refined content, with each cycle incorporating what was learned from the previous one. The final product has been reviewed and iterated multiple times, not signed off once after a long wait.
+
+<Callout type="info">
+  SAM doesn't eliminate documentation or planning — it shifts when they happen.
+  Documentation produced in response to actual prototypes is more accurate and
+  more useful than documentation produced speculatively in advance. The Savvy
+  Start produces alignment that document review rarely achieves.
+</Callout>
+
+## Who benefits from switching
+
+SAM is not universally superior to ADDIE — the book is honest about this. There are situations where a linear process is appropriate:
+
+- Projects with genuinely stable, well-understood requirements
+- Compliance or regulatory training where content is fixed and the design problem is straightforward
+- Small projects where the overhead of iterative cycles outweighs their benefit
+- Organizational contexts where iterative, "unfinished-looking" early reviews are culturally difficult
+
+Where SAM provides the clearest benefit: complex projects with uncertain requirements, stakeholder groups that are hard to align in advance, high-stakes content where late-stage rework would be seriously costly, and organizations that have experienced the pain of ADDIE's late-feedback problem firsthand.
+
+## Introducing SAM in organizations used to ADDIE
+
+The book devotes practical attention to change management — how to introduce SAM when your organization, clients, and stakeholders have built their expectations around ADDIE's structure.
+
+The core challenge is that ADDIE creates predictable checkpoints that feel safe to clients: you review the design document, approve it, then review the completed modules. SAM replaces this with an unfamiliar rhythm of rough prototypes and iterative review that requires more engagement and more comfort with ambiguity.
+
+Allen and Sites suggest several approaches: piloting SAM on a single project to demonstrate the value before advocating for it broadly, educating stakeholders on what early prototypes are and are not, and framing the Savvy Start as a benefit to them (their input shapes the design from the beginning rather than being limited to late-stage corrections).
+
+## When ADDIE still makes sense
+
+The book's intellectual honesty is worth noting: it doesn't argue that ADDIE should always be replaced. For simple, well-scoped projects where requirements are clear and stakeholder involvement is limited, ADDIE's sequential structure is efficient. The process overhead of SAM's iterative cycles is a genuine cost that only pays off when the problems it prevents are likely to occur.
+
+The argument is not "ADDIE is bad." It's "ADDIE has specific structural weaknesses that cause predictable problems in specific project contexts, and SAM is designed to address those weaknesses."
+
+Deploying either model well requires an infrastructure that can support iterative content development and stakeholder review. Scibly is built to be that infrastructure — enabling teams to deploy, gather feedback on, and revise learning content without the friction that makes iteration expensive.
+
+</PostLayout>

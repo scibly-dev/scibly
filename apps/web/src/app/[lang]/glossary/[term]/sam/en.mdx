@@ -1,0 +1,88 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Successive Approximation Model (SAM)",
+  definition:
+    "An agile instructional design process developed by Michael Allen that replaces ADDIE's linear phases with iterative cycles of design, prototype, and review — enabling faster feedback and lower rework costs.",
+  keywords: [
+    "SAM model",
+    "Successive Approximation Model",
+    "agile instructional design",
+    "Michael Allen",
+    "ADDIE alternative",
+  ],
+  relatedTerms: ["addie", "instructional-design", "action-mapping"],
+  relatedPost: "leaving-addie-for-sam",
+};
+
+<GlossaryLayout metadata={metadata} lang="en">
+
+The Successive Approximation Model is an instructional design process developed by Michael Allen, founder of Allen Interactions, and introduced in his 2012 book "Leaving ADDIE for SAM." Where ADDIE is a linear, phase-gated process — analysis, then design, then development, then implementation, then evaluation — SAM is iterative. It moves quickly toward a rough prototype, then refines through repeated cycles of feedback and revision.
+
+The name describes the core philosophy: each iteration is a closer approximation of the final product, and the process is structured around getting to that approximation as quickly as possible.
+
+## SAM's three phases
+
+SAM organizes work into three phases, with iteration built into each:
+
+### Preparation phase
+
+The preparation phase is the front-end work that gives the design team enough shared understanding to start building. It typically involves gathering background information, identifying the business problem and performance gap, reviewing any existing content, and assembling the project team.
+
+The key output of this phase is the Savvy Start — a structured workshop, usually one or two days, that brings together instructional designers, subject matter experts, and stakeholders to produce the first rough prototype. This is not a requirements document. It is a tangible, if rough, artifact: sketches of interactions, outlines of scenarios, draft storyboards. The goal is to make the thinking visible quickly enough that everyone can respond to it.
+
+### Iterative design phase
+
+The iterative design phase uses the output of the Savvy Start to produce increasingly refined design prototypes. Each iteration cycle involves three activities: design (produce or revise the prototype), prototype (build enough to be reviewable), and review (gather specific, actionable feedback). Cycles are short — typically one to two weeks — so that course corrections cost relatively little time and money.
+
+The iterative design phase ends when the design is stable enough to move into full development: the interactions are defined, the branching logic is mapped, the content structure is agreed upon.
+
+### Iterative development phase
+
+The development phase follows the same iteration pattern: build, implement, evaluate, repeat. Alpha builds go to a limited review group, beta builds to a broader group, and gold releases reflect a version that all parties have validated. Each cycle produces something reviewable, rather than waiting for a "complete" version before gathering feedback.
+
+<Callout type="info">
+  A simplified version of SAM — sometimes called SAM1 — compresses the process
+  into a single preparation phase followed by two or three design-development
+  iterations. SAM2, the full version described above, is appropriate for larger
+  projects. Knowing which version fits your project's scope and timeline is part
+  of implementing SAM effectively.
+</Callout>
+
+## The Savvy Start workshop
+
+The Savvy Start is what distinguishes SAM most clearly from ADDIE in practice. Instead of writing a design document and waiting for approval before building anything, the team enters a room with a problem and leaves with a prototype.
+
+A well-run Savvy Start includes:
+
+- A clear statement of the performance problem (not "we need training on X" but "employees are doing Y instead of Z")
+- Quick exploration of potential solutions, including non-training options
+- A rough prototype of the most promising approach — enough to make it concrete
+- A list of open questions and the research needed to answer them
+
+The rough prototype from a Savvy Start is intentionally imperfect. Its purpose is to generate specific, concrete feedback — to reveal assumptions that would otherwise remain hidden until late in development, when changing them is expensive.
+
+## Why SAM produces better courses than ADDIE's linear process
+
+The structural problem with ADDIE's linear model is that decisions made in analysis constrain options in design, and decisions made in design constrain options in development. By the time a course reaches implementation, hundreds of decisions have been locked in based on information gathered at the beginning — before anyone has seen what the course actually looks like in use.
+
+SAM addresses this by keeping decisions revisable longer. The cost of course corrections in week two of a project is much lower than in week twelve. Iteration front-loads the discovery of problems.
+
+The empirical argument is straightforward: instructional design projects rarely fail in analysis or design. They fail when the completed course does not change the behavior it was supposed to change. SAM's continuous feedback loops — prototyping early, reviewing often — increase the probability that the course addresses the real problem.
+
+<Callout type="tip">
+  Introducing SAM in an organization accustomed to ADDIE requires managing
+  stakeholder expectations carefully. Showing a rough prototype early can alarm
+  stakeholders who interpret "rough" as "incomplete" or "low-quality." Frame the
+  Savvy Start explicitly: this prototype is a thinking tool, not a draft of the
+  finished product. The purpose is to surface assumptions before they become
+  expensive.
+</Callout>
+
+## Introducing SAM in organizations used to ADDIE
+
+The most common resistance to SAM comes from stakeholders who are comfortable with ADDIE's clear phase deliverables — needs analysis report, design document, course outline — because those deliverables feel like progress. SAM's prototypes can feel messier and less professional to someone accustomed to formal documentation.
+
+The practical strategy is to run a pilot: take one project through the SAM process while running another project through ADDIE. Compare the revision cycles, the number of late-stage changes, and the final product quality. Data from within the organization tends to be more persuasive than methodology arguments.
+
+</GlossaryLayout>

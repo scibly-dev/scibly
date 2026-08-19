@@ -1,0 +1,112 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Gagné's Nine Events of Instruction",
+  definition:
+    "Robert Gagné's framework of nine instructional events — from gaining attention to enhancing retention and transfer — each supporting a specific internal cognitive process required for learning.",
+  keywords: [
+    "Gagné nine events",
+    "nine events of instruction",
+    "Gagné",
+    "instructional design",
+    "course design",
+  ],
+  relatedTerms: ["instructional-design", "addie", "merrills-first-principles"],
+  relatedPost: "didaktische-grundlagen",
+};
+
+<GlossaryLayout metadata={metadata} lang="en">
+
+Robert Gagné introduced the Nine Events of Instruction in his 1965 book _The Conditions of Learning_, arguing that effective instruction is not just about presenting content — it is about creating the external conditions that support specific internal cognitive processes. Each of the nine events maps to one of those internal processes, and skipping an event means failing to support the cognitive work it enables.
+
+The framework remains one of the most practically grounded models in instructional design. It bridges learning science and design practice in a way that is directly applicable to eLearning module structure.
+
+## The nine events and their cognitive function
+
+### 1. Gain attention
+
+**Cognitive function:** Alertness and receptivity — activating the learner's sensory register.
+
+Without attention, no subsequent learning can occur. In eLearning, effective attention-gaining goes beyond a startling animation or a video that plays automatically. The most reliable attention trigger is relevance: opening with a realistic scenario, a provocative question, or a statistic that immediately signals why this content matters to the learner's work.
+
+### 2. Inform learners of objectives
+
+**Cognitive function:** Expectancy — helping learners understand what they will be able to do and why it matters.
+
+Stating objectives explicitly primes learners to organize incoming information against a goal. This is not a bureaucratic formality — it fundamentally changes how the brain processes what follows. Objectives work best when framed as outcomes ("After this module, you'll be able to handle an irate customer call without escalating") rather than content ("This module covers customer service protocols").
+
+### 3. Stimulate recall of prior learning
+
+**Cognitive function:** Retrieval — pulling relevant existing knowledge into working memory to serve as scaffolding.
+
+New information attaches more durably to existing knowledge. This event is one of the most commonly skipped in corporate eLearning, and its absence is directly costly: without activating prior knowledge, learners are processing new content without the scaffolding that would help them encode and retain it. A brief reflection question, a knowledge check on prerequisite concepts, or an explicit connection to previous training all serve this function.
+
+### 4. Present the content
+
+**Cognitive function:** Selective perception — helping learners identify and process the most important information.
+
+This is the event most courses overemphasize at the expense of the others. Content should be organized to reduce cognitive load: chunked into digestible segments, sequenced logically, and presented with enough variation in format (text, visuals, audio) to maintain attention without overwhelming working memory. The goal is not to transfer maximum information but to enable maximum encoding.
+
+### 5. Provide learning guidance
+
+**Cognitive function:** Semantic encoding — helping learners move information from working memory to long-term memory.
+
+Learning guidance is not simply more content — it is the scaffolding that helps learners make sense of content: worked examples, analogies, mnemonics, visual models, or explanations of why something works the way it does. This is another commonly skipped event. Courses that present content and immediately ask learners to apply it are skipping the encoding support that makes application possible.
+
+### 6. Elicit performance (practice)
+
+**Cognitive function:** Responding — requiring learners to actively produce behavior, not just observe it.
+
+Practice is where learning becomes skill. Multiple-choice questions are technically practice, but they're at the bottom of the performance hierarchy — recognizing a correct answer is cognitively very different from producing one. Scenario-based questions, decision simulations, and constructed-response tasks all elicit higher-order performance and produce more durable learning.
+
+### 7. Provide feedback
+
+**Cognitive function:** Reinforcement — correcting and strengthening the learning.
+
+Feedback must be informative, not just evaluative. "Correct" confirms; it doesn't teach. "Incorrect — here's why that choice creates compliance risk and what you should do instead" does both. The most effective feedback in eLearning is intrinsic to the scenario: consequences that follow naturally from the learner's decision, making the feedback felt rather than just stated.
+
+### 8. Assess performance
+
+**Cognitive function:** Retrieval of learning — confirming that the objective has been met.
+
+This is the formal evaluation of whether learning has occurred — distinct from the practice in event 6, which is formative. Assessment should be aligned to the stated objective at the same cognitive level. If the objective requires Apply, the assessment should require Apply, not Remember.
+
+### 9. Enhance retention and transfer
+
+**Cognitive function:** Generalizability — helping learners apply what they've learned in new contexts.
+
+This event is the most commonly neglected and the most directly connected to whether training produces any real-world impact. Spaced practice, job aids that extend the learning into the workflow, manager follow-up prompts, and post-training scenario challenges all serve this function. An eLearning module that ends at event 8 and does nothing to support transfer is completing a course, not completing a learning intervention.
+
+<Callout type="info">
+  The three events most commonly skipped in corporate eLearning are 3 (stimulate
+  recall of prior learning), 5 (provide learning guidance), and 9 (enhance
+  retention and transfer). These are also the three events most directly
+  associated with whether learners retain and apply what they've learned. The
+  events that get the most design attention — presenting content (4) and
+  assessing performance (8) — are necessary but insufficient on their own.
+</Callout>
+
+## Using the nine events as a design checklist
+
+The most practical application of the framework is using it as a course audit checklist. Map your current or planned module against each of the nine events:
+
+- Is there a genuine attention-gaining mechanism, or just a title slide?
+- Are objectives framed in behavioral terms that set learner expectancy?
+- Does anything activate learners' existing knowledge before new content begins?
+- Is content chunked and sequenced to manage cognitive load?
+- Are there worked examples, analogies, or explanatory scaffolding beyond raw content?
+- Does practice require learners to produce behavior, not just recognize answers?
+- Is feedback informative and corrective, not just confirmatory?
+- Does the assessment align with the objective's cognitive level?
+- Is there anything designed to support application after the module closes?
+
+<Callout type="tip">
+  If you're working with a content-expert subject matter expert who keeps adding
+  slides, the nine events give you a structured argument for why the course
+  needs less content and more guidance, practice, and feedback. Most SMEs are
+  naturally strong at event 4 (content) and have rarely considered events 3, 5,
+  7, or 9. Walking through the checklist together usually surfaces the gaps they
+  hadn't thought about.
+</Callout>
+
+</GlossaryLayout>

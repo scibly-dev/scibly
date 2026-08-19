@@ -1,0 +1,12 @@
+{
+  "courses": {
+    "detail": {
+      "outdatedAlert": {
+        "title": "{{count}} Szene(n) nicht synchron",
+        "description": "Das Quellenmaterial hat sich seit der Erstellung dieser Szenen geändert. Überprüfen und aktualisieren Sie sie vor der Veröffentlichung.",
+        "actionLabel": "Prüfen & aktualisieren",
+        "updatePrompt": "Überprüfe veraltete Szenen im Kurs {{courseId}} („{{courseTitle}}“). Lade zuerst den scene-content Skill und folge dem Workflow für veraltete Szenen. Für jede veraltete Szene: mit insertContent neu generieren, wenn die Quellen noch relevantes Material enthalten, oder deleteScene mit einem klaren Grund aufrufen, wenn das Thema aus den Quellen entfernt wurde. Das Löschen erfordert eine Bestätigung im Chat."
+      }
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "courses": {
+    "detail": {
+      "breadcrumbRoot": "Programme",
+      "badgeLessons": "{{count}} Lektionen",
+      "badgeLesson": "{{count}} Lektion",
+      "noEstimatedTime": "Keine geschätzte Zeit",
+      "courseCover": "Kurs-Cover",
+      "coverLabel": "Titelbild",
+      "coverAdd": "Titelbild hinzufügen",
+      "coverRemove": "Titelbild entfernen",
+      "workingOnVersion": "Bearbeite v{{version}} (Entwurf)",
+      "preview": "Vorschau",
+      "tabs": {
+        "content": "Inhalt",
+        "people": "Personen",
+        "analytics": "Analysen"
+      },
+      "editSheet": {
+        "triggerTooltip": "Details bearbeiten",
+        "title": "Kurs bearbeiten",
+        "description": "Alle Änderungen gelten für den gesamten Kurs und werden sofort wirksam, keine erneute Veröffentlichung erforderlich.",
+        "fieldCategory": "Kategorie",
+        "fieldCategoryPlaceholder": "z. B. Compliance, Sicherheit",
+        "fieldTitle": "Kurstitel",
+        "titleRequired": "Titel ist erforderlich",
+        "fieldDescription": "Beschreibung",
+        "fieldTags": "Tags",
+        "fieldTagsPlaceholder": "Tags hinzufügen...",
+        "policyTitle": "Abschlussrichtlinie",
+        "minScoreLabel": "Mindestpunktzahl für Zertifikat (%)",
+        "noMinimum": "Kein Minimum",
+        "minScoreDescription": "Leer lassen für kein Minimum. Lernende, die unter diesem Prozentsatz liegen, schließen den Kurs ab, erhalten aber kein Zertifikat.",
+        "maxAttemptsLabel": "Maximale Versuche",
+        "unlimitedAttempts": "Unbegrenzt",
+        "maxAttemptsDescription": "Leer lassen für unbegrenzt. Lernende, die dieses Limit erreichen, können den Kurs nicht mehr öffnen.",
+        "deleteButton": "Löschen",
+        "deleting": "Wird gelöscht...",
+        "cancel": "Abbrechen",
+        "saveChanges": "Änderungen speichern",
+        "saving": "Wird gespeichert...",
+        "toastUpdateSuccess": "Kurs erfolgreich aktualisiert.",
+        "toastUpdateFailed": "Fehler beim Aktualisieren des Kurses.",
+        "toastDeleteSuccess": "Kurs erfolgreich gelöscht.",
+        "toastDeleteFailed": "Fehler beim Löschen des Kurses."
+      },
+      "deleteDialog": {
+        "title": "Kurs löschen",
+        "description": "Diese Aktion kann nicht rückgängig gemacht werden. Dadurch werden der Kurs, alle seine Lektionen, Szenen und Mitglieder-Einschreibungen dauerhaft gelöscht.",
+        "confirmInstruction": "Bitte tippe zur Bestätigung Kurs löschen ein.",
+        "confirmPlaceholder": "Kurs löschen",
+        "confirmValue": "kurs löschen",
+        "cancel": "Abbrechen",
+        "deleteButton": "Kurs verwerfen"
+      }
+    }
+  }
+}

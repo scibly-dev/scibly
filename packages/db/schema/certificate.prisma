@@ -1,0 +1,22 @@
+model Certificate {
+  id              String            @id @default(cuid())
+  enrollmentId    String?           @unique
+  enrollment      CourseEnrollment? @relation(fields: [enrollmentId], references: [id], onDelete: SetNull)
+  courseVersionId String?
+  courseVersion   CourseVersion?    @relation(fields: [courseVersionId], references: [id], onDelete: SetNull)
+  userId          String?
+  user            User?             @relation(fields: [userId], references: [id], onDelete: SetNull)
+  organizationId  String
+  organization    Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userName        String
+  courseName      String
+  versionNumber   Int
+  completedAt     DateTime
+  totalSpEarned   Int               @default(0)
+  createdAt       DateTime          @default(now())
+
+  @@unique([userId, courseVersionId])
+  @@index([enrollmentId])
+  @@index([userId, organizationId])
+  @@map("certificate")
+}

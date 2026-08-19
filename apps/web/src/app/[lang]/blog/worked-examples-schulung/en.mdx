@@ -1,0 +1,67 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "Worked Examples: Why Fully Worked-Out Examples Often Get You There Faster Than Figuring It Out Yourself",
+  description:
+    "A worked example is a fully worked-out example where every solution step is visibly explained, instead of leaving learners to find the solution themselves.",
+  date: "May 12, 2026",
+  readTime: 4,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "worked examples learning",
+    "worked examples training",
+    "fully worked-out examples training",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+A worked example is a fully worked-out example where every solution step is visibly explained, instead of leaving learners to find the solution themselves. For novices in a subject area, that's often more effective than immediate independent practice: research shows a medium advantage for worked examples over pure problem-solving with no example, especially clearly in mathematics (effect size g = 0.48).
+
+## Why worked examples work better for novices
+
+The mechanism behind this is cognitive load. Someone attempting a new procedure for the first time has to simultaneously understand the procedure itself and construct their own solution step by step. That taxes working memory twice over. A worked example removes part of that load: the solution path is already there, so learners can focus entirely on understanding the structure, instead of guessing and understanding at the same time.
+
+For people with existing prior knowledge, the effect partly reverses, a phenomenon known in the research as the expertise reversal effect. Someone who already knows a procedure often finds a fully worked-out example redundant and learns more from independent practice.
+
+## What a good worked example is built from
+
+| Element                                            | Purpose                                                     |
+| -------------------------------------------------- | ----------------------------------------------------------- |
+| Complete step-by-step solution                     | Shows the entire path, not just the result                  |
+| Reasoning per step                                 | Explains why this step was chosen, not a different one      |
+| Right after: a similar task to solve independently | Converts the pattern just seen into active application      |
+| No skipped intermediate steps                      | Every gap forces novices to guess, undoing the load benefit |
+
+## Using worked examples in corporate training
+
+Worked examples are most effective for new, rule-based procedures: a new software feature, a calculation rule, a decision tree for customer inquiries. Instead of choosing "try it yourself" as the first step, the sequence "show a complete example, then give a similar task to solve independently" works more reliably for beginners. As experience grows, the share of worked examples should decrease and the share of independent practice should increase, otherwise the effect eventually starts to slow learning down instead of supporting it.
+
+## Frequently asked questions
+
+### Are worked examples suitable for everyone?
+
+No. The advantage is largest for novices with no relevant prior knowledge. For people experienced in the given topic, a fully worked-out example can actually slow down learning progress, because it spends time on things they already know.
+
+### What's the difference between a worked example and a demonstration?
+
+A demonstration often only shows the result or the process from the outside. A worked example additionally makes every single reasoning step and justification explicitly visible, not just the end result.
+
+### How many worked examples does a learning section need?
+
+Usually one to two complete examples per new concept are enough, followed by an independent practice task in the same pattern. Too many examples in a row with no practice of your own unnecessarily delays the shift to active application.
+
+### Do worked examples work for soft skills too?
+
+Less directly than for rule-based topics. For soft skills, a related variant fits better: a fully played-out example conversation with commentary on why certain phrasings work, rather than a purely mathematical step-by-step solution.
+
+</PostLayout>

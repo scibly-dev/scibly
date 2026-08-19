@@ -1,0 +1,177 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "ChatGPT-Prompts für L&D: 20 Vorlagen, die du heute nutzen kannst",
+  description:
+    "Copy-paste ChatGPT-Prompts für L&D-Teams: Kursstruktur, Lernziele, Quizfragen, Szenarien, Bedarfsanalyse und mehr — mit echten Beispielen.",
+  date: "12. Juni 2026",
+  readTime: 8,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "ChatGPT Prompts L&D",
+    "ChatGPT E-Learning",
+    "KI Prompts Schulung",
+    "ChatGPT Kurs erstellen",
+    "L&D KI Prompts",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+Die Qualität des Outputs hängt fast immer an der Qualität des Inputs. Wer ChatGPT mit einem vagen "Schreib mir einen Kurs über Datenschutz" füttert, bekommt vagen Output. Wer dem Modell Kontext, Zielgruppe, Format und Einschränkungen mitgibt, bekommt etwas Verwertbares.
+
+Drei Grundprinzipien, bevor es zu den Prompts geht:
+
+**1. Immer Zielgruppe und Kontext angeben.** ChatGPT weiß nicht, ob du für Servicemitarbeitende in einem Callcenter oder für Führungskräfte in einem Pharmaunternehmen schreibst. Diese Information verändert den Output erheblich.
+
+**2. Das gewünschte Format spezifizieren.** Eine Aufzählung, ein erklärender Fließtext, eine Tabelle, ein Dialogbeispiel: Sag explizit, was du haben willst.
+
+**3. Sag, was du nicht willst.** "Keine Fachbegriffe ohne Erklärung", "keine Listen mit mehr als 5 Punkten", "kein einleitender Absatz, der den Nutzen erklärt". Einschränkungen verbessern den Output oft mehr als Anweisungen.
+
+Die folgenden 20 Prompts sind Ausgangspunkte. Passe die Platzhalter in eckigen Klammern an deinen spezifischen Kontext an.
+
+## Kursstruktur und Planung
+
+**Prompt 1: Kursübersicht aus Thema, Zielgruppe und Lernzielen**
+
+> Erstelle eine Kursübersicht für ein E-Learning-Modul zum Thema [Thema]. Zielgruppe: [Beschreibe die Zielgruppe, z.B. Vertriebsmitarbeitende ohne technischen Hintergrund]. Lernziele: [Nenne 2–3 Lernziele]. Gib mir 5–7 Modulthemen mit je einer kurzen Beschreibung (1–2 Sätze), was die Lernenden in diesem Modul lernen. Keine Einleitung, direkt mit der Liste beginnen.
+
+Gut geeignet, wenn du vor einem neuen Kursprojekt stehst und einen ersten Strukturvorschlag brauchst. Überprüfe, ob die Reihenfolge der Module eine sinnvolle didaktische Progression ergibt.
+
+**Prompt 2: Lernziele aus einer Stellenbeschreibung**
+
+> Hier ist eine Stellenbeschreibung: [Stellenbeschreibung einfügen]. Identifiziere die 5 wichtigsten Kompetenzen, die für diese Rolle erforderlich sind, und formuliere für jede Kompetenz ein messbares Lernziel nach der Formel: "Nach Abschluss des Moduls können die Lernenden [Verb] [Inhalt] [Bedingung/Standard]." Nutze konkrete Verben (analysieren, anwenden, unterscheiden), keine abstrakten (verstehen, kennen).
+
+Hilfreich für bedarfsgerechte Kursplanung. Prüfe die Lernziele gegen die reale Arbeitsanforderung, nicht nur gegen die formale Stellenbeschreibung.
+
+**Prompt 3: Microlearning-Sequenz aus einem längeren Thema**
+
+> Das Thema [Thema] soll als Microlearning aufbereitet werden. Teile das Thema in 5 eigenständige Lerneinheiten von je maximal 5 Minuten auf. Jede Einheit soll: einen konkreten Titel haben, einen einzigen Kerngedanken vermitteln, und mit einer kurzen Reflexionsfrage enden. Gib mir die Übersicht als nummerierte Liste.
+
+Nützlich, wenn ein bestehendes 60-Minuten-Modul in ein Microlearning-Format überführt werden soll. Achte darauf, dass jede Einheit wirklich für sich steht.
+
+**Prompt 4: Szenarien für einen Entscheidungskurs**
+
+> Ich entwickle einen Kurs zum Thema [Thema, z.B. Umgang mit Einwänden im Kundengespräch]. Die Zielgruppe sind [Zielgruppe]. Entwickle 3 realistische Szenarien, in denen Lernende eine Entscheidung treffen müssen. Jedes Szenario soll: die Ausgangssituation in 3–4 Sätzen beschreiben, 2–3 Entscheidungsoptionen enthalten, und je Option eine kurze Beschreibung der Konsequenz. Kein richtiges/falsches Framing, nur realistische Optionen.
+
+Szenarien machen Compliance- und Soft-Skill-Themen praxisnah. Lass die generierten Szenarien von jemandem aus dem Fachbereich prüfen.
+
+**Prompt 5: Komplexes Thema in lernbare Einheiten zerlegen**
+
+> Das Thema [komplexes Thema] muss an [Zielgruppe] vermittelt werden, die [keine/wenig] Vorkenntnis hat. Zerlege das Thema in seine Grundbausteine. Was muss zuerst verstanden werden, bevor das nächste Konzept gelernt werden kann? Erstelle eine Lernprogression als nummerierte Liste, von der einfachsten zur komplexesten Einheit, mit einer kurzen Begründung für die Reihenfolge.
+
+Besonders nützlich für technische oder abstrakte Themen. Die Progression hilft dir, Kurse zu strukturieren, die nicht überfordern.
+
+## Inhalte schreiben und überarbeiten
+
+**Prompt 6: Policy-Dokument in lernfreundliche Sprache übersetzen**
+
+> Hier ist ein Auszug aus einer internen Richtlinie: [Text einfügen]. Schreibe diesen Text für ein E-Learning-Modul um. Zielgruppe: [Zielgruppe]. Anforderungen: klare, direkte Sprache ohne Behördenstil, Sätze unter 20 Wörtern, keine Passivkonstruktionen, kein Fachjargon ohne sofortige Erklärung. Behalte alle inhaltlichen Informationen bei.
+
+Compliance-Texte sind oft für juristische Dokumentation geschrieben, nicht für Lernen. Diese Transformation ist eine der häufigsten Anwendungen.
+
+**Prompt 7: Aufzählung in einen erklärenden Text umwandeln**
+
+> Hier ist eine Aufzählung von Punkten: [Liste einfügen]. Schreibe diese als zusammenhängenden, erklärenden Absatz um. Der Text soll Zusammenhänge zwischen den Punkten deutlich machen und für [Zielgruppe] verständlich sein. Maximal 150 Wörter.
+
+Gut für Situationen, in denen du Stichpunkte aus einem Meeting oder aus einem Expertengespräch in Lerninhalt verwandeln willst.
+
+**Prompt 8: Fachbegriffe für Nicht-Experten vereinfachen**
+
+> Der folgende Text enthält Fachbegriffe, die [Zielgruppe, z.B. kaufmännische Mitarbeitende ohne technischen Hintergrund] nicht kennt: [Text einfügen]. Ersetze jeden Fachbegriff durch eine allgemeinverständliche Erklärung oder füge in Klammern direkt nach dem Begriff eine kurze Erläuterung ein. Behalte die Struktur des Textes bei.
+
+Technische Dokumentation, IT-Sicherheitsrichtlinien, rechtliche Texte: Alle profitieren von diesem Vereinfachungsschritt.
+
+**Prompt 9: Praxisbeispiel zu einem abstrakten Konzept ergänzen**
+
+> Erkläre das Konzept [abstraktes Konzept, z.B. kognitive Verzerrung bei Risikoeinschätzungen] mit einem konkreten Beispiel aus dem Arbeitsalltag von [Zielgruppe]. Das Beispiel soll realistisch sein, in 3–5 Sätzen erzählt werden, und zeigen, wie das Konzept in einer typischen Arbeitssituation auftaucht. Keine künstlichen Extrembeispiele.
+
+Abstraktes Lernen ohne Anker an die Realität der Zielgruppe bleibt abstrakt. Dieses Prompt hilft, den Transfer herzustellen.
+
+**Prompt 10: Formalen Text in eine gesprächige Sprache übertragen**
+
+> Hier ist ein formaler Text: [Text einfügen]. Schreibe ihn um für ein E-Learning-Modul, das einen gesprächigen, direkten Ton hat. Schreibe den Lernenden direkt mit "du" an. Kein akademischer Stil, keine Passivkonstruktionen. Der Inhalt soll vollständig erhalten bleiben. Zielgruppe: [Zielgruppe].
+
+Besonders nützlich für Inhalte, die aus dem Unternehmen kommen und ursprünglich für interne Dokumente geschrieben wurden.
+
+## Quizfragen und Assessments
+
+**Prompt 11: Multiple-Choice-Fragen aus einem Text generieren**
+
+> Hier ist ein Lerninhalt: [Text einfügen]. Erstelle 5 Multiple-Choice-Fragen, die das Verständnis des Textes prüfen. Jede Frage soll: eine klare Fragestellung haben, 4 Antwortoptionen enthalten (eine richtig, drei falsch), und die richtige Antwort am Ende mit einer kurzen Begründung (1 Satz) versehen sein. Keine Fragen, die reines Auswendiglernen von Definitionen abfragen.
+
+Überprüfe die generierten Fragen auf Eindeutigkeit. ChatGPT produziert manchmal Fragen, bei denen mehr als eine Antwort vertretbar ist.
+
+**Prompt 12: Szenariobasierte Fragen für Compliance-Themen**
+
+> Ich benötige szenariobasierte Fragen für ein Compliance-Modul zum Thema [z.B. Datenschutz am Arbeitsplatz]. Erstelle 3 Situationsbeschreibungen (je 3–4 Sätze), gefolgt von der Frage: "Was ist die richtige Vorgehensweise?" mit 3 Antwortoptionen (eine davon korrekt). Die Szenarien sollen typische Alltagssituationen von [Zielgruppe] darstellen.
+
+Szenariobasierte Fragen testen Anwendungswissen statt reines Faktenwissen. Für Compliance-Themen fast immer die bessere Wahl.
+
+**Prompt 13: Wahr/Falsch-Aussagen mit Erklärungen**
+
+> Erstelle 8 Wahr/Falsch-Aussagen zum Thema [Thema]. Jede Aussage soll: eindeutig wahr oder falsch sein (kein Graubereich), eine kurze Erklärung (1–2 Sätze) enthalten, warum sie wahr oder falsch ist, und typische Missverständnisse der Zielgruppe [Zielgruppe] adressieren. Liste am Ende auf, welche Aussagen wahr und welche falsch sind.
+
+Gut geeignet für Aufwärmfragen am Modulanfang oder für Wissenstests in kurzen Einheiten.
+
+**Prompt 14: Kurzer Wissenstest für ein Modul**
+
+> Erstelle einen kurzen Wissenstest (5 Fragen) für ein E-Learning-Modul zum Thema [Thema]. Zielgruppe: [Zielgruppe]. Nutze einen Mix aus Fragetypen: 2 Multiple-Choice, 2 Wahr/Falsch, 1 szenariobasierte Frage. Gib für jede Frage die richtige Antwort und eine kurze Begründung an. Der Test soll die wichtigsten Lernziele des Moduls abdecken: [Lernziele einfügen].
+
+Hilfreich, wenn du schnell einen vollständigen Test für ein neues Modul brauchst.
+
+**Prompt 15: Plausible Distraktoren für Multiple-Choice entwickeln**
+
+> Hier ist eine Multiple-Choice-Frage: [Frage und richtige Antwort einfügen]. Erstelle 3 falsche Antwortoptionen (Distraktoren), die: für [Zielgruppe] plausibel klingen, typische Missverständnisse oder Fehlannahmen widerspiegeln, und eindeutig falsch sind (keine Grenzfälle). Begründe kurz, warum jeder Distraktor für die Zielgruppe verlockend wirken könnte.
+
+Gute Distraktoren sind schwieriger zu schreiben als gute Fragen. Dieses Prompt spart erheblich Zeit.
+
+## Bedarfsanalyse und Planung
+
+**Prompt 16: Interviewfragen für eine Trainingsbedarfsanalyse**
+
+> Ich führe eine Trainingsbedarfsanalyse für [Rolle/Bereich, z.B. den Kundenservice einer Versicherung] durch. Erstelle 10 offene Interviewfragen, die herausfinden, wo konkrete Wissenslücken oder Kompetenzlücken bestehen. Die Fragen sollen: Verhalten und Situationen statt Meinungen erfragen, spezifisch genug sein, um verwertbare Antworten zu liefern, und keine Antwort vorwegnehmen. Keine geschlossenen Ja/Nein-Fragen.
+
+Offene Fragen liefern mehr verwertbare Informationen als Skalen oder Checklisten. Ergänze die Fragen um deine eigene Einschätzung des Kontexts.
+
+**Prompt 17: Trainingslücken aus einer Stellenbeschreibung identifizieren**
+
+> Hier ist eine Stellenbeschreibung: [Text einfügen]. Vergleiche die Anforderungen mit einem typischen Onboarding-Programm für diese Rolle [beschreibe kurz das aktuelle Onboarding oder schreibe "kein strukturiertes Onboarding vorhanden"]. Identifiziere die 5 wahrscheinlichsten Kompetenzlücken für jemanden, der neu in dieser Rolle ist. Priorisiere nach Auswirkung auf die Arbeitsleistung in den ersten 90 Tagen.
+
+Nützlich als Ausgangspunkt für die Entwicklung eines Onboarding-Curriculums.
+
+**Prompt 18: Trainingsplan-Vorlage für eine bestimmte Rolle**
+
+> Erstelle eine Trainingsplan-Vorlage für die Rolle [Rollenbezeichnung] in einem [Branche/Unternehmenstyp]-Unternehmen. Der Plan soll 90 Tage abdecken und folgende Elemente enthalten: Woche 1–2 (Orientierung und Grundlagen), Monat 2 (Kernkompetenzen), Monat 3 (Vertiefung und Anwendung). Für jede Phase: Lernziele, empfohlene Inhalte/Formate, und wie der Fortschritt gemessen werden kann. Keine generischen Phrasen, spezifisch für die genannte Rolle.
+
+Gib dem Modell möglichst viel Kontext über die Rolle und das Unternehmen, um spezifischere Ergebnisse zu erhalten.
+
+## Kommunikation und Rollout
+
+**Prompt 19: Launch-E-Mail für ein neues Pflichttraining**
+
+> Schreibe eine kurze E-Mail (maximal 150 Wörter) an alle Mitarbeitenden, die ein neues Pflichttraining zum Thema [Thema] ankündigt. Die E-Mail soll: erklären, warum das Training wichtig ist (ohne Drohung oder Übertreibung), den konkreten Aufwand nennen ([X Minuten], bis [Datum]), und einen klaren nächsten Schritt enthalten. Ton: direkt und kollegial, nicht formell. Kein Einleitungsabsatz, der die Geschichte der Schulungsinitiative erklärt.
+
+Überprüfe, ob die genannte Dauer stimmt und das Datum realistisch ist. Die E-Mail sollte von einer echten Person unterschrieben werden.
+
+**Prompt 20: Erinnerungs-Nachricht für Nicht-Abschließende**
+
+> Schreibe eine kurze Erinnerungs-E-Mail (maximal 100 Wörter) für Mitarbeitende, die ein Pflichttraining zum Thema [Thema] noch nicht abgeschlossen haben. Deadline: [Datum]. Die E-Mail soll: freundlich, aber direkt auf die Deadline hinweisen, keine Schuldgefühle erzeugen, und einen direkten Link oder Handlungsschritt enthalten. Kein erklärender Einleitungsabsatz.
+
+Kurze, direkte Erinnerungen funktionieren besser als lange. ChatGPT neigt dazu, zu viel Erklärung einzubauen. Kürze aktiv nach.
+
+<Callout type="tip">
+  Diese Prompts sind Ausgangspunkte. Überprüfe alle Outputs auf inhaltliche
+  Richtigkeit, besonders bei Compliance-Themen. ChatGPT kennt dein Unternehmen,
+  deine Branche und deine internen Prozesse nicht. Du schon.
+</Callout>
+
+</PostLayout>

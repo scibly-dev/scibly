@@ -1,0 +1,129 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "Microsoft Teams als LMS: Was geht — und was definitiv nicht",
+  description:
+    "Viele Unternehmen fragen sich, ob Microsoft Teams ein LMS ersetzen kann. Die ehrliche Antwort: Nein — und hier ist warum. Was Teams kann, wo es scheitert, und was stattdessen funktioniert.",
+  date: "13. Juni 2026",
+  readTime: 8,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1587614382346-4ec70e388b28?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "Microsoft Teams LMS",
+    "Teams als LMS",
+    "Teams Lernplattform",
+    "Microsoft Teams Schulungen",
+    "Teams statt LMS",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+"Wir haben doch Teams" — dieser Satz fällt in fast jedem Gespräch über Mitarbeiterschulungen im deutschen Mittelstand. Die Logik dahinter ist verständlich: Microsoft 365 kostet ohnehin Geld, Teams ist überall installiert, und die Mitarbeitenden kennen das Tool bereits. Warum dann noch ein separates LMS kaufen?
+
+Die ehrliche Antwort: Teams ist kein LMS. Das ist keine Marketing-Botschaft eines LMS-Anbieters — es ist eine technische Tatsache, die für viele Unternehmen teuer wird, wenn sie es zu spät herausfinden.
+
+## Was Microsoft Teams für Schulungen tatsächlich kann
+
+Teams ist ein Kommunikations- und Kollaborationstool. Für informellen Wissensaustausch und schnelle Schulungsmomente hat es echte Stärken:
+
+**Kanäle als Wissenssammlungen.** Du kannst einen Kanal "Onboarding", "Sicherheitsunterweisungen" oder "Produktwissen" anlegen und dort Dokumente, Links und Erklärvideos ablegen. Mitarbeitende finden das Material, wenn sie danach suchen.
+
+**Live-Webinare und Aufzeichnungen.** Teams-Meetings lassen sich aufzeichnen und danach teilen. Das funktioniert gut für synchrone Schulungsformate — Townhalls, Briefings, Produktdemos.
+
+**SharePoint-Integration.** Über SharePoint lassen sich strukturierte Wissensdatenbanken aufbauen. Manche Unternehmen nutzen das für selbst erstellte "Schulungsseiten" mit verlinkten Dokumenten.
+
+**Kurze Nachrichten und Ankündigungen.** Teams-Nachrichten erreichen alle Mitarbeitenden schnell — nützlich für Erinnerungen, Updates und kurze Hinweise.
+
+Das klingt nach solider Basis. Das Problem liegt im Fehlenden.
+
+## Was Teams nicht kann — und warum das ein Problem ist
+
+### Kein Tracking, wer etwas wirklich abgeschlossen hat
+
+Das ist der kritischste Punkt. Teams zeigt dir, wer in einem Meeting war. Es zeigt nicht, wer ein Video tatsächlich zu Ende geschaut hat, wer ein Dokument gelesen hat, wer eine Schulung abgeschlossen hat — und wer nicht.
+
+Für informelle Wissensvermittlung ist das okay. Für jede Schulung, bei der du nachweisen musst, dass Mitarbeitende sie absolviert haben — Arbeitssicherheit, DSGVO, Compliance — ist das ein Problem. Ohne Abschlussnachweis hast du keine dokumentierte Teilnahme. Ohne dokumentierte Teilnahme haftest du im Zweifel persönlich.
+
+<Callout type="warning">
+  Pflichtunterweisungen (Arbeitssicherheit, DSGVO, Datenschutz, Brandschutz)
+  erfordern einen nachweisbaren Abschluss — idealerweise mit Zeitstempel und
+  individueller Bestätigung. Teams liefert das nicht.
+</Callout>
+
+### Keine strukturierten Lernpfade
+
+Ein LMS ermöglicht es, Kurse in einer definierten Reihenfolge zu durchlaufen: Modul 1 muss abgeschlossen sein, bevor Modul 2 freigeschaltet wird. Teams kennt dieses Konzept nicht. Du kannst eine Ordnerstruktur anlegen, aber ob jemand sie in der richtigen Reihenfolge durcharbeitet, liegt außerhalb deiner Kontrolle.
+
+### Keine automatischen Erinnerungen und Fristen
+
+Ein LMS weist neue Mitarbeitende automatisch Pflichtkursen zu, setzt Fristen und erinnert automatisch, wenn eine Frist abläuft oder ein Zertifikat erneuert werden muss. Teams macht nichts davon automatisch. Jede Erinnerung ist manuelle Arbeit — ein Teams-Post, eine E-Mail, ein Gespräch.
+
+### Keine Zertifikate
+
+Teams kann keine Abschlusszertifikate generieren. Wenn du Mitarbeitenden nach einer abgeschlossenen Schulung einen Nachweis ausstellen musst — oder wenn externe Partner, Kunden oder Behörden einen Beleg verlangen — ist Teams keine Lösung.
+
+### Kein SCORM oder xAPI
+
+Wenn du E-Learning-Inhalte von einem Autorentool (Articulate, iSpring, Lectora) nutzt oder kaufst, sind diese meist als SCORM- oder xAPI-Paket verpackt. Teams kann diese Pakete nicht abspielen und ihre Completion-Daten nicht empfangen. Du könntest die Videos aus einem SCORM-Kurs extrahieren und hochladen — verlierst dabei aber alle interaktiven Elemente und das Tracking komplett.
+
+### Kein Reporting nach Mitarbeiter oder Gruppe
+
+"Wer hat die Datenschutzschulung noch nicht abgeschlossen?" — diese einfache Frage kann Teams nicht beantworten. Es gibt keine Ansicht, die dir zeigt, wer welche Schulung in welchem Status hat. Du müsstest das manuell dokumentieren: eine Excel-Tabelle pflegen, Rückmeldungen einsammeln, nachfragen. Das ist fehleranfällig und skaliert nicht.
+
+### Kein Quiz oder Assessment
+
+Teams bietet über Forms-Integration zwar eine einfache Umfrage-Funktion, aber keine echten Assessments, die den Lernfortschritt messen, Mindestpunktzahlen erzwingen oder bei Nicht-Bestehen automatisch den Kurs-Restart auslösen.
+
+## Wann Teams ausreicht
+
+Es gibt Szenarien, in denen Teams für Schulungszwecke tatsächlich ausreicht:
+
+- **Informeller Wissensaustausch**: Tipps und Tricks, Best Practices, kurze How-tos, die keine formale Dokumentation brauchen
+- **Live-Trainings mit synchroner Teilnahme**: Wenn alle Teilnehmenden live dabei sind und du die Anwesenheitsliste aus dem Meeting-Protokoll ziehst
+- **Sehr kleine Teams**: Bei 5–10 Mitarbeitenden, bei denen die Personalverantwortliche den Überblick noch persönlich behalten kann
+
+Sobald du Pflichtschulungen, Compliance-Nachweise, wachsende Teams oder externe Anforderungen hast, stößt Teams an seine Grenzen.
+
+## Was ein richtiges LMS bietet
+
+Ein [LMS](/de/blog/lms-auswahl) ist genau für das gebaut, was Teams nicht kann:
+
+- **Automatische Kurszuweisung** nach Rolle, Standort oder Eintrittsdatum
+- **Abschluss-Tracking** mit Zeitstempel und Benutzeridentität
+- **Zertifikat-Generierung** nach Kursabschluss, mit Ablaufdaten und Renewal-Erinnerungen
+- **SCORM/xAPI-Unterstützung** für professionell erstellte Kurse
+- **Reporting**: Wer hat was wann abgeschlossen — gefiltert nach Abteilung, Standort, Rolle
+- **Automatische Erinnerungen** für überfällige oder ablaufende Schulungen
+
+Das klingt komplex, muss es aber nicht sein. Moderne LMS-Plattformen sind heute in Minuten eingerichtet — ohne IT-Abteilung, ohne Implementation-Projekt.
+
+<Callout type="info">
+  Scibly ist genau für Teams ohne IT-Ressourcen gebaut: Kurse in Minuten
+  erstellen oder importieren, Mitarbeitende per Link einladen, automatische
+  Zertifikate und Compliance-Tracking inklusive. Keine Installation, kein
+  Setup-Projekt.
+</Callout>
+
+## Kann man Teams und ein LMS kombinieren?
+
+Ja — und das ist für viele Unternehmen die sinnvollste Lösung. Teams bleibt das Kommunikations-Hub für Ankündigungen, Diskussionen und Live-Events. Das LMS übernimmt strukturiertes Lernen, Pflichtschulungen und Compliance-Dokumentation.
+
+Viele LMS-Plattformen lassen sich als App in Teams integrieren, sodass Mitarbeitende direkt aus Teams heraus auf ihre zugewiesenen Kurse zugreifen können — das Beste aus beiden Welten, ohne dass jemand ein neues Tool lernen muss.
+
+## Die häufigste Falle
+
+Unternehmen bauen monatelang eine Teams-basierte Schulungsstruktur auf, merken dann beim ersten Audit oder dem ersten Arbeitsunfall, dass sie keinen belastbaren Nachweis haben — und müssen von vorne beginnen.
+
+Ein LMS-Projekt nach einem Compliance-Vorfall ist teurer und stressiger als eines, das proaktiv aufgesetzt wurde. Und es ist fast immer günstiger als der Versuch, eine Teams-Eigenlösung so nachzurüsten, dass sie tatsächlich Compliance-tauglich wird.
+
+Wenn du wissen möchtest, wie ein [LMS ohne IT-Aufwand](/de/blog/lms-ohne-it-abteilung) für dein Team konkret aussieht — schau dir an, wie [Scibly Schulungen für den Mittelstand abbildet](/de).
+
+</PostLayout>

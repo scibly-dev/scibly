@@ -1,0 +1,119 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "SCORM vs. xAPI: Was ist der Unterschied – und was brauche ich wirklich?",
+  description:
+    "SCORM ist seit 25 Jahren der E-Learning-Standard. xAPI soll ihn ablösen. Was beide wirklich können, wo sie scheitern – und wie du entscheidest.",
+  date: "19. März 2026",
+  readTime: 6,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "SCORM",
+    "xAPI",
+    "Tin Can API",
+    "E-Learning Standards",
+    "LMS Integration",
+    "SCORM Unterschied",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+Wenn du mit E-Learning-Tools zu tun hast, begegnen dir früher oder später diese Abkürzungen: SCORM. xAPI. Tin Can. CMI5. Sie stehen für technische Standards – und die meisten Menschen, die mit ihnen arbeiten, wissen nicht genau, was dahintersteckt.
+
+Das muss man auch nicht im Detail wissen. Aber man sollte verstehen, was diese Standards tun, warum sie existieren und welcher für welchen Anwendungsfall passt. Denn die falsche Wahl kann bedeuten, dass Kurse in deinem LMS nicht funktionieren oder wichtige Lernaktivitäten nicht getrackt werden.
+
+## Was E-Learning-Standards überhaupt sind
+
+E-Learning-Standards sind Protokolle, die definieren, wie ein Kurs mit einem LMS kommuniziert. Ohne Standard: Du hast einen Kurs und ein LMS, aber beide reden nicht miteinander. Der Kurs spielt ab – aber das LMS weiß nichts davon.
+
+Mit Standard: Das LMS weiß, wer den Kurs geöffnet hat, wie lange er ihn bearbeitet hat, welche Fragen er beantwortet hat, ob er bestanden hat.
+
+## SCORM: Der Platzhirsch seit 25 Jahren
+
+**SCORM** steht für Sharable Content Object Reference Model. Es wurde Ende der 1990er vom US-Verteidigungsministerium initiiert, um Kurse portabler zu machen – ein Kurs sollte in jedem beliebigen LMS laufen, das SCORM unterstützt.
+
+SCORM 2004 (die aktuelle Hauptversion) ist heute in den meisten LMS-Plattformen der Standard. Wenn du einen Kurs in Articulate Storyline oder Adobe Captivate erstellst und exportierst, wählst du SCORM – und kannst ihn in jedes SCORM-fähige LMS hochladen.
+
+Was SCORM trackt:
+
+- Kursabschluss (bestanden/nicht bestanden/abgeschlossen)
+- Score (Quizergebnis in Prozentzahl)
+- Zeit im Kurs
+- Fortschritt (auf Modulebene)
+- Letzte Position (für Lesezeichen-Funktion)
+
+Was SCORM nicht gut trackt:
+
+- Lernaktivitäten außerhalb des LMS (Videos auf YouTube, Artikel lesen, Gespräche mit Kollegen)
+- Detaillierte Interaktionsdaten innerhalb des Kurses
+- Lernen auf mobilen Geräten ohne permanente Internetverbindung
+
+<Callout type="info">
+  SCORM ist nicht schlecht. Es ist alt. Es wurde für eine Welt entwickelt, in
+  der Lernen ausschließlich in formalen Kursen auf Desktop-Computern stattfand.
+  Das hat sich verändert.
+</Callout>
+
+## xAPI: Der Nachfolger mit mehr Reichweite
+
+**xAPI** (auch Tin Can API oder Experience API genannt) wurde 2013 veröffentlicht und ist konzeptuell deutlich moderner. Kernidee: Lernen passiert überall – nicht nur in SCORM-Kursen. xAPI macht diese Aktivitäten trackbar.
+
+Ein xAPI-Statement sieht so aus: `[Wer] hat [was] getan`. Zum Beispiel:
+
+- „Felix hat Video zur Datenschutz-Schulung auf YouTube abgeschlossen."
+- „Maria hat den Artikel über Führungskommunikation gelesen."
+- „Das Team hat das Planspiel im Workshop gespielt."
+
+Diese Daten werden in einem separaten System gespeichert, dem **Learning Record Store (LRS)** – oft in das LMS integriert, aber auch eigenständig betreibbar.
+
+Was xAPI kann, was SCORM nicht kann:
+
+- Lernaktivitäten außerhalb des LMS tracken
+- Offline-Lernen auf mobilen Geräten erfassen (und später synchronisieren)
+- Komplexe Lernpfade und Sequenzen abbilden
+- Sehr granulare Interaktionsdaten speichern
+
+Was xAPI komplizierter macht:
+
+- Es braucht einen LRS (nicht alle LMS bieten das von Haus aus)
+- Authoring-Tools müssen xAPI unterstützen (viele neueren Versionen tun das, ältere nicht)
+- Die Implementierung ist technisch anspruchsvoller
+
+<Callout type="tip">
+  Wenn dein LMS xAPI unterstützt und du Lernaktivitäten außerhalb formaler Kurse
+  tracken willst (Videos, Dokumente, externe Ressourcen), ist xAPI ein echter
+  Gewinn. Wenn du einfach nur einen Kurs hochladen und Abschlüsse tracken
+  willst, reicht SCORM vollständig.
+</Callout>
+
+## Was du wirklich brauchst
+
+**Du brauchst wahrscheinlich SCORM, wenn:**
+
+- Du Kurse aus klassischen Authoring-Tools hochlädst
+- Dein LMS-Anbieter xAPI nicht oder nur eingeschränkt unterstützt
+- Abschlussquoten und Quizergebnisse deine primären Metriken sind
+
+**Du solltest xAPI in Betracht ziehen, wenn:**
+
+- Du Lernaktivitäten aus verschiedenen Quellen zusammenführen willst
+- Mobiles, Offline-Lernen eine wichtige Anforderung ist
+- Du detaillierte Lerndaten für Analyse und Personalisierung brauchst
+- Deine Plattform einen integrierten LRS bietet
+
+**Und für viele moderne Plattformen gilt:**
+Wenn deine Lernplattform Inhalte nativ erstellt – PDFs hochladen, Quizfragen direkt einbauen, ohne externe Authoring-Tools – dann sind SCORM und xAPI möglicherweise gar nicht mehr relevant. Das LMS trackt alles intern, ohne Standardformat.
+
+Das ist bei Scibly der Fall: Du erstellst Inhalte direkt in der Plattform, und alles wird automatisch erfasst.
+
+</PostLayout>

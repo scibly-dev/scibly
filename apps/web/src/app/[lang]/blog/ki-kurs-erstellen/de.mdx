@@ -1,0 +1,129 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "Kurse erstellen mit KI: Was wirklich funktioniert",
+  description:
+    "KI-Tools versprechen kürzere Kursentwicklungszeiten. Eine ehrliche Einschätzung: Was funktioniert wirklich, wo sind die Grenzen – und wie kommt man schnell zu brauchbaren Ergebnissen.",
+  date: "11. Juni 2026",
+  readTime: 7,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "KI Kurs erstellen",
+    "Kurs erstellen mit KI",
+    "KI E-Learning",
+    "KI Autorentool",
+    "Schulung mit KI erstellen",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+Mehr Schulungsbedarf, gleiche Ressourcen. Das ist die Realität in den meisten L&D-Teams. Neue Compliance-Anforderungen, veränderte Prozesse, ein neues Tool – und irgendwie soll in vier Wochen ein neuer Kurs fertig sein, ohne externes Budget und ohne zusätzliche Personalkapazität.
+
+KI kann hier tatsächlich helfen. Aber nicht auf die Art, wie die meisten Anbieter es beschreiben. Dieser Artikel zeigt, was KI beim Kursbau zuverlässig liefert, wo sie versagt – und wie ein realistischer Prozess aussieht, der die Zeit bis zum fertigen Kurs halbiert, ohne die Qualität zu opfern.
+
+## Was KI beim Kursbau wirklich kann
+
+KI ist gut darin, strukturierte Outputs aus unstrukturierten Inputs zu erzeugen. Für die Kursentwicklung bedeutet das:
+
+**Erststruktur aus einem Briefing.** Du beschreibst das Lernziel, die Zielgruppe und die Hauptthemen – KI schlägt in Minuten eine Kursstruktur mit Modulen, Abschnitten und Lernzielen vor. Was früher ein halber Tag Arbeit war, ist jetzt ein Ausgangspunkt, den du in 30 Minuten bearbeitest.
+
+**Lernskript aus Quelldokumenten.** Lade eine bestehende Richtlinie, eine Prozessbeschreibung oder eine PowerPoint hoch – KI fasst zusammen, strukturiert um und formuliert lerngerecht. Das eliminiert den leeren-Blatt-Problem, das bei jedem neuen Kurs entsteht.
+
+**Quizfragen und Szenarien ableiten.** KI generiert aus Lernzielen und Inhalten automatisch Testfragen, Multiple-Choice-Optionen und kurze Entscheidungsszenarien. Nicht alle sind brauchbar, aber 60–70 % davon sind ein guter Startpunkt.
+
+**Sprachliche Überarbeitung und Übersetzung.** Kursinhalte, die zuerst auf Deutsch entwickelt wurden, in brauchbares Englisch übersetzen – ohne Übersetzungsagentur.
+
+**Metadaten, Beschreibungen, Lernziele formulieren.** Kein großes Thema, aber KI spart hier viele kleine Aufgaben.
+
+<Callout type="info">
+  Eine realistische Einschätzung der Zeitersparnis: Ein einfacher
+  E-Learning-Kurs, der früher 40–60 Stunden Entwicklungszeit brauchte, ist mit
+  KI-Unterstützung in 15–25 Stunden machbar. Der Aufwand verlagert sich von
+  Erstellen auf Prüfen und Verfeinern.
+</Callout>
+
+## Wo KI an ihre Grenzen stößt
+
+**Firmenspezifisches Wissen fehlt komplett.** KI kennt deine Prozesse nicht, deine internen Systeme nicht, deine Unternehmenskultur nicht. Ein generischer Kurs über "Datenschutz im Unternehmen" lässt sich generieren – aber ein Kurs, der erklärt wie bei euch konkret mit Kundendaten umgegangen wird, welche Systeme betroffen sind und was euer Datenschutzbeauftragter in einem Vorfallsfall erwartet, den kann KI nicht schreiben. Dafür braucht es einen Menschen mit internem Wissen.
+
+**Regulatorische Nuancen sind riskant.** KI kann einen Text generieren, der wie ein DSGVO-Kurs aussieht. Ob er die tatsächlichen Anforderungen eurer Branche, eurer Aufsichtsbehörde und eurer internen Policies korrekt abbildet – das kann nur ein Fachexperte prüfen. KI-generierte Compliance-Inhalte ohne Expertenprüfung sind ein Haftungsrisiko.
+
+**Didaktische Entscheidungen trifft KI schlecht.** Welches Format für welches Lernziel? Wann reicht ein kurzes Informationsmodul, wann braucht es ein Übungsszenario? KI wählt oft das Offensichtliche, nicht das Richtige. Diese Entscheidungen bleiben beim Instructional Designer.
+
+**KI halluziniert bei Fakten.** Zahlen, Gesetze, Normen – gerade bei spezifischen regulatorischen Inhalten produziert KI plausibel klingende, aber falsche Angaben. Jeder Fakt muss geprüft werden.
+
+<Callout type="warning">
+  Kein KI-generierter Compliance-Kurs sollte ohne Prüfung durch einen
+  Fachexperten veröffentlicht werden. Das gilt besonders für DSGVO,
+  Arbeitssicherheit, und Finanzvorschriften – Bereiche, in denen falsche Inhalte
+  direkte Haftungsfolgen haben.
+</Callout>
+
+## Wie der Prozess in der Praxis aussieht
+
+Ein funktionierender Workflow mit KI sieht nicht so aus, dass du einen Prompt eingibst und einen fertigen Kurs bekommst. Er sieht so aus:
+
+### Schritt 1: Lernziele definieren – das macht noch ein Mensch
+
+Bevor KI irgendwas generiert, musst du wissen: Was soll die lernende Person am Ende konkret anders tun oder wissen? Diesen Schritt kann KI unterstützen (Lernziele formulieren, schärfen), aber die inhaltliche Entscheidung liegt bei dir und den Fachexperten.
+
+### Schritt 2: Quellinhalte zusammenstellen
+
+Sammle alles, was an Wissen existiert: bestehende Richtlinien, SOPs, alte PowerPoints, Notizen aus Expertengesprächen. Das ist das Rohmaterial. Ohne Quellinhalte erzeugt KI nur Generisches.
+
+### Schritt 3: Struktur und Skript generieren
+
+Füttere KI mit deinen Lernzielen und Quellinhalten. Bitte sie um eine Kursstruktur, dann um ein Skript für jedes Modul. Nutze das Ergebnis als Entwurf, nicht als Endprodukt.
+
+Ein konkreter Prompt, der funktioniert:
+
+> "Erstelle eine Kursstruktur für einen 20-minütigen E-Learning-Kurs zum Thema [X]. Zielgruppe: [Beschreibung]. Lernziele: [Liste]. Quellinhalte: [angefügtes Dokument]. Die Struktur soll 3–4 Module haben, jeweils mit Lernzielen und einer kurzen Inhaltsbeschreibung."
+
+### Schritt 4: Inhalte prüfen und anpassen
+
+Das ist der Schritt, der bei vielen Teams unterschätzt wird. Plan mindestens 30–40 % der ursprünglichen Entwicklungszeit für Prüfung und Anpassung ein. Alle Fakten gegenchecken, firmenspezifisches Wissen ergänzen, Ton und Stil anpassen.
+
+### Schritt 5: Medien, Interaktionen und Quiz hinzufügen
+
+Screencasts, echte Fallbeispiele, interaktive Szenarien – das kommt von dir. KI kann Szenarien vorschlagen, aber die Umsetzung im Autorentool oder LMS liegt beim Team.
+
+### Schritt 6: Review durch Fachexperten
+
+Insbesondere bei regulatorischen Inhalten: Fachexperte liest drüber. Das ist kein optionaler Schritt.
+
+## Welche Tools für was geeignet sind
+
+**ChatGPT / Claude** für die Textarbeit: Strukturierung, Skriptgenerierung, Quizfragen ableiten, sprachliche Überarbeitung. Einsatz außerhalb eines Autorentools – du kopierst das Ergebnis in deinen Kurs-Editor.
+
+**Articulate Rise AI** bietet eine integrierte Funktion, um Kursmodule aus einem Prompt zu erstellen. Für einfache informationelle Kurse brauchbar. Begrenzt bei komplexeren didaktischen Strukturen.
+
+**iSpring Suite** hat ähnliche KI-Features, ebenfalls gut für unkomplizierte Inhalte.
+
+**Scibly** verknüpft den KI-Schritt direkt mit der Kursstruktur und dem LMS – kein manuelles Kopieren zwischen Tools. Du gibst Briefing und Quellinhalte ein, KI generiert eine Kursstruktur, du bearbeitest direkt weiter und veröffentlichst im gleichen System. Das spart vor allem den Reibungsverlust zwischen den Tools.
+
+<Callout type="tip">
+  Wenn du KI-Tools im Bereich Compliance oder HR einsetzt: Kläre mit deiner
+  Rechts- oder Datenschutzabteilung, welche Inhalte du in externe KI-Dienste
+  (ChatGPT, Claude) eingeben darfst. Interne Prozessdokumente und
+  Mitarbeiterdaten gehören nicht dorthin. Für sensible Inhalte eignen sich
+  Werkzeuge mit eigener Datenverarbeitung oder On-Premise-Optionen besser.
+</Callout>
+
+## Was du von KI-Unterstützung beim Kurserstellen erwarten kannst
+
+Die ehrliche Zusammenfassung: KI halbiert den Aufwand für die Erstentwicklung — aber nicht für die Qualitätssicherung. Teams, die das verstehen und ihren Prozess entsprechend aufbauen, sparen erheblich Zeit. Teams, die erwarten, dass ein Prompt einen veröffentlichungsreifen Kurs liefert, werden enttäuscht.
+
+Der größte Gewinn liegt nicht in der Textgenerierung an sich, sondern darin, dass das leere Blatt verschwindet. Ein Erstentwurf, der 70 % des Weges da ist und überarbeitet werden muss, ist immens viel wertvoller als ein weißes Dokument mit dem Cursor.
+
+Wenn du einen Workflow aufbauen willst, der KI sinnvoll in die Kursentwicklung integriert — ohne separate Tools und manuelles Hin-und-Herkopieren — schau dir an, wie [Scibly das abbildet](/de).
+
+</PostLayout>

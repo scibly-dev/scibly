@@ -1,0 +1,20 @@
+{
+  "learn": {
+    "stats": {
+      "totalSP": "Total SP",
+      "completed": "Completed",
+      "inProgress": "In Progress",
+      "enrolled": "Enrolled"
+    },
+    "overview": {
+      "recentActivity": "Recent Activity",
+      "viewAll": "View all →",
+      "noActivity": "No activity yet. Start a course to see your progress here.",
+      "upcomingDeadlines": "Upcoming Deadlines",
+      "noDeadlines": "No upcoming deadlines. You're all caught up!",
+      "active": "Active",
+      "dueInDay": "Due in 1 day",
+      "dueInDays": "Due in {{days}} days"
+    }
+  }
+}

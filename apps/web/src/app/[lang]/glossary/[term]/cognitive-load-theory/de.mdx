@@ -1,0 +1,99 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Cognitive Load Theory",
+  definition:
+    "Eine Lerntheorie von John Sweller, die besagt, dass das Arbeitsgedächtnis begrenzte Kapazität hat – und wie Instructional Design überflüssige kognitive Belastung reduzieren kann, um besseres Lernen zu ermöglichen.",
+  keywords: [
+    "Cognitive Load Theory",
+    "kognitive Belastungstheorie",
+    "Sweller",
+    "Arbeitsgedächtnis",
+    "Instructional Design",
+  ],
+  relatedTerms: [
+    "spaced-repetition",
+    "retrieval-practice",
+    "instructional-design",
+  ],
+  relatedPost: "elearning-science-of-instruction",
+};
+
+<GlossaryLayout metadata={metadata} lang="de">
+
+Die Cognitive Load Theory (CLT) ist eines der empirisch am besten fundierten Frameworks im Instructional Design. Sie wurde von John Sweller in den 1980er und 1990er Jahren entwickelt — aufbauend auf früheren Arbeiten zum Arbeitsgedächtnis von Forschern wie George Miller und Alan Baddeley — und liefert ein Modell dafür, wie das menschliche Gehirn neue Informationen verarbeitet und speichert. Aus diesem Modell leitet sie eine Reihe praktischer Designprinzipien ab.
+
+## Die grundlegende Architektur
+
+Die Theorie basiert auf zwei fundamentalen Eigenschaften des menschlichen Gedächtnisses:
+
+**Das Arbeitsgedächtnis ist stark begrenzt.** Manchmal als „Flaschenhals" der Kognition bezeichnet, kann das Arbeitsgedächtnis nur eine kleine Anzahl von Elementen gleichzeitig aktiv halten und verarbeiten — häufig werden etwa vier Einheiten genannt, wobei die genaue Zahl davon abhängt, wie „Einheit" definiert wird. Für das Instructional Design entscheidender: Das Arbeitsgedächtnis ist der Ort, an dem Lernen stattfindet — und es kann überlastet werden.
+
+**Das Langzeitgedächtnis ist praktisch unbegrenzt.** Sobald Informationen als Schemata im Langzeitgedächtnis gespeichert sind — organisierte Wissensstrukturen —, können sie abgerufen und genutzt werden, ohne Arbeitsgedächtniskapazität zu beanspruchen. Eine Expertin, die ein vertrautes Problem löst, greift auf Schemata zurück, die einen Großteil der Komplexität automatisch bewältigen, und gibt so Arbeitsgedächtnisressourcen für neuartige Aspekte der Aufgabe frei.
+
+Lernen bedeutet im Sinne der CLT: Schemata im Langzeitgedächtnis aufzubauen — durch den begrenzten Kanal des Arbeitsgedächtnisses.
+
+## Drei Arten kognitiver Belastung
+
+Sweller identifizierte drei unterschiedliche Quellen kognitiver Belastung, die gemeinsam die Arbeitsgedächtniskapazität beanspruchen:
+
+### Intrinsische Belastung
+
+Intrinsische Belastung ist die dem Material selbst innewohnende Komplexität — bestimmt durch die Anzahl interagierender Elemente, die gleichzeitig im Arbeitsgedächtnis gehalten werden müssen, um den Inhalt zu verstehen. Inhalte mit hoher Element-Interaktivität (bei denen das Verstehen eines Teils erfordert zu verstehen, wie er mit mehreren anderen zusammenhängt) erzeugen eine höhere intrinsische Belastung als Inhalte mit geringer Interaktivität. Ein Diagramm, das zeigt, wie ein einzelnes Maschinenteil funktioniert, hat eine geringere intrinsische Belastung als das Verständnis der Rolle desselben Teils im Gesamtsystem.
+
+Intrinsische Belastung lässt sich nicht eliminieren, ohne gleichzeitig das Lernen selbst zu eliminieren. Sie kann jedoch durch eine Sequenzierung gesteuert werden, die Schemata schrittweise aufbaut, bevor vollständige Komplexität eingeführt wird.
+
+### Extrinsische Belastung
+
+Extrinsische Belastung ist der kognitive Aufwand, der durch schlechtes didaktisches Design entsteht — eine Belastung, die für das Lernen unnötig ist und mit der intrinsischen Belastung um Arbeitsgedächtniskapazität konkurriert. Quellen sind unter anderem:
+
+- Redundante Informationen, die gleichzeitig in verschiedenen Formaten präsentiert werden (Redundanzeffekt)
+- Geteilte Aufmerksamkeit zwischen räumlich oder zeitlich getrennten Informationsquellen, die integriert werden müssen (Split-Attention-Effekt)
+- Unnötig komplexe Sprache oder visuelle Darstellungen
+- Dekoratives Material ohne Lernwert
+
+Extrinsische Belastung ist das primäre Ziel CLT-informierten Designs, da sie reduziert oder eliminiert werden kann, ohne die Lernziele zu verändern.
+
+### Lernrelevante Verarbeitung (germane load)
+
+Germane Load — heute manchmal auch als „lernrelevante kognitive Verarbeitung" bezeichnet — bezieht sich auf den Arbeitsgedächtnisaufwand, der auf das Aufbauen und Automatisieren von Schemata gerichtet ist. Es ist die produktive kognitive Arbeit des Lernens. Ein didaktisches Design, das extrinsische Belastung wirksam reduziert, gibt Arbeitsgedächtnisressourcen für diese produktive Verarbeitung frei.
+
+<Callout type="info">
+  Die Terminologie rund um „germane load" hat sich weiterentwickelt. Einige
+  aktuelle CLT-Forscher:innen beschreiben sie lieber als den Teil der
+  intrinsischen Belastung, der für die Schemabildung relevant ist, statt als
+  eigenständigen dritten Typ. Für die praktische Gestaltungsarbeit bleibt die
+  zentrale Erkenntnis dieselbe: Extrinsische Belastung reduzieren, damit das
+  Arbeitsgedächtnis für die eigentliche Lernaufgabe genutzt werden kann.
+</Callout>
+
+## Wichtige Designprinzipien aus der CLT
+
+### Der Split-Attention-Effekt
+
+Wenn Lernende Informationen aus mehreren räumlich oder zeitlich getrennten Quellen mental integrieren müssen, beansprucht dieser Integrationsaufwand Arbeitsgedächtnisressourcen, die sonst das Lernen unterstützen würden. Lösung: Zusammengehörige Texte und Grafiken physisch integrieren statt sie durch Bildunterschriften oder Fußnoten zu trennen.
+
+### Der Redundanzeffekt
+
+Wenn dieselbe Information gleichzeitig in mehreren Formaten präsentiert wird und jedes Format für sich ausreicht (z. B. gesprochene Narration von Text, der auch auf dem Bildschirm zu sehen ist), erzeugt das redundante Format extrinsische Belastung. Lösung: Informationen in einer Form präsentieren, wenn eine Form ausreicht; Formate nur kombinieren, wenn jedes Format einzigartige Informationen beiträgt.
+
+### Der Modalitätseffekt
+
+Das Arbeitsgedächtnis verfügt über getrennte Kanäle für visuell-räumliche und auditiv-verbale Informationen. Die effektive Nutzung beider Kanäle verdoppelt die Kapazität für das jeweilige Material. Lösung: Grafiken oder Animationen mit gesprochener Narration kombinieren statt mit On-Screen-Text — besonders bei komplexen Inhalten.
+
+<Callout type="tip">
+  CLT-Erkenntnisse sind im E-Learning-Design direkt umsetzbar. Die häufigsten
+  Verstöße — dekorative Bilder, vorgelesener Text, der den On-Screen-Text
+  wörtlich wiederholt, und Diagrammbeschriftungen weit entfernt von dem, was sie
+  beschreiben — sind behebbar, ohne Kurse von Grund auf neu aufzubauen. Allein
+  das Reduzieren dieser extrinsischen Quellen verbessert typischerweise sowohl
+  das Lernerlebnis als auch die Retention.
+</Callout>
+
+## Bezug zu Richard Mayers Multimedia-Lernprinzipien
+
+Richard Mayers Cognitive Theory of Multimedia Learning (CTML) gelangte aus einer anderen Forschungstradition unabhängig zu ähnlichen Schlussfolgerungen und entwickelte einen komplementären Prinzipiensatz (Kohärenz, Signaling, Kontiguität, Modalität, Multimedia, Redundanz, Personalisierung), der direkt auf bildschirmbasiertes Lerndesign anwendbar ist. Beide Frameworks werden häufig zusammen vermittelt und bilden gemeinsam die stärkste Evidenzbasis für praktische E-Learning-Designentscheidungen.
+
+Praktizierende, die sowohl mit CLT als auch mit CTML vertraut sind, haben eine vertretbare, empirisch fundierte Grundlage für ihre Designentscheidungen — und für die Gespräche mit Stakeholdern, die mehr Folien, mehr Bullet Points und mehr Narration zu einem ohnehin überlasteten Kurs hinzufügen wollen.
+
+</GlossaryLayout>

@@ -1,0 +1,38 @@
+{
+  "compliance": {
+    "eyebrow": "Security by design",
+    "title": "Dein Wissen",
+    "titleEmphasis": "bleibt deins.",
+    "subtitle": "Klare technische und vertragliche Grundlagen für sensible Lerninhalte.",
+    "cta": "Demo anfordern",
+    "registry": {
+      "summary": "Vier konkrete Sicherheits- und Compliance Zusagen: DSGVO Konformität, EU gehostete Modelle, kein Training mit Kundendaten und AES Verschlüsselung."
+    },
+    "controls": [
+      {
+        "kind": "gdpr",
+        "value": "DSGVO",
+        "label": "DSGVO konform",
+        "detail": "Vollständig konform mit allen Datenschutzanforderungen der EU."
+      },
+      {
+        "kind": "euServer",
+        "value": "EU",
+        "label": "EU Server",
+        "detail": "scibly verwendet ausschließlich Modelle, die in der EU gehostet sind."
+      },
+      {
+        "kind": "noTraining",
+        "value": "0×",
+        "label": "Kein Training",
+        "detail": "Deine Daten werden niemals für das Training von KI Modellen verwendet."
+      },
+      {
+        "kind": "aes",
+        "value": "AES",
+        "label": "AES Verschlüsselt",
+        "detail": "Daten werden mit AES verschlüsselt gespeichert und geschützt übertragen."
+      }
+    ]
+  }
+}

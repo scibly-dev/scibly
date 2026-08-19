@@ -1,0 +1,65 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "H5P als Autorentool: Was es kann und wo die Grenzen liegen",
+  description:
+    "H5P ist ein kostenloses, quelloffenes Autorenwerkzeug für interaktive E-Learning-Inhalte, das direkt im Browser läuft und sich in viele bestehende Systeme wie Moodle oder WordPress einbinden lässt.",
+  date: "25. Juni 2026",
+  readTime: 4,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1555255707-c07966088b7b?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "h5p autorentool",
+    "h5p e-learning",
+    "h5p kostenlos",
+    "h5p interaktive inhalte",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+H5P ist ein kostenloses, quelloffenes Autorenwerkzeug für interaktive E-Learning-Inhalte, das direkt im Browser läuft und sich in viele bestehende Systeme wie Moodle oder WordPress einbinden lässt. Es eignet sich gut für einzelne interaktive Bausteine, etwa Drag-and-Drop-Übungen oder interaktive Videos, ist aber kein vollständiges Kurs-Autorentool mit eigenem Lernpfad-Management.
+
+## Was H5P kann
+
+| Funktion                 | Beschreibung                                                                                   |
+| ------------------------ | ---------------------------------------------------------------------------------------------- |
+| Interaktive Inhaltstypen | Über 40 fertige Vorlagen: Quiz, Drag-and-Drop, interaktives Video, Zeitleisten, Präsentationen |
+| Kostenlos und quelloffen | Keine Lizenzkosten, Quellcode frei verfügbar                                                   |
+| Einbettbar               | Läuft als Plugin in Moodle, WordPress, Drupal oder als eigenständige Website                   |
+| Browserbasiert           | Kein Download nötig, direkte Bearbeitung im Browser                                            |
+
+## Wo H5P an seine Grenzen stößt
+
+H5P erstellt einzelne interaktive Bausteine, keine vollständigen Kurse mit Lernpfad, Fortschrittsverfolgung über mehrere Module hinweg oder zentraler Nutzerverwaltung. Diese Funktionen müssen von der Plattform kommen, in die H5P eingebettet wird, etwa einem LMS. Wer nur H5P allein nutzt, braucht zusätzlich ein System, das die einzelnen Bausteine zu einem zusammenhängenden Kurs verbindet und den Fortschritt der Lernenden trackt.
+
+## Für wen sich H5P eignet
+
+H5P passt gut zu Teams mit technischem Know-how, die bereits ein LMS wie Moodle betreiben und einzelne Kursabschnitte interaktiver gestalten wollen, ohne zusätzliche Lizenzkosten. Für Teams ohne eigene IT-Infrastruktur oder ohne Zeit, sich in ein zusätzliches Werkzeug einzuarbeiten, ist der Umweg über ein eigenständiges, aus einem Dokument generierbares Kursformat oft der schnellere Weg zu einem fertigen, interaktiven Kurs.
+
+## Häufige Fragen
+
+### Ist H5P wirklich komplett kostenlos?
+
+Ja, H5P selbst ist Open Source und kostenlos. Kosten können indirekt entstehen, etwa für das Hosting der Plattform, in die H5P eingebunden wird, oder für technischen Support, falls kein eigenes IT-Team vorhanden ist.
+
+### Braucht man Programmierkenntnisse für H5P?
+
+Für die Standard-Inhaltstypen nicht, sie lassen sich über eine grafische Oberfläche befüllen. Für tiefere Anpassungen oder eigene Inhaltstypen sind Entwicklungskenntnisse hilfreich.
+
+### Kann H5P ein vollständiges LMS ersetzen?
+
+Nein, H5P erstellt einzelne interaktive Inhalte, aber kein eigenständiges Lernmanagement mit Nutzerverwaltung und übergreifendem Fortschritt-Tracking. Dafür wird zusätzlich ein LMS oder eine vergleichbare Plattform benötigt.
+
+### Was ist eine gute Alternative zu H5P für Teams ohne eigene IT?
+
+Tools, die von Anfang an Kurserstellung und Lernplattform in einem bieten, ohne separate Einbindung in ein bestehendes System, senken die technische Einstiegshürde deutlich.
+
+</PostLayout>

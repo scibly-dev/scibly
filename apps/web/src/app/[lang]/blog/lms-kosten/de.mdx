@@ -1,0 +1,156 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "LMS Kosten: Was ein Lernmanagementsystem wirklich kostet",
+  description:
+    "LMS-Preise sind absichtlich undurchsichtig. Hier ist eine klare Übersicht: wie Preismodelle funktionieren, welche Folgekosten entstehen und was realistische Budgets je Unternehmensgröße sind.",
+  date: "19. Mai 2026",
+  readTime: 7,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "LMS Kosten",
+    "Lernmanagementsystem Kosten",
+    "LMS Preis",
+    "was kostet ein LMS",
+    "LMS Budget",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+„Was kostet ein LMS?" ist eine der häufigsten Fragen von HR-Teams vor einer Evaluation – und eine der schwierigsten, eine ehrliche Antwort darauf zu bekommen. Die meisten Anbieter-Websites zeigen eine Demo, keinen Preis. Wer Preise veröffentlicht, versteckt die echten Zahlen oft hinter „Bitte kontaktieren Sie uns für ein Angebot."
+
+Dieser Artikel gibt dir eine klare Übersicht: wie LMS-Preise wirklich funktionieren, was über die Lizenzgebühr hinaus anfällt und was realistische Budgets für verschiedene Unternehmensgrößen sind.
+
+## Die drei wichtigsten Preismodelle
+
+### Preis pro aktivem Nutzer
+
+Du zahlst eine monatliche oder jährliche Gebühr für jeden Nutzer, der die Plattform in einem bestimmten Zeitraum nutzt. Das ist das häufigste Modell bei cloudbasierten LMS-Plattformen.
+
+- **Typische Spanne**: 3–15 € pro Nutzer und Monat
+- **Geeignet für**: Unternehmen mit stabiler, bekannter Mitarbeiterzahl
+- **Vorsicht bei**: der Definition von „aktiver Nutzer" – manche Plattformen berechnen jeden, der ins System eingeladen wurde, nicht nur die, die einen Kurs abgeschlossen haben
+
+### Preis pro registriertem Nutzer (Seat)
+
+Du zahlst für jeden im System registrierten Nutzer, egal ob er sich einloggt oder nicht.
+
+- **Typische Spanne**: 2–8 € pro Seat und Monat
+- **Geeignet für**: Unternehmen mit vorhersehbaren Nutzerzahlen und hohen Engagement-Erwartungen
+- **Vorsicht bei**: schnell steigenden Kosten, wenn nur 40 % der registrierten Nutzer die Plattform tatsächlich verwenden
+
+### Flatrate / gestaffelte Preise
+
+Ein fester monatlicher oder jährlicher Betrag für bis zu einer bestimmten Nutzeranzahl. Häufig bei KMU-fokussierten Plattformen.
+
+- **Typische Spanne**: 300–2.000 €/Monat für 50–500 Nutzer
+- **Geeignet für**: KMUs, die Kostenprediktabilität möchten
+- **Vorsicht bei**: Aufpreisen bei Überschreitung der Tier-Grenze und dem genauen Leistungsumfang je Tier
+
+<Callout type="info">
+  Open-Source-Plattformen wie Moodle sind kostenlos zum Download – aber nicht
+  kostenlos im Betrieb. Hosting, Wartung, Updates und Anpassungen erfordern
+  Entwicklerzeit oder einen Managed-Hosting-Anbieter – typischerweise 200–800
+  €/Monat für eine kleine Installation.
+</Callout>
+
+## Versteckte Kosten, die die meisten Teams nicht einplanen
+
+Die Lizenzgebühr ist selten die ganze Geschichte.
+
+**Implementierung und Einrichtung**: Selbst einfache Plattformen brauchen Konfiguration – Nutzerimport, Kurs-Migration, SSO-Einrichtung, Branding. Budget 5–15 Stunden Admin-Zeit für eine einfache Implementierung, mehr für Integrationen.
+
+**Content-Erstellung**: Das LMS ist das Regal. Du musst es noch befüllen. Einen ordentlichen Online-Kurs zu bauen dauert typischerweise 40–80 Stunden Entwicklungszeit pro Stunde fertigem Content. Freelance Instructional Designer berechnen 50–120 €/Stunde.
+
+**Integrationen**: Dein LMS an ein HRIS, SSO-Anbieter oder Slack anzuschließen erfordert oft kostenpflichtige Add-ons oder Entwicklungsarbeit. Budget zusätzlich 1.000–5.000 €, wenn du nicht-standardmäßige Integrationen brauchst.
+
+**Schulung und Onboarding**: Deine Admins müssen das System kennenlernen. Vendor-Onboarding-Sessions kosten bei Corporate-Plattformen oft 500–2.000 €.
+
+**Jährliche Preiserhöhungen**: SaaS-Verträge enthalten oft 5–10 % jährliche Anpassungsklauseln. Jetzt danach fragen.
+
+## Realistische Budgetbereiche nach Unternehmensgröße
+
+<Table>
+  <thead>
+    <tr>
+      <Th>Unternehmensgröße</Th>
+      <Th>Plattformkosten (jährlich)</Th>
+      <Th>Gesamtkosten erstes Jahr (inkl. Einrichtung)</Th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <Td>10–50 Mitarbeitende</Td>
+      <Td>500–3.000 €</Td>
+      <Td>1.500–6.000 €</Td>
+    </tr>
+    <tr>
+      <Td>50–200 Mitarbeitende</Td>
+      <Td>2.000–10.000 €</Td>
+      <Td>5.000–20.000 €</Td>
+    </tr>
+    <tr>
+      <Td>200–1.000 Mitarbeitende</Td>
+      <Td>8.000–40.000 €</Td>
+      <Td>15.000–60.000 €</Td>
+    </tr>
+    <tr>
+      <Td>1.000+ Mitarbeitende</Td>
+      <Td>30.000–150.000 €+</Td>
+      <Td>60.000–200.000 €+</Td>
+    </tr>
+  </tbody>
+</Table>
+
+Das sind grobe Spannen, keine Garantien. Die tatsächlichen Kosten hängen stark von der Plattformwahl, der Anzahl der Integrationen und dem Content-Aufwand ab.
+
+<Callout type="tip">
+  Für die meisten Unternehmen unter 200 Mitarbeitenden sollten die jährlichen
+  Gesamtkosten inklusive Plattform und Content-Entwicklung unter 15.000 €
+  bleiben. Wenn ein Anbieter mehr veranschlagt, die Komplexität hinterfragen –
+  du kaufst möglicherweise Funktionen, die du nicht brauchst.
+</Callout>
+
+## Wann kostenlose Tools ausreichen
+
+Nicht jeder Schulungsbedarf erfordert ein kostenpflichtiges LMS. Kostenlose oder sehr günstige Optionen eignen sich, wenn:
+
+- Du weniger als 20 Lernende hast
+- Inhalte sich selten ändern
+- Keine Compliance-Dokumentation oder Audit-Trails benötigt werden
+- Du zunächst testen möchtest, ob ein LMS überhaupt Mehrwert schafft
+
+Kostenlose Tools stoßen an Grenzen bei automatischer Zuweisung, Compliance-Nachweisen, Abschlusszertifikaten oder teamübergreifendem Reporting. Ab dann wird der Mehrwert einer kostenpflichtigen Plattform klar.
+
+## Fragen, die du vor der Unterschrift stellen solltest
+
+**Was ist im Grundpreis enthalten?** Support, Speicher, SSO, API-Zugang – das sind oft kostenpflichtige Add-ons.
+
+**Was passiert mit unseren Daten, wenn wir gehen?** Du solltest Content und Abschlussnachweise in einem Standardformat ohne Zusatzkosten exportieren können.
+
+**Gibt es eine Mindestvertragslaufzeit?** Jahresverträge bieten günstigere Konditionen, reduzieren aber die Flexibilität. Monatliche Pläne kosten mehr, bieten aber mehr Spielraum.
+
+**Was kostet das System beim doppelten Nutzerwachstum?** Der Sprung von 100 auf 200 Nutzer sollte planbar sein, bevor du unterschreibst.
+
+## Die Total-Cost-of-Ownership-Rechnung
+
+Die Frage ist nicht nur „Was kostet das LMS?" – sondern „Was kostet das LMS im Verhältnis zum Problem, das es löst?"
+
+Bei Compliance-Schulungen: LMS-Kosten mit dem Verwaltungsaufwand vergleichen, der bisher für manuelle Nachverfolgung entsteht – plus dem Risiko durch undokumentierte Compliance-Lücken.
+
+Bei Onboarding: Kosten mit dem Produktivitätsverlust durch lange Einarbeitungszeiten vergleichen und mit den Kosten für Neueinstellungen von Mitarbeitenden, die in den ersten 90 Tagen wieder gehen.
+
+Wenn Schulung messbare Business-Kosten hat, sieht die Plattformgebühr anders aus.
+
+Scibly ist für Unternehmen gebaut, die eine leistungsfähige Plattform ohne Corporate-Komplexität und -Preisgestaltung wollen. Die Preise sind transparent.
+
+</PostLayout>

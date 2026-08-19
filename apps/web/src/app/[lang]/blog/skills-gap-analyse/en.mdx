@@ -1,0 +1,184 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "Skills Gap Analysis: How to Identify What Your Team Actually Needs",
+  description:
+    "A skills gap analysis tells you where your team's capabilities fall short of what your business needs. Here's a practical method that works without an L&D department.",
+  date: "May 12, 2026",
+  readTime: 7,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "skills gap analysis",
+    "skills gap",
+    "training needs analysis",
+    "workforce skills",
+    "L&D planning",
+    "employee development planning",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+Most training programs are built backwards: someone decides on a course, then runs it, then hopes it solves whatever problem prompted it. A skills gap analysis reverses this — it starts with what the business needs, maps that against what people can currently do, and identifies the specific gaps worth closing.
+
+It sounds obvious. It's done properly far less often than it should be.
+
+This article walks through a practical method for conducting a skills gap analysis — without a large L&D team or expensive consultants.
+
+## What a skills gap analysis actually is
+
+A skills gap analysis is a structured comparison between two states:
+
+- **Required skills**: what your people need to be able to do to meet current and near-future business goals
+- **Existing skills**: what your people can actually do today
+
+The gap between the two is your development priority list. Everything else — training programs, budget allocation, new hires — flows from that.
+
+<Callout type="info">
+  A skills gap analysis is not an employee performance review. It's an
+  organizational diagnostic. The question is "does this team have the
+  capabilities the business needs?" — not "is this person doing their job well?"
+</Callout>
+
+## When to run a skills gap analysis
+
+The most common triggers:
+
+- **Strategic shift**: entering a new market, launching a new product, undergoing digital transformation
+- **Recurring performance problems**: the same errors keep appearing, the same type of project keeps stalling
+- **Annual L&D planning**: deciding where training budget goes next year
+- **High turnover in specific roles**: understanding whether role requirements have outpaced what candidates bring
+- **Post-merger integration**: two teams with different skill sets need to operate as one
+
+You don't need a trigger to do a gap analysis — but if you're doing one without a clear business context, the outputs tend to be unfocused.
+
+## A practical 4-step method
+
+### Step 1: Define required skills by role
+
+Start with the business outcome you're trying to enable. Then work backwards to the specific skills required.
+
+For each role you're analyzing, list:
+
+- **Technical skills**: tools, systems, processes, domain knowledge
+- **Behavioral skills**: communication, problem-solving, collaboration, leadership
+- **Compliance requirements**: certifications, regulations, mandatory knowledge
+
+Be specific. "Communication skills" is not a skill. "Ability to write a clear project brief that external vendors can execute without clarifying questions" is.
+
+<Table>
+  <thead>
+    <tr>
+      <Th>Role</Th>
+      <Th>Required skill</Th>
+      <Th>Priority</Th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <Td>Sales Manager</Td>
+      <Td>Coach team members on discovery call methodology</Td>
+      <Td>High</Td>
+    </tr>
+    <tr>
+      <Td>Customer Success</Td>
+      <Td>Identify expansion opportunities in product usage data</Td>
+      <Td>High</Td>
+    </tr>
+    <tr>
+      <Td>Operations</Td>
+      <Td>Configure and maintain the new ERP module</Td>
+      <Td>Critical</Td>
+    </tr>
+    <tr>
+      <Td>All staff</Td>
+      <Td>Handle data subject access requests under GDPR</Td>
+      <Td>Required</Td>
+    </tr>
+  </tbody>
+</Table>
+
+### Step 2: Assess current skill levels
+
+There are several ways to assess where people are today. The right method depends on the skill and the scale:
+
+**Self-assessment surveys** — fast to run, useful for directional data, but suffer from the Dunning-Kruger effect (people who are least competent often rate themselves highest). Use them as a starting point, not a conclusion.
+
+**Manager assessments** — more reliable for behavioral skills, but require calibration to be consistent across managers. Works well for teams of 10–30.
+
+**Skills assessments or tests** — the most objective method for technical skills. A short practical test or scenario-based quiz tells you what someone can actually do, not what they think they can do.
+
+**Performance data** — look for patterns in quality metrics, error rates, customer satisfaction scores, or project outcomes. These often reveal skill gaps more honestly than any survey.
+
+**Observed work** — for smaller teams, having a manager review work samples or sit in on calls for a week generates qualitative data that surveys miss.
+
+<Callout type="tip">
+  Combine at least two methods per skill area. Self-assessment alone is
+  directional at best. Self-assessment plus a short practical test is
+  significantly more reliable.
+</Callout>
+
+### Step 3: Map and prioritize the gaps
+
+Once you have required skills and current levels, you can score the gaps. A simple 1–4 scale works:
+
+- **1 — No gap**: current capability meets or exceeds requirement
+- **2 — Minor gap**: capability is close, a brief refresher would close it
+- **3 — Significant gap**: structured training required
+- **4 — Critical gap**: capability is absent, business impact is immediate
+
+Then add a second dimension: **business impact if the gap isn't closed**. A gap with score 3 that affects a core business process matters more than a gap with score 4 that affects a rarely triggered edge case.
+
+This two-axis view prevents the analysis from becoming a list of everything that needs improving — which is just a recipe for doing nothing.
+
+### Step 4: Translate gaps into development actions
+
+A gap analysis is only useful if it leads to decisions. For each prioritized gap, identify the appropriate response:
+
+| Gap type                                       | Appropriate response                                 |
+| ---------------------------------------------- | ---------------------------------------------------- |
+| Knowledge gap (doesn't know)                   | Training, documentation, course                      |
+| Skill gap (knows but can't do well)            | Practice, coaching, simulation                       |
+| Capacity gap (can do it but doesn't have time) | Process change, delegation, hiring                   |
+| Motivation gap (can do it but won't)           | Management conversation, role clarity — not training |
+
+This last point is critical: **training is not the answer to every gap.** If someone knows how to do something but doesn't do it, more training won't help. Diagnosing the actual root cause determines whether L&D has a role to play at all.
+
+<Callout type="warning">
+  Before designing a training program, confirm the gap is a knowledge or skill
+  issue. If it's a motivation, clarity, or process issue, training will waste
+  time and budget with no impact.
+</Callout>
+
+## Common mistakes to avoid
+
+**Analyzing too many roles at once**: A broad analysis that covers every role superficially is less useful than a deep analysis of three critical roles. Start focused.
+
+**Involving HR without involving line managers**: HR understands the organizational context; line managers understand what the job actually requires day-to-day. You need both. An analysis done without manager input produces a list nobody owns.
+
+**Treating required skills as static**: The business changes. A skills gap analysis is a snapshot, not a permanent truth. Revisit it when strategic priorities shift — typically every 12–18 months.
+
+**Confusing gap analysis with performance management**: If individual names start appearing in the analysis, it's sliding into performance management territory. The analysis should be about role requirements and aggregate team capability, not about specific individuals.
+
+## What to do with the output
+
+A completed skills gap analysis gives you:
+
+- A prioritized list of capabilities the business needs that don't currently exist at the required level
+- A clear basis for training budget allocation
+- A rationale for new hires vs. internal development decisions
+- A baseline to measure progress against
+
+The most important step: share it with relevant stakeholders before it becomes a training plan. The business outcome framing — "we have a gap here that's affecting X" — makes the conversation about resources much more productive than "we want to run a course on Y."
+
+If you're running the resulting training through an LMS, Scibly lets you build the courses and track completion against the specific gaps you've identified — so the gap analysis becomes a live development tracker, not a document that sits in a folder.
+
+</PostLayout>

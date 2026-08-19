@@ -1,0 +1,88 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Spaced Repetition",
+  definition:
+    "Eine Lerntechnik, bei der Lernmaterial in zunehmenden Zeitabständen wiederholt wird, um durch den Spacing-Effekt die Langzeitretention bei minimalem Aufwand zu maximieren.",
+  keywords: [
+    "Spaced Repetition",
+    "Spacing-Effekt",
+    "verteiltes Lernen",
+    "Wissensretention",
+    "Lernwissenschaft",
+  ],
+  relatedTerms: ["retrieval-practice", "forgetting-curve", "microlearning"],
+  relatedPost: "die-vergessenskurve",
+};
+
+<GlossaryLayout metadata={metadata} lang="de">
+
+Spaced Repetition ist eine Lerntechnik, die Wiederholungen von Lernmaterial in zunehmenden zeitlichen Abständen plant. Anstatt Informationen unmittelbar nach dem Lernen zu wiederholen oder alle Wiederholungen in eine einzige Sitzung zu bündeln, verteilt Spaced Repetition die Wiederholungen über Tage, Wochen und Monate – zeitlich so abgestimmt, dass die Information kurz vor dem Vergessen erneut abgerufen wird.
+
+Das zugrunde liegende Phänomen ist der Spacing-Effekt: Zwei durch eine zeitliche Lücke getrennte Wiederholungssitzungen erzeugen bessere Langzeitretention als zwei aufeinanderfolgende Sitzungen – selbst wenn die Gesamtlernzeit identisch ist. Hermann Ebbinghaus dokumentierte diesen Effekt in seiner Gedächtnisforschung von 1885, und er gehört seitdem zu den am konsistentesten replizierten Befunden der Kognitionspsychologie.
+
+## Wie Spaced-Repetition-Systeme funktionieren
+
+Die Kernerkenntnis eines Spaced-Repetition-Systems (SRS) ist, dass Wiederholungen auf der demonstrierten Gedächtnisleistung für jedes Element basieren sollten – nicht auf einem festen Kalenderplan.
+
+### Das Leitner-Kartei-System
+
+Sebastian Leitners papierbasiertes System (1970) war eine der ersten systematischen Implementierungen von Spaced Repetition. Es verwendet eine Reihe von Fächern, die jeweils ein Wiederholungsintervall repräsentieren. Neue Karten beginnen in Fach 1 (täglich wiederholt). Wird eine Karte korrekt erinnert, wandert sie in Fach 2 (alle paar Tage). Erneuter Erfolg bewegt sie in Fach 3 (wöchentlich), und so weiter. Falsches Erinnern schickt die Karte zurück in Fach 1. Das Ergebnis: Gut bekanntes Material wird seltener wiederholt, schlecht bekanntes häufiger – genau kalibriert auf die Funktionsweise des Gedächtnisses.
+
+### Der SM-2-Algorithmus
+
+Der SM-2-Algorithmus, von Piotr Wozniak 1987 für seine SuperMemo-Software entwickelt, formalisierte Spaced Repetition zu einem Berechnungsmodell. Nach jeder Wiederholung bewertet der Lernende, wie schwierig der Abruf war (typischerweise auf einer Skala von 0 bis 5). Der Algorithmus nutzt diese Bewertung, um das nächste optimale Wiederholungsintervall zu berechnen:
+
+- Einfacher Abruf → längeres Intervall bis zur nächsten Wiederholung
+- Schwieriger Abruf → kürzeres Intervall bis zur nächsten Wiederholung
+- Gescheiterter Abruf → Zurücksetzen auf ein kurzes Intervall
+
+SM-2 und seine Nachfolger treiben die meisten modernen digitalen SRS-Implementierungen an, darunter Anki (das meistgenutzte Open-Source-SRS-Tool) und zahlreiche kommerzielle Sprachlern-Apps.
+
+<Callout type="info">
+  Die entscheidende Variable in SRS-Algorithmen ist der „Ease Factor" – ein
+  Multiplikator, der steuert, wie schnell Wiederholungsintervalle wachsen.
+  Karten, die konsistent korrekt abgerufen werden, erhalten einen höheren Ease
+  Factor, und Wiederholungen werden progressiv seltener. Karten, die häufig
+  nicht erinnert werden, behalten einen niedrigeren Ease Factor und werden
+  beharrlicher wiederholt. Diese Personalisierung macht SRS deutlich effizienter
+  als zeitbasierte Wiederholungspläne.
+</Callout>
+
+## Was die Forschung zu Retentionsgewinnen zeigt
+
+Die Belege für den Spacing-Effekt gehören zu den zuverlässigsten in der Lernwissenschaft:
+
+**Gegenüber Massed Practice**: Studien zeigen konsistent, dass verteiltes Üben bessere Langzeitretention erzeugt als dieselbe Menge gebündelten Übens – typischerweise um 50–200 %, gemessen bei Verzögerungen von einer Woche oder mehr. Der Vorteil wächst, je länger das Retentionsintervall – verteiltes Üben hat seinen größten Vorteil bei Sechs-Monats- und Jahres-Messungen.
+
+**Potenzierung durch Retrieval Practice**: Spaced Repetition wirkt am stärksten, wenn jede Wiederholungssitzung ein aktives Abrufereignis ist, kein passives erneutes Lesen. Flashcard-Wiederholung, die den Lernenden zwingt, eine Antwort zu generieren, bevor er sie überprüft, erzeugt deutlich bessere Retention als passives Wiederholungslesen in denselben Abständen.
+
+**Transfer, nicht nur Recall**: Mehrere Studien haben gezeigt, dass die Retentionsvorteile verteilten Übens sich auf Transferaufgaben erstrecken – die Anwendung von Wissen auf neue Situationen –, nicht nur auf den direkten Abruf des geübten Materials. Das ist für Trainingsdesign bedeutsam, wo Anwendung das Ziel ist.
+
+## Praktische Anwendungen im betrieblichen Trainingsdesign
+
+Spaced Repetition wird im betrieblichen Training gemessen an seiner Evidenzlage zu wenig eingesetzt. Mehrere praktische Ansätze:
+
+**Nachkurs-Verstärkungssequenzen**: Nach einem Schulungsevent (Kurs, Workshop, Onboarding-Programm) eine Reihe kurzer Review-Aktivitäten in wachsenden Abständen planen: Tag 1 nach dem Event, Tag 5, Tag 15, Tag 30. Jede Wiederholung kann ein 5-Fragen-Quiz, eine kurze Reflexionsaufgabe oder ein Mikroszenario sein. Der Gesamtzeitaufwand ist minimal; der Retentionsgewinn erheblich.
+
+**Integriertes SRS in Lernplattformen**: Einige LMSs und Microlearning-Plattformen verfügen inzwischen über native Spaced-Repetition-Funktionalität – sie planen Push-Benachrichtigungen oder Zuteilungen auf Basis der Lernperformance statt fester Termine.
+
+**Führungskraftgestützte Wiederholung**: Zu Beginn von Teammeetings 5 Minuten für eine strukturierte Wiederholung kürzlich behandelter Trainingsinhalte reservieren. Das erzeugt Spaced-Retrieval-Ereignisse ohne zusätzliche Lernplattform-Infrastruktur.
+
+<Callout type="tip">
+  Der häufigste Fehler bei der Implementierung von Spaced Repetition im
+  betrieblichen Training ist das Planen von Wiederholungen in festen Abständen
+  (z. B. „alle zwei Wochen") statt das Kalibrieren auf die Lernperformance.
+  Feste Intervalle sind besser als keine Wiederholung, verschwenden aber Zeit
+  mit bereits bekanntem Material und wiederholen zu selten, was vergessen wurde.
+  Performance-kalibrierte Wiederholung – selbst ein einfaches
+  „leicht/schwer"-Rating – verbessert die Effizienz erheblich.
+</Callout>
+
+## Der Zusammenhang zwischen Spaced Repetition und Vergessenskurven
+
+Ebbinghaus' Vergessenskurve zeigt, dass das Gedächtnis ohne Verstärkung exponentiell nachlässt – mit rund 50–80 % der neuen Informationen, die innerhalb einer Woche verloren gehen. Spaced Repetition ist die direkte Gegenstrategie: Jedes Wiederholungsereignis setzt die Verfallskurve auf einem höheren Ausgangsniveau zurück, sodass nachfolgendes Vergessen langsamer verläuft.
+
+Nach drei oder vier gut getimten Wiederholungen verlangsamt sich die Vergessensrate für ein gut gelerntes Element dramatisch. Material, das mit einem optimalen Spaced-Repetition-Plan wiederholt wurde, kann mit zunehmend seltenen Wiederholungsereignissen über Monate oder Jahre zugänglich bleiben – ein grundlegend anderes Ergebnis als nach einer einmaligen Schulungssitzung ohne Nachverstärkung.
+
+</GlossaryLayout>

@@ -1,0 +1,79 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "Duolingo as a Model for Employee Training? What's Actually Transferable",
+  description:
+    "Duolingo is often cited in L&D circles as a model when it comes to engagement in training.",
+  date: "July 13, 2026",
+  readTime: 4,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "duolingo principle for companies",
+    "gamification employee training worthwhile",
+    "spaced repetition employee training",
+    "why employees forget training content",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+Duolingo is often cited in L&D circles as a model when it comes to engagement in training. What's actually transferable: structuring repetition around the forgetting curve, and the progression from recognition to active recall. What doesn't work: simply slapping points, badges, and leaderboards onto arbitrary company content without the content itself being properly sequenced.
+
+## What Duolingo gets right, learning-science-wise
+
+Two mechanisms in Duolingo are well researched and clearly transferable to corporate training.
+
+First, spaced repetition. Duolingo built its own model for this, one that estimates the forgetting curve per learning item and per person, and triggers repetition exactly when a piece of information would otherwise be lost. That's the same idea Hermann Ebbinghaus described back in the 19th century: without repetition, roughly 90 percent of what was learned is gone again after a week. The difference is just that Duolingo now computes this from real per-person usage data instead of a fixed repetition schedule for everyone.
+
+Second, the progression from recognition to recall. Early Duolingo exercises rely on recognition, later ones force active production. That matches one of the most robust findings in learning psychology: active recall stabilizes knowledge far more than simply rereading or recognizing.
+
+## Where Duolingo hits its limits for corporate training
+
+The independent research on Duolingo shows a consistent pattern: reading and passive comprehension develop well, speaking and free production develop much more slowly. A large comparison study with 337 learners found in 2025 that app-based learning led in general language proficiency and vocabulary, while classroom instruction led in listening comprehension. Another study with three groups, app-only, classroom-only, and a combination, found in 2026 that all three performed similarly overall, but the combination was the only group with a clear advantage in situational, pragmatic competence, meaning knowing which phrasing to use in a real context.
+
+That's the decisive point for employee training. A compliance course or onboarding to an internal system lives almost entirely on exactly the kind of knowledge where Duolingo performs weakest: acting correctly in a specific, real situation, not recognizing abstract rules. Layering a generic gamification veneer over company content, without the exercises themselves being tailored to the real work situation, copies the system's weakness, not its strength.
+
+There's a second point from the research on Duolingo itself: not every gamification element that drives people back into the app also actually drives learning. Streaks and leaderboards are well documented for engagement, but only mixed for actual competence gains. Applying that uncritically to mandatory training risks optimizing for employees logging in daily, not for them actually mastering the process.
+
+## What L&D teams should really take from Duolingo
+
+| Duolingo principle                              | Transferable to corporate training? | Why                                                                                        |
+| ----------------------------------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------ |
+| Spaced repetition based on the forgetting curve | Yes, directly                       | One of the best-documented effects in learning research, independent of domain             |
+| Progression from recognition to recall          | Yes, directly                       | Active recall reliably stabilizes knowledge more than passive rereading                    |
+| Short, daily learning units (microlearning)     | Yes, with a caveat                  | Lowers the entry barrier, but doesn't replace content quality                              |
+| Streaks and leaderboards                        | Only carefully                      | Strong for driving return visits to the app, weakly documented for actual competence gains |
+| Generic, prefabricated exercises                | No                                  | Company-relevant knowledge needs exercises tied to the real process, not general knowledge |
+
+The practical takeaway: Duolingo's repetition logic is worth copying. Its content isn't, because unlike a language, corporate training doesn't have a large, interchangeable vocabulary, it has very specific knowledge tied to a particular process, a particular policy, or a particular system.
+
+That's also why Scibly doesn't try to build a generic exercise engine for arbitrary content, but instead generates courses directly from a company's own documents and builds repetition and recall exercises on top of that. Duolingo's learning logic, without Duolingo's generic content.
+
+## Frequently asked questions
+
+### Is gamification in employee training fundamentally worthwhile?
+
+Partly. Elements like progress indicators or short, daily units are well supported. Points and leaderboards mainly drive return usage, not necessarily learning success itself.
+
+### Why do employees forget training content so quickly?
+
+Because most training happens once and is never repeated afterward. Without repetition, according to the classic forgetting curve, roughly 90 percent of the content is gone again after a week, regardless of how good the training itself was.
+
+### Is an app like Duolingo enough as a model for compliance training?
+
+Only partly. The repetition logic transfers, the content doesn't. Compliance knowledge is always tied to a specific, company-specific context that a generic app can't capture.
+
+### What's the biggest difference between language learning and corporate training?
+
+A language has a large but relatively stable and generic vocabulary. Corporate knowledge, by contrast, is highly specific to a single company and changes with every new process, policy, or system.
+
+</PostLayout>

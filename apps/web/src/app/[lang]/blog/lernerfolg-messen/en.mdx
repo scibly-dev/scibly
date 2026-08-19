@@ -1,0 +1,113 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "Measuring Learning Success: The Kirkpatrick Model Explained",
+  description:
+    "Most organizations measure whether training happened. The Kirkpatrick model helps you measure whether it worked — at four levels, from reactions to business results.",
+  date: "March 21, 2026",
+  readTime: 7,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "Kirkpatrick model",
+    "training effectiveness",
+    "learning evaluation",
+    "L&D ROI",
+    "training assessment",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+The most common way L&D teams prove their value is the completion report: 94% of employees finished the annual compliance training. Leadership nods. Budget gets renewed.
+
+What the report doesn't show: whether anyone retained anything, whether behavior changed, whether the training made a difference to anything that actually matters to the business.
+
+The Kirkpatrick Model — developed in the 1950s and still the most widely cited framework in learning evaluation — gives you a structured way to answer those questions. It's not complicated. Most teams just don't use it fully.
+
+## The Four Levels
+
+Donald Kirkpatrick, a professor and training professional, published the framework in 1959 across four issues of the _Journal of the American Society of Training Directors_. It's been refined and debated since, but the core structure has survived largely intact. That's either testament to its durability or a sign the industry hasn't done enough to replace it — probably both.
+
+### Level 1: Reaction
+
+Did learners find the training useful, engaging, and relevant?
+
+This is the "smile sheet" — the feedback form at the end of a training session. It's the most commonly collected data in L&D and also the most commonly misinterpreted. A positive reaction doesn't predict learning. Learners can enjoy a session and retain nothing. They can find a session boring and walk away with exactly what they needed.
+
+Reaction data is still worth collecting, but for two specific purposes: identifying content that's genuinely confusing or poorly delivered, and catching cases where learners doubt the relevance of the training to their actual work. That last one matters — perceived relevance is a real predictor of motivation to apply what you've learned.
+
+<Callout type="info">
+  Level 1 data is easiest to collect and hardest to act on. The useful question
+  isn't "did learners enjoy it?" but "did they see a clear connection to their
+  daily work?"
+</Callout>
+
+### Level 2: Learning
+
+Did learners actually acquire knowledge, skills, or changed attitudes?
+
+This is where most L&D teams stop if they go beyond reaction data. Pre/post tests, knowledge checks, skill assessments, scenario-based evaluations. The goal is measuring delta: what did the learner know or be able to do before versus after?
+
+The key design principle: test application, not recall. "What are the three stages of escalation?" tests memory. "Your customer just said X — what's your next move?" tests understanding. The latter is harder to design and much more predictive of whether learning will transfer to the job.
+
+### Level 3: Behavior
+
+Are learners applying what they learned on the job?
+
+This is the level most organizations skip, mostly because it's harder to measure. It requires observation, manager feedback, or follow-up assessments 30–90 days after training — not just immediately after completion.
+
+The gap between Level 2 and Level 3 is where most training value disappears. A learner can score 90% on a post-test and still default to old habits three weeks later, especially if the work environment doesn't reinforce the new behaviors.
+
+The practical approach: a short pulse survey 30 days after training asking learners and their managers two or three specific questions about whether and how the training is being applied. It's not perfect measurement, but it's vastly more useful than completion data.
+
+<Callout type="tip">
+  The single most predictive question for Level 3 transfer: "Have you applied
+  anything from this training in the last two weeks? If yes, what? If no, what
+  got in the way?" The qualitative answer tells you more than any satisfaction
+  score.
+</Callout>
+
+### Level 4: Results
+
+Did the training contribute to outcomes that matter to the organization?
+
+This is the hardest level to measure and the one most frequently invoked without real evidence. "Our sales training improved revenue by 12%" sounds compelling. Proving the causal link between that training and that revenue movement is genuinely difficult — too many other variables change at the same time.
+
+That said, it's not impossible for every training initiative. Compliance training with a clear link to audit outcomes. Onboarding programs with a measurable effect on 90-day retention. Customer service training tied to CSAT scores. Where the connection between the training topic and a measurable outcome is direct, Level 4 measurement is achievable and worth pursuing.
+
+The realistic standard for most teams: identify one or two training programs per year where Level 4 measurement is feasible, do it rigorously, and use those as anchor cases. You don't need to prove ROI for every module.
+
+## A Practical Version for Most Teams
+
+Full Kirkpatrick evaluation on every training initiative is overkill and usually impossible. Here's a more realistic framework:
+
+**For mandatory compliance training:** Collect Level 1 reactions to catch quality issues. Use Level 2 testing (pass/fail with meaningful questions) for documentation. If this training has regulatory consequences, consider Level 3 follow-up.
+
+**For skills-based training:** Always measure Level 2 with pre/post assessment. Build in a Level 3 check at 4–6 weeks. Define one Level 4 outcome before the training runs, not after.
+
+**For leadership or culture programs:** Acknowledge that measurement will be imprecise. Focus on Level 3 behavioral change as the primary metric, using manager feedback and 360-style input.
+
+<Callout type="warning">
+  Avoid the trap of measuring what's easy to measure rather than what matters.
+  Completion rates and satisfaction scores are available by default from any
+  LMS. They're not evidence of learning. Design your measurement strategy before
+  you design the training.
+</Callout>
+
+## Why This Still Matters
+
+There's a critique of Kirkpatrick that has merit: the model assumes a linear progression from reaction to results, and real learning isn't that clean. The New World Kirkpatrick Model (developed by James and Wendy Kirkpatrick) updates this by emphasizing that Level 4 outcomes should be defined first — working backwards from what the business needs to what behavior change would produce it, and then what training would enable that behavior change.
+
+That inversion is worth adopting even if you stick with the original framework. Don't ask "what training will we run?" and then measure whether it worked. Ask "what behavior change do we need?" and then design training that produces it.
+
+The model is 65 years old and imperfect. It's also still the clearest available structure for evaluating whether training actually works. That's a reasonable place to start.
+
+</PostLayout>

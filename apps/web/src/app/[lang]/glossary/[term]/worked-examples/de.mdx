@@ -1,0 +1,42 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Worked Examples",
+  definition:
+    "Schritt-für-Schritt-Demonstrationen einer Problemlösung, die Lernenden gezeigt werden, bevor sie selbst ein Problem bearbeiten – reduziert die kognitive Last bei Novizen und unterstützt den Aufbau mentaler Schemata, besonders bei komplexen oder neuen Verfahren.",
+  keywords: [
+    "Worked Examples",
+    "ausgearbeitete Beispiele",
+    "Sweller",
+    "kognitive Belastung",
+    "Subgoal Labeling",
+  ],
+  relatedTerms: [
+    "cognitive-load-theory",
+    "productive-failure",
+    "deliberate-practice",
+  ],
+  relatedPost: "erst-theorie-oder-erst-uebung",
+};
+
+<GlossaryLayout metadata={metadata} lang="de">
+
+Ein Worked Example zeigt eine vollständige Lösung Schritt für Schritt, bevor Lernende selbst eine ähnliche Aufgabe bearbeiten. Statt "hier ist das Problem, löse es", lautet die Botschaft "hier ist, wie eine Expertin dieses Problem löst, jetzt versuch ein ähnliches". Der Ansatz geht auf John Swellers Cognitive Load Theory zurück und gehört zu den am besten untersuchten Instructional-Design-Techniken überhaupt.
+
+## Ein konkretes Beispiel aus der Praxis
+
+Bei der Einweisung in ein neues CRM-System zeigt eine Führungskraft zunächst am Bildschirm, Schritt für Schritt, wie ein neuer Lead korrekt angelegt, kategorisiert und einem Vertriebsmitarbeiter zugewiesen wird, inklusive der Begründung für jeden Klick. Erst danach bearbeitet die neue Mitarbeiterin selbst einen ähnlichen, aber nicht identischen Fall. Der Unterschied zu "einfach ausprobieren lassen": Die kognitive Kapazität, die sonst für Versuch-und-Irrtum draufgeht, steht stattdessen für das Verstehen des Ablaufs selbst zur Verfügung.
+
+## Was die Forschung dazu zeigt
+
+Eine Meta-Analyse zu Worked Examples im Mathematikunterricht, basierend auf 55 Studien und 181 Effekten, fand einen mittleren Vorteil gegenüber weniger geführten Lernformen (Effektstärke g = 0,48). Der Effekt war größer bei korrekten, vollständigen Beispielen als bei fehlerhaften oder unvollständigen. Eine Verfeinerung der Technik, sogenannte Subgoal Labels, unterteilt ein Beispiel zusätzlich in benannte Teilziele, etwa "Schritt 1: Lead-Quelle prüfen" statt eines durchgehenden Ablaufs ohne Zwischenüberschriften. Studien im Programmieranfänger-Unterricht zeigen, dass diese Subgoal-Labels mit geringeren Abbruchquoten verbunden sind.
+
+<Callout type="tip">
+  Worked Examples wirken am stärksten bei Novizen und komplexem, neuem Stoff.
+  Bei fortgeschrittenen Lernenden kehrt sich der Effekt teilweise um, ein
+  bekanntes Phänomen namens Expertise Reversal Effect: Wer ein Verfahren schon
+  beherrscht, profitiert stärker von eigenständigem Üben als von einer erneuten
+  Demonstration.
+</Callout>
+
+</GlossaryLayout>

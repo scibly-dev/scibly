@@ -1,0 +1,113 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "LMS Without an IT Department: What to Look for and What to Avoid",
+  description:
+    "Most LMS platforms assume you have an IT team. If you don't, here's what to look for when evaluating a learning management system your team can actually run on its own.",
+  date: "June 11, 2026",
+  readTime: 6,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "LMS without IT",
+    "LMS small business",
+    "self-service LMS",
+    "easy LMS setup",
+    "LMS no technical support",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+Most LMS platforms were built for organizations that have an IT department. That assumption shows up in the implementation: server setup, SSO configuration, LDAP integration, manual user migrations. If you don't have that capacity, you're stuck — either the rollout stalls until someone has time, or the system runs half-configured.
+
+Yet the organizations that most need a functioning learning platform are often the ones without IT support: onboarding new hires, running mandatory compliance training, building product knowledge. The question isn't whether — it's which platform can actually deliver without technical overhead.
+
+## What "No IT Support" Actually Means in Practice
+
+Before evaluating, it's worth being precise about what you're dealing with. Companies without an IT department typically have:
+
+- No one to configure or maintain a server
+- No dedicated resources for internal tool support
+- HR or L&D as the only people responsible for the platform
+- Sometimes a technically capable employee who can handle basic admin tasks — but not a full-time role
+
+That means: the platform needs to be set up and run by an HR manager or a business owner. Not a system administrator.
+
+## Five Criteria That Matter
+
+### 1. Cloud-first, no self-hosting
+
+Any platform you install on your own server needs maintenance — updates, backups, security patches. That's exactly what you can't deliver. Look for SaaS solutions where the vendor runs the infrastructure entirely.
+
+This doesn't rule out open-source platforms like Moodle, but be clear-eyed: hosting Moodle yourself is technical. Running Moodle through a managed hosting provider is feasible — but still requires more admin effort than modern SaaS solutions.
+
+### 2. User management without programming knowledge
+
+A common sticking point: new employees need to be added to the LMS. On many platforms, that requires CSV imports with specific column formats, manual API connections to HR systems, or direct database access.
+
+What you actually need: email invitation or a CSV upload that's genuinely a CSV — not a database format. And self-registration with automatic role assignment where possible.
+
+### 3. Course creation without a separate authoring tool
+
+Many LMS platforms assume you'll create courses externally (in Articulate, iSpring, etc.) and upload them as SCORM files. That's two separate tool ecosystems, two licenses, two learning curves.
+
+For teams without IT, an LMS with a built-in course editor is preferable. Create courses in the same system where they're published — no export step, no compatibility troubleshooting.
+
+### 4. Support that's actually reachable
+
+When something breaks, a small company without IT is entirely dependent on vendor support. Ask concretely during the sales process:
+
+- Is there chat or email support with a defined response time?
+- Is support available in your language if needed?
+- How is onboarding handled — do you get a dedicated contact or just a knowledge base?
+
+Corporate platforms often have excellent support — for corporate customers. SMBs can end up at the bottom of the priority queue.
+
+### 5. Pricing without hidden implementation costs
+
+Many platforms charge for an "onboarding package" that runs $1,000–$5,000. That's legitimate if it covers real effort — but for a small company needing a straightforward platform, it's often disproportionate.
+
+Ask explicitly: what does setup cost? Is there a mandatory onboarding package? Can I configure the platform myself, or is that only possible through professional services?
+
+<Callout type="warning">
+  Watch out for platforms that market technical complexity as a feature ("Fully
+  customizable," "Unlimited configuration options"). What sounds appealing often
+  means unlimited maintenance work for a team without IT support.
+</Callout>
+
+## Platforms That Work Without an IT Team
+
+**TalentLMS** is known for fast setup. The interface is straightforward, CSV user import works, and there's a simple course editor. For teams that want to upload SCORM courses or build basic online courses, it's a solid option.
+
+**Teachable / Thinkific** come from the course-selling space but can work for internal training. Very easy to use, no technical knowledge required. Tradeoff: limited reporting and compliance features.
+
+**Scibly** is explicitly built for mid-market teams without dedicated IT support. Setup without an onboarding package, course creation in-system, user invitation by email, automatic completion certificates. [Try it free](/en).
+
+<Callout type="tip">
+  Run a self-test: sign up for a free trial of each platform on your shortlist.
+  Attempt within two hours: (1) create a user group, (2) build a simple course
+  with a quiz, (3) assign the course to the group. If you can do that within two
+  hours without help, the platform works for you. If not — decide whether that's
+  manageable in daily operations.
+</Callout>
+
+## What You Don't Need
+
+Many features platforms highlight are irrelevant — or actively counterproductive — for teams without IT:
+
+- **LDAP/AD integration**: relevant for organizations running Active Directory — not for most SMBs
+- **Custom domain with SSL certificate management**: nice to have, not a launch requirement
+- **API access**: useful when you integrate systems — but you need someone to use the API
+- **White-label options**: useful for companies selling training to customers, not for internal training
+
+A platform that doesn't offer these features isn't a worse product. It's a more deliberate one.
+
+</PostLayout>

@@ -1,0 +1,41 @@
+{
+  "notebook": {
+    "studio": {
+      "imageEditor": {
+        "back": "Back",
+        "promptPlaceholder": "Describe or refine your image…",
+        "send": "Send",
+        "selectImage": "Select image version {index}",
+        "aspectRatio": {
+          "trigger": "Aspect ratio",
+          "menuTitle": "Recreate this image in a different aspect ratio",
+          "prompt": "Recreate the current image in {label} ({ratio}) aspect ratio. Keep the same subject, content, and visual style.",
+          "options": {
+            "square": "Square",
+            "portrait": "Portrait",
+            "story": "Story",
+            "landscape": "Landscape",
+            "widescreen": "Widescreen"
+          }
+        },
+        "comments": {
+          "commentButton": "Comment",
+          "clickHint": "Click a spot, or drag to size the area you want to change",
+          "markerLabel": "Comment {index}",
+          "addPlaceholder": "Describe what to change here…",
+          "additionalPlaceholder": "(Optional) Add further changes",
+          "saveComment": "Save comment",
+          "dismissComment": "Dismiss comment",
+          "deleteComment": "Delete comment",
+          "clearAll": "Clear all comments",
+          "send": "Send",
+          "countSingular": "{count} comment",
+          "countPlural": "{count} comments",
+          "promptIntro": "Refine this image with these localized changes:",
+          "promptItem": "{index}. At {x}% from left, {y}% from top: {text}",
+          "promptAdditional": "Additional changes: {text}"
+        }
+      }
+    }
+  }
+}

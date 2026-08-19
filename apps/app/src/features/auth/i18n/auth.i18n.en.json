@@ -1,0 +1,97 @@
+{
+  "auth": {
+    "betaBanner": {
+      "message": "Thanks for your interest! Launch is coming soon 🚀 Even though sign-up is still closed, you can already secure beta access via email.",
+      "contactLabel": "Contact us"
+    },
+    "heroPanel": {
+      "eyebrow": "Get started",
+      "title": "Learning, ",
+      "titleAccent": "simplified.",
+      "subtitle": "Create courses, track progress, and grow your team's knowledge in one place."
+    },
+    "loginPage": {
+      "title": "Welcome back to Scibly",
+      "redirectText": "No account yet?",
+      "redirectLabel": "Sign up"
+    },
+    "registerPage": {
+      "title": "Let's get started with Scibly",
+      "redirectText": "Already registered?",
+      "redirectLabel": "Sign in"
+    },
+    "signInForm": {
+      "emailPlaceholder": "your@email.com",
+      "passwordPlaceholder": "Password",
+      "submit": "Sign in",
+      "submitting": "Signing in...",
+      "forgotPassword": "Forgot password?",
+      "invalidEmailMessage": "Please enter a valid email address",
+      "invalidEmailOrPassword": "Invalid email or password."
+    },
+    "signUpForm": {
+      "namePlaceholder": "First and last name",
+      "emailPlaceholder": "your@email.com",
+      "usernamePlaceholder": "Username (optional)",
+      "passwordPlaceholder": "Password",
+      "submit": "Create account",
+      "submitting": "Creating account...",
+      "invalidEmailMessage": "Please enter a valid email address",
+      "successToast": "Account created successfully. Please verify your email address.",
+      "errorToast": "Error while creating account."
+    },
+    "resetPasswordPage": {
+      "title": "Reset password",
+      "passwordPlaceholder": "Password",
+      "confirmPasswordPlaceholder": "Repeat password",
+      "submit": "Reset password",
+      "submitting": "Resetting password...",
+      "successToast": "Password reset successfully",
+      "errorToast": "Error resetting password."
+    },
+    "forgotPasswordCard": {
+      "title": "Reset password",
+      "description": "Please enter your email address to receive a password reset link",
+      "sendLink": "Send link",
+      "back": "Remembered your password?",
+      "invalidEmail": "Please enter a valid email address"
+    },
+    "registerSuccessCard": {
+      "title": "Almost done!",
+      "description": "Please verify your email address to complete your registration",
+      "redirectLabel": "Already verified? Sign in",
+      "countDownLabel": "Resend email",
+      "resendSuccessMessage": "Email resent successfully!",
+      "resendLabel": "Didn’t get the email? Resend email",
+      "invalidEmail": "Please enter a valid email address",
+      "resendError": "Failed to resend email",
+      "messagePrefix": "We sent a verification link to:",
+      "nextStepsTitle": "What’s next?",
+      "steps": [
+        "Check your email inbox",
+        "Click the verification link in the email",
+        "Start creating and sharing educational content!"
+      ]
+    },
+    "resetPasswordSuccessCard": {
+      "title": "Check your email",
+      "countDownLabel": "Resend email",
+      "resendSuccessMessage": "Email resent successfully!",
+      "resendLabel": "Didn’t get the email? Resend email",
+      "invalidEmail": "Please enter a valid email address",
+      "resendError": "Failed to resend reset link",
+      "message": "Please check your inbox and click the link to reset your password. The link expires in 60 minutes."
+    },
+    "formBase": {
+      "or": "OR",
+      "signInAriaLabel": "Sign in"
+    },
+    "googleButton": {
+      "continueWithGoogle": "Continue with Google",
+      "signInError": "An error occurred during Google sign in. Please try again."
+    },
+    "successCard": {
+      "resending": "Resending..."
+    }
+  }
+}

@@ -1,0 +1,60 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "LMS mit SSO: Was Single Sign-On für die Einführung bedeutet",
+  description:
+    "Single Sign-On (SSO) erlaubt es Mitarbeitenden, sich mit ihrem bestehenden Firmen-Account bei einem LMS anzumelden, statt ein zusätzliches Passwort zu verwalten.",
+  date: "11. Juni 2026",
+  readTime: 4,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: ["lms sso", "lms mit sso integration", "single sign on lms"],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+Single Sign-On (SSO) erlaubt es Mitarbeitenden, sich mit ihrem bestehenden Firmen-Account bei einem LMS anzumelden, statt ein zusätzliches Passwort zu verwalten. Für die IT-Abteilung ist SSO oft eine Voraussetzung, kein Nice-to-have: Ohne SSO müssen Nutzerkonten manuell angelegt und gepflegt werden, was bei jedem Ein- und Austritt zusätzlichen Aufwand bedeutet und ein Sicherheitsrisiko durch vergessene, nicht deaktivierte Konten schafft.
+
+## Was SSO bei einem LMS konkret verändert
+
+| Ohne SSO                                          | Mit SSO                                                       |
+| ------------------------------------------------- | ------------------------------------------------------------- |
+| Separates Passwort fürs LMS nötig                 | Anmeldung mit bestehendem Firmen-Account                      |
+| Manuelles Anlegen neuer Nutzerkonten              | Automatische Bereitstellung über das zentrale Identity-System |
+| Konten bleiben nach Austritt oft aktiv            | Zugang wird automatisch mit dem zentralen Konto deaktiviert   |
+| Höheres Risiko durch mehrfach genutzte Passwörter | Ein zentraler Anmeldepunkt, geringeres Angriffsrisiko         |
+
+## Die gängigen SSO-Standards
+
+Die meisten LMS-Anbieter unterstützen SAML oder OAuth/OpenID Connect als technische Grundlage für SSO, oft in Kombination mit verbreiteten Identity-Providern wie Microsoft Entra ID (vormals Azure AD), Google Workspace oder Okta. Vor der Auswahl eines LMS lohnt sich die konkrete Frage, welches Identity-System das eigene Unternehmen bereits nutzt, und ob der LMS-Anbieter genau dieses System unterstützt, nicht nur SSO allgemein.
+
+## Warum SSO bei Enterprise-Einführungen oft den Ausschlag gibt
+
+Bei größeren Unternehmen ist die IT-Abteilung meist Teil der Kaufentscheidung, unabhängig davon, wie überzeugt die Personalentwicklung vom eigentlichen Kursinhalt ist. Ein LMS ohne SSO-Unterstützung wird in dieser Phase häufig aussortiert, weil zusätzliche Nutzerverwaltung als Sicherheits- und Aufwandsrisiko eingestuft wird. Wer SSO von Anfang an mitdenkt, verkürzt in der Praxis oft die Zeit bis zur finalen Freigabe durch die IT.
+
+## Häufige Fragen
+
+### Ist SSO nur für große Unternehmen relevant?
+
+Der größte Nutzen zeigt sich bei wachsender Mitarbeiterzahl und mehreren genutzten Tools, aber auch kleinere Teams profitieren vom Wegfall eines zusätzlichen Passworts und der automatischen Deaktivierung bei Austritten.
+
+### Was ist der Unterschied zwischen SAML und OAuth für SSO?
+
+Beide sind Standards zur Authentifizierung, SAML ist im Enterprise-Umfeld traditionell verbreiteter, OAuth/OpenID Connect ist moderner und wird von vielen neueren Cloud-Diensten bevorzugt. Für die Auswahl eines LMS zählt vor allem, welchen Standard das eigene Identity-System unterstützt.
+
+### Bedeutet SSO automatisch mehr Sicherheit?
+
+SSO reduziert bestimmte Risiken, etwa mehrfach verwendete oder vergessene Passwörter und verwaiste Konten nach Austritten. Es ersetzt aber keine grundlegenden Sicherheitsmaßnahmen wie Zwei-Faktor-Authentifizierung auf dem zentralen Identity-System selbst.
+
+### Muss SSO von Anfang an eingerichtet werden oder lässt es sich nachrüsten?
+
+Technisch lässt sich SSO meist nachrüsten, in der Praxis ist es aber einfacher, es direkt bei der Einführung mitzudenken, statt nach der Einführung Nutzerkonten nachträglich zu migrieren.
+
+</PostLayout>

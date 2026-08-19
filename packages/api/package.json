@@ -1,0 +1,63 @@
+{
+  "name": "@scibly/api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "i18n:merge-api": "tsx scripts/merge-api-i18n.ts",
+    "test": "vitest run",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@scibly/auth": "workspace:*",
+    "@scibly/db": "workspace:*",
+    "@scibly/ee-billing": "workspace:*",
+    "@scibly/i18n": "workspace:*",
+    "@scibly/lib": "workspace:*",
+    "@scibly/schemas": "workspace:*",
+    "@tanstack/react-query": "^5.80.7",
+    "@trpc/client": "^11.4.1",
+    "@trpc/react-query": "^11.4.1",
+    "@trpc/server": "^11.4.1",
+    "server-only": "^0.0.1",
+    "superjson": "^2.2.2",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@scibly/eslint-config": "workspace:*",
+    "@types/node": "^20.17.29",
+    "@types/react": "^19.2.14",
+    "better-auth": "^1.2.8",
+    "dotenv": "^17.3.1",
+    "eslint": "^9.39.2",
+    "next": "^16.3.0",
+    "react": "^19.0.0",
+    "stripe": "^20.3.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.8.2",
+    "vitest": "^4.1.6"
+  },
+  "peerDependencies": {
+    "@prisma/adapter-pg": "^7.3.0",
+    "@prisma/client": "^7.3.0",
+    "better-auth": "^1.2.8",
+    "next": "^16.1.6",
+    "react": "^19.0.0"
+  },
+  "exports": {
+    "./trpc": "./src/trpc.ts",
+    "./server": "./src/server.ts",
+    "./react": "./src/react.ts",
+    "./utils": "./src/utils.ts",
+    "./application-error": "./src/application-error.ts",
+    "./application-error/server": "./src/application-error.server.ts",
+    "./api-messages": "./src/api-messages.ts",
+    "./query-client": "./src/query-client.ts",
+    "./rate-limit": "./src/rate-limit.ts",
+    "./entitlement": "./src/entitlement/index.ts",
+    "./entitlement/codes": "./src/entitlement/codes.ts"
+  }
+}

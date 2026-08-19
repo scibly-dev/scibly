@@ -1,0 +1,67 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "Spaced Repetition in der Praxis: So baut man verteilte Wiederholung in Schulungen ein",
+  description:
+    "Spaced Repetition bedeutet, denselben Lerninhalt in wachsenden Zeitabständen zu wiederholen, statt ihn einmal zu lernen und dann nie wieder anzufassen.",
+  date: "22. Mai 2026",
+  readTime: 4,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1555255707-c07966088b7b?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "spaced repetition mitarbeiterschulung",
+    "verteilte wiederholung lernen",
+    "spaced repetition praxis",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+Spaced Repetition bedeutet, denselben Lerninhalt in wachsenden Zeitabständen zu wiederholen, statt ihn einmal zu lernen und dann nie wieder anzufassen. Die Vergessenskurve zeigt, warum das nötig ist: Ohne Wiederholung sinkt der Erinnerungswert eines neu gelernten Inhalts in den ersten Tagen am schnellsten. Eine gezielt platzierte Wiederholung genau an diesem Punkt bringt den Erinnerungswert wieder nach oben, mit jedem weiteren Wiederholungszyklus hält der Effekt länger an.
+
+## Wie ein Spaced-Repetition-Zyklus praktisch aussieht
+
+| Wiederholung           | Ungefährer Zeitpunkt nach dem ersten Lernen                          |
+| ---------------------- | -------------------------------------------------------------------- |
+| Erste Wiederholung     | Nach 1 bis 2 Tagen                                                   |
+| Zweite Wiederholung    | Nach etwa 1 Woche                                                    |
+| Dritte Wiederholung    | Nach etwa 2 bis 4 Wochen                                             |
+| Weitere Wiederholungen | Zunehmend größere Abstände, solange der Inhalt korrekt erinnert wird |
+
+Der Abstand wächst mit jeder erfolgreichen Wiederholung. Wird ein Inhalt bei einer Wiederholung falsch erinnert, sinkt der Abstand wieder, damit der Inhalt erneut häufiger aufgefrischt wird, bis er wieder sicher sitzt.
+
+## Warum die meisten Firmenschulungen keine Wiederholung einplanen
+
+Klassische Schulungen sind meist als einmaliges Ereignis konzipiert: ein Workshop, ein E-Learning-Modul, ein Abschlusstest, danach gilt das Thema als erledigt. Ohne geplante Wiederholung ist genau das der Punkt, an dem der größte Teil des Gelernten in den folgenden Wochen wieder verloren geht, unabhängig davon, wie gut die ursprüngliche Schulung war. Spaced Repetition korrigiert nicht die Qualität der ursprünglichen Vermittlung, sondern das Fehlen einer Nachverfolgung danach.
+
+## Spaced Repetition ohne komplizierte Software umsetzen
+
+Auch ohne ein spezialisiertes Karteikarten-Tool lässt sich das Prinzip einbauen: eine kurze Erinnerungsfrage per E-Mail oder Chat nach ein paar Tagen, ein kurzer Auffrischungs-Block zu Beginn eines Folgetrainings, oder automatisierte Erinnerungen aus dem LMS, die auf Basis des Abschlussdatums ausgelöst werden. Wichtig ist weniger das Werkzeug als der Grundsatz: Wiederholung passiert nicht von selbst, sie muss aktiv eingeplant werden, am besten automatisiert, damit sie nicht von manueller Nachverfolgung abhängt.
+
+## Häufige Fragen
+
+### Ist Spaced Repetition dasselbe wie Retrieval Practice?
+
+Nein, aber beide gehören zusammen. Retrieval Practice beschreibt, wie wiederholt wird, nämlich durch aktiven Abruf statt passives Wiederlesen. Spaced Repetition beschreibt, wann wiederholt wird, nämlich in wachsenden Zeitabständen. Mehr dazu in [Retrieval Practice: Die einfachste Methode, Schulungsinhalte langfristig zu verankern](/blog/retrieval-practice-mitarbeiterschulung).
+
+### Wie oft sollte ein Inhalt wiederholt werden?
+
+Es gibt keine feste Zahl, die für jeden Inhalt gilt. Als grobe Orientierung dienen die Zeitpunkte in der Tabelle oben, angepasst danach, wie sicher der Inhalt bei jeder Wiederholung erinnert wurde.
+
+### Funktioniert Spaced Repetition auch für praktische Fähigkeiten, nicht nur Fakten?
+
+Ja, das Prinzip lässt sich übertragen, indem nicht nur Wissen abgefragt, sondern die Anwendung selbst in Abständen erneut geübt wird, etwa ein kurzes Fallbeispiel statt einer reinen Wissensfrage.
+
+### Wie viel Aufwand bedeutet Spaced Repetition für ein L&D-Team?
+
+Manuell kann der Nachverfolgungsaufwand hoch sein. Automatisierte Erinnerungen über ein LMS, die auf Abschlussdatum und bisherigem Ergebnis basieren, senken diesen Aufwand deutlich und machen Spaced Repetition auch für größere Teams praktikabel.
+
+</PostLayout>

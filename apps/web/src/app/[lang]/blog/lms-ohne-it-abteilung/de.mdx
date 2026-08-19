@@ -1,0 +1,115 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "LMS ohne IT-Abteilung: Worauf es ankommt und was du vermeiden solltest",
+  description:
+    "Die meisten LMS-Plattformen setzen eine IT-Abteilung voraus. Wenn du keine hast: Worauf du bei der Auswahl achten solltest und welche Fallen du vermeidest.",
+  date: "11. Juni 2026",
+  readTime: 6,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "LMS ohne IT-Abteilung",
+    "LMS Mittelstand",
+    "LMS einfach einrichten",
+    "LMS selbst verwalten",
+    "LMS ohne IT",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+Die meisten LMS-Plattformen wurden für Unternehmen gebaut, die eine IT-Abteilung haben. Das zeigt sich in der Implementierung: Serversetup, SSO-Konfiguration, LDAP-Integration, manuelle Nutzermigrationen. Wer das nicht hat, steckt fest — entweder wird die Einführung verzögert, bis jemand Zeit hat, oder das System läuft halbfertig.
+
+Dabei brauchen gerade Unternehmen ohne dediziertes IT-Team eine funktionierende Lernplattform: Onboarding neuer Mitarbeitender, Pflichtschulungen, Produktwissen aufbauen. Die Frage ist nicht ob, sondern welche Plattform das ohne technischen Overhead leistbar macht.
+
+## Was "kein IT-Support" in der Praxis bedeutet
+
+Bevor du evaluierst, lohnt es sich zu präzisieren, worum es wirklich geht. Unternehmen ohne IT-Abteilung haben typischerweise:
+
+- Niemanden, der einen Server konfiguriert oder wartet
+- Keine dedizierten Ressourcen für technischen Support interner Tools
+- HR oder L&D als einzige Ansprechpartner für die Plattform
+- Manchmal einen "IT-affinen" Mitarbeitenden, der grundlegende Admin-Aufgaben übernimmt — aber keine Vollzeitstelle
+
+Das bedeutet: Die Plattform muss von einer HR-Managerin oder einer Geschäftsführerin eingerichtet und betrieben werden können. Nicht von einem Systemadministrator.
+
+## Die fünf wichtigsten Kriterien
+
+### 1. Cloud-first, kein Self-Hosting
+
+Jede Plattform, die du selbst auf einem Server installierst, braucht Wartung — Updates, Backups, Sicherheitspatches. Das ist exakt das, was du nicht leisten kannst. Suche nach SaaS-Lösungen, bei denen die Infrastruktur vollständig vom Anbieter betrieben wird.
+
+Das schließt Open-Source-Plattformen wie Moodle nicht aus, aber: Moodle selbst zu hosten ist technisch. Moodle über einen Managed-Hosting-Anbieter zu nutzen ist machbar — aber auch dort braucht es mehr Admin-Aufwand als bei modernen SaaS-Lösungen.
+
+### 2. Nutzerimport und -verwaltung ohne Programmierkenntnisse
+
+Ein häufiger Stolperstein: Neue Mitarbeitende müssen ins LMS. Bei vielen Plattformen erfordert das CSV-Importe mit spezifischen Spaltenformaten, manuelle API-Verbindungen zu HR-Systemen oder direkten Admin-Zugriff auf Datenbanken.
+
+Was du brauchst: E-Mail-Einladung oder CSV-Upload, der wirklich CSV ist — kein Datenbankformat. Und Selbstregistrierung mit automatischer Rollenzuweisung, wenn möglich.
+
+### 3. Kurserstelling ohne Autorentool
+
+Viele LMS setzen voraus, dass du Kurse extern erstellst (in Articulate, iSpring o.ä.) und als SCORM-Datei hochlädst. Das sind zwei separate Tool-Ökosysteme, zwei Lizenzen, zwei Lernkurven.
+
+Für Teams ohne IT ist ein LMS mit integriertem Kurseditor vorzuziehen. Kurse im gleichen System erstellen, in dem sie auch veröffentlicht werden — ohne Exportschritt.
+
+### 4. Support, der erreichbar ist
+
+Bei technischen Problemen ist ein kleines Unternehmen ohne IT-Abteilung auf den Anbieter-Support angewiesen. Frag im Verkaufsgespräch konkret:
+
+- Gibt es einen Chat- oder E-Mail-Support mit definierter Reaktionszeit?
+- Ist der Support auf Deutsch erreichbar (falls relevant)?
+- Wie wird Onboarding begleitet — gibt es einen Ansprechpartner oder nur eine Wissensdatenbank?
+
+Corporate-Plattformen haben oft ausgezeichneten Support — für Corporate-Kunden. KMU können in der Prioritätsliste ganz unten landen.
+
+### 5. Preis ohne versteckte Implementierungskosten
+
+Viele Plattformen verlangen für die Einrichtung ein "Onboarding-Paket", das 1.000–5.000 EUR kostet. Das ist legitim, wenn es echten Aufwand abdeckt — aber für ein kleines Unternehmen, das eine einfache Plattform braucht, ist das oft unverhältnismäßig.
+
+Frag nach: Was kostet die Einrichtung? Gibt es ein Mindest-Onboarding-Paket? Kann ich die Plattform selbst einrichten, oder ist das nur über Professional Services möglich?
+
+<Callout type="warning">
+  Vorsicht bei Plattformen, die technische Komplexität als Feature vermarkten
+  ("Vollständig anpassbar", "Unbegrenzte Konfigurationsmöglichkeiten"). Was gut
+  klingt, bedeutet für ein Team ohne IT oft: unbegrenzte Wartungsarbeit.
+</Callout>
+
+## Plattformen, die ohne IT-Abteilung funktionieren
+
+**TalentLMS** ist bekannt für schnelles Setup. Die Benutzeroberfläche ist straightforward, CSV-Import für Nutzer funktioniert, und es gibt einen einfachen Kurseditor. Für Teams, die SCORM-Kurse hochladen oder einfache Online-Kurse erstellen wollen, ist das eine brauchbare Option.
+
+**Teachable / Thinkific** kommen aus dem Richtung des Kurs-Verkaufs, können aber auch für interne Schulungen genutzt werden. Sehr einfach zu bedienen, kein technisches Wissen nötig. Aber: begrenzte Reporting- und Compliance-Funktionen.
+
+**Scibly** ist explizit für den Mittelstand ohne dedizierten IT-Support gebaut. Einrichtung ohne Onboarding-Paket, Kurserstelling im System, Nutzereinladung per E-Mail, automatische Abschlussnachweise. Support auf Deutsch. [Kostenlos testen](/de).
+
+<Callout type="tip">
+  Mach einen Selbsttest: Registriere dich für den kostenlosen Trial jeder
+  Plattform auf deiner Shortlist. Versuche innerhalb von zwei Stunden: (1) eine
+  Nutzergruppe anlegen, (2) einen einfachen Kurs mit Quiz erstellen, (3) den
+  Kurs einer Gruppe zuweisen. Wenn das innerhalb von zwei Stunden ohne Hilfe
+  klappt, ist die Plattform für dich geeignet. Wenn nicht — überleg, ob das im
+  Alltag tragbar ist.
+</Callout>
+
+## Was du nicht brauchst
+
+Viele Features, die Plattformen hervorheben, sind für Teams ohne IT irrelevant oder sogar hinderlich:
+
+- **LDAP/AD-Integration**: relevant für Unternehmen, die Active Directory nutzen — nicht für die meisten KMU
+- **Custom Domain mit eigenem Zertifikat**: nice to have, aber keine Einführungsbedingung
+- **API-Zugang**: sinnvoll, wenn du integrierst — aber du brauchst jemanden, der die API nutzt
+- **White-Label-Optionen**: nützlich für Anbieter von Kundentraining, nicht für interne Schulungen
+
+Eine Plattform, die diese Features nicht anbietet, ist kein schlechteres Produkt — sie ist ein bewussteres.
+
+</PostLayout>

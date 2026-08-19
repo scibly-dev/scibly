@@ -1,0 +1,84 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "SCORM",
+  definition:
+    "Sharable Content Object Reference Model — the dominant e-learning technical standard since 2001, defining how courses and LMS platforms communicate completion, score, and progress data.",
+  keywords: [
+    "SCORM",
+    "e-learning standard",
+    "SCORM 1.2",
+    "SCORM 2004",
+    "LMS standard",
+  ],
+  relatedTerms: ["xapi", "lms"],
+  relatedPost: "scorm-vs-xapi",
+};
+
+<GlossaryLayout metadata={metadata} lang="en">
+
+SCORM — Sharable Content Object Reference Model — is the technical standard that defines how e-learning content packages communicate with learning management systems. Published by the Advanced Distributed Learning Initiative (ADL), a US Department of Defense project, SCORM established a common language between authoring tools and LMS platforms that has remained the industry default for over two decades.
+
+The reason SCORM matters practically: if you build a course in Articulate Storyline, Adobe Captivate, or any major authoring tool and export it as a SCORM package, it will work in any SCORM-compliant LMS — without any custom development work. That interoperability was not a given before SCORM, and it remains the standard's primary value.
+
+## What SCORM does
+
+SCORM addresses three technical problems:
+
+**Packaging**: SCORM defines how course files are bundled into a single portable zip file (the PIF — Package Interchange File) with a manifest (imsmanifest.xml) that tells the LMS what files are in the package, how they relate to each other, and how to launch them.
+
+**Runtime communication**: SCORM defines the JavaScript API through which a course communicates with the LMS during a learner session. The course can report its status (incomplete, completed, passed, failed), transmit the learner's score, record the time spent, and store bookmarking information so the learner can resume from where they left off.
+
+**Sequencing** (SCORM 2004 only): The later version added a sequencing engine that allows designers to define navigation rules — for example, requiring that a learner pass a prerequisite module before unlocking the next one.
+
+<Callout type="info">
+  The imsmanifest.xml file is the backbone of a SCORM package. When a SCORM
+  package misbehaves in an LMS, the manifest is usually the first place to
+  investigate — it controls how the LMS reads the course structure and launches
+  individual learning objects.
+</Callout>
+
+## SCORM 1.2 vs. SCORM 2004
+
+Two versions of SCORM see significant real-world use:
+
+**SCORM 1.2** (released 2001) is the more widely supported version. Its runtime communication model uses a simpler API, and despite being technically superseded, it remains the default export option in most authoring tools because virtually every LMS on the market supports it.
+
+**SCORM 2004** (with four editions, the latest in 2009) added a more sophisticated data model, richer completion status options (beyond the binary complete/incomplete of 1.2), and the sequencing and navigation (SN) specification. However, LMS support for SCORM 2004's advanced features — particularly the sequencing engine — has historically been inconsistent, which limited its adoption.
+
+In practice: most organizations use SCORM 1.2 by default. SCORM 2004 is worth considering only when you need the sequencing features and have verified that your LMS implements them correctly.
+
+## Why SCORM is still dominant despite its age
+
+SCORM's longevity is partly inertia — it is deeply embedded in the procurement processes and technical infrastructure of large organizations — but it also reflects the fact that it solves the problem it was designed to solve reasonably well. For courses that run in a browser, need to report completion and a score to an LMS, and need to work across a diverse LMS landscape, SCORM does the job.
+
+The installed base is also enormous. Millions of SCORM-compliant courses exist in organizational content libraries. Organizations would need a compelling reason to replace them, and for compliance training and standardized product knowledge courses, the SCORM data model captures the relevant information adequately.
+
+## Limitations of SCORM
+
+SCORM's design reflects the assumptions of 2001:
+
+**Browser-only**: SCORM assumes the learner is at a desktop computer with a browser. Mobile learning, app-based training, physical simulations, and offline scenarios are invisible to SCORM.
+
+**Completion-focused**: The data model tracks completion, score, and time. It cannot capture nuanced learner behavior — which paths they took through a branching scenario, where they paused, what they searched for, how they performed in a simulation.
+
+**Synchronous communication**: SCORM communicates with the LMS during the session. If the connection drops, data may be lost. There is no mechanism for tracking activities that happen offline and syncing later.
+
+**No support for informal learning**: SCORM cannot track reading an article, watching a YouTube video, participating in a discussion forum, or completing a real-world task. These are significant omissions in an era where 70-20-10 and learning in the flow of work describe how most learning actually happens.
+
+<Callout type="tip">
+  When a SCORM course is not reporting correctly to an LMS, the most common
+  causes are: the LMS's SCORM API is not being detected by the course (a
+  JavaScript loading sequence issue), the completion trigger in the course is
+  set incorrectly (e.g., set to "quiz score" when there is no quiz), or the
+  imsmanifest.xml contains an incorrect reference. Starting with those three
+  checks resolves the majority of SCORM debugging cases.
+</Callout>
+
+## Contrast with xAPI
+
+xAPI (Experience API) was developed specifically to address SCORM's limitations: it works outside the browser, supports offline tracking, captures any type of activity in a flexible statement structure, and stores data in a Learning Record Store (LRS) rather than in the LMS itself. For organizations that need richer learning data, blended program tracking, or non-browser-based training, xAPI is the more capable standard.
+
+The practical barrier to xAPI adoption is implementation complexity and infrastructure cost — xAPI requires an LRS in addition to (or instead of) an LMS, and authoring tool support for xAPI's full capabilities remains less mature than for SCORM. For most organizations today, SCORM handles the majority of use cases, with xAPI reserved for specific programs where richer data genuinely drives better decisions.
+
+</GlossaryLayout>

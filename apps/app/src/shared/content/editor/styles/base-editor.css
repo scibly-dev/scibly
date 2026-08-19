@@ -1,0 +1,258 @@
+@import "./extensions/selection.css";
+@import "./extensions/placeholder.css";
+@import "./nodes/drag-handle.css";
+@import "./nodes/table.css";
+@import "./nodes/image.css";
+@import "./nodes/collab.css";
+@import "./nodes/lists.css";
+@import "./nodes/columns.css";
+@import "./nodes/flashcard.css";
+@import "./nodes/matching-pairs.css";
+@import "./nodes/cloze-text.css";
+@import "./nodes/guide-character.css";
+@import "./nodes/steps.css";
+@import "./nodes/code/index.css";
+
+/* Custom node inputs are not ProseMirror's contenteditable surface — keep a visible caret. */
+.tiptap.ProseMirror .react-renderer input,
+.tiptap.ProseMirror .react-renderer textarea {
+  caret-color: currentColor;
+}
+
+.tiptap.ProseMirror {
+  font-family: var(--editor-font-family, var(--font-sans), sans-serif);
+  white-space: pre-wrap;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+  line-height: 1.6;
+  font-size: 1.25rem;
+  /* 20px base for slide-like feel */
+  color: var(--editor-text-color, #374151);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+
+  /* Needed for the editor, otherwise lists are not displayed*/
+  ol,
+  ul {
+    list-style: revert;
+    margin: revert;
+    padding: revert;
+    margin-left: -20px;
+  }
+
+  /* Heading breathing room — creates clear section breaks */
+  h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    color: var(--editor-heading-color, #111827);
+  }
+
+  h2 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    margin-top: 1.75rem;
+    margin-bottom: 0.75rem;
+    color: var(--editor-heading-color, #1f2937);
+  }
+
+  h3 {
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--editor-heading-color, #374151);
+  }
+
+  /* A pull-quote is a key laid on its side: a thick accent lip, a wash of the
+     same colour behind it, and the corners rounded off the accent. */
+  blockquote {
+    border-left: 4px solid var(--editor-primary-color, #0066ff);
+    border-radius: 0 14px 14px 0;
+    background: color-mix(
+      in srgb,
+      var(--editor-primary-color, #0066ff) 6%,
+      transparent
+    );
+    padding: 0.75rem 1.25rem 0.75rem 1.5rem;
+    margin-left: 0;
+    margin-right: 0;
+    font-style: italic;
+    color: var(--editor-text-color, #6b7280);
+    opacity: 0.85;
+  }
+}
+
+.dark .tiptap.ProseMirror {
+  color: #d1d5db;
+}
+
+.dark .tiptap.ProseMirror h1 {
+  color: #f9fafb;
+}
+
+.dark .tiptap.ProseMirror h2 {
+  color: #f3f4f6;
+}
+
+.dark .tiptap.ProseMirror h3 {
+  color: #d1d5db;
+}
+
+.tiptap.ProseMirror > * {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* Interactive/custom blocks get slightly more vertical breathing room */
+.tiptap.ProseMirror > .react-renderer {
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+:focus {
+  outline: none;
+}
+
+/* Block-level custom nodes (direct children of the editor root) */
+.react-renderer {
+  position: relative;
+}
+
+div.react-renderer {
+  display: block;
+  width: 100%;
+}
+
+/* Inline custom nodes (input fields, hints, inline math, etc.) */
+span.react-renderer {
+  display: inline;
+  width: auto;
+  max-width: 100%;
+  vertical-align: baseline;
+}
+
+/* Remove top margin from the first element in the editor to prevent huge gaps */
+.tiptap.ProseMirror > *:first-child {
+  margin-top: 0;
+}
+
+/* Placeholder for empty contenteditable blocks inside custom react nodes (probably not needed) */
+[contenteditable="true"]:empty::before {
+  content: attr(placeholder);
+  pointer-events: none;
+  display: block;
+  /* For Firefox */
+  opacity: 0.2;
+}
+
+[contenteditable="true"]:empty:focus::before {
+  content: none;
+}
+
+/* Add scroll margin to headings to prevent them from being hidden behind the top bar */
+h1,
+h2,
+h3 {
+  scroll-margin-top: 5rem;
+}
+
+/* Add scroll margin to node view wrappers to prevent them from being hidden behind the top bar */
+[data-node-view-wrapper] {
+  scroll-margin-top: 5rem;
+}
+
+@media screen and (max-width: 1536px) {
+  .tiptap.ProseMirror {
+    margin: 0 auto;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .tiptap.ProseMirror {
+    width: 100%;
+    font-size: 1.125rem;
+    /* 18px base on mobile so more of the scene fits on screen */
+  }
+
+  .tiptap.ProseMirror h1 {
+    font-size: 2.75rem;
+    margin-top: 1.25rem;
+    margin-bottom: 0.625rem;
+  }
+
+  .tiptap.ProseMirror h2 {
+    font-size: 2rem;
+    margin-top: 1.125rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .tiptap.ProseMirror h3 {
+    font-size: 1.75rem;
+    margin-top: 1rem;
+    margin-bottom: 0.375rem;
+  }
+
+  .tiptap.ProseMirror blockquote {
+    padding-left: 1rem;
+  }
+
+  .tiptap.ProseMirror > * {
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+
+  .tiptap.ProseMirror > .react-renderer {
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+}
+
+/* Custom premium scrollbar for player / preview containers */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: color-mix(
+    in srgb,
+    var(--editor-text-color, currentColor) 15%,
+    transparent
+  );
+  border-radius: 9999px;
+  transition: background-color 0.2s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: color-mix(
+    in srgb,
+    var(--editor-text-color, currentColor) 35%,
+    transparent
+  );
+}
+
+/* For Firefox */
+.custom-scrollbar {
+  scrollbar-width: auto;
+  scrollbar-color: color-mix(
+      in srgb,
+      var(--editor-text-color, currentColor) 15%,
+      transparent
+    )
+    transparent;
+}

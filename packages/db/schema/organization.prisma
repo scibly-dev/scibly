@@ -1,0 +1,60 @@
+model Organization {
+  id                   String                    @id
+  name                 String
+  slug                 String
+  logo                 String?
+  createdAt            DateTime
+  metadata             String?
+  /// Owned by the Better Auth Stripe plugin; the domain copy read by the rest
+  /// of the app lives on `OrganizationSubscription.stripeCustomerId`.
+  stripeCustomerId     String?                   @unique
+  /// Default chat model for AI Creator (`null` = Scibly AI).
+  defaultChatModelId   String?
+  defaultChatModel     OrganizationAIModel?      @relation("OrgDefaultChatModel", fields: [defaultChatModelId], references: [id], onDelete: SetNull)
+  members              Member[]
+  invitations          Invitation[]
+  courses              Course[]
+  certificates         Certificate[]
+  notebooks            Notebook[]
+  promptTemplates      PromptTemplate[]
+  organizationAIModels OrganizationAIModel[]
+  integrations         IntegrationConnection[]
+  subscription         OrganizationSubscription?
+  credit               OrganizationCredit?
+  creditLedgerEntries  CreditLedgerEntry[]
+  courseEnrollments    CourseEnrollment[]
+
+  @@unique([slug])
+  @@map("organization")
+}
+
+model Member {
+  id             String       @id
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role           String       @default("member")
+  createdAt      DateTime
+
+  @@index([organizationId])
+  @@index([userId])
+  @@map("member")
+}
+
+model Invitation {
+  id             String       @id
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  email          String
+  role           String?
+  status         String       @default("pending")
+  expiresAt      DateTime
+  createdAt      DateTime     @default(now())
+  inviterId      String
+  user           User         @relation(fields: [inviterId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([email])
+  @@map("invitation")
+}

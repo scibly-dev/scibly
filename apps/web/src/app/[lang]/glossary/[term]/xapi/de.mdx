@@ -1,0 +1,89 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "xAPI (Tin Can API)",
+  definition:
+    "Experience API – ein E-Learning-Standard, der beliebige Lernaktivitäten (mobil, Simulation, reale Performance) als strukturierte Aussagen erfasst und SCORMs Browser-gebundene, abschlussorientierte Einschränkungen überwindet.",
+  keywords: [
+    "xAPI",
+    "Tin Can API",
+    "Experience API",
+    "E-Learning-Standard",
+    "Lerndaten",
+  ],
+  relatedTerms: ["scorm", "lms"],
+  relatedPost: "scorm-vs-xapi",
+};
+
+<GlossaryLayout metadata={metadata} lang="de">
+
+xAPI – formal Experience API genannt, manchmal auch unter dem Entwicklungs-Codenamen „Tin Can API" bekannt – ist ein E-Learning-Standard, der von Rustici Software im Auftrag der Advanced Distributed Learning (ADL)-Initiative des US-Verteidigungsministeriums entwickelt wurde. 2013 veröffentlicht, wurde xAPI entworfen, um die fundamentalen Einschränkungen von SCORM zu adressieren, die sich über mehr als ein Jahrzehnt angesammelt hatten: Browser-Abhängigkeit, synchrone Kommunikation, abschlusszentrierte Daten und die Unfähigkeit, Lernen zu verfolgen, das außerhalb eines LMS-ausgelieferten Kurses stattfindet.
+
+Die zentrale Innovation ist die Aussagenstruktur: Jede Lernaktivität wird als Subjekt-Verb-Objekt-Satz ausgedrückt und in einem Learning Record Store (LRS) gespeichert – nicht im LMS. „Alice hat Einführung in die Arbeitssicherheit abgeschlossen" und „Bob hat 85 % im Einwandbehandlungs-Assessment erreicht" sind SCORM-kompatibel. „Charlie hat die Schweißprozedur 23 Minuten lang in der Simulation geübt", „Dana hat das Produkt-Demo-Video auf dem Smartphone während des Pendelns gesehen" und „Evan hat eine 4/5-Peer-Bewertung für seine Präsentation erhalten" sind es nicht – aber alle sind gültige xAPI-Aussagen.
+
+## Die Aussagenstruktur
+
+Eine xAPI-Aussage hat drei erforderliche Bestandteile:
+
+**Actor (Handelnder)**: Die Person (oder das System), die die Aktivität durchführt. Typischerweise durch Name und E-Mail-Adresse oder eine eindeutige Kennung aus einem HR-System identifiziert.
+
+**Verb**: Was der Handelnde getan hat, ausgedrückt als URI, die auf ein definiertes Verb aus einem Vokabular verweist (z. B. `http://adlnet.gov/expapi/verbs/completed` für „abgeschlossen" oder `http://adlnet.gov/expapi/verbs/scored` für „bewertet mit"). Die Verwendung standardisierter Vokabular-URIs stellt sicher, dass Aussagen aus verschiedenen Quellen sinnvoll verglichen und aggregiert werden können.
+
+**Object (Objekt)**: Womit der Handelnde interagiert hat – ein Kurs, ein Video, eine Simulation, ein physisches Objekt, das von einem Sensor erfasst wird, eine URL oder jede andere definierte Lernressource.
+
+Über diese drei Pflichtfelder hinaus unterstützen Aussagen eine umfangreiche Menge optionaler Erweiterungen: Kontext (die Beziehung der Lernaktivität zu anderen Aktivitäten, die Plattform, auf der sie stattfand, der anwesende Lehrende), Ergebnis (Punktzahl, Abschluss, Erfolg, Dauer) und beliebige domänenspezifische Datenerweiterungen.
+
+<Callout type="info">
+  Die Verb-URI-Konvention ist mehr als ein technisches Detail. Sie ermöglicht
+  Dateninteroperabilität: Wenn Ihr LMS, Ihre Simulationsplattform und Ihr
+  Performance-Support-Tool dieselbe Verb-URI für „abgeschlossen" verwenden,
+  können ihre Daten zu einem einzigen Lernendenprofil aggregiert werden. Wenn
+  jedes System eine andere Zeichenkette verwendet, bleiben die Daten isoliert.
+  Die Festlegung eines Verb-Vokabularstandards vor der Implementierung erspart
+  erheblichen Datentechnikaufwand später.
+</Callout>
+
+## Wie xAPI sich von SCORM unterscheidet
+
+Die architektonischen Unterschiede sind erheblich:
+
+**Speicherung**: SCORM-Daten liegen im LMS. xAPI-Daten liegen in einem Learning Record Store (LRS), der ein eigenständiges System, in ein LMS integriert oder ein Drittanbieterdienst sein kann. Der LRS ist das System of Record; das LMS wird zu einem von potenziell vielen Konsumenten dieser Daten.
+
+**Kommunikation**: SCORM erfordert eine aktive Browser-Sitzung und eine Live-Verbindung zum LMS. xAPI-Aussagen können asynchron gesendet werden, offline zwischengespeichert und bei Wiederherstellung der Verbindung synchronisiert werden – und von jedem System generiert werden, nicht nur von Browser-basierten Kursen.
+
+**Datentiefe**: SCORM verfolgt Abschluss, Punktzahl und Zeit. xAPI kann jede Aktivität mit beliebig angehängten Daten verfolgen, solange jemand die Aussagenstruktur definiert. Die Einschränkung liegt im Design, nicht im Standard selbst.
+
+**Plattformunabhängigkeit**: Ein SCORM-Kurs läuft in einem Browser innerhalb eines LMS. Eine xAPI-Aussage kann von einer mobilen App, einem physischen Sensor, einer Spiel-Engine, einem CRM-System, einem Leistungsbeurteilungsformular einer Führungskraft oder jedem anderen System generiert werden, das einen HTTP-Aufruf absetzen kann.
+
+## Adoptionshürden
+
+Trotz seiner technischen Vorteile verlief die xAPI-Adoption langsamer als erwartet, aus mehreren Gründen:
+
+**LRS-Anforderung**: Um xAPI-Aussagen zu empfangen und zu speichern, wird ein LRS benötigt – entweder als eigenständiges Produkt (Learning Locker, SCORM Clouds LRS, Watershed) oder als Modul in einem modernen LMS. Viele Organisationen haben bereits ein LMS, aber keinen LRS, und die zusätzliche Infrastruktur bedeutet Kosten und Komplexität.
+
+**Authoring-Tool-Unterstützung**: SCORM-Export ist in praktisch jedem Authoring-Tool eine Standardfunktion. Vollständige xAPI-Unterstützung – einschließlich benutzerdefinierter Aussagendefinitionen, Kontext-Erweiterungen und Agent-Profile-Unterstützung – ist weniger konsistent implementiert. Viele Tools exportieren grundlegende xAPI-Aussagen, aber die vollständigen Möglichkeiten des Standards zu nutzen erfordert bewusstere Konfiguration.
+
+**Analyse-Lücke**: xAPI generiert reichhaltigere Daten, aber diese Daten haben nur Wert, wenn jemand sie analysieren und daraus handeln kann. Vielen Organisationen fehlen die Analyseinfrastruktur oder die Datenkompetenz, um aus xAPI-Protokollen Erkenntnisse zu gewinnen. Reichhaltigere Daten ohne bessere Entscheidungen sind versunkene Kosten.
+
+<Callout type="tip">
+  Die richtige Frage bei der xAPI-Evaluierung ist nicht „Können wir xAPI
+  implementieren?", sondern „Welche Entscheidungen würden wir anders treffen,
+  wenn wir diese Daten hätten?" Ist die Antwort vage, ist die
+  Infrastrukturinvestition verfrüht. xAPI ist am wertvollsten, wenn eine
+  spezifische analytische Frage vorhanden ist – „Wie korreliert die Zeit in der
+  Simulation mit der Performance am Arbeitsplatz?" –, die SCORM nicht
+  beantworten kann und deren Antwort die Trainingsgestaltung oder
+  -bereitstellung verändern würde.
+</Callout>
+
+## Reale Anwendungsfälle, in denen xAPI echten Mehrwert liefert
+
+**Simulations-Tracking**: Eine medizinische Eingriffssimulation, ein Rollenspiel für Kundengespräche oder ein technisches Troubleshooting-Szenario kann detaillierte Verhaltensdaten generieren – welche Entscheidungspfade Lernende eingeschlagen haben, wo sie gezögert haben, wie viele Versuche sie benötigten –, die SCORMs Abschluss/Punktzahl-Modell nicht erfassen kann. xAPI macht diese Daten portierbar und aggregierbar.
+
+**Blended-Learning-Programme**: In einem Programm, das E-Learning, virtuelle Präsenzsitzungen, physische Workshops und On-the-Job-Übungsaktivitäten kombiniert, bietet xAPI eine einzige Datenschicht zur Fortschrittsverfolgung über alle Formate. Ohne xAPI lebt die Daten jedes Formats in einem separaten Silo.
+
+**Performance-Support-Tracking**: Wenn Mitarbeitende einen Job Aid, ein Referenzdokument oder ein eingebettetes Hilfesystem verwenden, kann xAPI diese Interaktionen protokollieren – und ermöglicht die Analyse, ob Performance-Support tatsächlich genutzt wird und ob Nutzung mit Performance-Ergebnissen korreliert.
+
+**Informelles und soziales Lernen**: Aktivitäten in Corporate-Social-Tools, Peer-Bewertungen, Abschlüsse in Consumer-Lern-Apps – all das kann als xAPI-Aussagen erfasst werden, wenn die Systeme es unterstützen, und erzeugt ein reichhaltigeres Bild davon, wo Lernen in einer Organisation tatsächlich stattfindet.
+
+</GlossaryLayout>

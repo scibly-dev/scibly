@@ -1,0 +1,96 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "E-Learning and the Science of Instruction: Clark & Mayer's Design Principles – A Summary",
+  description:
+    "Clark and Mayer's evidence-based design principles remain the most rigorous foundation for e-learning development — here's what the 12 principles actually say.",
+  date: "May 24, 2026",
+  readTime: 8,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "E-Learning and the Science of Instruction",
+    "Clark Mayer",
+    "multimedia learning principles",
+    "cognitive load theory",
+    "e-learning design",
+    "instructional design principles",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+Ruth Clark and Richard Mayer's _E-Learning and the Science of Instruction_ is, in many ways, the opposite of a trend-driven design guide. Now in its fourth edition (2016), it draws entirely on empirical research to argue for design decisions that are often counterintuitive — and sometimes directly contrary to what clients, stakeholders, and even designers assume will engage learners.
+
+Its organizing premise is cognitive load theory: the human cognitive system has limited working memory capacity, and effective instructional design manages that constraint rather than ignoring it. Every one of the book's twelve principles follows from this premise.
+
+## The theoretical foundation
+
+The book rests on two connected frameworks. The first is Cognitive Load Theory (CLT), developed by John Sweller, which distinguishes between intrinsic load (the complexity inherent to the material), extraneous load (the demands imposed by poor design), and germane load (the cognitive work of building schemas). Good design reduces extraneous load and supports germane load.
+
+The second is Mayer's Cognitive Theory of Multimedia Learning (CTML), which holds that people learn more deeply from words and pictures together than from words alone — but only when the combination is designed carefully. Poorly combined media increases extraneous load and impairs learning.
+
+## The 12 principles
+
+**Multimedia principle**: People learn better from words and graphics than from words alone. This seems obvious, but the qualification matters: relevant graphics that explain or illustrate the content, not decorative images.
+
+**Contiguity principle**: Related words and graphics should appear near each other on the page or screen. Separating text explanations from the diagrams they describe increases cognitive load by requiring learners to hold information in working memory while scanning for the corresponding visual.
+
+**Coherence principle**: People learn better when extraneous material is excluded rather than included. Adding interesting but tangential stories, impressive graphics, or background music tends to hurt learning, not help it. This principle has significant implications for production decisions.
+
+**Signaling principle**: Learning improves when cues highlight the organization and relationships in the material — headings, numbering, arrows, bolding. Not because decoration is useful, but because structure reduces the work of identifying what matters.
+
+**Redundancy principle**: People learn better from graphics and narration than from graphics, narration, and simultaneous on-screen text. When narration and text carry the same message, the learner must process both, increasing extraneous load. This directly challenges the common practice of displaying full scripts on screen while narrating them.
+
+**Spatial contiguity principle**: Placing printed words near corresponding graphics improves learning compared to separating them.
+
+**Temporal contiguity principle**: Presenting corresponding words and pictures simultaneously produces better learning than presenting them sequentially.
+
+**Segmenting principle**: Presenting a complex lesson in learner-paced segments improves learning compared to presenting it as a continuous unit. Breaking lessons into manageable units isn't just about user experience — it directly affects cognitive processing.
+
+**Pre-training principle**: Learning improves when learners know the names and characteristics of key concepts before the main lesson. Brief pre-training reduces the cognitive demand of the main lesson by establishing scaffolding.
+
+**Modality principle**: People learn better from narration with graphics than from on-screen text with graphics, because narration uses the auditory channel while the visual channel processes graphics — splitting the cognitive load across two channels rather than overloading one.
+
+**Personalization principle**: People learn better from conversational style than from formal style. Using "you" and "I," informal language, and a more direct tone produces better learning outcomes than impersonal, academic prose — even in professional contexts.
+
+**Voice principle**: People learn better from a human voice than from a machine voice. Even synthetic voices that are very good reduce learning somewhat compared to natural human narration.
+
+<Callout type="tip">
+  The coherence and redundancy principles together have the most direct impact
+  on common e-learning production habits. If a course displays full narration
+  scripts on screen while the voice-over plays, it's violating the redundancy
+  principle. If it includes corporate stock photography that doesn't explain
+  anything, it's violating coherence. Both increase extraneous cognitive load.
+  Removing content from an e-learning course often improves it.
+</Callout>
+
+## The image principle (a notable addition in later editions)
+
+The fourth edition adds discussion of an image principle: adding a picture of a speaking instructor to the screen does not necessarily improve learning. The conversational presence effect is real, but a static image of a person contributes little instructionally. This counters the intuition that humanizing courses with instructor photos improves engagement and retention.
+
+## Why less is more
+
+The overarching lesson of Clark and Mayer's evidence is consistently in the same direction: removing elements from e-learning tends to improve it. More audio channels, more visual elements, more entertainment, and more explanatory text tend to increase extraneous load without producing better learning outcomes.
+
+This is a direct challenge to the production values that dominate much commercially produced e-learning. High production value — complex animations, polished graphics, custom illustrations, full narration with background music — is often uncorrelated with or negatively correlated with actual learning effectiveness.
+
+The book makes the case that instructional effectiveness and production investment are different things, and that confusing them is a systematic error in how organizations evaluate training quality.
+
+## Applying the principles
+
+The principles don't prescribe a single course format. They provide a decision-making framework for evaluating specific design choices: should this graphic be included, and does it explain something? Should this text be on screen if the narration already covers it? Is this story relevant enough to the learning objective to include?
+
+For teams building e-learning with standard authoring tools, the principles translate directly into decisions about slide design, narration scripts, graphic selection, and lesson segmentation. The research supporting each principle is cited throughout the book, making it possible to understand not just what the recommendation is but what evidence it rests on.
+
+Scibly supports the kind of focused, well-structured course design that Clark and Mayer's principles point toward — clean delivery, trackable completion, and learner-paced navigation without the overhead of overbuilt production.
+
+</PostLayout>

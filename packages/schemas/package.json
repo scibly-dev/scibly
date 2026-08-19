@@ -1,0 +1,29 @@
+{
+  "name": "@scibly/schemas",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    "./zod-i18n": "./src/zod-i18n.ts",
+    "./*": "./src/schema/*/index.ts"
+  },
+  "scripts": {
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@scibly/i18n": "workspace:*",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "@scibly/eslint-config": "workspace:*",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^20.17.29",
+    "eslint": "^9.39.2",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.4.9",
+    "typescript": "^5.8.2"
+  }
+}

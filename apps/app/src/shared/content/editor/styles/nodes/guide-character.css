@@ -1,0 +1,37 @@
+/* Guide character speech bubble — nested editor blocks */
+
+/* Read-only speech text ignores clicks; nested interactive blocks stay clickable. */
+.guide-speech-content .react-renderer {
+  width: 100%;
+}
+
+.guide-speech-content .react-renderer + .react-renderer {
+  margin-top: 0.75rem;
+}
+
+.guide-speech-content .flashcard-container {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+[data-guide-layout='top'] .guide-speech-bubble {
+  max-width: 100%;
+}
+
+[data-guide-layout='inline'] .guide-speech-content {
+  min-height: 3.25rem;
+}
+
+@media (max-width: 480px) {
+  [data-guide-layout='left'] .guide-speech-tail,
+  [data-guide-layout='right'] .guide-speech-tail {
+    display: none;
+  }
+}
+
+/* ── Guide character animations (lesson player) ─────────────────────────── */
+/* Reaction motion is baked into the mascot's Lottie animations themselves. */
+
+.guide-character-avatar__inner {
+  transform-origin: center bottom;
+}

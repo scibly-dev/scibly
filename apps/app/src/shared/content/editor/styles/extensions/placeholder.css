@@ -1,0 +1,73 @@
+.ProseMirror .is-empty::before {
+  color: rgba(122, 122, 122, 0.4);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  width: 100%;
+}
+.dark .ProseMirror .is-empty::before {
+  color: rgba(122, 122, 122, 0.4);
+}
+
+.ProseMirror.ProseMirror-focused {
+  p.is-empty.has-focus::before {
+    content: 'Gestalte deine Szene... ("/" für Widgets)';
+  }
+
+  table p.is-empty.has-focus::before {
+    content: "";
+  }
+
+  div[data-type="column"] p.is-empty::before {
+    content: "";
+  }
+
+  li p.is-empty.has-focus::before {
+    content: "Liste";
+  }
+
+  h1:not([data-type="custom-page-title"]).is-empty::before {
+    content: "Überschrift 1";
+  }
+
+  h2.is-empty::before {
+    content: "Überschrift 2";
+  }
+
+  h3.is-empty::before {
+    content: "Überschrift 3";
+  }
+}
+
+/* Shorter mobile placeholders to avoid text wrapping */
+@media screen and (max-width: 768px) {
+  .ProseMirror.ProseMirror-focused p.is-empty.has-focus::before {
+    content: '"/" für Befehle';
+  }
+}
+
+[data-locale="en"] .ProseMirror.ProseMirror-focused p.is-empty.has-focus::before {
+  content: 'Craft your scene... ("/" for widgets)';
+}
+
+@media screen and (max-width: 768px) {
+  [data-locale="en"] .ProseMirror.ProseMirror-focused p.is-empty.has-focus::before {
+    content: '"/" for commands';
+  }
+}
+
+[data-locale="en"] .ProseMirror.ProseMirror-focused li p.is-empty.has-focus::before {
+  content: "List";
+}
+
+[data-locale="en"] .ProseMirror.ProseMirror-focused h1:not([data-type="custom-page-title"]).is-empty::before {
+  content: "Heading 1";
+}
+
+[data-locale="en"] .ProseMirror.ProseMirror-focused h2.is-empty::before {
+  content: "Heading 2";
+}
+
+[data-locale="en"] .ProseMirror.ProseMirror-focused h3.is-empty::before {
+  content: "Heading 3";
+}

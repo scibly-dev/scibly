@@ -1,0 +1,9 @@
+{
+  "appRoutes": {
+    "loadingPage": "Loading page...",
+    "loadingEditor": "Loading editor...",
+    "loadingWorksheet": "Loading worksheet...",
+    "loadingWorksheets": "Loading worksheets...",
+    "loadingSettings": "Loading settings..."
+  }
+}

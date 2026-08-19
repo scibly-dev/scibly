@@ -1,0 +1,100 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "LMS mit Zertifikaten: Was du vor dem Kauf prüfen solltest",
+  description:
+    "Abschlusszertifikate klingen nach Standard – aber die Zertifikatsfunktionen von LMS-Plattformen unterscheiden sich erheblich. Was du prüfen musst, damit sie für Compliance und Audits wirklich taugen.",
+  date: "11. Juni 2026",
+  readTime: 5,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1589330273594-fade1ee91647?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "LMS mit Zertifikaten",
+    "Abschlusszertifikat LMS",
+    "Schulungszertifikat",
+    "Compliance Zertifikat LMS",
+    "LMS Zertifikat Vorlage",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+„Das LMS stellt automatisch Zertifikate aus" — das klingt nach einer einfachen Anforderung und wird oft als selbstverständlich angenommen. Aber wer im Vertriebsgespräch nicht genauer nachfragt, entdeckt die Lücken erst nach dem Go-live: Zertifikate ohne Zeitstempel, keine Möglichkeit zur eigenen Gestaltung, kein Export für externe Audits.
+
+Besonders bei Compliance-Schulungen steht mehr auf dem Spiel als ein hübsches PDF. Aufsichtsbehörden, Versicherungen und interne Audits fragen nach konkreten Nachweisen — wer geschult wurde, was abgedeckt wurde, wann die Schulung abgeschlossen wurde und ob der Inhalt aktuell war.
+
+## Was ein LMS-Zertifikat leisten muss
+
+Ein Zertifikat, das für Compliance-Zwecke nutzbar ist, braucht mindestens:
+
+**Namen des Lernenden**, genau so wie er im System hinterlegt ist — kein "Hallo [Vorname]"-Platzhalter.
+
+**Kursbezeichnung und Version**, damit klar ist, welcher Kursstand absolviert wurde. Wenn du einen Kurs nach einer Gesetzesänderung aktualisierst, muss das Zertifikat erkennbar machen, welche Version jemand abgeschlossen hat.
+
+**Datum des Abschlusses** mit Zeitstempel — nicht nur "Juni 2026", sondern 11.06.2026 oder genauer.
+
+**Ausstellendes Unternehmen**, idealerweise mit Logo und Firmenstempel oder -unterschrift, falls das Zertifikat extern vorgelegt werden soll.
+
+**Eindeutige Zertifikatsnummer**, die mit einem Eintrag in deinem System verknüpfbar ist — für die Verifikation durch Dritte.
+
+<Callout type="info">
+  Für DSGVO-Schulungen, Arbeitssicherheitsunterweisungen und ähnliche
+  Pflichtkurse gilt: Das Zertifikat ist kein Nice-to-have. Es ist der Nachweis,
+  den du bei einer Aufsichtsbehörden-Prüfung vorlegen musst. Ein PDF ohne
+  Zeitstempel und ohne Versionsbezug hält dem nicht stand.
+</Callout>
+
+## Die häufigsten Schwachstellen in der Praxis
+
+### Kein Verfallsdatum / keine Wiederzertifizierungsfunktion
+
+Viele Schulungen müssen jährlich wiederholt werden — Arbeitssicherheit, DSGVO, Brandschutz. Ein LMS, das Zertifikate ausstellt, aber kein Ablaufdatum verwaltet und keine automatischen Erinnerungen sendet, löst nur die halbe Aufgabe.
+
+Frage im Evaluierungsgespräch: Kann ich für Kurse ein Gültigkeitsdatum definieren? Werden Lernende und Vorgesetzte automatisch erinnert, bevor das Zertifikat abläuft?
+
+### Keine Möglichkeit, das Zertifikat-Template anzupassen
+
+Generische Zertifikate mit dem Branding des LMS-Anbieters wirken unprofessionell, wenn Mitarbeitende sie bei Kunden oder Behörden vorzeigen. Die meisten LMS erlauben zumindest Logo und Firmenname — prüfe aber, ob das in deinem Preismodell enthalten ist oder ein kostenpflichtiges Add-on.
+
+### Export nur als nicht durchsuchbares PDF
+
+Wenn Zertifikate nur als Bild-PDF gespeichert werden, kann ein Prüfer den Namen oder die Kursbezeichnung nicht per Texteingabe suchen. Für Audits mit vielen Zertifikaten (z. B. 200 Mitarbeitende, 5 Pflichtkurse pro Jahr) wird das schnell zum Problem.
+
+### Keine Massen-Exportfunktion
+
+Ein Auditor bittet um alle Zertifikate für das Jahr 2025. Wenn du jedes einzeln herunterladen musst, verlierst du Stunden. Frage: Kann ich Zertifikate gefiltert nach Kurs, Zeitraum oder Abteilung exportieren?
+
+<Callout type="warning">
+  Wenn ein LMS-Anbieter sagt "Zertifikate sind in Planung" oder "das Feature
+  kommt im nächsten Quartal" — planen entsprechend. Diese Features kommen oft
+  mit Verzögerung, und du willst kein Compliance-Programm auf einem Feature
+  aufbauen, das noch nicht existiert.
+</Callout>
+
+## Was du im Evaluierungsgespräch fragen solltest
+
+1. Zeig mir ein Beispielzertifikat — kann ich sehen, welche Felder automatisch befüllt werden?
+2. Kann ich ein Ablaufdatum pro Kurs definieren?
+3. Werden Lernende und Manager bei ablaufenden Zertifikaten automatisch benachrichtigt?
+4. Wie passe ich das Zertifikat-Design an? Ist das im Standardpaket enthalten?
+5. Wie exportiere ich alle Zertifikate einer Abteilung für einen bestimmten Zeitraum?
+6. Kann ein Dritter die Echtheit eines Zertifikats verifizieren?
+
+Plattformen, die diese Fragen beantworten können, ohne in eine Produktdemo ausweichen zu müssen, sind besser auf Compliance-Anwendungsfälle ausgelegt.
+
+## Wann einfache Zertifikate ausreichen
+
+Nicht jeder Kurs braucht Audit-feste Dokumentation. Für Onboarding-Inhalte, Produktwissen oder optionale Weiterbildung reicht ein einfaches Abschluss-PDF mit Name und Datum. Die Compliance-Anforderungen gelten primär für gesetzlich vorgeschriebene Schulungen.
+
+Wenn du beides brauchst — einfache Kurse und Compliance-Dokumentation — achte darauf, dass dein LMS beides in einem System abbildet, ohne dass du für die Compliance-Funktion ein separates Modul kaufen musst.
+
+Scibly generiert automatisch Zertifikate mit Zeitstempel, Kursversion und Firmenbezug für jeden abgeschlossenen Kurs — ohne zusätzliches Setup. [Kostenlos testen](/de).
+
+</PostLayout>

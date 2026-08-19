@@ -1,0 +1,73 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "Turning Internal Documentation into an Onboarding Course",
+  description:
+    "In most engineering teams, Confluence pages, Notion docs, and internal wikis already contain the complete knowledge new developers need for onboarding, just not in a form that can be worked through like a course.",
+  date: "June 23, 2026",
+  readTime: 4,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "turn internal docs into training course",
+    "confluence as lms",
+    "turn notion docs into a course",
+    "technical onboarding software startup",
+    "automate engineering onboarding",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+In most engineering teams, Confluence pages, Notion docs, and internal wikis already contain the complete knowledge new developers need for onboarding, just not in a form that can be worked through like a course. Turning existing technical documentation into a structured onboarding course saves the time that would otherwise go into repeated verbal explanations from experienced team members.
+
+## Why pure documentation often isn't enough for onboarding
+
+A Confluence page or Notion doc is meant as a reference: complete, but with no recognizable order for someone seeing the system for the first time. New developers often don't know where to start, which sections are actually relevant for getting started, and which only matter later. The result: the same questions get answered verbally over and over, because the documentation exists but isn't usable as a learning path.
+
+## What changes when you turn docs into a course
+
+| Documentation                               | Onboarding course                                       |
+| ------------------------------------------- | ------------------------------------------------------- |
+| Complete, but unordered for newcomers       | Clear sequence from most important to specialized       |
+| No visible progress                         | Traceable who has worked through which part             |
+| No check whether content was understood     | Short knowledge checks after each section               |
+| Look something up again with every question | Worked through once, baseline understanding established |
+
+## What the conversion process actually looks like
+
+1. **Select the relevant documents.** Not the entire Confluence instance, but the pages that actually matter for the first few weeks: architecture overview, local setup, code conventions, key internal tools.
+2. **Define the sequence.** What needs to be clear on day one, what only matters in week two. The documentation itself usually doesn't dictate this order.
+3. **Build in knowledge checks.** Short questions after each section show whether the setup and core concepts actually landed before moving on to the next topic.
+4. **Keep it in sync with the docs regularly.** The biggest risk factor is that the underlying code or process changes but the course doesn't get updated along with it.
+
+## Which teams benefit the most
+
+The conversion saves the most time for teams that hire frequently, where the same explanations get repeated to new people, and for teams with a complex, grown codebase where just "reading the code" isn't enough to get started. For very small, stable teams with rare new hires, the effort often pays off less; good, maintained documentation alone is often enough there.
+
+## Frequently asked questions
+
+### Does an onboarding course replace existing documentation?
+
+No, the documentation stays the reference for later. The course is the guided first pass through its most important parts, with a sequence and comprehension checks that pure documentation doesn't offer.
+
+### How often does a technical onboarding course need to be updated?
+
+Whenever the underlying architecture, tools, or processes change materially. Having one clear owner who updates the course alongside changes to the documentation prevents unnoticed drift.
+
+### Does this also work with Notion instead of Confluence?
+
+Yes, the principle is independent of the wiki tool used. What matters is that structured, written knowledge already exists, regardless of which tool it's maintained in.
+
+### What's the biggest difference from a classic HR onboarding course?
+
+Technical onboarding often needs more hands-on setup steps (local dev environment, access rights, first code change) instead of pure knowledge transfer. The course should represent these practical steps as their own checkpoints, not just describe them as text.
+
+</PostLayout>

@@ -1,0 +1,63 @@
+{
+  "courses": {
+    "detail": {
+      "contentTab": {
+        "title": "Course Lessons",
+        "noContent": "No content yet",
+        "noContentSub": "Start building your learning journey by adding your first lesson.",
+        "addFirst": "Add your first lesson",
+        "deleteTitle": "Delete Lesson",
+        "deleteDesc": "Are you sure you want to delete \"{{title}}\"? This action cannot be undone and will permanently remove this lesson and all its scenes.",
+        "openBuilder": "Open Builder",
+        "deleteBtn": "Delete Lesson",
+        "addBtn": "Add Lesson",
+        "addBlockedLessonMode": "A lesson holds one lesson. Switch to course mode to add more.",
+        "cancel": "Cancel",
+        "toastReorderSuccess": "Lesson order updated successfully.",
+        "toastReorderError": "Failed to update lesson order. Please try again.",
+        "toastDeleteSuccess": "Lesson deleted successfully.",
+        "toastDeleteError": "Failed to delete lesson. Please try again."
+      },
+      "lessonSheet": {
+        "titleCreate": "Create Lesson",
+        "titleEdit": "Edit Lesson",
+        "descCreate": "Add a new learning module to your course.",
+        "descEdit": "Update the lesson metadata and save changes.",
+        "fieldTitle": "Title",
+        "fieldTitlePlaceholder": "e.g. Introduction to Thermodynamics",
+        "fieldTitleRequired": "Title is required",
+        "fieldDesc": "Description (optional)",
+        "fieldDescPlaceholder": "What will learners achieve in this lesson?",
+        "fieldDescCounter": "{{current}} / {{max}}",
+        "fieldDescTooLong": "Description must be {{max}} characters or fewer.",
+        "fieldIcon": "Path icon",
+        "iconLabels": {
+          "book": {
+            "title": "Reading",
+            "description": "Introduce content: text, media, or a guided walkthrough."
+          },
+          "lightbulb": {
+            "title": "Concept",
+            "description": "Explain an idea, model, or how something works."
+          },
+          "practice": {
+            "title": "Practice",
+            "description": "Learners apply what they learned: exercises, scenarios, or questions."
+          },
+          "milestone": {
+            "title": "Milestone",
+            "description": "Checkpoint, recap, or celebration before the next section."
+          }
+        },
+        "fieldTime": "Estimated Time (minutes)",
+        "toastCreateSuccess": "Lesson created successfully.",
+        "toastCreateError": "Failed to create lesson.",
+        "toastUpdateSuccess": "Lesson updated successfully.",
+        "toastUpdateError": "Failed to update lesson.",
+        "cancel": "Cancel",
+        "saveChanges": "Save changes",
+        "createLesson": "Create Lesson"
+      }
+    }
+  }
+}

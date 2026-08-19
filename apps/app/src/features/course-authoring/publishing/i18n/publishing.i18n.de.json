@@ -1,0 +1,28 @@
+{
+  "courses": {
+    "detail": {
+      "previewBackToCourse": "Zurück zum Kurs",
+      "toastPublishSuccess": "Kurs veröffentlicht! (v{{version}})",
+      "toastPublishFailed": "Fehler beim Veröffentlichen des Kurses.",
+      "publish": "Veröffentlichen",
+      "publishing": "Wird veröffentlicht...",
+      "publishDialog": {
+        "title": "Kurs veröffentlichen",
+        "description": "Dadurch wird eine neue veröffentlichte Version des Kurses erstellt. Aktuell eingeschriebene Mitglieder verbleiben in ihrer bestehenden Version.",
+        "supersedeLabel": "Vorherige Version ersetzen",
+        "supersedeDescription": "Wenn diese Option aktiviert ist, werden Benutzer, die in früheren Versionen eingeschrieben sind, automatisch in diese neue Version verschoben. Ihr Fortschritt geht möglicherweise verloren, wenn Szenen entfernt oder wesentlich geändert wurden.",
+        "cancel": "Abbrechen",
+        "confirmPublish": "Veröffentlichung bestätigen",
+        "publishing": "Wird veröffentlicht...",
+        "confirmForce": "Trotzdem veröffentlichen",
+        "gateDialogDescription": "Einen Kurs zu veröffentlichen gehört zu einem Abonnement. Alles Erstellte bleibt bearbeitbar und in der Vorschau sichtbar.",
+        "gateTitle": "Veröffentlichen erfordert mindestens {{plan}}",
+        "gateDescription": "Abonniere, um diesen Kurs zu veröffentlichen und Lernende einzuschreiben. Erstellen und Vorschau bleiben unverändert. Nichts Erstelltes wird gesperrt.",
+        "gateLapsedTitle": "Dieses Abonnement ist beendet",
+        "gateLapsedDescription": "Kurse lassen sich nicht mehr veröffentlichen. Reaktiviere das Abonnement, um wieder zu veröffentlichen und einzuschreiben; Erstellen und Vorschau bleiben offen.",
+        "gateFallbackPlan": "einen kostenpflichtigen Plan",
+        "gateViewPlans": "Pläne ansehen"
+      }
+    }
+  }
+}

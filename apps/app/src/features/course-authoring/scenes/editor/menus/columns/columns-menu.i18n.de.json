@@ -1,0 +1,9 @@
+{
+  "editorUi": {
+    "columnsMenu": {
+      "sidebarLeft": "Sidebar links",
+      "twoColumns": "Zwei Spalten",
+      "sidebarRight": "Sidebar rechts"
+    }
+  }
+}

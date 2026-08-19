@@ -1,0 +1,67 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "Enterprise-LMS-Sicherheit: Checkliste für die IT-Freigabe",
+  description:
+    "Bevor ein Enterprise-LMS produktiv eingeführt wird, prüft die IT-Abteilung typischerweise mehr als nur die Kursfunktionen: Authentifizierung, Datenverarbeitung, Zertifizierungen und Nachvollziehbarkeit.",
+  date: "7. Juli 2026",
+  readTime: 4,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1555255707-c07966088b7b?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "enterprise lms sicherheit",
+    "lms datenschutz zertifizierung",
+    "e-learning plattform iso 27001",
+    "audit trail lms",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+Bevor ein Enterprise-LMS produktiv eingeführt wird, prüft die IT-Abteilung typischerweise mehr als nur die Kursfunktionen: Authentifizierung, Datenverarbeitung, Zertifizierungen und Nachvollziehbarkeit. Wer diese Checkliste vor dem ersten Gespräch mit der IT kennt, verkürzt den Freigabeprozess spürbar, statt Anforderungen erst nachträglich einzeln zu klären.
+
+## Die zentralen Prüfpunkte für eine IT-Freigabe
+
+| Bereich             | Typische Anforderung                                                                                   |
+| ------------------- | ------------------------------------------------------------------------------------------------------ |
+| Authentifizierung   | Single Sign-On über das bestehende Identity-System, siehe [LMS mit SSO](/blog/lms-sso-integration)     |
+| Datenverarbeitung   | Serverstandort, Auftragsverarbeitungsvertrag, Subprozessoren-Liste                                     |
+| Zertifizierungen    | ISO 27001 oder vergleichbare Nachweise, je nach Branche und Unternehmensgröße unterschiedlich verlangt |
+| Nachvollziehbarkeit | Audit Trail: Wer hat wann welchen Kurs abgeschlossen, mit welchem Ergebnis                             |
+| Zugriffsrechte      | Rollenbasierte Berechtigungen, keine pauschalen Admin-Rechte für alle                                  |
+| Datenlöschung       | Klares Konzept für das Löschen von Nutzer- und Kursdaten nach Bedarf                                   |
+
+## Warum diese Prüfung oft länger dauert als die inhaltliche Bewertung
+
+In vielen Enterprise-Beschaffungsprozessen ist die IT-Sicherheitsprüfung der eigentliche Flaschenhals, nicht die fachliche Entscheidung der Personalentwicklung. Ein Tool, das inhaltlich überzeugt, aber keine klaren Antworten auf Authentifizierung, Datenverarbeitung und Zertifizierungen liefert, verzögert sich in dieser Phase oft um Wochen oder scheitert ganz. Wer diese Fragen von Anfang an proaktiv beantwortet, statt sie erst auf Nachfrage zu klären, beschleunigt den gesamten Freigabeprozess.
+
+## Wie sich Anbieter auf diese Prüfung vorbereiten lassen
+
+Sinnvoll ist ein kurzes, standardisiertes Sicherheits-Datenblatt, das die wichtigsten Punkte aus der Tabelle oben auf einen Blick beantwortet, statt sie bei jeder Anfrage neu zusammenzustellen. Für Zertifizierungen, die noch nicht vorliegen, hilft eine ehrliche Roadmap mit Zeitrahmen mehr als eine vage Zusage, "das kommt noch".
+
+## Häufige Fragen
+
+### Ist ISO 27001 für jedes Unternehmen zwingend erforderlich?
+
+Nein, die Anforderung hängt von Branche, Unternehmensgröße und internen Richtlinien ab. Größere Organisationen und stark regulierte Branchen verlangen sie häufiger als kleinere Mittelständler.
+
+### Was ist ein Audit Trail konkret?
+
+Eine lückenlose, nachvollziehbare Aufzeichnung, wer wann welche Schulung abgeschlossen hat und mit welchem Ergebnis, wichtig für Compliance-Nachweise und interne Prüfungen.
+
+### Wie lässt sich der IT-Freigabeprozess beschleunigen?
+
+Indem die zentralen Fragen zu Authentifizierung, Datenverarbeitung und Zertifizierung von Anfang an proaktiv beantwortet werden, statt erst auf konkrete Nachfrage der IT-Abteilung zu reagieren.
+
+### Reicht SSO allein für eine Enterprise-Freigabe aus?
+
+Nein, SSO ist ein wichtiger, aber nur einer von mehreren Prüfpunkten. Datenverarbeitung, Zertifizierungen und Audit Trail werden in der Regel unabhängig davon geprüft.
+
+</PostLayout>

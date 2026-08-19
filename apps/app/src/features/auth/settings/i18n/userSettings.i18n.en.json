@@ -1,0 +1,48 @@
+{
+  "userSettings": {
+    "title": "Settings",
+    "subtitle": "General",
+    "saveChanges": "Save Changes",
+    "savedSuccessfully": "Settings saved successfully",
+    "name": {
+      "title": "Your Name",
+      "description": "This is your display name on Scibly.",
+      "footer": "Max 32 characters."
+    },
+    "username": {
+      "title": "Your Username",
+      "description": "This is your unique username on Scibly.",
+      "footer": "Max 32 characters.",
+      "taken": "This username is already taken. Please choose another."
+    },
+    "avatar": {
+      "title": "Your Avatar",
+      "description": "This is your avatar image on your Scibly account.",
+      "footer": "Square image recommended. Accepted file types: .png, .jpg. Max file size: 2MB.",
+      "uploadText": "Click your avatar to upload a new image."
+    },
+    "emailNotifications": {
+      "title": "Email Notifications",
+      "description": "Receive emails about your account, activity, and assignments.",
+      "footer": "You can change this at any time."
+    },
+    "marketingNotifications": {
+      "title": "Marketing Notifications",
+      "description": "Receive emails about new features, updates, and promotions.",
+      "footer": "We won't spam you."
+    },
+    "deleteAccount": {
+      "title": "Delete Account",
+      "description": "Permanently delete your account and all associated data. This action cannot be undone - please proceed with caution.",
+      "button": "Delete Account",
+      "modal": {
+        "title": "Delete Account",
+        "warning": "Warning: This will permanently delete your account, courses, and all associated data.",
+        "label1": "Enter your username {username} to continue:",
+        "label2": "To verify, type confirm delete account below:",
+        "confirmText": "confirm delete account",
+        "deleteButton": "Delete"
+      }
+    }
+  }
+}

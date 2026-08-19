@@ -1,0 +1,43 @@
+model User {
+  id                     String                  @id @default(cuid())
+  name                   String
+  email                  String
+  emailVerified          Boolean                 @default(false)
+  image                  String?
+  username               String?                 @unique
+  /// Required by the Better Auth Stripe plugin's schema; unused since billing
+  /// is organization-scoped (`Organization.stripeCustomerId`), not per-user.
+  stripeCustomerId       String?                 @unique
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @default(now()) @updatedAt
+  marketingNotifications Boolean                 @default(true)
+  emailNotifications     Boolean                 @default(true)
+  onboardingStep         OnboardingStep?
+  accounts               Account[]
+  sessions               Session[]
+  members                Member[]
+  invitations            Invitation[]
+  courseEnrollments      CourseEnrollment[]
+  courseVersions         CourseVersion[]
+  certificates           Certificate[]
+  oauthclients           OauthClient[]
+  oauthrefreshtokens     OauthRefreshToken[]
+  oauthaccesstokens      OauthAccessToken[]
+  oauthconsents          OauthConsent[]
+  notebooks              Notebook[]
+  connectedIntegrations  IntegrationConnection[]
+  creditLedgerEntries    CreditLedgerEntry[]
+
+  @@unique([email])
+  @@map("user")
+}
+
+model RateLimit {
+  identifier  String
+  endpoint    String
+  windowStart DateTime
+  count       Int      @default(1)
+
+  @@id([identifier, endpoint, windowStart])
+  @@map("RateLimit")
+}

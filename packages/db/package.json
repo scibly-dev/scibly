@@ -1,0 +1,52 @@
+{
+  "name": "@scibly/db",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "postinstall": "pnpm run generate",
+    "generate": "pnpm exec prisma generate",
+    "migrate": "pnpm exec prisma migrate dev",
+    "migrate:deploy": "pnpm exec prisma migrate deploy",
+    "push": "pnpm exec prisma db push",
+    "studio": "pnpm exec prisma studio",
+    "seed": "pnpm exec prisma db seed",
+    "clear": "tsx ./seeds/clear-db.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.3.0",
+    "@prisma/client": "^7.3.0",
+    "@scibly/course-content": "workspace:*",
+    "@scibly/lib": "workspace:*",
+    "better-auth": "^1.2.8",
+    "pg": "^8.17.2"
+  },
+  "devDependencies": {
+    "@scibly/eslint-config": "workspace:*",
+    "@types/node": "^20.17.29",
+    "@types/pg": "^8.20.0",
+    "dotenv": "^17.3.1",
+    "eslint": "^9.39.2",
+    "prisma": "^7.3.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.8.2"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts",
+    "./client": "./src/client.ts",
+    "./enums": "./src/enums.ts",
+    "./plan-catalogue": "./src/plan-catalogue.ts",
+    "./topup-catalogue": "./src/topup-catalogue.ts",
+    "./provision-organization": "./src/provision-organization.ts",
+    "./test-client": "./src/test-client.ts",
+    "./seed/constants": "./seeds/constants/dev-seed-data.ts",
+    "./seed/factory": "./seeds/helpers/seed-factory.ts",
+    "./seed/hash": "./seeds/hash-credential-password.ts"
+  }
+}

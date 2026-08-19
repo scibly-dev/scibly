@@ -1,0 +1,9 @@
+{
+  "editorUi": {
+    "inputField": {
+      "startTypingPlaceholder": "Start typing...",
+      "optionalLabel": "Optional",
+      "caseSensitiveLabel": "Case-sensitive"
+    }
+  }
+}

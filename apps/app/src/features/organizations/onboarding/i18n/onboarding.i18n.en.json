@@ -1,0 +1,45 @@
+{
+  "onboarding": {
+    "createOrg": {
+      "eyebrow": "Welcome to Scibly",
+      "title": "Create your ",
+      "titleAccent": "organization",
+      "subtitle": "Your courses, notebooks and teammates all live inside it.",
+      "logoLabel": "Upload a logo",
+      "nameLabel": "Organization name",
+      "namePlaceholder": "Name your organization",
+      "slugLabel": "URL slug",
+      "slugPlaceholder": "your-organization",
+      "contents": {
+        "notebooks": "Notebooks",
+        "courses": "Courses",
+        "team": "Team"
+      },
+      "submit": "Create organization",
+      "submitting": "Creating...",
+      "skip": "Skip for now",
+      "errorToast": "Failed to create organization."
+    },
+    "invite": {
+      "eyebrow": "Welcome to Scibly",
+      "title": "You've been ",
+      "titleAccent": "invited",
+      "subtitle": "Accept an invitation to join your team's organization.",
+      "skip": "Skip for now"
+    },
+    "plans": {
+      "eyebrow": "Your organization is ready",
+      "title": "You're on the ",
+      "titleAccent": "free trial",
+      "subtitle": "Upgrade whenever you need more, or start with the trial.",
+      "credits": {
+        "eyebrow": "Trial voucher",
+        "unit": "AI credits",
+        "headline": "Already in your account",
+        "note": "Free to spend, no card needed.",
+        "pending": "Your free AI credits are on their way."
+      },
+      "continue": "Continue to my dashboard"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "learn": {
+    "certificates": {
+      "title": "Zertifikat über den Abschluss",
+      "version": "Version",
+      "awardedTo": "Verliehen an",
+      "noCertificates": "Noch keine Zertifikate",
+      "completeCourseToEarn": "Schließe einen Kurs ab, um dein erstes Zertifikat zu erhalten."
+    }
+  }
+}

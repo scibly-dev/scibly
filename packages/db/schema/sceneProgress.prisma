@@ -1,0 +1,22 @@
+model SceneProgress {
+  id               String           @id @default(cuid())
+  enrollmentId     String
+  enrollment       CourseEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  lessonId         String
+  lesson           Lesson           @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  sceneId          String
+  scene            Scene            @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+  status           EnrollmentStatus @default(NOT_STARTED)
+  timeSpentSeconds Int              @default(0) // time spent in seconds
+  completedAt      DateTime?
+  spEarned         Int              @default(0)
+  attempt          Int              @default(1)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+
+  @@unique([enrollmentId, lessonId, sceneId, attempt])
+  @@index([enrollmentId])
+  @@index([lessonId])
+  @@index([sceneId])
+  @@map("scene_progress")
+}

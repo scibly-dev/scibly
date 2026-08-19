@@ -1,0 +1,70 @@
+{
+  "qualityProof": {
+    "eyebrow": "From knowledge to approved course",
+    "title": "More than just a prompt",
+    "subtitle": "Scibly combines your content with learning science, verifiable sources, and your team’s experience.",
+    "inputLabel": "Starting point",
+    "inputTitle": "Your knowledge",
+    "sourceSamples": [
+      "Compliance handbook.pdf",
+      "Onboarding wiki · Confluence"
+    ],
+    "inputs": [
+      {
+        "label": "Existing knowledge",
+        "detail": "Policies, handbooks & internal expertise"
+      },
+      {
+        "label": "Real context",
+        "detail": "Audience & real work situations"
+      }
+    ],
+    "coreLabel": "The Scibly quality core",
+    "qualityLayers": [
+      {
+        "title": "Instructionally designed",
+        "body": "Structure, examples, and repetition follow proven learning science."
+      },
+      {
+        "title": "Traceable to the source",
+        "body": "Every statement stays connected to its origin.",
+        "proof": {
+          "kind": "source",
+          "label": "Handbook · §4.2 Data handling"
+        }
+      },
+      {
+        "title": "Directed by people",
+        "body": "Your team controls content, tone, and depth.",
+        "proof": {
+          "kind": "reviewers",
+          "label": "Reviewed by 3 experts before publish"
+        }
+      }
+    ],
+    "output": {
+      "label": "Result",
+      "title": "A course built for everyday work",
+      "body": "Instructionally grounded, subject matter reviewed, and ready to use.",
+      "status": "Approved by your team"
+    },
+    "differentiation": {
+      "title": "Why not just use ChatGPT?",
+      "body": "What companies need doesn’t end at the prompt. Only instructional design, quality assurance, collaboration, and approvals turn AI-generated content into professional training. That’s exactly what Scibly was built for."
+    },
+    "cta": {
+      "notebook": {
+        "eyebrow": "Try it now",
+        "title": "Experience it as an author.",
+        "body": "Try the notebook and see how knowledge becomes a finished course.",
+        "label": "Open author demo"
+      },
+      "course": {
+        "eyebrow": "See a finished course",
+        "title": "Experience it as a learner.",
+        "body": "Go through a published course exactly as your team would experience it.",
+        "label": "Open learner demo"
+      }
+    }
+  }
+}

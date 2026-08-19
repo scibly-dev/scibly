@@ -1,0 +1,190 @@
+{
+  "featureShowcase": {
+    "eyebrow": "Plattform Funktionen",
+    "title": "Alles, was du für wirksames Lernen brauchst, ohne Umwege.",
+    "subtitle": "Vom Quellwissen zum fertigen, interaktiven Kurs. Ohne Content Team, ohne Wochen Vorlauf.",
+    "journeyLabel": "Ein verbundener Lernkreislauf",
+    "expandAriaLabel": "Feature Details öffnen",
+    "closeLabel": "Schließen",
+    "ctaPrimary": "Demo anfordern",
+    "ctaSecondary": "Notebook Demo öffnen",
+    "import": {
+      "phase": "Verbinden",
+      "title": "Quellen rein. Lernstruktur raus.",
+      "stageLabel": "Vom Dokument zum Kurs",
+      "detail": {
+        "body": "Verbinde eure freigegebenen Quellen einmal. Scibly liest Richtlinien, Handbücher und Fachdokumente aus und baut daraus automatisch strukturierte Lektionen mit passenden Lernzielen und Quizfragen. Ändert sich das Originaldokument, aktualisiert scibly den Kurs automatisch mit, ganz ohne manuellen Aufwand von dir.",
+        "highlights": [
+          "Direkter Import aus Confluence, Notion, PDF, DOCX und PPTX",
+          "Automatisch strukturierte Lektionen inklusive passender Quizfragen",
+          "Kurse bleiben aktuell: Änderungen an der Quelle synchronisieren sich automatisch",
+          "Läuft mit Scibly AI oder eurem eigenen Modell, ihr entscheidet"
+        ]
+      },
+      "source1Label": "IT Sicherheitsrichtlinie",
+      "source1Sub": "Confluence · 34 Seiten",
+      "source2Label": "Onboarding Guide",
+      "source2Sub": "Notion · 12 Seiten",
+      "source3Label": "Compliance Handbuch",
+      "source3Sub": "PDF · 8 Seiten",
+      "source4Label": "Sales Enablement Playbook",
+      "source4Sub": "DOCX · 26 Seiten",
+      "source5Label": "Produkt Release Briefing",
+      "source5Sub": "PPTX · 18 Folien",
+      "modelLabel": "oder dein Modell",
+      "courseLabel": "Generierter Kurs",
+      "lessonCount": "4 Lektionen · 1 Quiz",
+      "syncBadge": "Automatisch synchronisiert",
+      "syncedLabel": "Aktualisiert · vor 2 Min.",
+      "lessons": [
+        "Passwörter",
+        "MFA Grundlagen",
+        "Zugriffsreviews",
+        "Security Quiz"
+      ]
+    },
+    "channels": {
+      "phase": "Einbetten",
+      "title": "Lernen direkt im Arbeitsfluss",
+      "stageLabel": "Lernen im Flow",
+      "detail": {
+        "body": "Lernen gehört in den Arbeitsalltag, nicht nur in ein zusätzliches Tool. Scibly liefert kurze Lektionen und Quizfragen direkt dorthin, wo dein Team ohnehin schon kommuniziert: in Slack oder Microsoft Teams. Niemand muss sich extra einloggen oder ein neues Portal öffnen, das Wissen kommt genau dort an, wo und wann es gebraucht wird.",
+        "highlights": [
+          "Auslieferung direkt in Slack und Microsoft Teams",
+          "Kurze Mikrolektionen von wenigen Minuten, direkt im Thread",
+          "Quizfragen mit sofortigem Feedback",
+          "Kein zusätzliches Portal für den Alltag"
+        ]
+      },
+      "channel": "alle-mitarbeiter",
+      "botName": "Scibly AI",
+      "chat1Author": "Mia",
+      "chat1Text": "Hat jemand das Q3 Deck parat?",
+      "chat2Author": "Jonas",
+      "chat2Text": "Im Shared Drive, ich schicke den Link gleich.",
+      "lessonLabel": "2 Minuten Mikrolektion · Passwortsicherheit",
+      "quizQ": "Wie lang muss dein Passwort laut Sicherheitsrichtlinie mindestens sein?",
+      "optCorrect": "12 Zeichen",
+      "optWrong": "8 Zeichen",
+      "correct": "Richtig · plus 10 SP"
+    },
+    "learner": {
+      "phase": "Aktivieren",
+      "title": "Motivierendes Lernen durch spielerische Elemente",
+      "stageLabel": "Interaktive Lernchallenge",
+      "detail": {
+        "body": "Lange Folien liest niemand freiwillig zu Ende. Scibly ersetzt sie durch kurze Challenges, bei denen dein Team wirklich mitmachen will. Multiple Choice, Lückentext, Drag and Drop, Zuordnungsaufgaben und viele mehr. Dieselben Frageblöcke, die du auch im Editor bearbeitest, kommen direkt beim Lernenden an, inklusive Punkten, Fortschritt und Wiedererkennungswert.",
+        "highlights": [
+          "Sechs interaktive Frageblöcke",
+          "Direktes Feedback nach jeder Antwort",
+          "Fortschritt, Punkte und Levels motivieren zum Weitermachen"
+        ]
+      },
+      "question": "Eine Slack DM fragt nach deinem Passwort zum SSO Fix. Was tust du?",
+      "optA": "Ablehnen und an die IT melden",
+      "optB": "Passwort schicken, damit die Arbeit weitergeht",
+      "optC": "Ändern und dann das neue schicken",
+      "spValue": "plus 15",
+      "earnedLabel": "verdient",
+      "comboLabel": "3 fach Multiplikator",
+      "streakValue": "7 Tage Streak",
+      "streakLabel": "Weiter so",
+      "levelValue": "Level 4",
+      "levelLabel": "Sales Rookie",
+      "xpLabel": "XP bis Level 5",
+      "feedback": "Super!",
+      "nextLabel": "Weiter",
+      "clozeBefore": "Fragt jemand per Mail nach deinem Passwort, solltest du",
+      "clozeMid": "und dann",
+      "clozeAfter": "über Ticket oder Telefon",
+      "clozeGapOne": "ablehnen",
+      "clozeGapTwo": "melden",
+      "clozeBankLabel": "Wortauswahl",
+      "clozeReset": "Zurücksetzen",
+      "clozeBank": ["abschicken", "ignorieren"]
+    },
+    "analytics": {
+      "phase": "Verstehen",
+      "title": "Erkenne, wo Wissen fehlt.",
+      "stageLabel": "Live Wissensanalyse",
+      "detail": {
+        "body": "Stell Scibly AI Fragen in ganz normaler Alltagssprache, statt Reports selbst zusammenzusuchen. Du siehst sofort, wo Fehlerquoten steigen, was sich verändert hat und wo als Nächstes Trainingsbedarf entsteht. Kein Tabellenexport, keine manuelle Auswertung.",
+        "highlights": [
+          "Fragen stellen in ganz normaler Alltagssprache",
+          "Trends und Wissenslücken auf einen Blick erkennen",
+          "Klarer Zusammenhang zwischen Ereignissen und Lernbedarf, ganz ohne Zusatzaufwand"
+        ]
+      },
+      "youLabel": "Du",
+      "query": "Gibt es eine Wissenslücke im Vertrieb?",
+      "replyLabel": "Scibly AI",
+      "chartLabel": "Vertrieb · Quiz Fehlerquote",
+      "peakLabel": "41 Prozent",
+      "eventLabel": "Neues Provisionsmodell ausgerollt",
+      "gapBody": "Ja, seit dem neuen Provisionsmodell ist die Fehlerquote spürbar gestiegen. Das Team ist bei diesem Thema noch nicht sicher.",
+      "series": [
+        {
+          "label": "W1",
+          "rate": 12
+        },
+        {
+          "label": "W2",
+          "rate": 11
+        },
+        {
+          "label": "W3",
+          "rate": 13
+        },
+        {
+          "label": "W4",
+          "rate": 14
+        },
+        {
+          "label": "W5",
+          "rate": 41
+        },
+        {
+          "label": "W6",
+          "rate": 38
+        }
+      ]
+    },
+    "byoai": {
+      "phase": "Steuern",
+      "title": "Nutze die KI, der dein Unternehmen schon vertraut.",
+      "stageLabel": "Deine Modellwahl, deine Kontrolle",
+      "detail": {
+        "body": "Kein Vendor Lock in. Nutze die Modelle, die euer Sicherheitsteam bereits freigegeben hat, statt euch auf einen einzigen Anbieter festzulegen. Wechsle jederzeit zwischen OpenAI, Anthropic, Scibly AI oder eurem eigenen internen Zugang, ohne dass ihr die Plattform neu aufbauen müsst.",
+        "highlights": [
+          "OpenAI, Anthropic und Scibly AI direkt integriert",
+          "Volle Unternehmenskontrolle, ohne euch an einen Anbieter zu binden",
+          "Auch euer eigenes internes Modell lässt sich anbinden"
+        ]
+      },
+      "panelLabel": "Modell",
+      "inputPlaceholder": "Frag Scibly AI…",
+      "youLabel": "Du",
+      "query": "Entwirf ein 2 Minuten Quiz zu Passwort Phishing.",
+      "replyLabel": "Scibly AI",
+      "reply": "3 Fragen fertig, basierend auf eurer IT Richtlinie, nicht auf einem öffentlichen Modell.",
+      "viaLabel": "Über",
+      "trustChips": ["EU Endpoint", "Org Key", "IT freigegeben"],
+      "providers": [
+        {
+          "name": "OpenAI",
+          "detail": "GPT 5.5 · Org Key"
+        },
+        {
+          "name": "Anthropic",
+          "detail": "Claude · Org Key"
+        },
+        {
+          "name": "Scibly AI",
+          "detail": "Managed · EU"
+        }
+      ],
+      "yoursLabel": "Dein internes Modell",
+      "yoursDetail": "Freigegeben · EU Endpoint"
+    }
+  }
+}

@@ -1,0 +1,91 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "Talk to the Elephant: Verhaltensänderung durch Lerndesign – Eine Zusammenfassung",
+  description:
+    "Dirksens Folgebuch adressiert die Knowing-Doing-Gap direkt – und gibt Designern ein diagnostisches Framework, um zu verstehen, warum Verhalten sich nicht ändert.",
+  date: "21. Mai 2026",
+  readTime: 7,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "Talk to the Elephant",
+    "Julie Dirksen",
+    "Verhaltensänderung",
+    "Knowing-Doing-Gap",
+    "COM-B-Modell",
+    "Instructional Design",
+    "Lerndesign",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+Julie Dirksens erstes Buch, Design for How People Learn, erklärt, wie Lernen funktioniert und wie man dafür designt. Talk to the Elephant (2023) setzt dort an, wo das erste Buch aufhört – nicht bei der Frage „Wie lernen Menschen?", sondern bei der Frage „Warum ändern Menschen ihr Verhalten nicht, obwohl sie wissen, dass sie es sollten?" Die Lücke zwischen Wissen und Handeln erweist sich als das schwierigere Problem, und dieses Buch ist eine der klarsten Behandlungen davon in der Instructional-Design-Literatur.
+
+Das Buch ist vergleichsweise kurz, dicht argumentiert und praxisorientiert. Es liest sich am besten nach Design for How People Learn – nicht weil es es voraussetzt, sondern weil beide Bücher komplementäre Probleme adressieren und das erste dem zweiten hilft, seine volle Wirkung zu entfalten.
+
+## Die Knowing-Doing-Gap
+
+Die Knowing-Doing-Gap ist das zentrale Rätsel, das das Buch adressiert. Sie erklärt, warum Compliance-Training absolviert und dann ignoriert wird, warum Menschen das gesunde Verhalten kennen und es trotzdem nicht tun, und warum informationslastige E-Learning-Kurse so wenig Verhaltensänderung erzeugen.
+
+Dirksens Argument: Die Lücke existiert, weil Trainingsdesigner Verhaltensänderung als Informationsproblem behandeln – wenn Menschen nur das Richtige wüssten, würden sie es tun. Aber die Beziehung zwischen Wissen und Verhalten ist weit komplizierter. Menschen haben konkurrierende Ziele, jahrelang geformte Gewohnheiten, Umgebungszwänge, sozialen Druck und emotionale Reaktionen, die Wissen allein nicht überwinden kann.
+
+Für Verhaltensänderung zu designen bedeutet, zu verstehen, welcher dieser Faktoren das gewünschte Verhalten in einer gegebenen Situation tatsächlich blockiert – und dann Interventionen zu gestalten, die genau diese Barriere adressieren.
+
+## Der Elefant und der Reiter
+
+Dirksen greift auf Jonathan Haidts Metapher aus The Happiness Hypothesis zurück: der Reiter auf dem Elefanten. Der Reiter ist der rationale, überlegende Geist – fähig zu Schlussfolgern, Planen und Absichten setzen. Der Elefant ist der emotionale, gewohnheitsmäßige, automatische Geist – viel größer und mächtiger, und derjenige, der in den meisten realen Situationen das Verhalten tatsächlich antreibt.
+
+Training spricht fast immer zum Reiter. Es liefert Informationen, baut Begründungen auf, setzt Ziele. Aber wenn der Elefant woanders hinwill – wenn die Verhaltensänderung mit einer tief verwurzelten Gewohnheit kollidiert, eine emotionale Reaktion auslöst oder mehr Aufwand erfordert, als das unmittelbare Umfeld unterstützt – werden die Absichten des Reiters überwältigt.
+
+Für Verhaltensänderung zu designen bedeutet zu verstehen, was der Elefant braucht, nicht nur was der Reiter weiß.
+
+## Das COM-B-Modell
+
+Das zentrale praktische Framework des Buches ist COM-B aus der Verhaltenswissenschaft: Capability (Fähigkeit), Opportunity (Gelegenheit), Motivation → Behavior (Verhalten). Das Modell liefert eine strukturierte diagnostische Linse, um zu verstehen, warum ein Verhalten nicht auftritt.
+
+**Fähigkeit** ist, ob die Person das Verhalten physisch und psychologisch ausführen kann. Das unterteilt sich in physische Fähigkeit (motorische Fertigkeiten, Kraft oder Ausdauer) und psychologische Fähigkeit (Wissen, kognitive Fähigkeiten und Selbstregulation). Training zielt typischerweise auf psychologische Fähigkeit ab. Aber Fähigkeitsdefizite sind nicht immer das Problem – oft sind Menschen völlig fähig und die Lücke liegt woanders.
+
+**Gelegenheit** ist, ob die Umgebung das Verhalten unterstützt. Physische Gelegenheit umfasst das Vorhandensein von Zeit, Werkzeugen, Ressourcen und die Abwesenheit physischer Hindernisse. Soziale Gelegenheit umfasst Normen, Kultur und soziale Erwartungen. Wenn die Norm am Arbeitsplatz ist, die Sicherheitscheckliste unter Zeitdruck zu überspringen, wird Training über den Sinn von Checklisten das Verhalten nicht ändern – die soziale Gelegenheit ist nicht vorhanden.
+
+**Motivation** ist, ob die Person ausreichend angetrieben ist, das Verhalten auszuführen. Automatische Motivation umfasst Gewohnheiten und emotionale Assoziationen. Reflektive Motivation umfasst Absichten, Ziele und Überzeugungen. Die meisten Trainings adressieren reflektive Motivation – „hier ist, warum das wichtig ist" – ohne die automatischen Prozesse zu berühren, die das Verhalten im Moment tatsächlich antreiben.
+
+<Callout type="tip">
+  Das COM-B-Modell funktioniert am besten als diagnostisches Werkzeug vor Beginn
+  des Designs, nicht als nachträgliches Framework zur Rechtfertigung bestehenden
+  Trainings. Frag: Ist Fähigkeit wirklich die Lücke, oder ist es Gelegenheit
+  oder Motivation? Wenn es nicht Fähigkeit ist, wird mehr Training es nicht
+  lösen. Stattdessen braucht es vielleicht Umgebungsredesign, soziale
+  Normeninterventionen oder Gewohnheitsbildungsstrategien.
+</Callout>
+
+## Designstrategien für jeden Barrierentyp
+
+Das Buch bleibt nicht bei der Diagnose stehen – es ordnet spezifische Designstrategien jedem Barrierentyp zu.
+
+Bei Fähigkeitslücken: Deliberate Practice mit Feedback, Reduktion kognitiver Last, Lösungsbeispiele, Abrufübungen, verteiltes Üben. Das sind die Werkzeuge des klassischen Instructional Designs.
+
+Bei Gelegenheitslücken: Arbeitshilfen am Leistungspunkt, Umgebungsredesign, Reibung beim gewünschten Verhalten reduzieren, die Standardaktion zur richtigen Aktion machen.
+
+Bei Motivationslücken: Konsequenz-Salience umrahmen (Folgen von Verhalten lebendig und unmittelbar statt abstrakt und fern machen), soziale Beweise, Verpflichtungsgeräte, die psychologischen Kosten des Verhaltens reduzieren, Identitätsbedrohungen adressieren.
+
+Diese Taxonomie macht das Buch für praktizierende Designer wirklich nützlich. Die meiste Instructional-Design-Literatur konzentriert sich fast ausschließlich auf die erste Kategorie. Dirksen liefert das vollständige Bild.
+
+## Warum dieses Buch nach Design for How People Learn wichtig ist
+
+Design for How People Learn beantwortet die Frage, wie wirksame Lernerfahrungen gebaut werden. Talk to the Elephant beantwortet die vorgelagerte Frage: Ist Lernen überhaupt die richtige Intervention – und wenn ja, was genau sollte sie adressieren?
+
+Viele Trainingsprogramme scheitern nicht daran, dass sie schlecht als Lernerfahrungen gestaltet sind, sondern weil sie die falsche Barriere adressieren. Sie liefern Fähigkeit, wenn das eigentliche Hindernis Gelegenheit ist. Sie bauen Wissen auf, wenn das eigentliche Hindernis Gewohnheit ist. COM-B vor dem Öffnen eines Autorentools zu verstehen, reorientiert den gesamten Designprozess.
+
+Scibly unterstützt die Art von zielgerichteten, verhaltensorientierten Lernprogrammen, die dieses Framework ermöglicht – mit Werkzeugen zur Strukturierung von Training um spezifische Leistungsziele und zur Verfolgung, ob Verhalten sich tatsächlich ändert, nicht nur ob Kurse absolviert werden.
+
+</PostLayout>

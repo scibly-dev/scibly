@@ -1,0 +1,86 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "Theory First or Practice First? What Learning Science Means for Employee Training",
+  description:
+    "Should you explain the process manual to a new colleague first, or throw her in at the deep end and correct her afterward?",
+  date: "July 5, 2026",
+  readTime: 5,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "theory or practice first learning",
+    "best sequence for training",
+    "how should training be structured",
+    "productive failure training",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+Should you explain the process manual to a new colleague first, or throw her in at the deep end and correct her afterward? Learning science doesn't give a single answer, but it does give a clear rule of thumb: it depends on what's actually being learned. For pure understanding and transfer, practice first performs better on average. For correctly executing a new procedure, theory first performs better.
+
+## What the research actually shows
+
+The most thorough analysis to date comes from Sinha and Kapur (2021), who synthesized 53 studies with 166 comparisons. Result: people who tackle a problem first and receive the explanation afterward understand concepts better on average and transfer them more easily to new situations (effect size g = 0.36). For pure procedural knowledge, meaning "can the person correctly execute the steps," there's no difference at all (g = -0.03).
+
+That explains why both camps can be right in training practice, depending on what they're actually talking about. A compliance course on a new SAP process needs different sequencing than a workshop on "how do I evaluate a job interview fairly."
+
+A second major analysis, though, argues against unstructured "just let them do it." Alfieri and colleagues (2011) found that unassisted discovery performs worse than clear instruction (d = -0.38). But once exploration is guided, meaning with a clear frame, a time limit, and support, the picture reverses: guided exploration wins the comparison (d = 0.30). The difference isn't "practice before theory," it's the quality of the guidance.
+
+## When theory first is the better choice
+
+Three situations clearly favor explanation before practice:
+
+- **The material is new and complex.** Novices burn too much capacity on search processes when left to freely experiment. A good example or a brief explanation up front noticeably reduces that load. A meta-analysis of worked examples in math instruction found a medium advantage here (g = 0.48).
+- **It's about correct first execution, not understanding.** A new safety process in production needs to run correctly from the start, not "eventually be understood."
+- **There's no time for a good debrief.** Practice-first only works if someone afterward explicitly compares learners' solutions to the correct one. Without that phase, the advantage evaporates.
+
+## When practice first is the better choice
+
+Practice first pays off when the goal is understanding, transfer, or surfacing misconceptions, and when there's enough time left afterward for genuine consolidation. The mechanism behind it isn't "learning from mistakes" in a simple sense, it's prior-activation: someone who has already struggled with a problem listens more attentively to the subsequent explanation, because they know exactly where their own gap is.
+
+Important here: the effect is larger when learners develop several of their own solution ideas and these are then compared to the canonical solution, not when they're simply left to "guess."
+
+## The formula that works most often in practice
+
+Almost no study recommends a pure two-phase model. The more robust sequence is usually three-part: a brief activation or example, an explicit explanation, then varied re-application. This structure shows up in the literature under the abbreviation PS-I-PS (problem, instruction, renewed problem) and beats both the pure practice-first and pure theory-first models in several comparisons.
+
+| Situation                                                     | Recommended sequence                                           | Why                                                         |
+| ------------------------------------------------------------- | -------------------------------------------------------------- | ----------------------------------------------------------- |
+| New, complex procedure, little prior knowledge                | Explanation/example → guided practice → varied application     | Reduces cognitive overload for novices                      |
+| Conceptual understanding, transfer, diagnosing knowledge gaps | Short problem → explicit consolidation → renewed application   | Activates prior knowledge, surfaces gaps                    |
+| Very young or uncertain learners                              | Short guided exploration instead of open-ended problem solving | Open practice-first tends to work negatively for this group |
+| Long-term retention regardless of sequence                    | Retrieval practice, repetition spread out over time            | Strengthens memory traces after every sequence              |
+
+For practice, that means: before arguing over "theory or practice first," it's worth asking what should actually be measured in the end. Correct execution tomorrow morning, or understanding that still holds up three months from now when the process has changed slightly.
+
+That second question, whether knowledge still holds up a month later, is exactly why courses at Scibly don't just present content, but insert a short recall question and a transfer question after every section. Not as a quiz at the end for a check, but right in the flow, because that's exactly what the research says makes the difference between "read once" and "stuck."
+
+## Frequently asked questions
+
+### So is practice first generally the better method?
+
+No. Practice first mainly helps with understanding and transfer, not with the pure correct execution of a procedure. Without a good debrief, the advantage also evaporates completely.
+
+### Does that mean classic lecture-style instruction is scientifically supported?
+
+Partly. Explicit explanation and worked examples are demonstrably effective for complex, new material, especially for beginners. But that's different from a pure lecture with no subsequent active application.
+
+### What's the biggest mistake in practice-oriented training?
+
+Having learners work on a problem and then not following up with explicit consolidation. Without comparing their own solution to the correct one, the practice phase remains pure confusion instead of a learning effect.
+
+### Does this also apply to short microlearning formats?
+
+Yes, sequencing matters regardless of format length. Even a five-minute learning unit benefits from including recall or a small application question instead of just presenting content.
+
+</PostLayout>

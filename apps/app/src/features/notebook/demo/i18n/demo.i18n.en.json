@@ -1,0 +1,17 @@
+{
+  "notebook": {
+    "demo": {
+      "conversionOffer": "Your first course is on us",
+      "conversionCta": "Claim your free course",
+      "backToScibly": "Back to Scibly",
+      "restartDemo": "Restart demo",
+      "historyUnavailable": "History is unavailable in this demo",
+      "studioToolUnavailable": "Available in the full Scibly workspace",
+      "sidebarTitle": "Demo workspace",
+      "greeting": "Turn your sources into a course",
+      "workspaceTitle": "Course builder demo",
+      "metaTitle": "AI Notebook Demo | Scibly",
+      "metaDescription": "See how Scibly turns sources into a course in minutes."
+    }
+  }
+}

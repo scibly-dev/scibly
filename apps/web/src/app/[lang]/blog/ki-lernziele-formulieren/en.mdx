@@ -1,0 +1,188 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "Writing Learning Objectives with AI: Prompts, Templates, and Quality Checks",
+  description:
+    "Good learning objectives are the foundation of every effective course — and one of the hardest things to write well. Here's how to use AI to draft them faster, with prompts organized by Bloom's taxonomy level.",
+  date: "June 13, 2026",
+  readTime: 9,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "writing learning objectives AI",
+    "AI learning objectives",
+    "Bloom's taxonomy AI prompts",
+    "ChatGPT learning objectives",
+    "L&D AI prompts",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+The most common problem in course development isn't the content — it's the missing foundation. When learning objectives get written after the course ("we built a GDPR course, now we need objectives"), the problem shows up latest when you try to design the quiz: what are we actually testing?
+
+Good learning objectives drive every other course development decision: what's in scope, what isn't, what the assessment looks like, and whether the course format is right. AI can dramatically speed up the drafting process — but only if you understand what a good learning objective looks like in the first place.
+
+## What makes a learning objective good
+
+A learning objective describes what a person can **do** after training — not what they "know" or "understand." The critical difference is in the verb.
+
+A good learning objective meets three conditions:
+
+**1. It describes observable behavior.** "Understand" is not observable. "Explain" is. "Identify" is. "Apply" is. If you can't decide whether someone has met the objective, the verb is too vague.
+
+**2. It describes the outcome, not the activity.** "Complete the training" is not a learning objective. "After the training, handle a data subject access request without assistance" is.
+
+**3. It specifies the context in which the behavior is expected.** "After onboarding," "when handling a customer complaint," "in their day-to-day work."
+
+## Bloom's Taxonomy: The framework for precise objectives
+
+Bloom's Taxonomy organizes cognitive learning objectives into six levels — from simple recall to creative synthesis. The practical value: each level comes with specific verbs you can use directly in learning objectives.
+
+| Level         | Description                       | Common Verbs                             |
+| ------------- | --------------------------------- | ---------------------------------------- |
+| 1. Remember   | Recall facts from memory          | name, list, describe, recite             |
+| 2. Understand | Explain concepts                  | explain, summarize, classify, compare    |
+| 3. Apply      | Use knowledge in new situations   | apply, execute, calculate, demonstrate   |
+| 4. Analyze    | Break information into parts      | distinguish, analyze, categorize, derive |
+| 5. Evaluate   | Make judgments based on criteria  | judge, evaluate, justify, assess         |
+| 6. Create     | Assemble new things from elements | design, plan, develop, construct         |
+
+For most corporate training, you'll work primarily with levels 1–3. Levels 4–6 become relevant for leadership development, expert programs, and complex compliance subjects.
+
+## How AI helps with learning objectives
+
+AI is good at turning your rough goal description into precise, action-oriented learning objectives. But it needs the right inputs — generic prompts produce generic outputs.
+
+A good prompt includes three things:
+
+1. **The topic or competency** you want to train
+2. **The audience** — newcomers, specialists, managers, no prior knowledge?
+3. **The desired Bloom level** or the course context
+
+## Prompts for each Bloom level
+
+### Level 1: Remember
+
+```
+Write 3 learning objectives for a 10-minute microlearning course on
+password security in the workplace. Audience: all employees, no IT background.
+Use verbs from the "Remember" level of Bloom's Taxonomy.
+Format: "After completing this training, participants will be able to ..."
+```
+
+**Example output:**
+
+- After completing this training, participants will be able to name the three core characteristics of a secure password.
+- After completing this training, participants will be able to list four common password mistakes to avoid.
+- After completing this training, participants will be able to describe the correct steps to take when a password is forgotten or compromised.
+
+### Level 2: Understand
+
+```
+Write 3 learning objectives for a GDPR module on data subject rights.
+Audience: customer service representatives.
+Bloom level: Understand.
+Format: "After completing this module, participants will be able to ..."
+```
+
+**Example output:**
+
+- After completing this module, participants will be able to explain the rights customers have under GDPR Articles 15–22.
+- After completing this module, participants will be able to describe the difference between the right of access and the right to erasure.
+- After completing this module, participants will be able to classify incoming requests from data subjects by type.
+
+### Level 3: Apply
+
+```
+Write 3 learning objectives for a sales training module on objection handling.
+Audience: junior account executives in their first quarter.
+Bloom level: Apply.
+The course includes practice scenarios and simulated conversations.
+```
+
+**Example output:**
+
+- After completing this module, participants will be able to correctly apply the FEEL-FELT-FOUND technique when a prospect raises a pricing objection.
+- After completing this module, participants will be able to distinguish between genuine and smoke-screen objections in a simulated customer conversation and respond accordingly.
+- After completing this module, participants will be able to handle three common objection types using appropriate responses in a role-play scenario.
+
+### Level 4: Analyze
+
+```
+Write 2 learning objectives for a leadership seminar on situational leadership.
+Bloom level: Analyze.
+Audience: team leads with at least 2 years of management experience.
+Duration: 4-hour workshop.
+```
+
+**Example output:**
+
+- After the seminar, participants will be able to assess the current development level of individual team members based on observable behavioral indicators.
+- After the seminar, participants will be able to analyze why a specific leadership approach produced a defined outcome in a given situation.
+
+### Level 6: Create
+
+```
+Write 2 learning objectives for a workshop module on onboarding program design.
+Audience: HR business partners.
+Bloom level: Create.
+Participants will have developed an onboarding concept for their own department by the end.
+```
+
+**Example output:**
+
+- After the workshop, participants will be able to design a structured onboarding program for their department that covers the first 90 days.
+- After the workshop, participants will be able to construct an onboarding plan for a new role that integrates formal training, peer learning, and hands-on tasks.
+
+<Callout type="tip">
+  When planning multiple courses at once, ask AI to generate objectives for all
+  modules in a single prompt — then ask it to flag any overlaps or
+  contradictions. It's a fast way to spot gaps in your curriculum design.
+</Callout>
+
+## How to quality-check AI-generated objectives
+
+AI doesn't always produce good objectives on the first try. Check each one against these criteria:
+
+**Is the verb observable?** If you can't decide whether someone has met the objective, the verb is too vague. "Know" and "understand" alone don't cut it — "explain" and "apply" do.
+
+**Does it describe the outcome, not the activity?** "Complete the module" is not a learning objective. "Independently handle a customer data request after completing the module" is.
+
+**Is it realistic for the course format?** AI tends to write ambitious objectives at higher Bloom levels even when you describe a simple information course. A 10-minute microlearning on data protection basics can support level 1–2 objectives — not analysis-level competency.
+
+**Can you write a quiz question for it?** The simplest practical test: if you can't formulate a meaningful assessment question based on the objective, the objective is too vague.
+
+## Common mistakes in AI-generated objectives
+
+**Too many objectives per module.** AI will happily generate 8–10 objectives for a generic prompt. A useful benchmark: 2–4 core objectives per module. Everything else is either a separate module or not a standalone objective.
+
+**Objectives that sound like agenda items.** "Participants will learn what GDPR is" is a topic announcement, not a learning objective. This happens when the prompt is too vague — be more specific about the expected behavior.
+
+**Objectives that don't match the course format.** If your course contains only informational text but the objectives promise "apply" and "analyze" competencies, you have a credibility gap — and the assessments you derive from those objectives will require activities that aren't in the course.
+
+**No audience specification.** Generic objectives for "employees" are almost always either too easy or too hard. The more precisely you describe the audience, the better the output.
+
+<Callout type="info">
+  Learning objectives are also the best input for AI-generated quiz questions.
+  Once you have solid objectives, you can ask: "Write 3 multiple-choice
+  questions that test this learning objective: [objective]" — and get far better
+  questions than a generic "write quiz questions about GDPR" prompt would
+  produce.
+</Callout>
+
+## From objectives to finished course
+
+Learning objectives aren't bureaucratic overhead — they're the control mechanism for every subsequent decision: what belongs in the course, what doesn't, which activities to include, and what the assessment looks like.
+
+If you want to use AI not just for objectives but for the entire course development process — from structure to script to publishing in your LMS — see how [creating courses with AI](/en/blog/ki-kurs-erstellen) works in practice, and how [Scibly integrates that workflow directly into the LMS](/en).
+
+</PostLayout>

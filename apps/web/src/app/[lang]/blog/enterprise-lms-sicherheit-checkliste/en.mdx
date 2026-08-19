@@ -1,0 +1,67 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "Enterprise LMS Security: A Checklist for IT Sign-Off",
+  description:
+    "Before an enterprise LMS goes live, IT departments typically check more than just course functionality: authentication, data processing, certifications, and auditability.",
+  date: "July 7, 2026",
+  readTime: 4,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1555255707-c07966088b7b?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "enterprise lms security",
+    "lms data protection certification",
+    "e-learning platform iso 27001",
+    "lms audit trail",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+Before an enterprise LMS goes live, IT departments typically check more than just course functionality: authentication, data processing, certifications, and auditability. Knowing this checklist before the first conversation with IT noticeably shortens the sign-off process, instead of clarifying requirements one by one after the fact.
+
+## The key checkpoints for IT sign-off
+
+| Area            | Typical requirement                                                                                  |
+| --------------- | ---------------------------------------------------------------------------------------------------- |
+| Authentication  | Single sign-on through the existing identity system, see [LMS with SSO](/blog/lms-sso-integration)   |
+| Data processing | Server location, data processing agreement, subprocessor list                                        |
+| Certifications  | ISO 27001 or comparable evidence, required to varying degrees depending on industry and company size |
+| Auditability    | Audit trail: who completed which course when, with what result                                       |
+| Access rights   | Role-based permissions, no blanket admin rights for everyone                                         |
+| Data deletion   | A clear concept for deleting user and course data on request                                         |
+
+## Why this review often takes longer than the content evaluation
+
+In many enterprise procurement processes, the IT security review is the actual bottleneck, not the L&D team's content decision. A tool that's compelling on content but has no clear answers on authentication, data processing, and certifications often gets delayed by weeks at this stage, or fails entirely. Answering these questions proactively from the start, rather than only when asked, speeds up the entire sign-off process.
+
+## How vendors can prepare for this review
+
+A short, standardized security data sheet that answers the key points from the table above at a glance, rather than assembling them fresh for every inquiry, is a sensible approach. For certifications that aren't yet in place, an honest roadmap with a timeline helps more than a vague "that's coming."
+
+## Frequently asked questions
+
+### Is ISO 27001 mandatory for every company?
+
+No, the requirement depends on industry, company size, and internal policy. Larger organizations and heavily regulated industries require it more often than smaller mid-sized companies.
+
+### What exactly is an audit trail?
+
+A complete, traceable record of who completed which training when and with what result, important for compliance evidence and internal reviews.
+
+### How can the IT sign-off process be sped up?
+
+By proactively answering the key questions on authentication, data processing, and certification from the start, instead of only reacting once IT specifically asks.
+
+### Is SSO alone enough for enterprise sign-off?
+
+No, SSO is an important checkpoint, but only one of several. Data processing, certifications, and audit trail are typically reviewed independently of it.
+
+</PostLayout>

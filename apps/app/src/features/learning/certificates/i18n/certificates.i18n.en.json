@@ -1,0 +1,11 @@
+{
+  "learn": {
+    "certificates": {
+      "title": "Certificate of Completion",
+      "version": "Version",
+      "awardedTo": "Awarded to",
+      "noCertificates": "No certificates yet",
+      "completeCourseToEarn": "Complete a course to earn your first certificate."
+    }
+  }
+}

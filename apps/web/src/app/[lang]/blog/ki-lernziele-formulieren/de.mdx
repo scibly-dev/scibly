@@ -1,0 +1,188 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "Lernziele formulieren mit KI: Schritt für Schritt",
+  description:
+    "Lernziele zu formulieren kostet Zeit und Denkarbeit — KI kann beides drastisch reduzieren. Konkrete Prompts nach Bloom's Taxonomie, mit Beispielen aus dem L&D-Alltag.",
+  date: "13. Juni 2026",
+  readTime: 9,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "Lernziele formulieren KI",
+    "KI Lernziele erstellen",
+    "Lernziele Bloom Taxonomie",
+    "ChatGPT Lernziele",
+    "KI Prompts L&D",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+Das häufigste Problem bei der Kursentwicklung ist nicht der Inhalt — es ist das fehlende Fundament. Wer Lernziele nach dem Kurs schreibt ("Wir haben einen Kurs über DSGVO erstellt — jetzt brauchen wir noch Lernziele"), bemerkt das Dilemma spätestens beim Quiz-Design: Welche Fragen sollen wir eigentlich stellen?
+
+Gute Lernziele sind das Fundament jedes funktionierenden Kurses. Und KI kann dabei erheblich helfen — aber nur, wenn man versteht, wonach gute Lernziele überhaupt aussehen.
+
+## Was ein gutes Lernziel ausmacht
+
+Ein Lernziel beschreibt, was eine Person nach der Schulung **tun** kann — nicht, was sie "weiß" oder "kennt". Der entscheidende Unterschied liegt im Verb.
+
+Ein gutes Lernziel erfüllt drei Bedingungen:
+
+**1. Es beschreibt ein beobachtbares Verhalten.** "Verstehen" ist nicht beobachtbar. "Erklären können" ist es. "Identifizieren können" ist es. "Anwenden können" ist es. Wenn du dir nicht sicher bist, ob jemand das Ziel erreicht hat, ist das Verb zu vage.
+
+**2. Es beschreibt das Ergebnis, nicht den Prozess.** "Die Schulung absolvieren" ist kein Lernziel. "Nach der Schulung ein DSGVO-konformes Auskunftsersuchen selbstständig bearbeiten können" schon.
+
+**3. Es gibt einen Kontext an, wann das Verhalten erwartet wird.** "Nach dem Onboarding", "im Fall einer Kundenreklamation", "im Tagesgeschäft".
+
+## Bloom's Taxonomie: Das Grundgerüst für präzise Lernziele
+
+Die Bloomsche Taxonomie ordnet kognitive Lernziele in sechs Ebenen — von einfachem Erinnern bis zur kreativen Wissensanwendung. Das Nützliche für die Praxis: Jede Ebene hat spezifische Verben, die du direkt in Lernzielen verwenden kannst.
+
+| Ebene          | Beschreibung                           | Typische Verben                                       |
+| -------------- | -------------------------------------- | ----------------------------------------------------- |
+| 1. Erinnern    | Fakten abrufen                         | nennen, auflisten, beschreiben, wiedergeben           |
+| 2. Verstehen   | Konzepte erklären                      | erklären, zusammenfassen, klassifizieren, vergleichen |
+| 3. Anwenden    | Wissen in Situationen einsetzen        | anwenden, durchführen, berechnen, ausführen           |
+| 4. Analysieren | Informationen zergliedern              | unterscheiden, analysieren, einordnen, herleiten      |
+| 5. Bewerten    | Urteile auf Basis von Kriterien fällen | beurteilen, bewerten, rechtfertigen, überprüfen       |
+| 6. Erschaffen  | Neues zusammenstellen                  | entwickeln, planen, gestalten, konzipieren            |
+
+Für die meisten Unternehmensschulungen arbeitest du hauptsächlich mit den Ebenen 1–3. Ebenen 4–6 sind relevant für Führungskräfteentwicklung, Expertenprogramme und komplexe Compliance-Themen.
+
+## Wie KI beim Formulieren von Lernzielen hilft
+
+KI ist gut darin, aus einer groben Zielbeschreibung präzise, handlungsorientierte Lernziele zu generieren. Aber sie braucht die richtigen Inputs — generische Prompts liefern generische Outputs.
+
+Ein guter Prompt enthält drei Elemente:
+
+1. **Das Thema oder die Kompetenz**, die du schulen möchtest
+2. **Die Zielgruppe** — Berufseinsteiger, Fachkraft, Führungskraft, ohne Vorkenntnisse?
+3. **Die gewünschte Bloom-Ebene** oder den Verwendungskontext des Kurses
+
+## Konkrete Prompts für jede Bloom-Ebene
+
+### Ebene 1: Erinnern
+
+```
+Formuliere 3 Lernziele für einen 10-minütigen Mikrokurs über Passwort-Sicherheit
+im Unternehmen. Zielgruppe: alle Mitarbeitenden ohne IT-Vorkenntnisse.
+Nutze Verben aus der Ebene "Erinnern" der Bloomschen Taxonomie.
+Format: "Nach Abschluss der Schulung können Teilnehmende ..."
+```
+
+**Beispiel-Output:**
+
+- Nach Abschluss der Schulung können Teilnehmende die drei Hauptmerkmale eines sicheren Passworts benennen.
+- Nach Abschluss der Schulung können Teilnehmende vier häufige Passwort-Fehler aufzählen.
+- Nach Abschluss der Schulung können Teilnehmende das korrekte Vorgehen bei einem vergessenen Passwort wiedergeben.
+
+### Ebene 2: Verstehen
+
+```
+Formuliere 3 Lernziele für ein DSGVO-Modul über die Rechte betroffener Personen.
+Zielgruppe: Mitarbeitende im Kundendienst.
+Bloom-Ebene: Verstehen.
+Format: "Nach Abschluss dieses Moduls können Teilnehmende ..."
+```
+
+**Beispiel-Output:**
+
+- Nach Abschluss dieses Moduls können Teilnehmende erklären, welche Rechte Kundinnen und Kunden gemäß DSGVO Art. 15–22 haben.
+- Nach Abschluss dieses Moduls können Teilnehmende die Unterschiede zwischen Auskunftsrecht und Löschrecht beschreiben.
+- Nach Abschluss dieses Moduls können Teilnehmende eingehende Anfragen von betroffenen Personen korrekt klassifizieren.
+
+### Ebene 3: Anwenden
+
+```
+Formuliere 3 Lernziele für ein Schulungsmodul über Einwandbehandlung im Vertrieb.
+Zielgruppe: Junior Account Executives im ersten Quartal.
+Bloom-Ebene: Anwenden.
+Der Kurs enthält Szenarien und simulierte Gespräche.
+```
+
+**Beispiel-Output:**
+
+- Nach Abschluss des Moduls können Teilnehmende die FEEL-FELT-FOUND-Methode bei einem Preiseinwand korrekt anwenden.
+- Nach Abschluss des Moduls können Teilnehmende in einem simulierten Kundengespräch zwischen Schein- und echten Einwänden unterscheiden und entsprechend reagieren.
+- Nach Abschluss des Moduls können Teilnehmende drei häufige Einwandtypen mit passenden Antworten in einem Rollenspiel-Szenario bearbeiten.
+
+### Ebene 4: Analysieren
+
+```
+Formuliere 2 Lernziele für ein Führungsseminar über situatives Führen.
+Bloom-Ebene: Analysieren.
+Zielgruppe: Teamleiter mit mindestens 2 Jahren Führungserfahrung.
+Kursdauer: 4 Stunden.
+```
+
+**Beispiel-Output:**
+
+- Nach dem Seminar können Teilnehmende den aktuellen Reifegrad einzelner Teammitglieder anhand konkreter Verhaltensindikatoren einordnen.
+- Nach dem Seminar können Teilnehmende herleiten, warum ein bestimmter Führungsstil in einer gegebenen Situation zu einem definierten Outcome geführt hat.
+
+### Ebene 6: Erschaffen
+
+```
+Formuliere 2 Lernziele für ein Workshop-Modul über Onboarding-Konzepte.
+Zielgruppe: HR Business Partner.
+Bloom-Ebene: Erschaffen.
+Teilnehmende sollen am Ende ein Onboarding-Konzept für ihre eigene Abteilung entwickelt haben.
+```
+
+**Beispiel-Output:**
+
+- Nach dem Workshop können Teilnehmende ein strukturiertes Onboarding-Konzept für ihre Abteilung entwickeln, das die ersten 90 Tage abdeckt.
+- Nach dem Workshop können Teilnehmende einen Onboarding-Plan für eine neue Rolle konzipieren, der formale Schulungen, Peer-Learning und praktische Aufgaben kombiniert.
+
+<Callout type="tip">
+  Wenn du mehrere Kurse auf einmal planen musst: Bitte KI, Lernziele für alle
+  Module eines Programms in einer einzigen Antwort zu generieren — und danach
+  eine kurze Prüfung vorzunehmen, ob die Ziele inhaltlich überlappen oder sich
+  widersprechen.
+</Callout>
+
+## Wie du KI-generierte Lernziele prüfst
+
+KI produziert nicht immer gute Lernziele im ersten Versuch. Prüfe jedes generierte Ziel nach diesen Kriterien:
+
+**Ist das Verb beobachtbar?** Wenn du nicht entscheiden kannst, ob jemand das Ziel erreicht hat, ist das Verb zu vage. "Wissen" und "Verstehen" allein sind nicht messbar — "erklären können" und "anwenden können" schon.
+
+**Beschreibt das Ziel das Ergebnis, nicht die Aktivität?** "Den Kurs abschließen" ist kein Lernziel. "Nach dem Kurs den Prozess eigenständig durchführen können" ist eines.
+
+**Ist das Ziel realistisch für das Kursformat?** KI neigt dazu, ambitionierte Lernziele auf höheren Bloom-Ebenen zu formulieren, selbst wenn du einen einfachen Informationskurs beschreibst. Ein 10-minütiger Mikrokurs über Datenschutz-Grundlagen kann Ebene-1- und Ebene-2-Ziele unterstützen — keine Analyse-Kompetenz.
+
+**Kann ich dafür eine konkrete Quiz-Frage oder Übung formulieren?** Das ist der einfachste Praxistest. Wenn du keine sinnvolle Prüffrage zum Lernziel formulieren kannst, ist das Ziel zu vage.
+
+## Die häufigsten Fehler bei KI-generierten Lernzielen
+
+**Zu viele Lernziele pro Modul.** KI generiert bei einem generischen Prompt gerne 8–10 Lernziele. Ein guter Richtwert: 2–4 Kernlernziele pro Modul. Alles andere ist entweder ein separates Modul oder kein eigenständiges Ziel.
+
+**Lernziele, die wie Agenda-Punkte klingen.** "Teilnehmende lernen, was DSGVO ist" ist eine Themenankündigung, kein Lernziel. KI produziert das, wenn der Prompt zu vage ist — sei spezifischer.
+
+**Lernziele, die nicht zum Kursformat passen.** Wenn dein Kurs nur informationelle Texte enthält, aber die Lernziele "anwenden" und "analysieren" versprechen, entsteht eine Glaubwürdigkeitslücke. Assessments, die du aus solchen Lernzielen ableitest, werden dein Kursformat sprengen.
+
+**KI-Lernziele ohne Zielgruppen-Spezifizierung.** Generische Ziele für "Mitarbeitende" sind fast immer entweder zu leicht oder zu schwer. Je präziser du die Zielgruppe beschreibst, desto passender die Output-Qualität.
+
+<Callout type="info">
+  Lernziele sind auch der beste Input für KI-generierte Quiz-Fragen. Wenn du
+  gute Lernziele hast, kannst du KI bitten: "Formuliere 3
+  Multiple-Choice-Fragen, die dieses Lernziel testen: [Lernziel]" — und bekommst
+  deutlich bessere Fragen als bei einem generischen "Erstelle Quiz-Fragen über
+  DSGVO".
+</Callout>
+
+## Vom Lernziel zum fertigen Kurs
+
+Lernziele sind kein bürokratischer Overhead — sie sind das Steuerungsinstrument für alle weiteren Kursentwicklungs-Entscheidungen: Was gehört in den Kurs, was nicht? Welche Quizfragen sind relevant? Welche Aktivitäten braucht es?
+
+Wenn du KI nicht nur für Lernziele, sondern für den gesamten Kursentwicklungsprozess nutzen willst — von der Struktur über das Skript bis zur Veröffentlichung im LMS — sieh dir an, wie [Kurserstellung mit KI](/de/blog/ki-kurs-erstellen) in der Praxis funktioniert und wie [Scibly diesen Workflow direkt ins LMS integriert](/de).
+
+</PostLayout>

@@ -1,0 +1,58 @@
+{
+  "courses": {
+    "detail": {
+      "breadcrumbRoot": "Programmes",
+      "badgeLessons": "{{count}} Lessons",
+      "badgeLesson": "{{count}} Lesson",
+      "noEstimatedTime": "No estimated time",
+      "courseCover": "Course Cover",
+      "coverLabel": "Cover image",
+      "coverAdd": "Add cover image",
+      "coverRemove": "Remove cover image",
+      "workingOnVersion": "Working on v{{version}} (Draft)",
+      "preview": "Preview",
+      "tabs": {
+        "content": "Content",
+        "people": "People",
+        "analytics": "Analytics"
+      },
+      "editSheet": {
+        "triggerTooltip": "Edit details",
+        "title": "Edit Course",
+        "description": "All changes are course-wide and take effect immediately, no new publish required.",
+        "fieldCategory": "Category",
+        "fieldCategoryPlaceholder": "e.g. Compliance, Security",
+        "fieldTitle": "Course Title",
+        "titleRequired": "Title is required",
+        "fieldDescription": "Description",
+        "fieldTags": "Tags",
+        "fieldTagsPlaceholder": "Add tags...",
+        "policyTitle": "Completion Policy",
+        "minScoreLabel": "Min score for certificate (%)",
+        "noMinimum": "No minimum",
+        "minScoreDescription": "Leave empty for no minimum. Learners scoring below this percentage complete the course but receive no certificate.",
+        "maxAttemptsLabel": "Max attempts",
+        "unlimitedAttempts": "Unlimited",
+        "maxAttemptsDescription": "Leave empty for unlimited. Learners who reach this limit can no longer open the course.",
+        "deleteButton": "Delete",
+        "deleting": "Deleting...",
+        "cancel": "Cancel",
+        "saveChanges": "Save changes",
+        "saving": "Saving...",
+        "toastUpdateSuccess": "Course updated successfully.",
+        "toastUpdateFailed": "Failed to update course.",
+        "toastDeleteSuccess": "Course deleted successfully.",
+        "toastDeleteFailed": "Failed to delete course."
+      },
+      "deleteDialog": {
+        "title": "Delete Course",
+        "description": "This action cannot be undone. This will permanently delete the course, all its lessons, scenes, and member enrollments.",
+        "confirmInstruction": "Please type delete course to confirm.",
+        "confirmPlaceholder": "delete course",
+        "confirmValue": "delete course",
+        "cancel": "Cancel",
+        "deleteButton": "Delete Course"
+      }
+    }
+  }
+}

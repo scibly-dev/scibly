@@ -1,0 +1,140 @@
+{
+  "orgBilling": {
+    "title": "Billing",
+    "subtitle": "What this organization's plan grants, what it has spent, and when the allowance comes back.",
+    "paymentLapse": {
+      "grace": {
+        "title": "A payment for this organization failed",
+        "description": "Everything keeps working until {date}. Update the payment method before then and nothing changes. After that date AI generations, new enrollments and new public course links stop, while learners already enrolled keep their courses."
+      },
+      "lapsed": {
+        "title": "This organization's subscription has lapsed",
+        "description": "AI generations, new enrollments and new public course links have stopped. Nothing has been deleted: learners keep their courses, their progress and their certificates, and everything resumes the moment payment is restored."
+      },
+      "billingLink": "Go to billing"
+    },
+    "allowanceWarning": {
+      "warning": {
+        "title": "Your AI generations are running low",
+        "description": "{remaining} generations are left, top-ups included, less than a fifth of the {allowance} your plan grants each month. There's still room, but it's worth deciding on an upgrade or a top-up now, rather than once your authors are already stopped."
+      },
+      "critical": {
+        "title": "You're almost out of AI generations",
+        "description": "{remaining} generations are left, top-ups included, against the {allowance} your plan grants each month. When they run out, chats, image generation and source indexing stop for everyone until the allowance resets."
+      },
+      "dismiss": "Dismiss this warning",
+      "topupLink": "Buy a top-up",
+      "plansLink": "Compare plans"
+    },
+    "usage": {
+      "title": "AI generations this period",
+      "description": "What this period holds (your plan's monthly allowance plus any top-up packs) and how much of it is gone.",
+      "usedOfTotal": "{used} of {total} used",
+      "remaining": "{remaining} left",
+      "unlimited": "Unlimited",
+      "allowanceLegend": "Monthly allowance: {remaining} of {allowance} left",
+      "topupLegend": "Top-up packs: {remaining} left · never expire",
+      "topupLegendSpent": "Top-up packs: {remaining} left, {used} spent this period · never expire",
+      "resetsAt": "Resets on {date}",
+      "noReset": "A one-time grant that does not reset."
+    },
+    "breakdown": {
+      "title": "Where they went",
+      "description": "Every generation charged this billing period, by the person who ran it and by what it did. Refunded generations are not counted.",
+      "byAuthorTab": "By author",
+      "byActionTab": "By action",
+      "creditsColumn": "Generations",
+      "unattributed": "Removed member",
+      "otherAuthors": "{authors} more authors",
+      "empty": "Nothing has been generated this period yet.",
+      "total": "{total} generations charged this period",
+      "topupNote": "{topup} of these were paid for with top-up credits rather than the monthly allowance.",
+      "actions": {
+        "CHAT_MESSAGE": "Chat messages",
+        "IMAGE_GENERATION": "Image generation",
+        "SOURCE_INGEST": "Source indexing"
+      }
+    },
+    "seats": {
+      "title": "Learner seats",
+      "description": "Distinct people enrolled in at least one course. Authors and admins who are not enrolled cost nothing.",
+      "usedOfCapacity": "{used} of {capacity} seats in use",
+      "included": "{included} included in the plan · {purchased} purchased",
+      "none": "This plan includes no learner seats, so nobody can be enrolled yet.",
+      "pricePerSeat": "€{price} per seat per month",
+      "vatNote": "plus VAT",
+      "quantityLabel": "Seats to add",
+      "buyButton": "Add seats",
+      "prorationNote": "Added seats work immediately and renew with the plan. You will see what the rest of this period costs before anything is charged.",
+      "unavailableNote": "This plan does not sell additional seats. Choose a plan that does to enroll more learners.",
+      "purchaseSuccess": "Seats added, {purchased} purchased in total.",
+      "purchaseFailed": "The seats could not be added. Please try again.",
+      "confirmTitle": "Add {quantity} learner seats?",
+      "confirmLoading": "Working out what this costs…",
+      "confirmFailed": "We could not work out the price just now. Please try again in a moment.",
+      "confirmChargeNow": "€{amount} plus VAT is charged to your card now, covering {quantity} seats for the rest of the current period.",
+      "confirmRenewal": "From {date} your plan carries {seats} extra seats at €{recurring} per month.",
+      "confirmRenewalNoDate": "From the next renewal your plan carries {seats} extra seats at €{recurring} per month.",
+      "confirmAction": "Pay €{amount}",
+      "confirmActionPending": "Pay",
+      "confirmCancel": "Cancel"
+    },
+    "topup": {
+      "title": "Top up generations",
+      "description": "Buy generations as a one-off. They never expire, and your monthly allowance is always spent first.",
+      "unavailableDescription": "Top-up packs are sold to organizations on a paid plan. Choose a plan below to unlock them.",
+      "packCredits": "{credits} generations",
+      "packPrice": "€{price}",
+      "vatNote": "+ VAT, one-off",
+      "buyButton": "Buy",
+      "upgradeNote": "Running out every month? A larger plan gives you more generations for less. See the plans below.",
+      "checkoutFailed": "Could not start checkout. Please try again.",
+      "purchaseConfirmed": "Top-up added. Your balance has been updated.",
+      "purchasePending": "Your payment is being confirmed. The generations will appear here shortly."
+    },
+    "plan": {
+      "title": "Billing",
+      "description": "Subscribe to a plan to unlock generation credits and paid features. Managed entirely by Stripe.",
+      "internalDescription": "Your organization has complimentary access. Billing does not apply.",
+      "activeDescription": "Manage your subscription, payment methods, and invoices in the Stripe customer portal.",
+      "managePortalButton": "Manage billing",
+      "checkoutFailed": "Could not start checkout. Please try again.",
+      "portalFailed": "Could not open the billing portal. Please try again.",
+      "mostPopularBadge": "Most popular",
+      "vatNote": "+ VAT",
+      "byoaiLabel": "Bring your own AI (BYOAI)",
+      "plans": {
+        "starter": {
+          "name": "Starter",
+          "price": "€{price}",
+          "period": "/ month",
+          "tagline": "Great for getting started",
+          "credits": "{credits} AI credits / month",
+          "seats": "{seats} learner seats",
+          "sources": "{sources} sources per notebook",
+          "cta": "Subscribe to Starter"
+        },
+        "business": {
+          "name": "Business",
+          "price": "€{price}",
+          "period": "/ month",
+          "tagline": "For growing teams",
+          "credits": "{credits} AI credits / month",
+          "seats": "{seats} learner seats",
+          "sources": "{sources} sources per notebook",
+          "cta": "Subscribe to Business"
+        },
+        "pro": {
+          "name": "Pro",
+          "price": "€{price}",
+          "period": "/ month",
+          "tagline": "For large organizations",
+          "credits": "{credits} AI credits / month",
+          "seats": "{seats} learner seats",
+          "sources": "{sources} sources per notebook",
+          "cta": "Subscribe to Pro"
+        }
+      }
+    }
+  }
+}

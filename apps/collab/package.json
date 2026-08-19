@@ -1,0 +1,33 @@
+{
+  "name": "@scibly/collab",
+  "version": "1.1.4",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "tsx src/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "dependencies": {
+    "@hocuspocus/extension-database": "^4.0.0",
+    "@hocuspocus/server": "^4.0.0",
+    "@scibly/db": "workspace:*",
+    "@scibly/lib": "workspace:*",
+    "dotenv": "^17.0.0",
+    "yjs": "^13.6.20"
+  },
+  "devDependencies": {
+    "@hocuspocus/provider": "^4.0.0",
+    "@scibly/eslint-config": "workspace:*",
+    "@types/node": "^25.0.0",
+    "eslint": "^9.39.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.8.2",
+    "vitest": "^4.1.5"
+  }
+}

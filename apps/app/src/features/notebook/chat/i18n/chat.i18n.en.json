@@ -1,0 +1,111 @@
+{
+  "notebook": {
+    "chat": {
+      "inputPlaceholder": "Describe a lesson, quiz, or course…",
+      "chipsOnlyPlaceholder": "Pick a prompt below to start…",
+      "sendButton": "Send",
+      "stopButton": "Stop generating",
+      "scrollToBottom": "Scroll to the latest message",
+      "error": "Error:",
+      "errorFallback": "The AI request failed. Check your API key or model configuration.",
+      "errorRetry": "Retry",
+      "errorRetryPrompt": "Continue where you left off.",
+      "selectModel": "Select model",
+      "customModelsLabel": "Custom",
+      "noCustomModelsHint": "No custom models added yet.",
+      "sessionStartedHint": "Sources added, ask a question to get started",
+      "summarizingHistory": "Summarizing earlier conversation…",
+      "multipleChoice": {
+        "noAnswerLabel": "No answer recorded",
+        "otherLabel": "Something else",
+        "skip": "Skip",
+        "skippedLabel": "Skipped",
+        "replyDirectlyPlaceholder": "Or reply directly…",
+        "pendingApproval": "Answer the questions in the wizard before sending a new message.",
+        "pendingApprovalPlaceholder": "Complete the questions above first…",
+        "stepPagerShort": "{{current}} of {{total}}",
+        "questionPrefix": "Q:",
+        "answerPrefix": "A:",
+        "submissionLabel": "Your selections",
+        "submissionHint": "Reply to multiple choice",
+        "submissionSingleDetail": "Your answer to the question above",
+        "submissionBatchDetail": "Your answers to the questions above",
+        "invalidQuestion": "This question could not be displayed. Ask the assistant to ask it again.",
+        "back": "Back",
+        "next": "Next",
+        "submitAnswers": "Submit answers",
+        "chooseOrSkip": "Choose an answer or skip this question."
+      },
+      "planning": {
+        "confirm": "Confirm plan",
+        "deny": "Reject",
+        "back": "Back",
+        "submitDenial": "Reject plan",
+        "submitChanges": "Send changes",
+        "addStep": "Add a step…",
+        "removeStep": "Remove step",
+        "stepCount": "{{count}} steps",
+        "stepLimitReached": "Maximum number of steps reached.",
+        "denyFeedbackLabel": "Why are you rejecting this plan?",
+        "denyFeedbackPlaceholder": "Optional: tell the agent what to try instead…",
+        "adjustFeedbackLabel": "Additional notes",
+        "adjustFeedbackPlaceholder": "Optional: explain what you changed or what still needs work…",
+        "stepTitleLabel": "Step {{index}} title",
+        "stepDetailPlaceholder": "Description…",
+        "decisionConfirmed": "Plan confirmed",
+        "decisionDenied": "Plan rejected",
+        "decisionAdjusted": "Plan updated",
+        "feedbackLabel": "Notes",
+        "noResponseLabel": "No response recorded",
+        "submissionLabel": "Your plan response",
+        "submissionHint": "Reply to proposed plan",
+        "pendingApproval": "Confirm, reject, or adjust the proposed plan before sending a new message.",
+        "invalidPlan": "This plan could not be displayed. Ask the assistant to propose it again."
+      },
+      "deletion": {
+        "pendingApproval": "Confirm or cancel the deletion request before sending a new message."
+      },
+      "imageGeneration": {
+        "generating": "Creating image…",
+        "generated": "Generated image",
+        "insertIntoScene": "Insert into scene",
+        "openFullSize": "Open full size",
+        "downloadImage": "Download image",
+        "insertError": "Could not insert the image into the scene.",
+        "noCourseLinked": "Select a course before inserting images.",
+        "openCourseBuilder": "Select course",
+        "chooseSceneTitle": "Insert into scene",
+        "chooseSceneDescription": "Choose where this image should be appended in your course.",
+        "insertedIntoScene": "Image added to {{scene}} · {{lesson}}",
+        "generationFailed": "Image generation failed.",
+        "retryGeneration": "Try again",
+        "openInImageEditor": "Open in image editor",
+        "moreActions": "More actions",
+        "pendingApproval": "Wait for image generation to finish before sending a new message.",
+        "pendingApprovalPlaceholder": "Generating image…",
+        "metadata": {
+          "showDetails": "Image details",
+          "title": "Image details",
+          "alt": "Alt text",
+          "prompt": "Prompt",
+          "dimensions": "Dimensions",
+          "fileSize": "File size",
+          "aspectRatio": "Aspect ratio",
+          "created": "Created"
+        }
+      },
+      "thinking": {
+        "active": "Thinking…",
+        "idle": "Thinking",
+        "done": "Done"
+      },
+      "outOfCredits": {
+        "title": "Out of AI generations",
+        "description": "Your organization has used all of its AI generations for this billing period. An admin can buy a top-up or upgrade the plan to keep chatting.",
+        "acknowledgeLabel": "Got it",
+        "manageDescription": "Your organization has used all of its AI generations for this billing period. Buy a top-up pack to keep working right away (top-up generations never expire), or upgrade the plan if this keeps happening.",
+        "billingLinkLabel": "Buy generations"
+      }
+    }
+  }
+}

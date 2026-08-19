@@ -1,0 +1,118 @@
+{
+  "learningPlayer": {
+    "courseCompleteSuccess": {
+      "badge": "Course Complete 🎉",
+      "earnedSp": "You finished the course and earned {{sp}} SP.",
+      "greatJob": "Great job!",
+      "certReady": "Your certificate is ready in",
+      "myCertificates": "My Certificates",
+      "backToDashboard": "Back to Dashboard",
+      "viewCert": "View Certificate"
+    },
+    "courseCompleteFail": {
+      "badge": "Score Too Low",
+      "desc": "You completed all lessons but didn't reach the minimum score required to earn a certificate.",
+      "yourScore": "Your Score",
+      "required": "Required",
+      "attemptsUsed": "Attempts Used",
+      "remaining": "Remaining",
+      "remainingNone": "None",
+      "remainingCount": "{{count}} left",
+      "instructionRetry": "Start the course again to improve your score.",
+      "instructionMaxTriesReached": "You have used all allowed attempts.",
+      "instructionContactAdminRetry": "Contact your administrator to be re-enrolled for another attempt.",
+      "instructionContactAdminMaxTriesReached": "You have used all allowed attempts. Contact your administrator if you believe this is a mistake.",
+      "backToDashboard": "Back to Dashboard",
+      "resetting": "Resetting…",
+      "tryAgain": "Try Again"
+    },
+    "restartConfirm": {
+      "title": "Restart this course?",
+      "description": "Starting over will erase your score and progress on this attempt. This can't be undone.",
+      "cancel": "Cancel",
+      "confirm": "Restart"
+    },
+    "overview": {
+      "progressLessonsCount": "{{completed}} of {{total}} lessons",
+      "attemptsUsedStatus": "{{tries}} / {{max}} attempts used",
+      "nextLesson": "Next Lesson",
+      "start": "Start",
+      "minutesSuffix": "min",
+      "badgeLessons": "{{count}} Lessons",
+      "badgeLesson": "{{count}} Lesson",
+      "noEstimatedTime": "No estimated time",
+      "courseCover": "Course Cover",
+      "lessonProgress": "Lesson {{current}} of {{total}}",
+      "sceneProgress": "{{completed}} of {{total}} scenes",
+      "sciblyPointsLabel": "Scibly Points",
+      "courseProgress": "{{pct}}% complete",
+      "pathEyebrow": "Learning path",
+      "nextUp": "Up next",
+      "lessonDetail": "Lesson",
+      "completedLesson": "Completed",
+      "lockedLesson": "Locked",
+      "lessonLockedHint": "Complete the previous lesson to unlock.",
+      "closeLessonDetail": "Close",
+      "estimatedTime": "{{minutes}} min",
+      "noLessonDescription": "No description for this lesson."
+    },
+    "lessonComplete": {
+      "title": "Lesson Completed!",
+      "titlePerfect": "Fantastic!",
+      "titleGreat": "Great job!",
+      "titleDone": "Lesson complete!",
+      "subtitlePerfect": "You nailed every scene. Keep that momentum going.",
+      "subtitleGreat": "Solid work. You're building real progress.",
+      "subtitleDone": "Another step forward on your learning path.",
+      "sciblyPointsTotal": "Scibly Points",
+      "scoreLabel": "Score",
+      "claimSciblyPoints": "Claim Scibly Points",
+      "totalCourseSp": "Total Course SP: {{total}} / {{max}} SP",
+      "continueOnPath": "Continue",
+      "courseCompleted": "Finish course",
+      "nextLabel": "Next up:"
+    },
+    "exitModal": {
+      "title": "Wait, you're on a roll!",
+      "descriptionEarly": "You've got momentum, don't waste it! Every scene you finish is saved, and completing this lesson checks it off your path.",
+      "descriptionRemaining": "Only {{remaining}} scenes left, you're so close. Finish now while you're in the flow and lock in the win.",
+      "descriptionAlmostDone": "Just one scene left! Wrap it up now and see this lesson checked off your learning path.",
+      "stay": "Keep learning",
+      "exit": "Leave anyway"
+    },
+    "topBar": {
+      "createCoursesPrompt": "Create Courses on Scibly →"
+    },
+    "navigation": {
+      "done": "Done",
+      "saving": "Saving...",
+      "check": "Check",
+      "complete": "Complete",
+      "next": "Next",
+      "previous": "Back",
+      "goBack": "Go back",
+      "submissionError": "We couldn't check your answer. Please try again.",
+      "sceneLoadError": "We couldn't load this scene.",
+      "tryAgain": "Try again",
+      "noScenes": "This lesson has no scenes yet."
+    },
+    "feedback": {
+      "perfectTitle": "Awesome!",
+      "partialTitle": "Almost!",
+      "incorrectTitle": "Not quite!",
+      "scoreSummary": "{{correct}} of {{total}} correct"
+    },
+    "spAnimation": {
+      "earned": "Earned"
+    },
+    "branding": {
+      "successTitle": "Enjoyed this interactive course?",
+      "successDesc": "Create similar courses for free on Scibly and share them with your audience.",
+      "successCta": "Create Your Free Course",
+      "failTitle": "Create courses like this for free",
+      "failDesc": "Sign up on Scibly to create interactive learning experiences today.",
+      "failCta": "Get Started",
+      "poweredBy": "Powered by Scibly"
+    }
+  }
+}

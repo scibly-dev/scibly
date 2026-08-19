@@ -1,0 +1,82 @@
+.tiptap.ProseMirror ol,
+ul > * {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.tiptap.ProseMirror li {
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.tiptap.ProseMirror a {
+  color: #3471eb;
+  text-decoration: underline;
+  &:hover {
+    cursor: pointer;
+  }
+}
+.tiptap.ProseMirror {
+/* This should do the trick for the beginning, since adding an extra plugin would be a bit overkill for this simple task. */
+
+/* Level 1: Decimal (1., 2., 3., ...) */
+ol {
+  list-style-type: decimal;
+}
+
+/* Level 2: Lower alpha (a., b., c., ...) */
+ol ol {
+  list-style-type: lower-alpha;
+}
+
+/* Level 3: Lower roman numerals (i., ii., iii., ...) */
+ol ol ol {
+  list-style-type: lower-roman;
+}
+
+/* Level 4: Repeat back to decimal (1., 2., 3., ...) */
+ol ol ol ol {
+  list-style-type: decimal;
+}
+
+/* Level 5: Lower alpha (a., b., c., ...) */
+ol ol ol ol ol {
+  list-style-type: lower-alpha;
+}
+
+/* Level 6: Lower roman numerals (i., ii., iii., ...) */
+ol ol ol ol ol ol {
+  list-style-type: lower-roman;
+}
+
+/* Level 7: Repeat back to decimal (1., 2., 3., ...) */
+/* And so on, continuing for each level */
+ol ol ol ol ol ol ol {
+  list-style-type: decimal;
+}
+
+/* Level 8: Lower alpha (a., b., c., ...) */
+ol ol ol ol ol ol ol ol {
+  list-style-type: lower-alpha;
+}
+
+/* Level 9: Lower roman numerals (i., ii., iii., ...) */
+ol ol ol ol ol ol ol ol ol {
+  list-style-type: lower-roman;
+}
+
+/* Level 10: Repeat back to decimal (1., 2., 3., ...) */
+ol ol ol ol ol ol ol ol ol ol {
+  list-style-type: decimal;
+}
+
+/* Level 11: Lower alpha (a., b., c., ...) */
+ol ol ol ol ol ol ol ol ol ol ol {
+  list-style-type: lower-alpha;
+}
+
+/* Level 12: Lower roman numerals (i., ii., iii., ...) */
+ol ol ol ol ol ol ol ol ol ol ol ol {
+  list-style-type: lower-roman;
+}
+}

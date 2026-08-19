@@ -1,0 +1,97 @@
+{
+  "auth": {
+    "betaBanner": {
+      "message": "Danke für dein Interesse! Der Start steht kurz bevor 🚀 Auch wenn die Anmeldung noch geschlossen ist, kannst du dir schon jetzt per E-Mail einen Beta-Zugang sichern.",
+      "contactLabel": "Kontaktiere uns"
+    },
+    "heroPanel": {
+      "eyebrow": "Einfach loslegen",
+      "title": "Lernen, ",
+      "titleAccent": "einfach gemacht.",
+      "subtitle": "Erstelle Kurse, verfolge Fortschritte und baue das Wissen deines Teams auf – an einem Ort."
+    },
+    "loginPage": {
+      "title": "Willkommen zurück bei Scibly",
+      "redirectText": "Noch kein Konto?",
+      "redirectLabel": "Registrieren"
+    },
+    "registerPage": {
+      "title": "Los geht's mit Scibly",
+      "redirectText": "Bereits registriert?",
+      "redirectLabel": "Anmelden"
+    },
+    "signInForm": {
+      "emailPlaceholder": "deine@email.com",
+      "passwordPlaceholder": "Passwort",
+      "submit": "Anmelden",
+      "submitting": "Anmelden...",
+      "forgotPassword": "Passwort vergessen?",
+      "invalidEmailMessage": "Bitte gib eine korrekte E-Mail-Adresse ein",
+      "invalidEmailOrPassword": "Ungueltige E-Mail oder falsches Passwort."
+    },
+    "signUpForm": {
+      "namePlaceholder": "Vor- und Nachname",
+      "emailPlaceholder": "deine@email.com",
+      "usernamePlaceholder": "Benutzername (optional)",
+      "passwordPlaceholder": "Passwort",
+      "submit": "Account erstellen",
+      "submitting": "Account wird erstellt...",
+      "invalidEmailMessage": "Bitte gib eine gültige E-Mail-Adresse ein",
+      "successToast": "Account erfolgreich erstellt. Bitte verifiziere deine E-Mail-Adresse.",
+      "errorToast": "Fehler beim Erstellen des Accounts."
+    },
+    "resetPasswordPage": {
+      "title": "Passwort zurücksetzen",
+      "passwordPlaceholder": "Passwort",
+      "confirmPasswordPlaceholder": "Passwort erneut eingeben",
+      "submit": "Passwort zurücksetzen",
+      "submitting": "Passwort wird zurückgesetzt...",
+      "successToast": "Passwort erfolgreich zurückgesetzt",
+      "errorToast": "Fehler beim Zurücksetzen des Passworts."
+    },
+    "forgotPasswordCard": {
+      "title": "Passwort zurücksetzen",
+      "description": "Bitte gib deine E-Mail-Adresse ein, um einen Link zum Zurücksetzen deines Passworts zu erhalten",
+      "sendLink": "Link senden",
+      "back": "Passwort wieder eingefallen?",
+      "invalidEmail": "Bitte gib eine gültige E-Mail-Adresse ein"
+    },
+    "registerSuccessCard": {
+      "title": "Fast fertig!",
+      "description": "Bitte verifiziere deine E-Mail-Adresse, um deine Registrierung abzuschließen",
+      "redirectLabel": "Bereits verifiziert? Anmelden",
+      "countDownLabel": "E-Mail erneut senden",
+      "resendSuccessMessage": "E-Mail erfolgreich erneut gesendet!",
+      "resendLabel": "Keine E-Mail erhalten? E-Mail erneut senden",
+      "invalidEmail": "Bitte gib eine gültige E-Mail-Adresse ein",
+      "resendError": "Fehler beim erneuten Senden der E-Mail",
+      "messagePrefix": "Wir haben einen Verifikationslink an diese Adresse gesendet:",
+      "nextStepsTitle": "Was kommt als nächstes?",
+      "steps": [
+        "Prüfe deinen E-Mail-Posteingang",
+        "Klicke auf den Verifikationslink in der E-Mail",
+        "Starte mit dem Erstellen und Teilen von Lerninhalten!"
+      ]
+    },
+    "resetPasswordSuccessCard": {
+      "title": "E-Mail überprüfen",
+      "countDownLabel": "E-Mail erneut senden",
+      "resendSuccessMessage": "E-Mail erfolgreich erneut gesendet!",
+      "resendLabel": "Keine E-Mail erhalten? E-Mail erneut senden",
+      "invalidEmail": "Bitte gib eine gültige E-Mail-Adresse ein",
+      "resendError": "Fehler beim erneuten Senden des Zurücksetzungslinks",
+      "message": "Bitte überprüfe deinen Posteingang und klicke auf den Link, um dein Passwort zurückzusetzen. Der Link läuft in 60 Minuten ab."
+    },
+    "formBase": {
+      "or": "ODER",
+      "signInAriaLabel": "Anmelden"
+    },
+    "googleButton": {
+      "continueWithGoogle": "Mit Google fortfahren",
+      "signInError": "Ein Fehler ist bei der Google-Anmeldung aufgetreten. Bitte versuche es erneut."
+    },
+    "successCard": {
+      "resending": "Erneut senden..."
+    }
+  }
+}

@@ -1,0 +1,99 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Scenario-Based Learning",
+  definition:
+    "An instructional strategy that places learners in realistic job situations requiring decisions, using the consequences of those choices — rather than information delivery — as the primary learning mechanism.",
+  keywords: [
+    "scenario-based learning",
+    "SBL",
+    "branching scenarios",
+    "decision-making training",
+    "instructional design",
+  ],
+  relatedTerms: [
+    "instructional-design",
+    "action-mapping",
+    "merrills-first-principles",
+  ],
+  relatedPost: "map-it-cathy-moore",
+};
+
+<GlossaryLayout metadata={metadata} lang="en">
+
+Scenario-based learning (SBL) is built on a straightforward premise: people learn to make better decisions by practicing making decisions, not by reading about how decisions should be made. The scenario puts the learner in a realistic situation, presents a choice with real stakes, and delivers consequences that depend on what the learner chose. The consequence — not the content that follows — is what drives the learning.
+
+This is a meaningful departure from the information-first model that most eLearning defaults to. Content-first design assumes that if you tell people what to do, they'll do it. SBL assumes that judgment is built through practice, not explanation.
+
+## Why SBL works
+
+The cognitive case for SBL is solid. When a learner faces a realistic scenario, they activate the same problem-solving processes they would use in the actual situation. This is sometimes called "desirable difficulty" — the effort required to navigate a realistic decision is the mechanism that creates durable learning, not a barrier to it.
+
+Three mechanisms underpin SBL's effectiveness:
+
+**Practice under realistic conditions.** The closer the training environment resembles the actual performance context, the more likely skills will transfer. Scenarios that mirror real job situations — with the same constraints, incomplete information, and competing priorities learners face on the job — produce more transfer than abstract case studies.
+
+**Immediate, consequential feedback.** In SBL, feedback isn't "Incorrect — the right answer is C." It's "You chose to escalate directly to the client. Here's what happened: the client is frustrated and your manager is asking why you didn't brief them first." The consequence creates the emotional salience that makes the lesson stick.
+
+**Activation of prior knowledge.** Scenarios force learners to retrieve and apply what they already know, connecting new concepts to existing mental models. This retrieval process is itself a powerful memory consolidation mechanism.
+
+## Five principles for designing effective scenarios
+
+### 1. Start with a real performance gap, not a content list
+
+Scenarios should be built around decisions that employees actually get wrong in real work. If you're designing without first identifying the specific mistake your learners make, you're likely building a scenario that teaches what the SME thinks is important, not what will change behavior on the job.
+
+### 2. Make the distractors genuinely tempting
+
+The most common failure in SBL is writing wrong answers that are obviously wrong. Good distractors reflect the actual reasoning errors your target learners make. If the wrong choice isn't something a reasonable person would actually select, you're testing recognition of labeled answers, not judgment.
+
+### 3. Consequences, not explanations, should do the work
+
+Resist the urge to explain why the learner was wrong after every choice. Let the consequence play out first. A learner who experiences the outcome of a poor decision is more likely to remember it than one who reads why their choice was suboptimal.
+
+### 4. Match fidelity to the decision, not to your budget
+
+Scenario fidelity — how realistic the production looks — has almost no correlation with learning effectiveness. A text-based branching scenario with sharp distractors and realistic consequences will outperform a polished video scenario with obvious wrong answers every time. Spend your budget on the quality of the decision architecture, not the visuals.
+
+### 5. Reflect the full complexity of the real situation
+
+Real job decisions involve ambiguity, missing information, and competing priorities. Scenarios that sanitize this complexity ("you have all the information you need, now choose") train a version of the skill that doesn't exist on the job.
+
+<Callout type="tip">
+  Before writing a single line of scenario content, identify the three most
+  common mistakes your target learners make in this situation. Your wrong-answer
+  options should be direct representations of those mistakes. If you can't name
+  three realistic errors, you don't yet have enough knowledge of the performance
+  gap to design an effective scenario.
+</Callout>
+
+## Branching vs. linear scenarios
+
+**Linear scenarios** present one situation, one decision, and one set of consequences. They're appropriate when you're targeting a specific decision point in isolation — for example, recognizing a social engineering attempt or categorizing an expense correctly.
+
+**Branching scenarios** chain decisions together so that earlier choices affect later situations. They more accurately reflect the reality of most job tasks — the consequences of how you handle the first part of a situation shape what you face next. Branching scenarios are significantly more complex to design and maintain, and should be used when the interdependence of decisions is central to the learning goal, not as a default.
+
+## When not to use SBL
+
+SBL is not appropriate for every learning objective. It is optimized for developing judgment and decision-making — situations where there's no single right answer, where context matters, or where the challenge is applying knowledge under realistic conditions.
+
+It is not the right tool for:
+
+- **Knowledge retrieval objectives** where the learner simply needs to remember a fact, a process step, or a definition. A reference guide or spaced repetition approach will be more efficient.
+- **Procedural skills with no ambiguity** where the correct sequence is fixed. A step-by-step job aid will serve better than a decision scenario.
+- **Awareness-level objectives** where the goal is exposure to a concept, not the ability to act on it.
+
+<Callout type="info">
+  One of the most common misuses of SBL is designing scenarios for topics that
+  don't require judgment — compliance training where the correct answer is
+  always "follow the policy" and any other choice is clearly wrong. When there's
+  genuinely only one right answer and no realistic reason to choose otherwise, a
+  scenario isn't building judgment; it's adding friction to information
+  delivery.
+</Callout>
+
+## The connection to action mapping
+
+Cathy Moore's action mapping methodology is closely aligned with SBL in its logic. Both start with a real-world performance gap, identify the decisions that drive that gap, and design practice around those decisions. If you've built an action map, the decisions your learners need to practice are already identified — scenarios are the natural practice format for decision-making objectives.
+
+</GlossaryLayout>

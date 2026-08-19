@@ -1,0 +1,38 @@
+{
+  "compliance": {
+    "eyebrow": "Security by design",
+    "title": "Your knowledge",
+    "titleEmphasis": "stays yours.",
+    "subtitle": "Clear technical and contractual foundations for sensitive learning content.",
+    "cta": "Request demo",
+    "registry": {
+      "summary": "Four concrete security and compliance commitments: GDPR compliance, EU hosted models, no training on customer data, and AES encryption."
+    },
+    "controls": [
+      {
+        "kind": "gdpr",
+        "value": "GDPR",
+        "label": "GDPR compliant",
+        "detail": "Fully compliant with all European Union data protection requirements."
+      },
+      {
+        "kind": "euServer",
+        "value": "EU",
+        "label": "EU servers",
+        "detail": "Scibly only uses models hosted in the European Union."
+      },
+      {
+        "kind": "noTraining",
+        "value": "0×",
+        "label": "No training",
+        "detail": "Your data is never used to train AI models."
+      },
+      {
+        "kind": "aes",
+        "value": "AES",
+        "label": "AES Encrypted",
+        "detail": "Data is stored with AES encryption and protected in transit."
+      }
+    ]
+  }
+}

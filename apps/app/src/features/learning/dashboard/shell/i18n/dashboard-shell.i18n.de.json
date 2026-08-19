@@ -1,0 +1,13 @@
+{
+  "learn": {
+    "layout": {
+      "title": "Mein Lernen",
+      "subtitle": "Verfolge deinen Fortschritt, deine Kurse und Erfolge."
+    },
+    "tabs": {
+      "overview": "Übersicht",
+      "myCourses": "Meine Kurse",
+      "certificates": "Zertifikate"
+    }
+  }
+}

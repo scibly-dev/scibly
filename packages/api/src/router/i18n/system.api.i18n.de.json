@@ -1,0 +1,6 @@
+{
+  "internalUnexpected": "Ein unerwarteter Fehler ist beim Verarbeiten deiner Anfrage aufgetreten",
+  "couldNotProcessRequest": "Deine Anfrage konnte nicht verarbeitet werden. Bitte versuche es erneut.",
+  "captchaFailed": "Sicherheitsüberprüfung fehlgeschlagen. Bitte versuche es erneut.",
+  "tooManyRequests": "Zu viele Anfragen. Bitte versuche es später erneut."
+}

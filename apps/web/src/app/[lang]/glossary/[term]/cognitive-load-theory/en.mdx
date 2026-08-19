@@ -1,0 +1,97 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Cognitive Load Theory",
+  definition:
+    "A learning science theory by John Sweller describing how working memory has limited capacity, and how instructional design can reduce unnecessary load to support better learning.",
+  keywords: [
+    "cognitive load theory",
+    "Sweller",
+    "working memory",
+    "instructional design",
+    "multimedia learning",
+  ],
+  relatedTerms: [
+    "spaced-repetition",
+    "retrieval-practice",
+    "instructional-design",
+  ],
+  relatedPost: "elearning-science-of-instruction",
+};
+
+<GlossaryLayout metadata={metadata} lang="en">
+
+Cognitive Load Theory (CLT) is one of the most empirically grounded frameworks in instructional design. Developed by John Sweller in the 1980s and 1990s — building on earlier work on working memory by researchers like George Miller and Alan Baddeley — it provides a model of how the human mind processes and stores new information, and derives from that model a set of practical design principles.
+
+## The core architecture
+
+The theory rests on two fundamental properties of human memory:
+
+**Working memory is severely limited.** Sometimes described as the "bottleneck" of cognition, working memory can hold and actively process only a small number of elements at any one time — often cited as approximately four items, though the exact number depends on how "item" is defined. More relevant for instructional design: working memory is where learning happens, and it can be overwhelmed.
+
+**Long-term memory is essentially unlimited.** Once information is encoded into long-term memory as schemas — organized knowledge structures — it can be retrieved and used without consuming working memory capacity. An expert solving a familiar problem draws on schemas that handle much of the complexity automatically, freeing working memory for novel aspects of the task.
+
+Learning, in CLT terms, is the construction of schemas in long-term memory through the limited channel of working memory.
+
+## Three types of cognitive load
+
+Sweller identified three distinct sources of cognitive load that together consume working memory capacity:
+
+### Intrinsic load
+
+Intrinsic load is the complexity inherent in the material itself — determined by the number of interacting elements that must be held in working memory simultaneously to understand the content. High-element-interactivity content (where understanding one part requires understanding how it relates to several others) imposes higher intrinsic load than low-element-interactivity content. A diagram showing how a single machine part works has lower intrinsic load than understanding the same part's role in a complete system.
+
+Intrinsic load cannot be eliminated without also eliminating the learning itself. However, it can be managed by sequencing content to build schemas progressively before introducing full complexity.
+
+### Extraneous load
+
+Extraneous load is the cognitive work imposed by poor instructional design — load that is unnecessary for learning and competes with the intrinsic load for working memory capacity. Sources include:
+
+- Redundant information presented simultaneously in different formats (the redundancy effect)
+- Split attention between physically or temporally separated sources of information that must be integrated (the split-attention effect)
+- Unnecessarily complex language or visual presentations
+- Decorative content that adds no instructional value
+
+Extraneous load is the primary target of CLT-informed design because it can be reduced or eliminated without changing the learning objectives.
+
+### Germane load (cognitive processing)
+
+Germane load — sometimes now reframed as simply "germane cognitive processing" — refers to the working memory effort directed toward constructing and automating schemas. It is the productive cognitive work of learning. Instructional design that effectively reduces extraneous load frees working memory for this productive processing.
+
+<Callout type="info">
+  The terminology around "germane load" has evolved. Some contemporary CLT
+  researchers prefer to frame it as the portion of intrinsic load that is
+  relevant to schema formation, rather than as a third distinct type. For
+  practical design purposes, the key insight remains: reduce extraneous load so
+  that working memory can be spent on the actual learning task.
+</Callout>
+
+## Key design principles derived from CLT
+
+### The split-attention effect
+
+When learners must mentally integrate information from multiple physically or temporally separated sources, the effort of integrating them consumes working memory that could otherwise support learning. Solution: physically integrate related text and diagrams rather than separating them with figure captions or footnotes.
+
+### The redundancy effect
+
+When the same information is presented in multiple formats simultaneously and each format is sufficient alone (e.g., audio narration of text that is also shown on screen), the redundant format adds extraneous load. Solution: present information in one form when one form is sufficient; combine formats only when each contributes unique information.
+
+### The modality effect
+
+Working memory has separate channels for visual-spatial and auditory-verbal information. Using both channels effectively doubles capacity for that material. Solution: combine graphics or animations with spoken narration rather than on-screen text, particularly for complex content.
+
+<Callout type="tip">
+  CLT research is directly actionable in e-learning design. The most common
+  violations — decorative images, narrated text that mirrors on-screen text
+  word-for-word, and diagram captions placed far from what they describe — are
+  fixable without rebuilding courses from scratch. Reducing these extraneous
+  sources alone typically improves both learner experience and retention.
+</Callout>
+
+## Connection to Richard Mayer's multimedia learning principles
+
+Richard Mayer's Cognitive Theory of Multimedia Learning (CTML) independently reached similar conclusions from a different research tradition, producing a complementary set of principles (coherence, signaling, contiguity, modality, multimedia, redundancy, personalization) that are directly applicable to screen-based learning design. The two frameworks are often taught together, and together they constitute the strongest evidence base for practical e-learning design decisions.
+
+Practitioners familiar with both CLT and CTML have a defensible, empirically grounded basis for the design choices they make — and for the conversations they have with stakeholders who want to add more slides, more bullet points, and more narration to an already overloaded course.
+
+</GlossaryLayout>

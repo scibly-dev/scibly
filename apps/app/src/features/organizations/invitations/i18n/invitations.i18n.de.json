@@ -1,0 +1,26 @@
+{
+  "invitations": {
+    "title": "Organisationseinladungen",
+    "subtitle": "Verwalte deine ausstehenden Einladungen zu Organisationen.",
+    "searchPlaceholder": "Organisationen suchen...",
+    "loading": "Einladungen werden geladen...",
+    "emptyState": "Du hast keine ausstehenden Einladungen.",
+    "noMatches": "Keine Einladungen gefunden, die deinen Filtern entsprechen.",
+    "clearFilters": "Filter löschen",
+    "card": {
+      "unknownOrg": "Unbekannte Organisation",
+      "invitedByAs": "Eingeladen von {{email}} als {{role}}",
+      "invitedAs": "Eingeladen als {{role}}",
+      "sent": "Gesendet am {{date}}",
+      "expires": "Läuft ab am {{date}}",
+      "decline": "Ablehnen",
+      "accept": "Annehmen"
+    },
+    "toast": {
+      "accepted": "Einladung erfolgreich angenommen!",
+      "failedAccept": "Fehler beim Annehmen",
+      "rejected": "Einladung abgelehnt",
+      "failedReject": "Fehler beim Ablehnen der Einladung"
+    }
+  }
+}

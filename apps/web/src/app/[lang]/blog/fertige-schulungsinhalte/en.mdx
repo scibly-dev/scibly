@@ -1,0 +1,159 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "Buy or Build Training Content? A Practical Decision Guide",
+  description:
+    "Off-the-shelf training content saves time but often misses your specific context. Here's a clear framework for deciding when to buy, when to build, and when to combine both.",
+  date: "June 12, 2026",
+  readTime: 7,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "buy or build training content",
+    "off-the-shelf e-learning",
+    "custom training content",
+    "training content library",
+    "ready-made courses",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+When a new training need appears, the first question is almost always: buy or build? Most L&D teams answer it reflexively, either always buying because it's faster, or always building because it "fits better." Both are oversimplifications that regularly lead to the wrong decision.
+
+The right answer depends on the content type.
+
+## What Off-the-Shelf Content Does Well (and Where It Fails)
+
+Ready-made courses work well when content is universal and stable. That's the case for:
+
+**Compliance fundamentals:** GDPR awareness, general health and safety, IT security basics, code of conduct foundations. These topics are defined by regulation and change slowly. A high-quality ready-made course covers 80–90% of what most employees need to know.
+
+**Universal soft skills:** Communication, presentation techniques, time management, project management fundamentals. These competencies are relevant across roles, and the core principles don't change quickly.
+
+**Broadly applicable technology:** Microsoft 365, Excel basics, video conferencing tools. For standard software, high-quality ready-made courses exist at a fraction of the custom development cost.
+
+Ready-made courses do not work well for:
+
+- Company-specific processes and internal systems
+- Regulatory topics where the interpretation is industry- or organisation-specific
+- Content where your own scenarios, examples, or branding matter
+- Topics that change frequently and need regular updates
+
+## The Real Cost of Building
+
+The industry rule of thumb for e-learning development is 40–80 development hours per hour of finished learning content. That sounds like a lot, but it's realistic once you include planning, scripting, visual design, voiceover, review cycles, and corrections.
+
+A 30-minute e-learning module costs 20–40 internal development hours. At an internal rate of $65/hour, that's $1,300–2,600 in development time alone, before tool costs or external contributions.
+
+On top of that:
+
+- Review cycles with subject-matter experts (2–5 hours per module)
+- Maintenance and updates when content changes
+- Quality assurance and technical testing
+
+Custom development is worthwhile when the content justifies the time. For standard compliance topics, that's rarely the case.
+
+## The Real Cost of Buying
+
+Ready-made courses seem inexpensive, but the calculation has two sides.
+
+Direct costs:
+
+- Single-course licences: $15–80 per employee (one-time or annual)
+- Content library subscriptions: $12–35 per user/month (LinkedIn Learning, Coursera for Business, GoodHabitz, and similar)
+
+Hidden costs:
+
+Ready-made content that doesn't match your audience produces low completion rates and poor transfer. A course that's technically comprehensive but written for financial services employees, using financial services examples and language, will be less effective for employees in a manufacturing company.
+
+Completion rates for poorly matched content can be 40–60% lower than for relevant content. For mandatory training, that's a compliance gap, not just a metrics problem.
+
+## The Decision Framework
+
+<Table>
+  <thead>
+    <tr>
+      <Th>Situation</Th>
+      <Th>Recommendation</Th>
+      <Th>Rationale</Th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <Td>Standard compliance (GDPR, health and safety, IT security)</Td>
+      <Td>Buy</Td>
+      <Td>
+        Content is regulatorily defined, ready-made courses cover the need
+      </Td>
+    </tr>
+    <tr>
+      <Td>Universal soft skills</Td>
+      <Td>Buy</Td>
+      <Td>Low custom-development need, broad market offering</Td>
+    </tr>
+    <tr>
+      <Td>Internal processes and systems</Td>
+      <Td>Build</Td>
+      <Td>No ready-made course can map your specific process</Td>
+    </tr>
+    <tr>
+      <Td>Company culture and onboarding</Td>
+      <Td>Build</Td>
+      <Td>Branding, values, and context are unique to your organisation</Td>
+    </tr>
+    <tr>
+      <Td>Compliance with org- or industry-specific interpretation</Td>
+      <Td>Hybrid</Td>
+      <Td>Buy a solid foundational course, build a short custom supplement</Td>
+    </tr>
+    <tr>
+      <Td>Fast coverage of a known standard topic</Td>
+      <Td>Buy</Td>
+      <Td>Speed-to-deployment matters more than customisation</Td>
+    </tr>
+  </tbody>
+</Table>
+
+## Key Providers of Ready-Made Training Content
+
+This is not an exhaustive list, but a practical orientation:
+
+**Compliance-focused:**
+
+- **OpenSesame** offers a wide international library with strong compliance coverage across multiple languages
+- **ELearning Brothers** (Courseware) for US-focused compliance content
+- **Skillsoft Percipio** for broad compliance libraries in regulated industries
+
+**Broad content libraries:**
+
+- **LinkedIn Learning** is strong on technology and professional skills, primarily English-language content
+- **Coursera for Business** for deeper subject-matter topics with more academic depth
+- **GoodHabitz** for soft skills and personal development, particularly strong in European markets
+
+**AI-generated on-demand content:**
+
+- **Coursebox** generates course content based on your own documents, good for fast first drafts of custom content
+
+## The Hybrid Model in Practice
+
+<Callout type="tip">
+  The hybrid model works best for most mid-market teams: buy a solid GDPR
+  awareness course for $25 per employee, then build a 15-minute module showing
+  how your organisation specifically handles data subject access requests, who
+  is responsible, and what the internal process looks like. One hour of custom
+  development, substantially more relevant overall training.
+</Callout>
+
+The same logic applies to onboarding: buy a good Microsoft 365 foundations course. Build your own module showing how your organisation uses Teams, SharePoint, and internal folder structures.
+
+Scibly supports both approaches: integrate ready-made content and build your own courses directly on the platform, without needing separate authoring tools. Everything runs in one place.
+
+</PostLayout>

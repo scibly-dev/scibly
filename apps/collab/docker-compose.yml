@@ -1,0 +1,25 @@
+services:
+  collab:
+    image: ${COLLAB_IMAGE:-scibly-collab:latest}
+    build:
+      context: ../..
+      dockerfile: apps/collab/Dockerfile
+    expose:
+      - "4000"
+    env_file: .env
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    command: caddy reverse-proxy --from collab.scibly.com --to collab:4000
+
+volumes:
+  caddy_data:
+  caddy_config:

@@ -1,0 +1,21 @@
+{
+  "editorUi": {
+    "blockOptions": {
+      "more": "Mehr",
+      "optional": "Optional",
+      "alignLeft": "Links",
+      "alignCenter": "Zentriert",
+      "alignRight": "Rechts",
+      "align": "Ausrichten",
+      "documentation": "Dokumentation",
+      "openOriginal": "Original öffnen",
+      "preventLearnerEdit": "Verhindern, dass Lernende diesen Block bearbeiten",
+      "allowLearnerEdit": "Erlauben, dass Lernende diesen Block bearbeiten",
+      "settings": "Einstellungen",
+      "delete": "Löschen",
+      "duplicate": "Duplizieren",
+      "copiedSuccess": "In die Zwischenablage kopiert",
+      "spLabel": "SP Belohnung"
+    }
+  }
+}

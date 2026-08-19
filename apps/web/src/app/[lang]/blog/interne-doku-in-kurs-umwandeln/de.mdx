@@ -1,0 +1,73 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "Interne Dokumentation in einen Onboarding-Kurs umwandeln",
+  description:
+    "Confluence-Seiten, Notion-Docs und interne Wikis enthalten in den meisten Engineering-Teams schon das komplette Wissen, das neue Entwicklerinnen und Entwickler beim Onboarding brauchen, nur nicht in einer Form, die sich wie ein Kurs durcharbeiten lässt.",
+  date: "23. Juni 2026",
+  readTime: 4,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "interne doku in trainingskurs umwandeln",
+    "confluence als lms",
+    "notion doku in kurs umwandeln",
+    "technical onboarding software startup",
+    "engineering onboarding automatisieren",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+Confluence-Seiten, Notion-Docs und interne Wikis enthalten in den meisten Engineering-Teams schon das komplette Wissen, das neue Entwicklerinnen und Entwickler beim Onboarding brauchen, nur nicht in einer Form, die sich wie ein Kurs durcharbeiten lässt. Aus einer bestehenden technischen Dokumentation einen strukturierten Onboarding-Kurs zu machen, spart die Zeit, die sonst für wiederholte mündliche Erklärungen durch erfahrene Teammitglieder draufgeht.
+
+## Warum reine Dokumentation für Onboarding oft nicht reicht
+
+Eine Confluence-Seite oder ein Notion-Dokument ist als Nachschlagewerk gedacht: vollständig, aber ohne erkennbare Reihenfolge für jemanden, der das System zum ersten Mal sieht. Neue Entwicklerinnen und Entwickler wissen oft nicht, wo sie anfangen sollen, welche Abschnitte für den Einstieg wirklich relevant sind und welche erst später wichtig werden. Das Ergebnis: Dieselben Fragen werden mündlich immer wieder beantwortet, weil die Dokumentation zwar vorhanden, aber nicht als Lernpfad nutzbar ist.
+
+## Was sich beim Umwandeln von Doku zu Kurs ändert
+
+| Dokumentation                                  | Onboarding-Kurs                                             |
+| ---------------------------------------------- | ----------------------------------------------------------- |
+| Vollständig, aber ungeordnet für Neueinsteiger | Klare Reihenfolge vom Wichtigsten zum Speziellen            |
+| Kein Fortschritt sichtbar                      | Nachvollziehbar, wer welchen Teil schon durchgearbeitet hat |
+| Keine Prüfung, ob Inhalt verstanden wurde      | Kurze Wissens-Checks nach jedem Abschnitt                   |
+| Bei jeder Frage erneut nachschlagen            | Einmal durchgearbeitet, Grundverständnis vorhanden          |
+
+## Wie der Umwandlungsprozess praktisch aussieht
+
+1. **Relevante Dokumente auswählen.** Nicht die gesamte Confluence-Instanz, sondern die Seiten, die für die ersten Wochen wirklich relevant sind: Architekturüberblick, lokales Setup, Code-Konventionen, wichtigste interne Tools.
+2. **Reihenfolge festlegen.** Was muss am ersten Tag klar sein, was erst in Woche zwei. Die Dokumentation selbst gibt diese Reihenfolge meist nicht vor.
+3. **Wissens-Checks einbauen.** Kurze Fragen nach jedem Abschnitt zeigen, ob das Setup und die Grundkonzepte wirklich sitzen, bevor es mit dem nächsten Thema weitergeht.
+4. **Regelmäßig mit der Doku synchron halten.** Der größte Risikofaktor ist, dass sich der zugrunde liegende Code oder Prozess ändert, der Kurs aber nicht mitgepflegt wird.
+
+## Für welche Teams sich das besonders lohnt
+
+Am meisten Zeit spart die Umwandlung bei Teams mit häufigem Einstellungstempo, wo dieselben Erklärungen wiederholt an neue Personen gegeben werden, und bei Teams mit komplexer, gewachsener Codebasis, bei der reines "Code lesen" für den Einstieg nicht reicht. Für sehr kleine, stabile Teams mit seltenen Neueinstellungen lohnt sich der Aufwand oft weniger, dort bleibt eine gute, gepflegte Dokumentation allein oft ausreichend.
+
+## Häufige Fragen
+
+### Ersetzt ein Onboarding-Kurs die bestehende Dokumentation?
+
+Nein, die Dokumentation bleibt das Nachschlagewerk für später. Der Kurs ist der geführte erste Durchgang durch die wichtigsten Teile davon, mit Reihenfolge und Verständnis-Check, den die reine Dokumentation nicht bietet.
+
+### Wie oft muss ein technischer Onboarding-Kurs aktualisiert werden?
+
+Immer dann, wenn sich zugrunde liegende Architektur, Tools oder Prozesse wesentlich ändern. Ein fester Verantwortlicher, der Änderungen an der Dokumentation auch im Kurs nachzieht, verhindert unbemerktes Veralten.
+
+### Funktioniert das auch mit Notion statt Confluence?
+
+Ja, das Prinzip ist unabhängig vom verwendeten Wiki-Tool. Entscheidend ist, dass strukturiertes, geschriebenes Wissen bereits vorliegt, unabhängig davon, in welchem Tool es gepflegt wird.
+
+### Was ist der größte Unterschied zu einem klassischen HR-Onboarding-Kurs?
+
+Technisches Onboarding braucht oft mehr praktische Setup-Schritte (lokale Entwicklungsumgebung, Zugriffsrechte, erste Code-Änderung) statt reiner Wissensvermittlung. Der Kurs sollte diese praktischen Schritte als eigene Checkpunkte abbilden, nicht nur als Text beschreiben.
+
+</PostLayout>

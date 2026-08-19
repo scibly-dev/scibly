@@ -1,0 +1,21 @@
+{
+  "extends": "../../tsconfig.next.json",
+  "compilerOptions": {
+    "noUncheckedIndexedAccess": false,
+    "checkJs": false,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "../../packages/ui/tailwind.config.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "src/i18n/generated/**/*.json"
+  ],
+  "exclude": ["node_modules"]
+}

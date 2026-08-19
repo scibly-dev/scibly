@@ -1,0 +1,11 @@
+-- "student" is retired: the person taking a course is a learner, in prose and
+-- in a name. This is the storage half of that rename.
+--
+-- Written by hand as a RENAME. The generated diff for this is DROP + ADD, which
+-- would destroy the published content of every scene ever published.
+--
+-- The two "student" keys inside stored documents are retired alongside it:
+-- `gradedBlocks.studentAnswer` by the next migration, and a hint's
+-- `studentRevealed` by nothing at all — it is transient learner view state, so
+-- an old document's copy is dropped on parse and re-defaults to the same value.
+ALTER TABLE "scene" RENAME COLUMN "studentContent" TO "learnerContent";

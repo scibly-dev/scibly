@@ -1,0 +1,115 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "EU AI Act Article 4: What the AI Literacy Obligation Means for Your Company",
+  description:
+    "Article 4 of the EU AI Act has required AI literacy among staff since February 2025. What it demands, who is affected, and what changes on August 2, 2026.",
+  date: "July 17, 2026",
+  readTime: 11,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "eu ai act article 4",
+    "ai literacy obligation",
+    "mandatory ai training company",
+    "ai act compliance training",
+    "ai literacy requirement",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+Article 4 of the EU AI Act has required every company that provides or deploys AI systems to ensure sufficient AI literacy among staff since February 2, 2025. The obligation applies regardless of the system's risk category, and enforcement becomes active on August 2, 2026. Scibly helps turn existing AI guidelines into a documented, audit-ready literacy record.
+
+## What does Article 4 actually require, word for word?
+
+The legal text is short but broad:
+
+"Providers and deployers of AI systems shall take measures to ensure, to their best extent, a sufficient level of AI literacy of their staff and other persons dealing with the operation and use of AI systems on their behalf, taking into account their technical knowledge, experience, education and training and the context the AI systems are to be used in, and considering the persons or groups of persons on whom the AI systems are to be used."
+
+Three things matter for how you apply this in practice. First, the obligation covers both providers and deployers, so it applies not only to companies building their own AI models but to anyone using off-the-shelf tools like ChatGPT, Copilot, or Claude in daily work. Second, "to their best extent" is an effort obligation, not a rigid checklist. What counts as sufficient depends on role, prior knowledge, and the risk of the specific application. Third, this isn't a one-time training event. It describes a competence level a company has to maintain, one that has to keep pace as new tools and new use cases show up.
+
+<Callout type="info">
+  Article 4 has been in force since February 2, 2025 (AI Act Article 113). What
+  changes on August 2, 2026 isn't the obligation itself, it's market
+  surveillance: from that date, the AI Act's full enforcement apparatus is
+  active, including the national market surveillance authorities in each member
+  state.
+</Callout>
+
+## Who is affected: does this apply to your company?
+
+Short answer: yes, if your company deploys or provides AI systems in daily operations. The obligation doesn't distinguish by company size or by the risk category of the system in use. A team using ChatGPT to draft marketing copy falls under it just as much as a company running a high-risk AI system for hiring decisions, though the scope of required measures differs sharply between the two.
+
+In practice, that means: the moment anyone in your company regularly works with an AI tool, whether it's an internal system or a purchased product, you're covered. In most companies that's a much larger group than the IT department alone: marketing teams generating AI copy, customer service teams running AI chatbots, HR teams using AI to screen applications.
+
+## What happens if you don't comply with Article 4?
+
+There's a common misconception worth correcting here: there's no standalone fine for violating Article 4 on its own. The AI Act doesn't set out a direct sanction for it. The specific fine amounts that many online guides suggest for "missing AI literacy" don't hold up against the actual legal text.
+
+What actually happens: missing AI literacy becomes an aggravating factor if a company is already under investigation for a different violation. If a regulator finds that a high-risk system produced discriminatory outcomes, and the staff responsible for it demonstrably lacked the training to catch that, it factors into how severely the underlying violation gets penalized. The AI Act's general penalty structure shows what's actually at stake:
+
+| Violation category                    | Penalty range                                         |
+| ------------------------------------- | ----------------------------------------------------- |
+| Prohibited AI practices               | up to EUR 35 million or 7% of global annual turnover  |
+| Non-compliance with other obligations | up to EUR 15 million or 3% of global annual turnover  |
+| Incorrect or misleading information   | up to EUR 7.5 million or 1% of global annual turnover |
+
+(Source: EU AI Act, Article 99, as of 2026)
+
+So missing AI literacy isn't its own fineable offense, but it's a factor that can push an existing violation into a higher tier. That doesn't make Article 4 less important, it just changes what you should actually prepare for: not a fictional "Article 4 fine," but a solid record that shows, if it ever comes to that, your company met its duty of care.
+
+## What does sufficient AI literacy actually look like?
+
+The legal text itself names four criteria that determine the required scope: a person's technical knowledge, experience, education and training, and the specific context they use AI in. In practice: a data scientist training a machine learning model needs a different level of competence than someone using ChatGPT to draft emails.
+
+For most companies, that breaks down into three practical building blocks.
+
+First, AI fundamentals for everyone who comes into contact with AI tools at all: what these systems can actually do, where their limits are (hallucinations being the obvious one), and the mistakes that typically happen in everyday use. Concrete [prompting examples for L&D work](/en/blog/chatgpt-prompts-ld) help make that tangible instead of abstract.
+
+Second, safe and privacy-compliant tool use for the specific tools deployed in the company, including a clear answer to what data is and isn't allowed to go into an AI system.
+
+Third, role-specific depth for people operating higher-risk AI systems or reviewing their output, for example in recruiting or credit decisions.
+
+<Callout type="tip">
+  Don't start with a comprehensive training program. Start with the AI tools
+  your company is already actively using, and build training around those real
+  use cases. That's both the fastest path to a solid record and the version
+  employees actually find relevant.
+</Callout>
+
+## How do you document this for an audit?
+
+The literacy obligation itself doesn't require a formal exam, but if it's ever challenged, you need to show you acted "to your best extent." That requires documentation answering three questions: who was trained, when, and on what content.
+
+A spreadsheet with attendee lists technically satisfies that, but rarely survives real scrutiny, because currency and completeness are hard to prove after the fact. A system that logs completions automatically with a timestamp, the way it's already standard for other mandatory training like [GDPR training](/en/blog/dsgvo-schulung), turns the documentation burden into a one-click report instead of a week of digging when it matters.
+
+That's exactly where Scibly fits in: existing AI guidelines, internal policies, or FAQs turn into an interactive micro-course in minutes, complete with automatic completion and competence records per employee. For a concrete starting point, see [AI training for your company](/en/use-cases/ai-enablement) as a ready-made use case, plus the [overview of AI in e-learning](/en/blog/ki-im-elearning) and the [guide to GDPR-compliant AI tools](/en/blog/dsgvo-konforme-ki-tools) if picking the right tool is still an open question.
+
+## Frequently Asked Questions
+
+### Do I need a separate training for every individual AI tool?
+
+No. Article 4 requires sufficient competence in working with AI systems generally, not a dedicated course per tool. A solid foundations training plus tool-specific add-ons for whatever is actually in use covers most cases.
+
+### Is a one-time training enough, or do I need to repeat it?
+
+The legal text doesn't set a fixed interval, but "ensure" implies an ongoing state, not a single checkbox. Since AI tools and their use cases evolve quickly, an annual refresher has become the practical standard.
+
+### Does this apply to small companies without a dedicated IT team?
+
+Yes. Article 4 doesn't distinguish by company size. The scope of measures can scale with risk and context, but the obligation itself doesn't disappear just because there's no in-house AI team.
+
+### Has the obligation been delayed by the Omnibus process?
+
+No, not so far. The European Parliament kept Article 4 unchanged in the Omnibus package negotiations and, if anything, signaled stricter compliance expectations. Until the trilogue negotiations conclude, the original statutory deadlines stand.
+
+</PostLayout>

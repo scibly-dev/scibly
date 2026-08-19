@@ -1,0 +1,139 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "Didaktische Grundlagen: Was Lernen wirklich wirksam macht",
+  description:
+    "Gutes instructional Design geht nicht darum, Inhalte hübsch zu machen. Es geht darum, zu verstehen, wie Menschen lernen – und danach zu gestalten.",
+  date: "7. April 2026",
+  readTime: 8,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "Instructional Design",
+    "Lerntheorie",
+    "ADDIE",
+    "Bloom-Taxonomie",
+    "Lernziele",
+    "E-Learning Gestaltung",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+Die meisten E-Learning-Kurse beginnen mit der falschen Frage. Nicht „Was soll der Lernende danach können?" sondern „Was soll in den Kurs rein?"
+
+Das klingt nach einem kleinen Unterschied. Es ist ein fundamentaler. Der erste Ansatz baut von den Lernzielen aus. Der zweite sammelt Informationen und präsentiert sie – und hofft, dass sie irgendwie hängen bleiben.
+
+Didaktik ist die Wissenschaft, diese erste Frage richtig zu stellen – und die Antwort in wirksames Lerndesign zu übersetzen.
+
+## Lernziele: Das Fundament von allem
+
+Ein Lernziel beantwortet eine Frage: Was kann der Lernende nach dieser Einheit tun oder wissen, was er vorher nicht konnte?
+
+Gute Lernziele sind konkret, beobachtbar und messbar. Das klingt nach Bürokratie, ist aber der Unterschied zwischen einem Kurs, der etwas bewirkt, und einem, der abgehakt wird.
+
+Schlechtes Lernziel: „Mitarbeiter verstehen das Thema Datenschutz."
+Gutes Lernziel: „Mitarbeiter können eine DSGVO-konforme Einwilligung von einer nicht-konformen unterscheiden und erklären, warum."
+
+Die Bloom'sche Taxonomie ist ein nützliches Werkzeug, um Lernziele nach Tiefe zu stufen. Von unten nach oben:
+
+1. **Erinnern** – Fakten abrufen
+2. **Verstehen** – Konzepte erklären
+3. **Anwenden** – Wissen in neuen Situationen einsetzen
+4. **Analysieren** – Zusammenhänge erkennen
+5. **Bewerten** – Urteile treffen
+6. **Erschaffen** – Neues generieren
+
+Die meisten Schulungen stecken in den ersten zwei Stufen. Echte Kompetenz beginnt bei Stufe 3.
+
+<Callout type="info">
+  Eine Daumenregel: Wenn das Lernziel mit einem Verb endet, das man nicht
+  beobachten kann (verstehen, wissen, bewusst sein für), ist es noch nicht gut
+  genug. Ersetze es durch: erklären, anwenden, auswählen, demonstrieren, lösen.
+</Callout>
+
+## Cognitive Load Theory: Warum weniger mehr ist
+
+Der Psychologe John Sweller entwickelte in den 1980ern die **Cognitive Load Theory** (Theorie der kognitiven Belastung). Kernaussage: Das Arbeitsgedächtnis hat eine begrenzte Kapazität. Wenn ein Kurs zu viele Informationen gleichzeitig präsentiert, überlastet er das Gedächtnis – und Lernen findet nicht statt.
+
+Es gibt drei Arten kognitiver Belastung:
+
+- **Intrinsic Load**: Die natürliche Komplexität des Themas. Kaum beeinflussbar.
+- **Extraneous Load**: Belastung durch schlechtes Design – ablenkende Animationen, unklare Navigation, überladene Folien. Vollständig vermeidbar.
+- **Germane Load**: Die Energie, die das Gehirn für den eigentlichen Lernprozess aufwendet. Maximiere das.
+
+Praktische Konsequenzen:
+
+- Eine Idee pro Folie / pro Abschnitt
+- Animationen nur, wenn sie das Verständnis fördern (nicht als Dekoration)
+- Text und Grafik nicht gleichzeitig für dieselbe Information (Redundanzeffekt)
+- Vorwissen aktivieren, bevor neues Wissen präsentiert wird
+
+## Das ADDIE-Modell: Ein Rahmen für systematisches Kursdesign
+
+ADDIE ist das bekannteste Prozessmodell im Instructional Design. Fünf Phasen:
+
+**Analyse (A)**: Was ist das Problem? Wer ist die Zielgruppe? Was soll am Ende können? Hier werden Lernziele definiert und der Ist-Stand gemessen.
+
+**Design (D)**: Wie wird der Kurs strukturiert? In welcher Reihenfolge werden Inhalte präsentiert? Welche Formate werden eingesetzt?
+
+**Development (D)**: Die eigentliche Produktion – Texte schreiben, Visuals erstellen, Quizfragen formulieren, Interaktionen bauen.
+
+**Implementation (I)**: Den Kurs in die Lernplattform einstellen, Zielgruppen zuweisen, kommunizieren.
+
+**Evaluation (E)**: Hat es funktioniert? Wurden die Lernziele erreicht? Was wird beim nächsten Mal anders gemacht?
+
+<Callout type="tip">
+  ADDIE wird oft als starres Wasserfall-Modell missverstanden. In der Praxis ist
+  es iterativ: Die Evaluation-Phase fließt wieder in die Analyse ein. Kurse
+  werden nicht fertig – sie werden besser.
+</Callout>
+
+## Die 70-20-10-Regel: Formales Lernen ist nur ein Drittel
+
+Das 70-20-10-Modell (Lombardo und Eichinger, 1996) beschreibt, wie Kompetenzentwicklung in der Praxis funktioniert:
+
+- **70 %** durch praktische Erfahrung: echte Aufgaben, Projekte, Fehler machen
+- **20 %** durch soziales Lernen: Coaching, Mentoring, kollegialer Austausch
+- **10 %** durch formales Lernen: Kurse, Seminare, E-Learning
+
+Das bedeutet nicht, dass formales Lernen unwichtig ist. Es bedeutet, dass formales Lernen allein nicht ausreicht. Gutes Lerndesign denkt alle drei Dimensionen mit.
+
+Ein Kurs, der ohne Transferaufgabe, ohne Anwendungsmöglichkeit und ohne kollegialen Austausch angeboten wird, arbeitet nur in der 10-%-Zone. Die restlichen 90 % bleiben ungenutzt.
+
+## Feedback und Interaktivität: Wann sie helfen (und wann nicht)
+
+Quizfragen am Ende eines Kurses sind gut. Besser sind Quizfragen nach jedem Abschnitt. Noch besser sind Fragen, die zum Nachdenken zwingen, nicht zum bloßen Erinnern.
+
+Was hilft:
+
+- **Szenario-basierte Fragen**: „Was würdest du in dieser Situation tun?" statt „Was ist die Definition von X?"
+- **Formatives Feedback**: Der Lernende bekommt sofort erklärt, warum eine Antwort richtig oder falsch ist
+- **Mehrere Versuche**: Fehler als Lernmöglichkeit, nicht als Strafe
+
+Was nicht hilft (aber verbreitet ist):
+
+- „Stimmt/Falsch"-Fragen über reine Fakten
+- Quizfragen am Ende, die den Kurs nicht bestanden werden lassen, wenn man zu viele falsch hat – das fördert Ratestrategie, keine Kompetenz
+- Zu viele Quizfragen ohne Feedback
+
+<Callout type="warning">
+  Ein Kurs, der mit einem 80-%-Quiz abschließt, misst nicht ob der Lernende
+  kompetent ist – er misst, ob der Lernende diesen Kurs gut absolviert hat. Das
+  ist nicht dasselbe.
+</Callout>
+
+## Lerndesign ist kein Einmalvorgang
+
+Gutes Kursdesign endet nicht mit dem Upload. Es beginnt damit. Daten aus der Lernplattform – Abbruchraten, Quizfehler, Bearbeitungszeiten – zeigen, wo ein Kurs nicht funktioniert.
+
+Wer diese Daten ignoriert, entwirft Kurse für sich selbst – nicht für die Lernenden.
+
+</PostLayout>

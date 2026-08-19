@@ -1,0 +1,39 @@
+{
+  "learn": {
+    "playerStates": {
+      "locked": {
+        "title": "Maximale Versuche erreicht",
+        "description": "Du hast {{courseTitle}} bereits die maximal zulässige Anzahl von {{maxTries}} {{times}} abgeschlossen. Wende dich an deinen Administrator, wenn du glaubst, dass dies ein Fehler ist.",
+        "time": "Mal",
+        "times": "Mal"
+      },
+      "readOnly": {
+        "title": "Kurs bereits abgeschlossen",
+        "description": "Du hast bereits ein Zertifikat für {{courseTitle}} erworben. Du kannst den Kurs nicht erneut abschließen, um mehr SP oder zusätzliche Zertifikate zu erhalten."
+      },
+      "courseUnavailable": {
+        "notPublishedTitle": "Dieser Kurs ist noch nicht veröffentlicht",
+        "notPublishedDescription": "Für diesen Kurs wurde noch nichts veröffentlicht. Sobald das passiert, erscheint er hier.",
+        "notAvailableTitle": "Dieser Kurs ist nicht verfügbar",
+        "notAvailableDescription": "Der Link wurde möglicherweise deaktiviert oder der Kurs entfernt.",
+        "loadFailedTitle": "Der Kurs konnte nicht geladen werden",
+        "loadFailedDescription": "Unterwegs ist etwas schiefgelaufen. Prüfe deine Verbindung und versuche es erneut.",
+        "retry": "Erneut versuchen"
+      },
+      "retryConfirm": {
+        "title": "Neuen Versuch starten?",
+        "description": "Deine bisherigen Antworten für {{courseTitle}} werden gelöscht und dein Fortschritt beginnt von vorn. Dein Zertifikat bleibt erhalten.",
+        "confirmCta": "Von vorn beginnen",
+        "confirmCtaPending": "Wird gestartet …",
+        "backToDashboard": "Zurück zum Dashboard"
+      },
+      "versionUpdateConfirm": {
+        "title": "Dieser Kurs wurde aktualisiert",
+        "description": "Es gibt eine neuere Version von {{courseTitle}}. Wenn du fortfährst, wird dein aktueller Fortschritt gelöscht und du startest in der neuen Version.",
+        "confirmCta": "In der neuen Version fortfahren",
+        "confirmCtaPending": "Wird aktualisiert …",
+        "backToDashboard": "Zurück zum Dashboard"
+      }
+    }
+  }
+}

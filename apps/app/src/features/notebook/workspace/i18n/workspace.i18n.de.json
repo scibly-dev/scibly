@@ -1,0 +1,41 @@
+{
+  "notebook": {
+    "page": {
+      "sidebarTitle": "Notebook",
+      "collapseSidebar": "Seitenleiste einklappen",
+      "historyButton": "Verlauf",
+      "leaveNotebook": "Notebook verlassen",
+      "newChat": "Neues Notebook",
+      "newNotebook": "Neues Notebook",
+      "generationsLeft": "{count} KI-Generierungen übrig",
+      "noChats": "Noch keine Notebooks",
+      "searchPlaceholder": "Notebooks durchsuchen...",
+      "recentsHeader": "Zuletzt verwendet",
+      "quickPrompts": [
+        {
+          "label": "Kurs entwerfen",
+          "prompt": "Ich möchte einen neuen Kurs aus meinen Quellen aufbauen. Stelle mir zuerst ein paar Fragen zu Zielgruppe und Lernzielen, schlage dann eine Kursstruktur mit Lektionen und Themen vor."
+        },
+        {
+          "label": "Szenarien üben",
+          "prompt": "Nutze meine Quellen, um realistische Übungsszenarien zu erstellen, in denen Lernende Entscheidungen treffen, die beste Option wählen und aus dem Feedback lernen."
+        },
+        {
+          "label": "Kurs verbessern",
+          "prompt": "Schau dir meinen bestehenden Kurs an und sag mir, wo er zu lang, zu passiv oder unübersichtlich ist. Mach konkrete Verbesserungsvorschläge."
+        },
+        {
+          "label": "Quellen zusammenfassen",
+          "prompt": "Fasse die wichtigsten Themen aus meinen Quellen zusammen und schlage, woraus sich am besten ein Kurs bauen lässt und in welcher Reihenfolge."
+        }
+      ],
+      "greetings": [
+        "Was erstellen wir, {name}?",
+        "Bereit, {name}?",
+        "Wieder am Start, {name}.",
+        "Lass uns etwas bauen, {name}.",
+        "Schön dich zu sehen, {name}."
+      ]
+    }
+  }
+}

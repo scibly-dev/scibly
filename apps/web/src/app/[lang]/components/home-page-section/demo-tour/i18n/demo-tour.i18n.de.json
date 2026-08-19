@@ -1,0 +1,27 @@
+{
+  "demoTour": {
+    "placeholder": "Erstelle einen Kurs aus deinem PDF oder Playbook…",
+    "sendLabel": "Notebook Demo öffnen",
+    "modelMenuLabel": "Modell",
+    "modelTriggerLabel": "KI Modell wählen",
+    "models": {
+      "scibly": {
+        "name": "Scibly KI",
+        "detail": "Verwaltet · EU gehostet"
+      },
+      "openai": {
+        "name": "OpenAI",
+        "detail": "GPT · Org Key"
+      },
+      "anthropic": {
+        "name": "Anthropic",
+        "detail": "Claude · Org Key"
+      },
+      "byoai": {
+        "name": "Dein KI Modell",
+        "detail": "Dein freigegebener Endpoint"
+      }
+    },
+    "seedPrompt": "Mach aus unserer IT Richtlinie einen kurzen Phishing Kurs."
+  }
+}

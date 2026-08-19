@@ -1,0 +1,78 @@
+{
+  "notebook": {
+    "sources": {
+      "title": "Sources",
+      "searchPlaceholder": "Search sources...",
+      "emptyTitle": "No sources yet",
+      "pasteText": "Paste Text",
+      "deleteSource": "Remove source",
+      "retrySource": "Retry ingestion",
+      "resyncSource": "Re-sync from source",
+      "replaceFile": "Replace file",
+      "downloadFile": "Download file",
+      "openExternal": "Open in source",
+      "staleSource": "Source changed since course was created",
+      "staleBadge": "stale",
+      "sourceLimitReached": "This notebook can have at most {max} sources. Remove one to add more.",
+      "dropzone": {
+        "title": "Drop files or browse",
+        "subtitle": "PDF or TXT up to 20MB"
+      },
+      "pasteDialog": {
+        "title": "Paste Text Content",
+        "namePlaceholder": "Source name...",
+        "contentPlaceholder": "Paste your text content here...",
+        "cancel": "Cancel",
+        "add": "Add Source",
+        "wordCount": "{count} / {max} words",
+        "wordLimitExceeded": "Text sources can contain at most 50,000 words."
+      },
+      "pagePicker": {
+        "title": "Import from Notion",
+        "searchPlaceholder": "Search pages...",
+        "filterPages": "Filter pages…",
+        "noResults": "No pages found. Try a different search.",
+        "noSubpagesFound": "No subpages found here.",
+        "addSelected": "Add {count} page(s)",
+        "cancel": "Cancel",
+        "clear": "Clear",
+        "adding": "Adding…",
+        "limitWarning": "You can add at most {remaining} more page(s).",
+        "loading": "Loading…",
+        "backToRoot": "Back to root",
+        "selectAll": "Select all ({count})",
+        "deselectAll": "Deselect all ({count})",
+        "pagesSelected": "{count} of {max} selected",
+        "pagesVisible": "{count} page(s) visible",
+        "pagesVisibleInfo": "About page count",
+        "pagesVisibleNote": "Only pages fetched in this view are shown. Large spaces may have more pages. Use search or drill into subfolders to find them.",
+        "openInSource": "Open {title} in Notion",
+        "openInSourceLabel": "Open in Notion",
+        "browseDatabase": "Browse database",
+        "browseSubpages": "Browse subpages",
+        "failedToLink": "Failed to link page"
+      },
+      "statusPending": "Pending",
+      "statusProcessing": "Processing",
+      "statusReady": "Ready",
+      "statusFailed": "Failed",
+      "processingNoticeOne": "1 source is still processing, so the assistant can't read it yet.",
+      "processingNoticeMany": "{count} sources are still processing, so the assistant can't read them yet.",
+      "processingNoticeDismiss": "Dismiss",
+      "deleteConfirmTitle": "Remove source?",
+      "deleteConfirmDescription": "\"{{name}}\" will be permanently removed and its imported content deleted. This cannot be undone.",
+      "deleteConfirmButton": "Remove",
+      "cancelButton": "Cancel",
+      "importFrom": "Import from {name}",
+      "connectIn": "Connect {name} in your organisation settings first to import pages from it.",
+      "entitlement": {
+        "sourceCapOne": "This notebook has room for 1 fewer source than requested. Remove a source or upgrade the plan.",
+        "sourceCapMany": "This notebook has room for {shortfall} fewer sources than requested. Remove sources or upgrade the plan.",
+        "creditsOne": "Importing this source costs 1 generation, and the balance is {balance}. Purchase a top-up to add it. Everything already imported keeps working.",
+        "creditsMany": "Importing these {sources} sources costs {credits} generations, and the balance is {balance}. Purchase a top-up to add them. Everything already imported keeps working.",
+        "creditsNone": "There are no AI generations left. Purchase a top-up to add sources. Everything already imported keeps working.",
+        "generationsLapsed": "This organisation's subscription has lapsed, so AI generations have stopped. Reactivate the subscription to add sources again. Everything already imported stays where it is."
+      }
+    }
+  }
+}

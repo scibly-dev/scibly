@@ -1,0 +1,4 @@
+{
+  "mediaNoUploadPermission": "Der Nutzer hat keine Erlaubnis Medien hochzuladen",
+  "mediaNoUploadPermissionForTypes": "Der Nutzer hat keine Erlaubnis Medien vom Typ {{types}} hochzuladen"
+}

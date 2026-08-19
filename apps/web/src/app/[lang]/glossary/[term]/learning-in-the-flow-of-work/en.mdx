@@ -1,0 +1,78 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Learning in the Flow of Work",
+  definition:
+    "Josh Bersin's concept that the most effective learning happens embedded in the work itself — short, relevant, and available at the moment of need — rather than in scheduled training events.",
+  keywords: [
+    "learning in the flow of work",
+    "Josh Bersin",
+    "just-in-time learning",
+    "performance support",
+    "workplace learning",
+  ],
+  relatedTerms: ["microlearning", "70-20-10", "blended-learning"],
+  relatedPost: "learning-in-the-flow-of-work",
+};
+
+<GlossaryLayout metadata={metadata} lang="en">
+
+In 2018, Josh Bersin coined the phrase "learning in the flow of work" to describe a shift that was already underway in high-performing organizations: moving away from scheduled training events toward learning that is embedded in the work itself. The idea is disarmingly simple — people learn best when they encounter the right information at the exact moment they need it, not two weeks earlier in a classroom and not two weeks later in a retrospective.
+
+## Why push learning has limits
+
+Most corporate training is push-based: L&D designs a course, schedules a session, and delivers it to employees who may or may not need that knowledge right now. The structural problem is timing. A new hire who sits through a compliance course in week one will retain only a fraction of it by the time they encounter relevant situations in month three. Ebbinghaus's forgetting curve is not a metaphor — it is a reliable description of how memory works, and it punishes scheduled training that is disconnected from application.
+
+Bob Mosher and Conrad Gottfredson formalized this timing problem through their "5 Moments of Need" framework, which identifies the five situations in which people actually want to learn:
+
+1. **Learning for the first time** — when encountering a concept or skill they have never seen before
+2. **Learning more** — when they want to go deeper on something they already know
+3. **Applying** — when they need to remember or adapt what they learned to a real task
+4. **Solving a problem** — when something is not working as expected
+5. **Changing** — when a process, system, or requirement has changed
+
+Traditional training addresses moments one and two reasonably well. It almost entirely fails at moments three through five, which are where most of the actual performance problems live.
+
+<Callout type="info">
+  Mosher and Gottfredson's research suggests that 80% of the situations where
+  people need learning support fall into moments three, four, and five —
+  precisely where scheduled training has the weakest reach.
+</Callout>
+
+## Pull learning vs. push learning
+
+The alternative to push training is pull learning: designing resources that employees actively seek out when they have a specific need. Search-based help centers, embedded tooltip guides, contextual job aids, and short reference videos all operate on pull logic. The employee initiates, the system responds.
+
+This distinction matters for design. A pull resource needs to be findable (good information architecture), fast (no one in the middle of a task has ten minutes to spare), and specific (answering the exact question at hand, not a general overview). A five-minute video explanation of a process that could have been a 30-second step-by-step checklist is not a performance support resource — it is a scaled-down course.
+
+## Practical implementation examples
+
+**Search-based help**: In-product documentation and knowledge bases that employees can query mid-task. Tools like Confluence, Notion, or purpose-built help centers work here. The design principle is answer the question, then stop.
+
+**Embedded guided experiences**: Walkthrough tools (Pendo, WalkMe, Appcues) that surface contextual instructions inside an application as an employee navigates it. These are particularly effective for software adoption and process changes.
+
+**Microlearning at point of task**: A 90-second video attached to a specific step in a workflow, accessible via a QR code, a link in a job aid, or a popup in a system. The key distinction from general microlearning is that it is anchored to a specific action rather than a topic.
+
+**Manager-enabled reinforcement**: Structured conversation guides that help managers debrief after real work situations — post-project reviews, call debriefs, deal reviews. This keeps learning connected to actual experience rather than simulated scenarios.
+
+## Contrast with LMS-heavy training architectures
+
+Learning management systems are excellent at certain things: enrollment, compliance tracking, course completion records, certification management. They are poorly suited to flow-of-work learning because they operate on a separate workflow from the actual work. Logging into an LMS while in the middle of a task adds friction precisely where friction is most costly.
+
+This does not mean LMSs are obsolete — it means they serve a different function. Structured programs (onboarding, regulatory compliance, technical certification) belong in an LMS. Moment-of-need support belongs closer to the work.
+
+<Callout type="tip">
+  A practical audit: map your organization's most frequent support tickets or
+  manager escalations. Each one represents a moment-of-need failure — an
+  instance where an employee needed information and could not get it quickly
+  enough. Those gaps are the highest-value targets for flow-of-work learning
+  design.
+</Callout>
+
+## What this means for L&D practitioners
+
+The shift toward flow-of-work learning asks something different from L&D teams: less course production, more infrastructure thinking. Building a searchable knowledge base, partnering with product and IT teams to embed guidance in systems, and designing job aids that actually travel with the work requires different skills than building a 45-minute e-learning module.
+
+It also requires a different relationship with stakeholders. The question is no longer "what should we train people on?" but "where do performance gaps actually appear, and how do we put the right support there?" That reframe — from content delivery to performance support — is at the core of what Bersin's concept demands from the L&D function.
+
+</GlossaryLayout>

@@ -1,0 +1,198 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "Schulungsvideos mit KI erstellen: Synthesia, HeyGen & Co. im Praxistest",
+  description:
+    "Mit KI-Avatartools wie Synthesia und HeyGen kannst du Schulungsvideos ohne Kamera produzieren. Was funktioniert, was nicht — und welches Tool für welchen Zweck.",
+  date: "12. Juni 2026",
+  readTime: 9,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "Schulungsvideo KI erstellen",
+    "Synthesia vs HeyGen",
+    "KI Avatarvideo Training",
+    "E-Learning Video KI",
+    "AI Schulungsvideo Tool",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+Schulungsvideos zu produzieren kostet traditionell viel: Kamera, Schnittsoftware, Sprecher oder Kamerascheu überwindende Kolleginnen, und dann nochmal alles wiederholen, wenn sich der Inhalt ändert.
+
+KI-Videotools haben das Preisschild radikal gesenkt. Du schreibst ein Skript, wählst einen Avatar, klickst auf "Erstellen" — und hast ein professionell aussehendes Video in 10–30 Minuten. Was du bekommst, ist nicht dasselbe wie ein gedrehtes Video. Aber für die meisten Schulungszwecke ist es gut genug.
+
+## Welche Tools gibt es?
+
+Die Kategorie "KI-generierte Schulungsvideos" lässt sich in drei Typen unterteilen:
+
+**Typ 1: KI-Avatar-Tools** (Synthesia, HeyGen, D-ID)
+Du gibst Text ein, wählst einen Avatarcharakter, und das Tool generiert ein Video mit einem sprechenden Avatargesicht vor einem Hintergrund. Keine Kamera, kein Sprecher nötig. Ergebnis: ein Presenter-Style-Video.
+
+**Typ 2: Voice-Cloning und Voiceover-Tools** (ElevenLabs, Descript, LOVO)
+Diese Tools erstellen oder klonen Stimmen. Einsatz: Voiceovers für Folienpräsentationen, Lernvideos oder Screen-Recordings. Kein Avatar, nur Stimme.
+
+**Typ 3: All-in-One Video-Editing mit KI** (Descript, Runway)
+Descript ist das bekannteste: Du hast ein echtes aufgezeichnetes Video und kannst es wie ein Word-Dokument bearbeiten. Gesprochene Sätze löschen, einfügen, KI-generierte Lücken füllen. Nicht für "Videos ohne Kamera", sondern für schnelles Editieren von echtem Footage.
+
+## Synthesia im Praxistest
+
+Synthesia ist der Marktführer bei Avatar-basierten Schulungsvideos. 160+ Avatare, 140+ Sprachen (inkl. Deutsch), anständige Lippensynchronisation.
+
+**Was gut funktioniert:**
+
+- Schulungsvideos für Standard-Compliance-Themen (DSGVO, IT-Sicherheit, Onboarding) produzieren sich schnell
+- Inhalte aktualisieren: Skript ändern, Video neu generieren — keine Neuaufnahme
+- Deutschsprachige Outputs sind solide; Aussprache bei Fachbegriffen manchmal holprig
+- Vorlagen für verschiedene Kursformate vorhanden
+- SCORM-Export für LMS-Integration verfügbar (höhere Tarife)
+
+**Was nicht so gut funktioniert:**
+
+- Avatare wirken erkennbar künstlich — wer ein "echtes" Gesicht vor der Kamera erwartet, ist enttäuscht
+- Emotionale Nuancen im Vortrag sind begrenzt
+- Individuelle Custom-Avatare (eigenes Gesicht) kosten extra und dauern länger
+- Preis steigt schnell bei hohem Videovolumen
+
+**Preise:** Personal ab ≈€22/Monat (begrenzte Minuten), Starter ≈€67/Monat, Corporate individuell.
+
+## HeyGen im Praxistest
+
+HeyGen ist Synthesias direktester Konkurrent. Ähnliche Positionierung, aber mit einigen Unterschieden.
+
+**Unterschiede zu Synthesia:**
+
+- HeyGens Video-Translation-Feature ist stark: ein Video in einer Sprache hochladen, automatisch in 40+ Sprachen übersetzen und die Lippenbewegungen neu synchronisieren. Nützlich für internationale Teams.
+- Custom-Avatar-Erstellung schneller und günstiger als bei Synthesia
+- Interface gilt als etwas intuitiver für Einsteiger
+- Deutsche Sprachqualität vergleichbar mit Synthesia
+
+**Preise:** Free (begrenzt), Creator ≈$24/Monat, Team ≈$69/Monat.
+
+## Descript: Wenn du echtes Footage hast
+
+Descript funktioniert anders. Du nimmst ein Video auf — Screen-Recording, Kamera, Webinar — und lädst es in Descript hoch. Das Tool transkribiert es automatisch und macht das Video editierbar wie ein Textdokument.
+
+Streichst du im Transkript einen Satz, verschwindet er im Video. Tippst du etwas Neues, kann Descript eine geklonte Version deiner Stimme einsprechen (Voice Clone).
+
+**Einsatz für Schulungsvideos:**
+
+- Führungskraft hält ein kurzes Intro-Video für Onboarding — Descript macht Editing in Minuten
+- Screen-Recording eines Softwaretools mit Live-Kommentar aufzeichnen und nachbearbeiten
+- Vorhandene Webinar-Aufnahmen zu kompakten Lerneinheiten schneiden
+
+Descript ist kein Ersatz für Synthesia/HeyGen, wenn du kein Ausgangsmaterial hast. Es ist ein Editiertool für vorhandenes Footage.
+
+**Preise:** Free (begrenzt), Creator ≈$12/Monat, Business ≈$24/Monat.
+
+## ElevenLabs: Wenn du nur eine Stimme brauchst
+
+ElevenLabs ist das stärkste reine Sprachgenerierungstool. Kein Avatar, kein Video — nur hochwertige KI-Stimmen und Voice Cloning.
+
+**Einsatz für Schulungsvideos:**
+
+- Voiceover für eine PowerPoint-basierte Lerneinheit hinzufügen
+- Screen-Recordings kommentieren, ohne selbst aufzunehmen
+- Konsistente Stimme über alle Kurse hinweg ohne immer selbst einzusprechen
+- Inhalte ohne neues Einsprechen aktualisieren
+
+Deutsche Sprachqualität bei ElevenLabs ist sehr gut — besser als die meisten Avatar-Tools in der Standard-Sprachqualität.
+
+**Preise:** Free (begrenzt), Starter ≈$5/Monat, Creator ≈$22/Monat.
+
+## Tool-Vergleich auf einen Blick
+
+<Table>
+  <thead>
+    <tr>
+      <Th>Tool</Th>
+      <Th>Bestes Einsatzszenario</Th>
+      <Th>Deutsche Sprachqualität</Th>
+      <Th>Einstiegspreis</Th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <Td>Synthesia</Td>
+      <Td>Presenter-Videos ohne Kamera, Skalierung über viele Kurse</Td>
+      <Td>Gut (Fachbegriffe manchmal holprig)</Td>
+      <Td>≈€22/Monat</Td>
+    </tr>
+    <tr>
+      <Td>HeyGen</Td>
+      <Td>Mehrsprachige Videos, Custom-Avatar schnell erstellen</Td>
+      <Td>Gut</Td>
+      <Td>≈$24/Monat</Td>
+    </tr>
+    <tr>
+      <Td>Descript</Td>
+      <Td>Vorhandenes Video-Material schnell editieren</Td>
+      <Td>Gut (Voice Clone)</Td>
+      <Td>≈$12/Monat</Td>
+    </tr>
+    <tr>
+      <Td>ElevenLabs</Td>
+      <Td>Voiceover für Slides und Screen-Recordings</Td>
+      <Td>Sehr gut</Td>
+      <Td>≈$5/Monat</Td>
+    </tr>
+  </tbody>
+</Table>
+
+## Der Produktionsprozess in der Praxis
+
+Ein Schulungsvideo mit Synthesia oder HeyGen ist in fünf Schritten erstellbar:
+
+**1. Skript schreiben**
+Das Skript bestimmt die Qualität des Videos — nicht der Avatar. 150 Wörter entsprechen ungefähr einer Minute Video. Für ein 3-minütiges Modul planst du 400–450 Wörter. Schreib das Skript so, wie du es sprechen würdest — kurze Sätze, keine Schachtelsätze.
+
+**2. Avatar und Hintergrund auswählen**
+Die meisten Tools bieten 50–160+ vorgefertigte Avatare. Wähle einen, der zur Zielgruppe und zum Thema passt. Für Compliance-Themen ist ein professioneller Dresscode sinnvoll. Für technische Teams kann es informeller sein.
+
+**3. Video generieren und prüfen**
+Nach dem Erstellen prüfst du: Lippensynchronisation in Ordnung? Aussprache bei Fachbegriffen korrekt? Für Deutsch lohnt es sich, das Skript vor dem Generieren phonetisch anzupassen (z.B. Anglizismen ausschreiben).
+
+**4. In LMS einbinden**
+Mit SCORM-Export (Synthesia höhere Tarife) oder als SCORM-Paket über ein Autorentool wie Scibly, das den Upload und das Tracking übernimmt. Alternativ als MP4 direkt in ein Modul einbetten.
+
+**5. Bei Inhaltsupdates aktualisieren**
+Hier liegt der eigentliche Wert: Ändert sich eine Zahl, eine Regulierung oder ein Prozess, änderst du das Skript und generierst das Video neu. Keine Neuaufnahme.
+
+<Callout type="tip">
+  Starte nicht mit dem technisch kompliziersten Video. Nimm ein
+  Compliance-Modul, das du eh schon hast — z.B. eine PowerPoint für
+  IT-Sicherheit — und konvertiere es in ein Avatar-Video. Du siehst sofort, ob
+  das Tool zu deinem Workflow passt, und hast in zwei Stunden ein
+  funktionierendes Ergebnis.
+</Callout>
+
+## Was KI-Videos nicht können
+
+**Emotionale Authentizität ersetzen**
+
+Für Kulturwandel-Botschaften, CEO-Kommunikation oder emotionale Onboarding-Momente ist ein echtes Video mit echten Personen wirkungsvoller. KI-Avatare sind unpersönlich — das ist in Ordnung für Faktentraining, weniger für Motivationsmomente.
+
+**Komplexe Demos und Simulationen**
+
+KI-Videos sind Lean-Back-Formate. Interaktive Software-Simulationen, verzweigte Szenarien oder Click-Through-Trainings brauchst du weiterhin ein Autorentool wie Storyline.
+
+**Vollständige Qualitätssicherung übernehmen**
+
+KI-generierte Inhalte müssen geprüft werden, bevor sie ausgerollt werden. Das gilt besonders für regulatorische oder rechtliche Themen. Der Fehlerrate bei fachlichen Details ist niedrig, aber nicht null.
+
+## Fazit
+
+KI-Videotools haben einen echten Platz in der L&D-Toolbox. Für Standard-Trainingsmodule, die schnell produziert und regelmäßig aktualisiert werden müssen, sind Synthesia und HeyGen keine Kompromisslösung — sie sind für diesen Zweck besser als traditionelle Videoproduktion.
+
+Für Schulungsvideos, die in ein LMS eingebunden werden sollen, bietet [Scibly](/de) direkten Video-Upload und Tracking ohne SCORM-Overhead.
+
+</PostLayout>

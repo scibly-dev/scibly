@@ -1,0 +1,115 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "Betriebsrat und E-Learning: Was vor der Einführung einer Lernplattform zu klären ist",
+  description:
+    "In Deutschland hat der Betriebsrat Mitbestimmungsrechte bei der Einführung von Systemen, die Mitarbeitende überwachen. Ein LMS gehört dazu. Was HR vor dem Rollout wissen muss.",
+  date: "25. April 2026",
+  readTime: 6,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "Betriebsrat E-Learning",
+    "Mitbestimmung Lernplattform",
+    "Betriebsrat LMS",
+    "Betriebsvereinbarung E-Learning",
+    "LMS Betriebsrat",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+In Unternehmen mit Betriebsrat hat dieser formelle Mitbestimmungsrechte bei der Einführung von Systemen, die das Verhalten oder die Leistung von Mitarbeitenden erfassen – oder auch nur dazu geeignet sind. Ein Lernmanagementsystem fällt klar in diese Kategorie.
+
+Wer ein LMS ohne Betriebsratsbeteiligung einführt, riskiert nicht nur Konflikte – der Betriebsrat kann die Nutzung des Systems untersagen lassen, bis eine ordnungsgemäße Vereinbarung getroffen ist. Den Betriebsrat von Anfang an einzubeziehen ist kein bürokratischer Umweg, sondern der direkteste Weg zum Rollout.
+
+## Warum ein LMS Mitbestimmungsrechte auslöst
+
+Ein LMS ist nicht nur eine Content-Bereitstellungs-Plattform. Es erfasst Daten: Wer hat was wann abgerufen, wann ein Kurs abgeschlossen wurde, wie in Prüfungen abgeschnitten wurde, wie lang auf jedem Modul verweilt wurde.
+
+Das **Betriebsverfassungsgesetz (BetrVG)** gibt dem Betriebsrat in mehreren für ein LMS relevanten Bereichen Mitbestimmungsrechte:
+
+- **§ 87 Abs. 1 Nr. 6**: Einführung und Anwendung von technischen Einrichtungen, die dazu bestimmt sind, das Verhalten oder die Leistung der Arbeitnehmer zu überwachen
+- **§ 94**: Personalfragebögen und Beurteilungsgrundsätze (einschließlich Schulungsleistungsdaten)
+- **§§ 96–98**: Berufsausbildung, berufliche Weiterbildung und Kompetenzentwicklung
+
+<Callout type="info">
+  Ein LMS ohne Betriebsratsbeteiligung einzuführen ist nicht nur
+  verfahrenstechnisch falsch – der Betriebsrat kann erfolgreich verlangen, dass
+  das System abgeschaltet oder seine Nutzung ausgesetzt wird, bis eine
+  ordnungsgemäße Vereinbarung geschlossen wurde. Ohne Konsultation zu starten
+  schafft Verzögerungen, keine Beschleunigung.
+</Callout>
+
+## Was in der Betriebsratskonsultation zu klären ist
+
+Die Betriebsratskonsultation zu einem LMS umfasst typischerweise:
+
+**Welche Daten erfasst werden**: Abschlussnachweise, Prüfungsergebnisse, Zeit im Modul, Login-Zeitstempel. Explizit angeben, was das System automatisch protokolliert.
+
+**Wer welche Daten sehen kann**: Führungskräfte-Zugang zu Abschlussständen direkter Mitarbeitenden vs. HR-Zugang vs. individueller Mitarbeitenden-Zugang zu eigenen Nachweisen. Das Prinzip der Datensparsamkeit ist hier zentral.
+
+**Wofür die Daten verwendet werden**: Fließen Abschlussdaten in Leistungsbeurteilungen ein? Kann unvollständiges Training Vergütung oder Beförderung beeinflussen? Das sind wesentliche Mitbestimmungsfragen.
+
+**Datenspeicherung und -löschung**: Wo werden Daten gespeichert? Handelt es sich um einen deutschen Server, ein EU-Rechenzentrum oder einen US-Anbieter? Wie lange werden Daten aufbewahrt? Was passiert mit Nachweisen, wenn ein Mitarbeitender ausscheidet?
+
+**Ob Schulungen Pflicht oder freiwillig sind**: Pflichtschulungen mit Tracking werfen mehr Mitbestimmungsfragen auf als freiwillige Entwicklungsressourcen.
+
+**Sicherheitsmaßnahmen**: Wer hat administrativen Zugang, welches Audit-Logging existiert, was schützt vor unbefugtem Datenzugriff.
+
+<Callout type="tip">
+  Eine technische und organisatorische Beschreibung des LMS vor dem ersten
+  Betriebsrats-Meeting vorbereiten. Ein klares Dokument, das beschreibt, welche
+  Daten erhoben werden, wer sie sieht und wie sie geschützt werden, macht die
+  Konsultation erheblich schneller und produktiver.
+</Callout>
+
+## Die Betriebsvereinbarung
+
+Das Ergebnis der Betriebsratskonsultation zu einem neuen System ist typischerweise eine **Betriebsvereinbarung** – ein formelles schriftliches Abkommen zwischen Arbeitgeber und Betriebsrat, das regelt, wie das System verwendet werden darf.
+
+Eine typische Betriebsvereinbarung zu einem LMS umfasst:
+
+- Den Zweck des Systems und die Art der darin bereitgestellten Schulungen
+- Welche Mitarbeitendendaten erfasst werden und wie sie verwendet werden
+- Wer Zugang zu individuellen Abschluss- und Prüfungsdaten hat
+- Ob und wie Schulungsdaten in Leistungsbeurteilungen einfließen dürfen
+- Das Verfahren zur Einführung neuer Kurse oder Schulungspflichten
+- Aufbewahrungsfristen und Löschzeiten für Daten
+- Mitarbeitenden-Rechte auf Einsicht in eigene Nachweise
+
+Die Verhandlung dieser Vereinbarung dauert – in manchen Fällen Wochen bis Monate. Das von Anfang an in den Implementierungszeitplan einplanen.
+
+## Wie der Prozess reibungslos verläuft
+
+**Den Betriebsrat früh einbeziehen**: Den Betriebsrat nach der Anbieterauswahl und Systemkonfiguration einzubeziehen, setzt ihn in eine Position, in der nur Annehmen oder Ablehnen möglich ist. Frühe Einbindung gibt echten Gestaltungsspielraum und beschleunigt die Einigung.
+
+**Einen Anbieter mit transparenten Datenpraktiken wählen**: Der Betriebsrat wird detaillierte Fragen zur Datenverarbeitung stellen. Ein Anbieter, der einen klaren Auftragsverarbeitungsvertrag (AVV) vorlegt, seine Unterauftragnehmer benennt und Daten in der EU speichert, steht deutlich weniger unter Druck als einer mit vager Datenschutzrichtlinie und US-Datenspeicherung.
+
+**Überwachung und Entwicklung trennen**: Von Anfang an klarstellen, dass Schulungsdaten für die Mitarbeitendenentwicklung genutzt werden – nicht zur Überwachung oder Leistungsbewertung. Wenn Schulungsabschlüsse kein Teil des Performance-Managements sein werden, das schriftlich festhalten. Wenn doch, das explizit in der Betriebsvereinbarung regeln.
+
+**Individuelle Prüfungsdaten schützen**: Betriebsräte fordern häufig, dass individuelle Prüfungsergebnisse und Abschlüsse nicht für Führungskräfte sichtbar sind – nur für den Mitarbeitenden selbst und für HR zu Audit-Zwecken. Das ist ein vertretbares Zugeständnis, das die Einigung oft freimacht.
+
+## Der praktische Einfluss auf den Rollout-Plan
+
+Wer in einem Unternehmen mit Betriebsrat ein LMS einführen möchte, sollte realistisch mit diesem Zeitplan rechnen:
+
+- **Monat 1**: Plattform auswählen, technische Dokumentation vorbereiten
+- **Monat 2–3**: Betriebsratskonsultation und Verhandlung
+- **Monat 3–4**: Betriebsvereinbarung unterzeichnen, Konfiguration abschließen
+- **Monat 4–5**: Pilotrollout
+- **Monat 5–6**: Vollständiger Rollout
+
+Das ist nicht ungewöhnlich – und besser als das System einzuführen, eine Betriebsratsbeschwerde zu erhalten und den Betrieb mitten im Rollout einstellen zu müssen.
+
+Das Grundprinzip gilt übrigens auch für Unternehmen ohne Betriebsrat: Mitarbeitende und ihre Vertretungen in die Gestaltung von Systemen einzubeziehen, die sie betreffen, führt zu besserer Akzeptanz und weniger Überraschungen.
+
+</PostLayout>

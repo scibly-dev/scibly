@@ -1,0 +1,70 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "The Kirkpatrick Model: The 4 Levels of Training Evaluation Explained",
+  description:
+    "The Kirkpatrick Model is a four-level framework for evaluating training effectiveness, developed by Donald Kirkpatrick and first published in 1959.",
+  date: "June 13, 2026",
+  readTime: 4,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "kirkpatrick model",
+    "kirkpatrick model explained",
+    "donald kirkpatrick",
+    "kirkpatrick evaluation model",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+The Kirkpatrick Model is a four-level framework for evaluating training effectiveness, developed by Donald Kirkpatrick and first published in 1959. The four levels are Reaction, Learning, Behavior, and Results. Each level builds on the previous one, and each level is harder to measure than the one before, but delivers more meaningful insight into the actual value of a training program.
+
+## The four levels of the Kirkpatrick Model
+
+| Level       | Question                                                             | Typical measurement method                                   |
+| ----------- | -------------------------------------------------------------------- | ------------------------------------------------------------ |
+| 1. Reaction | Did participants find the training relevant and engaging?            | Feedback survey right after the training                     |
+| 2. Learning | Did participants actually absorb the knowledge that was taught?      | Knowledge test, before-and-after comparison                  |
+| 3. Behavior | Do participants actually apply what they learned in day-to-day work? | Observation, manager feedback, some time after the training  |
+| 4. Results  | Did a measurable business outcome change?                            | Metrics like error rate, productivity, customer satisfaction |
+
+## Why most training only measures level 1
+
+In practice, evaluation for most training stops at level 1: a short feedback form right afterward, often called a "smile sheet." That's the easiest level to collect, but also the least meaningful. Whether training was well received says little about whether it actually changed anything. Levels 3 and 4 are measured less often because they take more effort and only become visible some time after the training, but they're the levels that actually matter to a business.
+
+## Applying the Kirkpatrick Model in practice
+
+Not every training program needs all four levels. A pragmatic approach:
+
+- **Level 1, always, but never as the only measurement.** Short feedback is quick to collect and at least shows whether there were obvious problems with delivery.
+- **Level 2 for every knowledge-based topic.** A short knowledge check right in the course shows whether the content landed at all, before looking at behavior or results.
+- **Level 3 for process and behavior training.** If the goal is a behavior change, for example in customer interactions or safety processes, a spot check after a few weeks is worthwhile.
+- **Level 4 only for training with a clear business tie-in.** Not every training program can be sensibly traced back to a metric, but for sales or safety training the connection is often directly tangible.
+
+## Frequently asked questions
+
+### Who developed the Kirkpatrick Model?
+
+Donald Kirkpatrick, a US education researcher, first published the model in 1959. It's been refined several times since, including by his son James Kirkpatrick, but has stayed centered on the same four levels.
+
+### What's the highest level in the Kirkpatrick Model?
+
+Level 4, Results, measures the actual business value of a training program, for example through changed metrics like error rate or productivity. It's the hardest to isolate, because many factors besides training affect a business outcome.
+
+### How does level 2 differ from level 3?
+
+Level 2 checks whether knowledge was absorbed, usually right after the training, for example via a test. Level 3 checks whether that knowledge is actually applied in real work situations, usually some weeks later.
+
+### Does every company need all four levels?
+
+No. For short, standardized training, levels 1 and 2 are often enough. Levels 3 and 4 pay off especially for high-effort training or training with a direct business tie-in, where the measurement effort is worth it.
+
+</PostLayout>

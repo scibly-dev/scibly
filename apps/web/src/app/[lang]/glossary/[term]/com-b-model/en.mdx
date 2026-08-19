@@ -1,0 +1,90 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "COM-B Model",
+  definition:
+    "A behavior change framework identifying three conditions required for behavior: Capability (physical and psychological), Opportunity (physical and social environment), and Motivation (reflective and automatic).",
+  keywords: [
+    "COM-B model",
+    "behavior change model",
+    "Capability Opportunity Motivation",
+    "behavior design",
+    "instructional design",
+  ],
+  relatedTerms: ["instructional-design", "action-mapping"],
+  relatedPost: "talk-to-the-elephant",
+};
+
+<GlossaryLayout metadata={metadata} lang="en">
+
+The COM-B model is a behavior change framework developed by Susan Michie, Maartje van Stralen, and Robert West, published in 2011. It states that for any behavior to occur, three conditions must be in place simultaneously: Capability, Opportunity, and Motivation — and Behavior is the result when all three are present. The model emerged from health psychology research but has found wide application in workplace learning, instructional design, and organizational change.
+
+## The three factors
+
+### Capability
+
+Capability is what a person is able to do. It has two components:
+
+**Physical capability** refers to the physical skills, strength, stamina, or coordination required for a behavior — relevant for manual tasks, safety procedures, or clinical interventions.
+
+**Psychological capability** covers the mental skills and knowledge required — understanding, memory, reasoning, and behavioral regulation. In most workplace learning contexts, this is the primary dimension: can the person cognitively execute the required behavior? Do they have the relevant knowledge, can they recall it under pressure, and can they translate it into action?
+
+Capability gaps are what training is typically best positioned to address.
+
+### Opportunity
+
+Opportunity refers to what the environment allows or enables. This factor is external to the person — it concerns the conditions within which behavior must occur.
+
+**Physical opportunity** covers the resources, tools, time, and physical environment required for the behavior. A salesperson cannot make a consultation call without access to a CRM with accurate customer data. A nurse cannot follow hand-washing protocol if soap dispensers are broken. These are not training problems.
+
+**Social opportunity** covers the social norms, cultural context, and interpersonal cues that make a behavior expected, acceptable, or visible in a given environment. If a team's unspoken norm is to skip documentation shortcuts, a course about documentation importance will achieve little.
+
+Opportunity gaps are almost never addressable through training alone — they require changes to systems, processes, tools, or organizational culture.
+
+### Motivation
+
+Motivation is what drives or directs the behavior. It also has two sub-components:
+
+**Reflective motivation** involves conscious beliefs, intentions, and goals — deliberate reasoning about whether a behavior is desirable or effective. Training can influence this through belief change, attitude shifting, or goal-setting activities.
+
+**Automatic motivation** covers habits, impulses, emotional responses, and unconscious associations that drive behavior without deliberate thought. Habits form when a behavior has been repeated consistently in a consistent context. Automatic processes are faster than reflective ones and can override conscious intentions — which is why good intentions formed in training often fail to produce behavior change when the person returns to a familiar environment with established habits.
+
+<Callout type="info">
+  The COM-B model is not just a categorization scheme — it's a diagnostic tool.
+  The point is to identify which factor is the primary constraint on the
+  behavior you want to change. A program that targets capability when
+  opportunity is the real barrier won't produce the behavior change it's
+  designed for, no matter how well the training is designed.
+</Callout>
+
+## How to use COM-B as a diagnostic
+
+The practical value of the model is in the question it prompts before any intervention is designed: why isn't this behavior happening?
+
+Working through the three factors:
+
+- If the person **doesn't know how** or lacks the mental skills to execute the behavior → Capability gap → Training may help
+- If the person **can't do it because the environment prevents it** (tools, time, processes, systems) → Opportunity gap → Training won't help; fix the environment
+- If the person **doesn't want to do it** or defaults to a competing habit → Motivation gap → May require attitude work, habit design, or incentive changes — training alone rarely solves it
+
+This diagnostic is closely connected to action mapping's gap analysis step. Both methods push L&D practitioners to ask whether the proposed training addresses the actual cause of the performance problem.
+
+## Julie Dirksen and behavior design in instructional design
+
+Learning designer Julie Dirksen brought substantial attention to COM-B and related behavior change frameworks in "Design for How People Learn" and particularly in "Talk to the Elephant: Design Learning Experiences with Behavior Change in Mind." Dirksen's framing — drawn from the dual-process metaphor of a rational rider on an emotional elephant — makes the automatic versus reflective motivation distinction concrete and practically useful. Her work is the primary bridge between academic behavior change research and the day-to-day practice of instructional designers.
+
+<Callout type="tip">
+  When a training program keeps being asked for on the same performance problem
+  — the same topic gets a new course year after year, but behavior doesn't
+  change — COM-B is a useful diagnostic lens. If the capability was established
+  in the first course and hasn't degraded, the problem likely lies in
+  opportunity or motivation, neither of which will be fixed by another course.
+</Callout>
+
+## Implications for training design
+
+COM-B is not primarily a course design model — it's a pre-design diagnostic. Its most important contribution is preventing the misapplication of training to problems that training cannot solve.
+
+When a capability gap is confirmed, the model's sub-distinctions still matter for design. Psychological capability gaps related to knowledge and recall are addressed differently than those related to behavioral regulation or habit formation. And even genuine capability gaps exist alongside motivation and opportunity conditions that must be acknowledged — if the environment actively discourages the target behavior, improving capability will have limited effect.
+
+</GlossaryLayout>

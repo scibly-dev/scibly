@@ -1,0 +1,70 @@
+{
+  "qualityProof": {
+    "eyebrow": "Vom Wissen zum freigegebenen Kurs",
+    "title": "Mehr als nur ein Prompt",
+    "subtitle": "Scibly verbindet deine Inhalte mit Lernwissenschaft, überprüfbaren Quellen und der Erfahrung deines Teams.",
+    "inputLabel": "Startpunkt",
+    "inputTitle": "Dein Wissen",
+    "sourceSamples": [
+      "Compliance Handbuch.pdf",
+      "Onboarding Wiki · Confluence"
+    ],
+    "inputs": [
+      {
+        "label": "Bestehendes Wissen",
+        "detail": "Richtlinien, Handbücher & internes Wissen"
+      },
+      {
+        "label": "Realer Kontext",
+        "detail": "Zielgruppe & reale Arbeitssituationen"
+      }
+    ],
+    "coreLabel": "Der Scibly Qualitätskern",
+    "qualityLayers": [
+      {
+        "title": "Didaktisch aufgebaut",
+        "body": "Struktur, Beispiele und Wiederholung folgen bewährter Lernwissenschaft."
+      },
+      {
+        "title": "Bis zur Quelle belegbar",
+        "body": "Jede Aussage bleibt mit ihrem Ursprung verbunden.",
+        "proof": {
+          "kind": "source",
+          "label": "Handbuch · §4.2 Datenverarbeitung"
+        }
+      },
+      {
+        "title": "Von Menschen gesteuert",
+        "body": "Dein Team bestimmt Inhalt, Ton und Tiefe.",
+        "proof": {
+          "kind": "reviewers",
+          "label": "Vor Veröffentlichung von 3 Experten geprüft"
+        }
+      }
+    ],
+    "output": {
+      "label": "Ergebnis",
+      "title": "Ein Kurs für den Arbeitsalltag",
+      "body": "Didaktisch fundiert, fachlich geprüft und sofort einsetzbar.",
+      "status": "Von deinem Team freigegeben"
+    },
+    "differentiation": {
+      "title": "Warum nicht einfach ChatGPT?",
+      "body": "Was Unternehmen brauchen, endet nicht beim Prompt. Erst Didaktik, Qualitätssicherung, Zusammenarbeit und Freigaben machen aus KI-generierten Inhalten professionelle Weiterbildung. Genau dafür wurde Scibly entwickelt."
+    },
+    "cta": {
+      "notebook": {
+        "eyebrow": "Direkt ausprobieren",
+        "title": "Als Autor:in erleben.",
+        "body": "Teste das Notebook und sieh selbst, wie aus Wissen ein fertiger Kurs entsteht.",
+        "label": "Autoren-Demo öffnen"
+      },
+      "course": {
+        "eyebrow": "Fertigen Kurs ansehen",
+        "title": "Als Lernende:r erleben.",
+        "body": "Durchlaufe einen veröffentlichten Kurs genau so, wie es dein Team erleben würde.",
+        "label": "Lern-Demo öffnen"
+      }
+    }
+  }
+}

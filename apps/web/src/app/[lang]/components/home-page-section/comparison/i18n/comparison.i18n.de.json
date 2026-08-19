@@ -1,0 +1,44 @@
+{
+  "comparison": {
+    "title1": "Weniger Verwaltung.",
+    "title2": "Mehr Lernwirkung.",
+    "table": {
+      "headers": {
+        "legacy": "Andere",
+        "scibly": "scibly"
+      },
+      "rows": [
+        {
+          "kind": "import",
+          "label": "Kurserstellung",
+          "legacy": "Manueller Aufbau",
+          "scibly": "Entwurf aus Quellen"
+        },
+        {
+          "kind": "byoai",
+          "label": "KI Modelle",
+          "legacy": "Vorgegebene Modelle",
+          "scibly": "BYOAI & Anbieterwahl"
+        },
+        {
+          "kind": "learner",
+          "label": "Lernformat",
+          "legacy": "Lange, statische Kurse",
+          "scibly": "Kurze, interaktive Übungen"
+        },
+        {
+          "kind": "channels",
+          "label": "Wissenszugang",
+          "legacy": "Isoliertes Lernportal",
+          "scibly": "Ein Lernraum für dein Team"
+        },
+        {
+          "kind": "analytics",
+          "label": "Analytics",
+          "legacy": "Exporte & Abschlussquote",
+          "scibly": "Fragen & direkte Insights"
+        }
+      ]
+    }
+  }
+}

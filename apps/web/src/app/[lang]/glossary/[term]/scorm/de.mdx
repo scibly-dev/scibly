@@ -1,0 +1,84 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "SCORM",
+  definition:
+    "Sharable Content Object Reference Model – der dominierende E-Learning-Standard seit 2001, der definiert, wie Kurse und LMS-Plattformen Abschluss-, Bewertungs- und Fortschrittsdaten austauschen.",
+  keywords: [
+    "SCORM",
+    "E-Learning-Standard",
+    "SCORM 1.2",
+    "SCORM 2004",
+    "LMS-Standard",
+  ],
+  relatedTerms: ["xapi", "lms"],
+  relatedPost: "scorm-vs-xapi",
+};
+
+<GlossaryLayout metadata={metadata} lang="de">
+
+SCORM – Sharable Content Object Reference Model – ist der technische Standard, der definiert, wie E-Learning-Inhaltspakete mit Lernmanagementsystemen kommunizieren. Veröffentlicht von der Advanced Distributed Learning Initiative (ADL), einem Projekt des US-Verteidigungsministeriums, etablierte SCORM eine gemeinsame Sprache zwischen Authoring-Tools und LMS-Plattformen, die seit über zwei Jahrzehnten der Industriestandard geblieben ist.
+
+Der praktische Grund, warum SCORM wichtig ist: Wenn Sie einen Kurs in Articulate Storyline, Adobe Captivate oder einem anderen gängigen Authoring-Tool erstellen und als SCORM-Paket exportieren, funktioniert er in jedem SCORM-konformen LMS – ohne individuelle Entwicklungsarbeit. Diese Interoperabilität war vor SCORM keine Selbstverständlichkeit, und sie bleibt der primäre Wert des Standards.
+
+## Was SCORM leistet
+
+SCORM adressiert drei technische Probleme:
+
+**Paketierung**: SCORM definiert, wie Kursdateien in eine einzelne, portable ZIP-Datei gebündelt werden (der PIF – Package Interchange File) mit einer Manifestdatei (imsmanifest.xml), die dem LMS mitteilt, welche Dateien im Paket enthalten sind, wie sie zueinander stehen und wie sie gestartet werden sollen.
+
+**Laufzeitkommunikation**: SCORM definiert die JavaScript-API, über die ein Kurs während einer Lernsitzung mit dem LMS kommuniziert. Der Kurs kann seinen Status melden (nicht abgeschlossen, abgeschlossen, bestanden, nicht bestanden), die Punktzahl übermitteln, die verbrachte Zeit protokollieren und Lesezeichen-Informationen speichern, damit Lernende dort weitermachen können, wo sie aufgehört haben.
+
+**Sequenzierung** (nur SCORM 2004): Die spätere Version fügte eine Sequenzierungs-Engine hinzu, die Designern erlaubt, Navigationsregeln zu definieren – beispielsweise, dass ein Lernender ein Voraussetzungsmodul bestehen muss, bevor das nächste freigeschaltet wird.
+
+<Callout type="info">
+  Die Datei imsmanifest.xml ist das Rückgrat eines SCORM-Pakets. Wenn ein
+  SCORM-Kurs im LMS nicht korrekt funktioniert, ist das Manifest meist die erste
+  Anlaufstelle – es steuert, wie das LMS die Kursstruktur liest und einzelne
+  Lernobjekte startet.
+</Callout>
+
+## SCORM 1.2 vs. SCORM 2004
+
+Zwei SCORM-Versionen sind in der Praxis relevant:
+
+**SCORM 1.2** (veröffentlicht 2001) ist die breiter unterstützte Version. Ihr Laufzeitkommunikationsmodell nutzt eine einfachere API, und obwohl sie technisch überholt ist, bleibt sie in den meisten Authoring-Tools die Standard-Exportoption – weil praktisch jedes LMS auf dem Markt sie unterstützt.
+
+**SCORM 2004** (mit vier Editionen, die neueste von 2009) fügte ein ausgefeilteres Datenmodell, reichhaltigere Abschlussstatus-Optionen (über das binäre Abgeschlossen/Nicht-abgeschlossen von 1.2 hinaus) und die Sequenzierungs- und Navigationsspezifikation hinzu. Die LMS-Unterstützung für die erweiterten Funktionen von SCORM 2004 – insbesondere die Sequenzierungs-Engine – war historisch inkonsistent, was die Verbreitung einschränkte.
+
+In der Praxis: Die meisten Organisationen verwenden standardmäßig SCORM 1.2. SCORM 2004 lohnt sich nur zu erwägen, wenn Sequenzierungsfunktionen benötigt werden und das eigene LMS diese korrekt implementiert.
+
+## Warum SCORM trotz seines Alters dominiert
+
+SCORMs Langlebigkeit liegt teilweise in der Trägheit – der Standard ist tief in die Beschaffungsprozesse und technische Infrastruktur großer Organisationen eingebettet – spiegelt aber auch wider, dass er das Problem, für das er entwickelt wurde, hinreichend gut löst. Für Kurse, die im Browser laufen, Abschluss und Punktzahl an ein LMS melden müssen und in einer vielfältigen LMS-Landschaft funktionieren sollen, leistet SCORM gute Dienste.
+
+Die installierte Basis ist ebenfalls enorm. Millionen SCORM-konformer Kurse existieren in organisationalen Inhaltsbibliotheken. Organisationen bräuchten einen überzeugenden Grund, sie zu ersetzen, und für Compliance-Trainings und standardisierte Produktwissenskurse erfasst das SCORM-Datenmodell die relevanten Informationen ausreichend.
+
+## Grenzen von SCORM
+
+SCORMs Design spiegelt die Annahmen von 2001 wider:
+
+**Nur Browser**: SCORM setzt voraus, dass der Lernende an einem Desktop-Computer mit Browser sitzt. Mobile Learning, App-basiertes Training, physische Simulationen und Offline-Szenarien sind für SCORM unsichtbar.
+
+**Abschlussorientiert**: Das Datenmodell verfolgt Abschluss, Punktzahl und Zeit. Es kann keine nuancierten Lernverhaltensweisen erfassen – welche Pfade jemand in einem Verzweigungsszenario genommen hat, wo er pausiert hat, wonach er gesucht hat, wie er sich in einer Simulation verhalten hat.
+
+**Synchrone Kommunikation**: SCORM kommuniziert während der Sitzung mit dem LMS. Bricht die Verbindung ab, können Daten verloren gehen. Es gibt keinen Mechanismus für das Tracking offline erfolgter Aktivitäten mit späterer Synchronisation.
+
+**Keine Unterstützung für informelles Lernen**: SCORM kann das Lesen eines Artikels, das Ansehen eines YouTube-Videos, die Teilnahme an einem Diskussionsforum oder die Durchführung einer Aufgabe in der realen Welt nicht nachverfolgen. Das sind erhebliche Lücken in einer Ära, in der 70-20-10 und Lernen im Arbeitsfluss beschreiben, wie Lernen tatsächlich stattfindet.
+
+<Callout type="tip">
+  Wenn ein SCORM-Kurs nicht korrekt an ein LMS berichtet, sind die häufigsten
+  Ursachen: Die SCORM-API des LMS wird vom Kurs nicht erkannt (ein Problem mit
+  der JavaScript-Ladereihenfolge), der Abschlusstrigger im Kurs ist falsch
+  gesetzt (z. B. auf „Quiz-Punktzahl" gesetzt, obwohl kein Quiz vorhanden ist),
+  oder die imsmanifest.xml enthält eine fehlerhafte Referenz. Diese drei
+  Prüfungen lösen den Großteil der SCORM-Debugging-Fälle.
+</Callout>
+
+## Abgrenzung zu xAPI
+
+xAPI (Experience API) wurde speziell entwickelt, um SCORMs Einschränkungen zu adressieren: Es funktioniert außerhalb des Browsers, unterstützt Offline-Tracking, erfasst jede Art von Aktivität in einer flexiblen Aussagenstruktur und speichert Daten in einem Learning Record Store (LRS) statt im LMS selbst. Für Organisationen, die reichhaltigere Lerndaten, Tracking von Blended-Programmen oder nicht-browser-basiertes Training benötigen, ist xAPI der leistungsfähigere Standard.
+
+Die praktische Hürde für die xAPI-Adoption ist die Implementierungskomplexität und der Infrastrukturaufwand – xAPI erfordert einen LRS zusätzlich zu (oder anstelle von) einem LMS, und die Unterstützung durch Authoring-Tools für xAPIs volle Fähigkeiten ist weniger ausgereift als für SCORM. Für die meisten Organisationen heute deckt SCORM den Großteil der Anwendungsfälle ab, während xAPI für spezifische Programme vorbehalten bleibt, wo reichhaltigere Daten wirklich bessere Entscheidungen ermöglichen.
+
+</GlossaryLayout>

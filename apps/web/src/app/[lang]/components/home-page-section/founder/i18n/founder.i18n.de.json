@@ -1,0 +1,12 @@
+{
+  "founder": {
+    "quote": "Das meiste Wissen in eurem Unternehmen existiert bereits. Es weiß nur noch niemand davon.",
+    "body": "Unternehmenswissen liegt meist verstreut in Dokumenten und Tools, unsichtbar für die, die es bräuchten. Wir machen es für das ganze Team zugänglich, und das auf eine Art, die tatsächlich Spaß macht, statt sich wie eine weitere Pflichtschulung anzufühlen.",
+    "attribution": "Felix & Niclas",
+    "role": "Gründer von scibly",
+    "imageSrcFelix": "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+    "imageSrcNiclas": "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/niclas-close-up.webp",
+    "imageAltFelix": "Felix, Co Gründer von scibly",
+    "imageAltNiclas": "Niclas, Co Gründer von scibly"
+  }
+}

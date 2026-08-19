@@ -1,0 +1,34 @@
+{
+  "publicCourse": {
+    "metadata": {
+      "title": "Course",
+      "description": "Complete this course on Scibly"
+    },
+    "unavailable": {
+      "title": "This course isn't available right now",
+      "description": "The link you followed is temporarily closed to new visitors. Please check back later, or ask whoever shared it with you for another way in."
+    },
+    "progress": {
+      "ephemeral": "Your browser won't let this page save anything, so your progress lasts until you close the tab."
+    },
+    "header": {
+      "offer": "Your first course is on us",
+      "cta": "Claim your free course"
+    },
+    "footer": {
+      "message": "Turn your knowledge into an interactive course with Scibly.",
+      "cta": "Claim your free course"
+    },
+    "pitch": {
+      "filename": "your-material.pdf",
+      "demo": {
+        "question": "How does knowledge actually stick?",
+        "optionA": "Interactive courses",
+        "optionB": "80-page PDFs"
+      },
+      "title": "This course used to be a document",
+      "message": "Picture your own material like this — interactive instead of filed away. Your first course is on us.",
+      "cta": "Create your first course for free"
+    }
+  }
+}

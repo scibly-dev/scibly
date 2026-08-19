@@ -1,0 +1,10 @@
+/*
+ * The global placeholder extension (styles/extensions/placeholder.css) shows
+ * hint text via a non-!important `content` on empty paragraphs. Cloze author
+ * paragraphs live inside NodeViewContent (.cloze-author-content) and have their
+ * own placeholder, so one !important rule suppresses the global one regardless
+ * of its specificity/locale/media variants.
+ */
+.ProseMirror .cloze-author-content p.is-empty::before {
+  content: "" !important;
+}

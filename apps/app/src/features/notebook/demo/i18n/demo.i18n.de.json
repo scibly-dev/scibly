@@ -1,0 +1,17 @@
+{
+  "notebook": {
+    "demo": {
+      "conversionOffer": "Der erste Kurs geht auf uns",
+      "conversionCta": "Kostenlosen Kurs anfragen",
+      "backToScibly": "Zurück zu Scibly",
+      "restartDemo": "Demo neu starten",
+      "historyUnavailable": "Der Verlauf ist in dieser Demo nicht verfügbar",
+      "studioToolUnavailable": "Im vollständigen Scibly-Arbeitsbereich verfügbar",
+      "sidebarTitle": "Demo-Arbeitsbereich",
+      "greeting": "Mach aus deinen Quellen einen Kurs",
+      "workspaceTitle": "Kurs-Builder-Demo",
+      "metaTitle": "KI-Notebook Demo | Scibly",
+      "metaDescription": "Erlebe, wie Scibly aus Quellen in Minuten einen Kurs erzeugt."
+    }
+  }
+}

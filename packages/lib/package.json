@@ -1,0 +1,37 @@
+{
+  "name": "@scibly/lib",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./collab": "./src/collab.ts",
+    "./collab-yjs": "./src/collab-yjs.ts",
+    "./collab-token": "./src/collab-token.ts",
+    "./internal": "./src/internal/index.ts",
+    "./hooks/*": "./src/hooks/*/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "react": "^19.0.0",
+    "use-debounce": "^10.0.4"
+  },
+  "peerDependencies": {
+    "next": "^16.1.6",
+    "react": "^19.0.0",
+    "yjs": "^13.6.20"
+  },
+  "devDependencies": {
+    "@scibly/eslint-config": "workspace:*",
+    "@types/node": "^20.17.29",
+    "@types/react": "^19.2.14",
+    "eslint": "^9.39.2",
+    "next": "^16.3.0",
+    "typescript": "^5.8.2",
+    "yjs": "^13.6.30"
+  }
+}

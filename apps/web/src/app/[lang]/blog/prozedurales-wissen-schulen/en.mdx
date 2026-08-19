@@ -1,0 +1,66 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "Training Procedural Knowledge: Why Process Knowledge Needs a Different Logic Than Understanding",
+  description:
+    "Procedural knowledge means correctly executing a fixed sequence, such as an approval process, a safety checklist, or operating a specific software dialog.",
+  date: "June 5, 2026",
+  readTime: 4,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "training procedural knowledge",
+    "train processes checklist",
+    "procedural knowledge training",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+Procedural knowledge means correctly executing a fixed sequence, such as an approval process, a safety checklist, or operating a specific software dialog. For this type of knowledge, the research shows no advantage for methods like productive failure, where learners are supposed to solve a problem themselves first (g = -0.03, practically no difference). What reliably works for procedural knowledge is a different, much more direct sequence: demonstration, guided practice, varied practice.
+
+## Why procedural knowledge should be treated differently from conceptual understanding
+
+With a fixed sequence, there's usually only one, or a few, correct ways to complete a task. Unlike conceptual understanding, where working it out yourself can surface misconceptions and thereby make the later explanation more effective, trial and error with a fixed sequence yields little extra insight. It mainly costs time and increases the risk of self-training an incorrect procedure that later has to be corrected.
+
+## The evidence-backed sequence for procedural knowledge
+
+| Step               | What happens                                                                          |
+| ------------------ | ------------------------------------------------------------------------------------- |
+| 1. Demonstration   | The correct procedure is shown fully and visibly, with no steps skipped               |
+| 2. Guided practice | Learners perform the same procedure themselves, with direct feedback on deviations    |
+| 3. Varied practice | The same procedure is practiced on slightly different cases to ensure transferability |
+
+Step three is often skipped in practice. A procedure practiced on only a single example case often transfers worse in practice to slightly different real situations than that one round of practice would suggest.
+
+## Common mistakes when teaching procedural knowledge
+
+The most common mistake is treating procedural knowledge like conceptual knowledge, for example by throwing learners straight into a new software form with no prior demonstration, hoping "learning by doing" is enough. For fixed procedures, that's rarely the most efficient sequence. The second most common mistake is the opposite: a demonstration with no subsequent practice of their own, assuming watching is enough to build the skill. Both mistakes can be avoided by consistently sticking to the sequence demonstration, guided practice, varied practice.
+
+## Frequently asked questions
+
+### What's the difference between procedural knowledge and conceptual understanding?
+
+Procedural knowledge is the ability to correctly execute a fixed sequence. Conceptual understanding is understanding why something works the way it does, and the ability to transfer that understanding to new situations. Both need different training methods.
+
+### Why doesn't productive failure work here?
+
+Because a fixed sequence rarely has alternative, equally valid solution paths that would make self-exploration worthwhile. The insight gained from one's own failure, which drives the advantage for conceptual topics, largely disappears for pure procedural knowledge.
+
+### How much practice does varied practice need?
+
+Usually a small number of slightly different cases is enough; what matters is just that variation exists at all, instead of repeating the exact same case multiple times.
+
+### Does this sequence also apply to software training?
+
+Yes, it's especially relevant there: show a software feature fully first, then have learners perform it themselves with guidance, then have them practice on a slightly different use case without support.
+
+</PostLayout>

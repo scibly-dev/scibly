@@ -1,0 +1,89 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "Talk to the Elephant: Designing for Behavior Change – A Summary",
+  description:
+    "Dirksen's follow-up addresses the knowing-doing gap head-on, giving designers a diagnostic framework for understanding why behavior doesn't change even when people know it should.",
+  date: "May 21, 2026",
+  readTime: 7,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "Talk to the Elephant",
+    "Julie Dirksen",
+    "behavior change",
+    "knowing-doing gap",
+    "COM-B model",
+    "instructional design",
+    "learning design",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+Julie Dirksen's first book, Design for How People Learn, explained how learning works and how to design for it. Talk to the Elephant (2023) picks up where that book leaves off — not with "how do people learn?" but with "why don't people change, even when they know they should?" The gap between knowing and doing turns out to be the harder problem, and this book is one of the clearest treatments of it in the instructional design literature.
+
+The book is relatively short, densely argued, and practically oriented. It's best read after Design for How People Learn — not because it requires it, but because the two books address complementary problems, and having the first under your belt helps the second land with full force.
+
+## The knowing-doing gap
+
+The knowing-doing gap is the central puzzle the book addresses. It's the phenomenon that explains why compliance training gets completed and then ignored, why people who know the healthy behavior still don't do it, and why information-heavy e-learning courses produce so little behavior change.
+
+Dirksen's argument is that the gap exists because training designers treat behavior change as an information problem — if people just knew the right thing to do, they would do it. But the relationship between knowledge and behavior is far more complicated than that. People hold competing goals, habits formed over years, environmental constraints, social pressures, and emotional responses that knowledge alone cannot override.
+
+Designing for behavior change means understanding which of these factors is actually blocking the desired behavior in a given situation — and then designing interventions that target that specific barrier. One-size-fits-all training fails because the same blocker is rarely in play across all learners.
+
+## The elephant and the rider
+
+Dirksen draws on Jonathan Haidt's metaphor from The Happiness Hypothesis: the rider on an elephant. The rider is the rational, deliberative mind — capable of reasoning, planning, and setting intentions. The elephant is the emotional, habitual, automatic mind — much larger and more powerful, and the one that actually drives behavior in most real situations.
+
+Training almost always speaks to the rider. It provides information, builds rationale, establishes goals. But if the elephant is heading somewhere else — if the behavior change conflicts with a deeply held habit, triggers an emotional response, or requires more effort than the immediate environment supports — the rider's intentions are overridden.
+
+Designing for behavior change means understanding what the elephant needs, not just what the rider knows. This is a different design problem, and it leads to a different set of design questions.
+
+## The COM-B model
+
+The book's central practical framework is COM-B, drawn from behavioral science: Capability, Opportunity, Motivation → Behavior. The model provides a structured diagnostic lens for understanding why a behavior isn't occurring.
+
+**Capability** is whether the person can physically and psychologically perform the behavior. This divides into physical capability (the motor skills, strength, or stamina to do it) and psychological capability (the knowledge, cognitive skills, and self-regulation to do it). Training typically targets psychological capability. But capability deficits aren't always the problem — often people are entirely capable and the gap is elsewhere.
+
+**Opportunity** is whether the environment supports the behavior. Physical opportunity covers the presence of the time, tools, resources, and absence of physical obstacles. Social opportunity covers the norms, culture, and social expectations that make the behavior more or less likely. If the workplace norm is to skip the safety checklist when under time pressure, training on why checklists matter will not change the behavior — the social opportunity isn't there.
+
+**Motivation** is whether the person is sufficiently driven to perform the behavior. Automatic motivation includes habits and emotional associations. Reflective motivation includes intentions, goals, and beliefs. Most training addresses reflective motivation — "here's why this matters" — without touching the automatic processes that actually drive behavior in the moment.
+
+<Callout type="tip">
+  The COM-B model works best as a diagnostic tool before design begins, not as a
+  post-hoc framework for justifying existing training. Ask: Is capability
+  actually the gap, or is it opportunity or motivation? If it's not capability,
+  more training won't solve it. You may need environmental redesign, social norm
+  interventions, or habit formation strategies instead.
+</Callout>
+
+## Design strategies for each barrier type
+
+The book doesn't stop at diagnosis — it maps specific design strategies to each barrier type.
+
+For capability gaps: deliberate practice with feedback, cognitive load reduction, worked examples, retrieval practice, spaced repetition. These are the tools of classical instructional design.
+
+For opportunity gaps: job aids at the point of performance, environmental redesign, removing friction from the desired behavior, making the default action the right action.
+
+For motivation gaps: reframing consequence salience (making the outcomes of behavior vivid and immediate rather than abstract and distant), social proof, commitment devices, reducing the psychological costs of the behavior, addressing identity threats.
+
+This taxonomy is what makes the book genuinely useful for working designers. Most instructional design literature focuses almost entirely on the first category. Dirksen gives the full picture.
+
+## Why this matters after Design for How People Learn
+
+Design for How People Learn answers the question of how to build effective learning experiences. Talk to the Elephant answers the prior question: is learning the right intervention at all, and if so, what exactly should it be targeting?
+
+Many training programs fail not because they're poorly designed as learning experiences, but because they're addressing the wrong barrier. They provide capability when the real obstacle is opportunity. They build knowledge when the real obstacle is habit. Understanding COM-B before opening an authoring tool reorients the entire design process.
+
+Scibly supports the kind of targeted, behavior-focused learning programs this framework enables — with tools for structuring training around specific performance goals and tracking whether behavior is actually changing, not just whether courses are being completed.
+
+</PostLayout>

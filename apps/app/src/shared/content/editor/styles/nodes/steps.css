@@ -1,0 +1,98 @@
+/* Step-by-step block — numbered rail, one connector per step. */
+
+.steps-list {
+  counter-reset: steps-item;
+}
+
+.steps-list > .react-renderer {
+  width: 100%;
+}
+
+.steps-item {
+  counter-increment: steps-item;
+  position: relative;
+  padding-left: 3.5rem;
+  padding-bottom: 0.75rem;
+}
+
+/* The number lives in CSS so inserting or deleting a step can never leave a
+   stale index behind. */
+.steps-item__marker::before {
+  content: counter(steps-item);
+}
+
+/* A finished step shows a check instead of its number. */
+.steps-item.is-explored .steps-item__marker::before {
+  content: none;
+}
+
+/* A step is a card, not a slide: its content reads at the shared tile size
+   rather than at the scene's 20px reading size, which dwarfs the card. */
+.steps-item__collapse {
+  font-size: 1.0625rem;
+}
+
+/* Connector from this step's marker down to the next one. It doubles as the
+   progress meter: opening a step draws its segment downwards to the next
+   marker, so the rail fills like a path being walked. */
+.steps-item::before {
+  content: "";
+  position: absolute;
+  left: 1.1875rem; /* marker centre: 2.375rem / 2 */
+  top: 2.75rem;
+  bottom: 0;
+  width: 2px;
+  border-radius: 2px;
+  background-color: var(--color-edge);
+  background-image: linear-gradient(#0f6fe6, #7ab4ff);
+  background-repeat: no-repeat;
+  background-size: 100% 0%;
+  transition: background-size 450ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.steps-item.is-explored::before {
+  background-size: 100% 100%;
+}
+
+/* A locked step is not yet part of the path the learner has walked. */
+.steps-item.is-locked::before {
+  opacity: 0.5;
+}
+
+/* The last step has nothing to connect to — the wrapper is the react-renderer,
+   so :last-child has to be matched on it rather than on the step itself. */
+.steps-list > .react-renderer:last-child .steps-item {
+  padding-bottom: 0;
+}
+
+.steps-list > .react-renderer:last-child .steps-item::before {
+  display: none;
+}
+
+.dark .steps-item::before {
+  background-color: var(--color-neutral-800);
+  background-image: linear-gradient(#1d4ed8, #3b82f6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .steps-item::before {
+    transition: none;
+  }
+}
+
+/* Exports render the document, never the collapsed reading state. */
+@media print {
+  .steps-item__collapse {
+    grid-template-rows: 1fr !important;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  .steps-item {
+    padding-left: 3rem;
+  }
+
+  .steps-item__collapse {
+    font-size: 1rem;
+  }
+}

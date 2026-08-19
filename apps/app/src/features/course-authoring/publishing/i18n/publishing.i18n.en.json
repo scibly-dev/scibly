@@ -1,0 +1,28 @@
+{
+  "courses": {
+    "detail": {
+      "previewBackToCourse": "Back to course",
+      "toastPublishSuccess": "Course published! (v{{version}})",
+      "toastPublishFailed": "Failed to publish course.",
+      "publish": "Publish",
+      "publishing": "Publishing...",
+      "publishDialog": {
+        "title": "Publish Course",
+        "description": "This will create a new published version of the course. Members currently enrolled will remain on their existing version.",
+        "supersedeLabel": "Supersede previous version",
+        "supersedeDescription": "If checked, users enrolled in previous versions will be automatically moved to this new version. Their progress might be lost if scenes were removed or changed significantly.",
+        "cancel": "Cancel",
+        "confirmPublish": "Confirm Publish",
+        "publishing": "Publishing...",
+        "confirmForce": "Publish anyway",
+        "gateDialogDescription": "Publishing a course is part of a subscription. Everything you have built stays open to edit and to preview.",
+        "gateTitle": "Publishing needs {{plan}} or above",
+        "gateDescription": "Subscribe to publish this course and enroll learners. Authoring and preview are unaffected. Nothing you have built is locked away.",
+        "gateLapsedTitle": "This subscription has lapsed",
+        "gateLapsedDescription": "Courses can no longer be published. Reactivate the subscription to publish and enroll again; authoring and preview stay open.",
+        "gateFallbackPlan": "a paid plan",
+        "gateViewPlans": "View plans"
+      }
+    }
+  }
+}

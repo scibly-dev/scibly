@@ -1,0 +1,139 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "Instructional Design Basics: What Actually Makes Learning Stick",
+  description:
+    "Good instructional design isn't about making content look nice. It's about understanding how people learn and designing for that — not against it.",
+  date: "April 7, 2026",
+  readTime: 8,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "instructional design",
+    "learning theory",
+    "ADDIE",
+    "Bloom taxonomy",
+    "learning objectives",
+    "e-learning design",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+Most e-learning courses start with the wrong question. Not "what should the learner be able to do after this?" but "what needs to go in the course?"
+
+That sounds like a minor difference. It's fundamental. The first approach builds from learning objectives outward. The second collects information and presents it — hoping something sticks.
+
+Instructional design is the discipline of asking the first question correctly — and translating the answer into learning that actually works.
+
+## Learning objectives: the foundation of everything
+
+A learning objective answers one question: what can the learner do or know after this unit that they couldn't before?
+
+Good learning objectives are concrete, observable, and measurable. That sounds bureaucratic — but it's the difference between a course that changes behavior and one that gets checked off.
+
+Weak objective: "Employees understand data privacy."
+Strong objective: "Employees can distinguish a GDPR-compliant consent form from a non-compliant one and explain why."
+
+Bloom's Taxonomy is a useful tool for structuring objectives by depth. From bottom to top:
+
+1. **Remember** — recall facts
+2. **Understand** — explain concepts
+3. **Apply** — use knowledge in new situations
+4. **Analyze** — identify relationships
+5. **Evaluate** — make judgments
+6. **Create** — generate something new
+
+Most corporate training sits in the bottom two levels. Real competence starts at level 3.
+
+<Callout type="info">
+  A useful rule: if the learning objective ends with a verb you can't observe
+  (understand, know, be aware of), it's not specific enough. Replace with:
+  explain, apply, select, demonstrate, solve.
+</Callout>
+
+## Cognitive Load Theory: why less is more
+
+Psychologist John Sweller developed **Cognitive Load Theory** in the 1980s. The core idea: working memory has a limited capacity. When a course presents too much information simultaneously, it overloads the system — and learning doesn't happen.
+
+There are three types of cognitive load:
+
+- **Intrinsic load**: The inherent complexity of the topic. Difficult to change.
+- **Extraneous load**: Load caused by poor design — distracting animations, unclear navigation, overloaded slides. Completely avoidable.
+- **Germane load**: The cognitive effort the brain dedicates to actual learning. Maximize this.
+
+Practical implications:
+
+- One idea per slide / per section
+- Animations only when they aid comprehension (not as decoration)
+- Don't use text and graphics to convey the same information simultaneously (redundancy effect)
+- Activate prior knowledge before introducing new concepts
+
+## The ADDIE model: a framework for systematic course design
+
+ADDIE is the most widely used process model in instructional design. Five phases:
+
+**Analyze**: What's the problem? Who's the audience? What should they be able to do at the end? Learning objectives are defined here and the current state is assessed.
+
+**Design**: How will the course be structured? In what order will content be presented? What formats will be used?
+
+**Develop**: The actual production — writing content, creating visuals, writing quiz questions, building interactions.
+
+**Implement**: Upload the course to the learning platform, assign to target groups, communicate.
+
+**Evaluate**: Did it work? Were the learning objectives met? What will be done differently next time?
+
+<Callout type="tip">
+  ADDIE is often misunderstood as a rigid waterfall process. In practice, it's
+  iterative: the evaluation phase feeds back into analysis. Courses don't get
+  finished — they get better.
+</Callout>
+
+## The 70-20-10 rule: formal learning is only part of the picture
+
+The 70-20-10 model (Lombardo and Eichinger, 1996) describes how competence actually develops:
+
+- **70%** through on-the-job experience: real tasks, projects, making mistakes
+- **20%** through social learning: coaching, mentoring, peer exchange
+- **10%** through formal learning: courses, seminars, e-learning
+
+That doesn't mean formal learning is unimportant. It means formal learning alone isn't enough. Good instructional design accounts for all three dimensions.
+
+A course delivered without a transfer task, without application opportunity, and without peer discussion works only in the 10% zone. The other 90% is left unused.
+
+## Feedback and interactivity: when they help (and when they don't)
+
+Quizzes at the end of a course are good. Quizzes after each section are better. Questions that force thinking — rather than mere recall — are better still.
+
+What helps:
+
+- **Scenario-based questions**: "What would you do in this situation?" instead of "What is the definition of X?"
+- **Formative feedback**: The learner immediately learns why an answer is right or wrong
+- **Multiple attempts**: Mistakes treated as learning opportunities, not penalties
+
+What doesn't help (but is common):
+
+- True/false questions on pure facts
+- End-of-course quizzes that fail you if you get too many wrong — this incentivizes guessing, not competence
+- Too many questions without feedback
+
+<Callout type="warning">
+  A course that ends with an 80% quiz doesn't measure whether the learner is
+  competent — it measures whether they navigated this particular course well.
+  Those aren't the same thing.
+</Callout>
+
+## Instructional design is not a one-time activity
+
+Good course design doesn't end at upload. It starts there. Data from your learning platform — drop-off rates, quiz errors, completion times — shows where a course isn't working.
+
+Ignoring that data means designing courses for yourself — not for the learners.
+
+</PostLayout>

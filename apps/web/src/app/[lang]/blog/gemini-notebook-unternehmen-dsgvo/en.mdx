@@ -1,0 +1,70 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "Gemini Notebook (NotebookLM) in the Enterprise: Where the GDPR Line Sits",
+  description:
+    "Gemini Notebook, known as NotebookLM until July 2026, is Google's AI tool that generates summaries, answers, and even audio overviews from uploaded documents, but those documents are processed on Google's US servers.",
+  date: "July 7, 2026",
+  readTime: 4,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "gemini notebook gdpr",
+    "gemini notebook enterprise data protection",
+    "notebooklm gdpr",
+    "notebooklm enterprise data protection",
+    "notebooklm alternative",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+Gemini Notebook, known as NotebookLM until July 2026, is Google's AI tool that generates summaries, answers, and even audio overviews from uploaded documents, but those documents are processed on Google's US servers. For companies with sensitive or personal content, that's a real data protection problem, not a theoretical one: standard contractual clauses and a data processing agreement are possible with US vendors, but many legal departments still reject uploading proprietary company documents to a US-hosted AI tool.
+
+## Why Gemini Notebook becomes a data protection problem in the enterprise
+
+Gemini Notebook works on a simple principle that already applied under the old name NotebookLM and hasn't changed with the rename: upload documents, the tool synthesizes answers exclusively from those sources. That's exactly what makes it attractive for internal use, HR policies, onboarding materials, or process documentation can quickly be made searchable. The problem starts as soon as those documents contain personal data or count as trade secrets. Processing by a US vendor means additional contractual and technical requirements that many teams haven't examined in detail before putting the tool into production use.
+
+## What companies should check when looking for a Gemini Notebook replacement
+
+If you're looking for an alternative, check concretely, don't just go by marketing claims:
+
+| Criterion                                 | Why it matters                                                                                                                                         |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Server location of processing             | Determines which data protection law applies and whether data is transferred to third countries                                                        |
+| Data processing agreement (DPA) available | Legal requirement for processing personal data through a service provider                                                                              |
+| No training on customer data              | Prevents uploaded company content from feeding into a general model                                                                                    |
+| Deletion policy for uploaded documents    | Important for the right to erasure and for trade secrets                                                                                               |
+| What happens to the result                | Gemini Notebook delivers a chat window that disappears after the session; for L&D purposes, the step to a reusable, shareable course format is missing |
+
+## From document to course, not document to chat window
+
+The real difference between a pure document chat and an L&D tool isn't just data protection, it's the outcome. A chat window answers a question, but every colleague has to ask it again. A course built from the same document is built once and can be taken by everyone on the team, with a progress indicator and a knowledge check instead of just an answer in a chat history. Scibly follows exactly this principle: upload a source document, and the result isn't a chat, it's a finished, interactive course. Data protection requirements like EU hosting and a DPA are criteria that enterprise customers should verify concretely before use, not just a marketing claim.
+
+## Frequently asked questions
+
+### Is Gemini Notebook (NotebookLM) GDPR-compliant?
+
+Google offers business customers contractual foundations such as standard contractual clauses that can generally enable GDPR-compliant use. Whether that's sufficient for your specific use case depends on the type of uploaded data and your internal risk assessment. For personal or especially sensitive company data, a review by your own legal or data protection department is recommended before production use. The rename from NotebookLM to Gemini Notebook in July 2026 doesn't change this assessment; it's technically the same product.
+
+### What's a good alternative to Gemini Notebook (NotebookLM) for enterprises?
+
+The criteria from the table above are decisive: server location, DPA, no training on customer data, a clear deletion policy. Additionally relevant for L&D use cases: does the end result stay a chat answer, or is it a reusable course that several people can take?
+
+### Can you still use Gemini Notebook for internal research, just not for sensitive documents?
+
+That's a common compromise in practice: run non-critical, public, or already-approved documents through NotebookLM, and route anything with personal data or trade secrets through a tool with verified data protection guarantees.
+
+### Why isn't a chat tool enough for employee training?
+
+A chat answers a single question from a single person at a single point in time. For training purposes, it's missing structure, repeatability for new employees, and the ability to track learning progress, all things a finished course provides out of the box.
+
+</PostLayout>

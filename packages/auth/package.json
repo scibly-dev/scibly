@@ -1,0 +1,49 @@
+{
+  "name": "@scibly/auth",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@better-auth/prisma-adapter": "^1.5.6",
+    "@better-auth/stripe": "^1.6.25",
+    "@scibly/db": "workspace:*",
+    "@scibly/ee-billing": "workspace:*",
+    "@scibly/email": "workspace:*",
+    "@scibly/i18n": "workspace:*",
+    "@scibly/lib": "workspace:*",
+    "@scibly/routes": "workspace:*",
+    "@scibly/schemas": "workspace:*",
+    "better-auth": "^1.6.9",
+    "server-only": "^0.0.1"
+  },
+  "peerDependencies": {
+    "better-auth": "^1.2.8",
+    "next": "^16.1.6",
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@scibly/eslint-config": "workspace:*",
+    "@types/node": "^20.17.29",
+    "@types/react": "^19.2.14",
+    "dotenv": "^17.3.1",
+    "eslint": "^9.39.2",
+    "next": "^16.3.0",
+    "react": "^19.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.8.2"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./config": "./src/auth-config.ts",
+    "./route-handler": "./src/route-handler.ts",
+    "./client": "./src/auth-client.ts",
+    "./cookies": "./src/cookies.ts",
+    "./session": "./src/session.ts"
+  }
+}

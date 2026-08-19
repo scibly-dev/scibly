@@ -1,0 +1,140 @@
+{
+  "orgBilling": {
+    "title": "Abrechnung",
+    "subtitle": "Was der Plan dieser Organisation gewährt, was verbraucht wurde und wann das Kontingent zurückkommt.",
+    "paymentLapse": {
+      "grace": {
+        "title": "Eine Zahlung für diese Organisation ist fehlgeschlagen",
+        "description": "Bis zum {date} funktioniert alles wie gewohnt. Wird die Zahlungsmethode vorher aktualisiert, ändert sich nichts. Danach enden KI-Generierungen, neue Einschreibungen und neue öffentliche Kurslinks, während bereits eingeschriebene Lernende ihre Kurse behalten."
+      },
+      "lapsed": {
+        "title": "Das Abonnement dieser Organisation ist abgelaufen",
+        "description": "KI-Generierungen, neue Einschreibungen und neue öffentliche Kurslinks sind gestoppt. Es wurde nichts gelöscht: Lernende behalten ihre Kurse, ihren Fortschritt und ihre Zertifikate, und sobald die Zahlung wieder läuft, geht alles weiter."
+      },
+      "billingLink": "Zur Abrechnung"
+    },
+    "allowanceWarning": {
+      "warning": {
+        "title": "Die KI-Generierungen werden knapp",
+        "description": "Es sind noch {remaining} Generierungen übrig, Guthabenpakete eingerechnet, weniger als ein Fünftel der {allowance}, die dein Tarif pro Monat gewährt. Es ist noch Luft, aber es lohnt sich, jetzt über ein Upgrade oder ein Guthabenpaket zu entscheiden und nicht erst, wenn deine Autoren bereits ausgebremst sind."
+      },
+      "critical": {
+        "title": "Die KI-Generierungen sind fast aufgebraucht",
+        "description": "Es sind noch {remaining} Generierungen übrig, Guthabenpakete eingerechnet, gegenüber {allowance} pro Monat in deinem Tarif. Sind sie aufgebraucht, stoppen Chats, Bildgenerierung und das Indexieren von Quellen für alle, bis das Kontingent zurückgesetzt wird."
+      },
+      "dismiss": "Warnung ausblenden",
+      "topupLink": "Top-up kaufen",
+      "plansLink": "Pläne vergleichen"
+    },
+    "usage": {
+      "title": "KI-Generierungen in dieser Periode",
+      "description": "Was in dieser Periode zur Verfügung steht (das monatliche Kontingent deines Plans plus gekaufte Guthabenpakete), und wie viel davon schon weg ist.",
+      "usedOfTotal": "{used} von {total} verbraucht",
+      "remaining": "{remaining} übrig",
+      "unlimited": "Unbegrenzt",
+      "allowanceLegend": "Monatliches Kontingent: {remaining} von {allowance} übrig",
+      "topupLegend": "Guthabenpakete: {remaining} übrig · verfallen nie",
+      "topupLegendSpent": "Guthabenpakete: {remaining} übrig, {used} in dieser Periode verbraucht · verfallen nie",
+      "resetsAt": "Zurücksetzung am {date}",
+      "noReset": "Einmaliges Kontingent, das nicht zurückgesetzt wird."
+    },
+    "breakdown": {
+      "title": "Wofür sie draufgingen",
+      "description": "Alle in dieser Abrechnungsperiode berechneten Generierungen, nach Person und nach Aktion. Erstattete Generierungen zählen nicht mit.",
+      "byAuthorTab": "Nach Person",
+      "byActionTab": "Nach Aktion",
+      "creditsColumn": "Generierungen",
+      "unattributed": "Entferntes Mitglied",
+      "otherAuthors": "{authors} weitere Personen",
+      "empty": "In dieser Periode wurde noch nichts generiert.",
+      "total": "{total} Generierungen in dieser Periode berechnet",
+      "topupNote": "Davon wurden {topup} aus Guthabenpaketen bezahlt statt aus dem monatlichen Kontingent.",
+      "actions": {
+        "CHAT_MESSAGE": "Chat-Nachrichten",
+        "IMAGE_GENERATION": "Bildgenerierung",
+        "SOURCE_INGEST": "Quellen-Indexierung"
+      }
+    },
+    "seats": {
+      "title": "Lernplätze",
+      "description": "Verschiedene Personen mit mindestens einer Kurszuweisung. Autoren und Admins ohne Zuweisung kosten nichts.",
+      "usedOfCapacity": "{used} von {capacity} Plätzen belegt",
+      "included": "{included} im Plan enthalten · {purchased} hinzugekauft",
+      "none": "Dieser Plan enthält keine Lernplätze, es können noch keine Personen zugewiesen werden.",
+      "pricePerSeat": "{price} € pro Platz und Monat",
+      "vatNote": "zzgl. MwSt.",
+      "quantityLabel": "Plätze dazukaufen",
+      "buyButton": "Plätze hinzufügen",
+      "prorationNote": "Neue Plätze gelten sofort und verlängern sich mit dem Plan. Vor der Zahlung siehst du, was der Rest dieses Zeitraums kostet.",
+      "unavailableNote": "Dieser Plan verkauft keine zusätzlichen Plätze. Wähle einen Plan, der das tut, um mehr Lernende einzuschreiben.",
+      "purchaseSuccess": "Plätze hinzugefügt, insgesamt {purchased} dazugekauft.",
+      "purchaseFailed": "Die Plätze konnten nicht hinzugefügt werden. Bitte versuche es erneut.",
+      "confirmTitle": "{quantity} Lernplätze hinzufügen?",
+      "confirmLoading": "Der Preis wird ermittelt …",
+      "confirmFailed": "Der Preis konnte gerade nicht ermittelt werden. Bitte versuche es gleich noch einmal.",
+      "confirmChargeNow": "{amount} € zzgl. MwSt. werden jetzt abgebucht, für {quantity} Plätze im Rest des laufenden Zeitraums.",
+      "confirmRenewal": "Ab dem {date} umfasst dein Plan {seats} zusätzliche Plätze für {recurring} € pro Monat.",
+      "confirmRenewalNoDate": "Ab der nächsten Verlängerung umfasst dein Plan {seats} zusätzliche Plätze für {recurring} € pro Monat.",
+      "confirmAction": "{amount} € zahlen",
+      "confirmActionPending": "Zahlen",
+      "confirmCancel": "Abbrechen"
+    },
+    "topup": {
+      "title": "Generierungen aufladen",
+      "description": "Kaufen Sie Generierungen einmalig dazu. Sie verfallen nie, und Ihr monatliches Kontingent wird immer zuerst verbraucht.",
+      "unavailableDescription": "Top-up-Pakete gibt es für Organisationen mit einem bezahlten Plan. Wählen Sie unten einen Plan, um sie freizuschalten.",
+      "packCredits": "{credits} Generierungen",
+      "packPrice": "{price} €",
+      "vatNote": "zzgl. MwSt., einmalig",
+      "buyButton": "Kaufen",
+      "upgradeNote": "Jeden Monat aufgebraucht? Ein größerer Plan bringt mehr Generierungen für weniger Geld. Siehe die Pläne unten.",
+      "checkoutFailed": "Checkout konnte nicht gestartet werden. Bitte versuchen Sie es erneut.",
+      "purchaseConfirmed": "Top-up hinzugefügt. Ihr Guthaben wurde aktualisiert.",
+      "purchasePending": "Ihre Zahlung wird noch bestätigt. Die Generierungen erscheinen in Kürze hier."
+    },
+    "plan": {
+      "title": "Abrechnung",
+      "description": "Abonniere einen Plan, um Generierungs-Guthaben und kostenpflichtige Funktionen freizuschalten. Vollständig über Stripe verwaltet.",
+      "internalDescription": "Deine Organisation hat kostenlosen Zugang. Abrechnung ist nicht anwendbar.",
+      "activeDescription": "Verwalte dein Abonnement, Zahlungsmethoden und Rechnungen im Stripe-Kundenportal.",
+      "managePortalButton": "Abrechnung verwalten",
+      "checkoutFailed": "Checkout konnte nicht gestartet werden. Bitte versuche es erneut.",
+      "portalFailed": "Das Abrechnungsportal konnte nicht geöffnet werden. Bitte versuche es erneut.",
+      "mostPopularBadge": "Beliebteste Wahl",
+      "vatNote": "zzgl. MwSt.",
+      "byoaiLabel": "Eigene KI-Anbindung (BYOAI)",
+      "plans": {
+        "starter": {
+          "name": "Starter",
+          "price": "{price} €",
+          "period": "/ Monat",
+          "tagline": "Ideal für den Einstieg",
+          "credits": "{credits} KI-Guthaben / Monat",
+          "seats": "{seats} Lernende",
+          "sources": "{sources} Quellen pro Notizbuch",
+          "cta": "Starter abonnieren"
+        },
+        "business": {
+          "name": "Business",
+          "price": "{price} €",
+          "period": "/ Monat",
+          "tagline": "Für wachsende Teams",
+          "credits": "{credits} KI-Guthaben / Monat",
+          "seats": "{seats} Lernende",
+          "sources": "{sources} Quellen pro Notizbuch",
+          "cta": "Business abonnieren"
+        },
+        "pro": {
+          "name": "Pro",
+          "price": "{price} €",
+          "period": "/ Monat",
+          "tagline": "Für große Organisationen",
+          "credits": "{credits} KI-Guthaben / Monat",
+          "seats": "{seats} Lernende",
+          "sources": "{sources} Quellen pro Notizbuch",
+          "cta": "Pro abonnieren"
+        }
+      }
+    }
+  }
+}

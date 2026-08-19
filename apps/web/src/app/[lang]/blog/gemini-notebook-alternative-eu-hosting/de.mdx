@@ -1,0 +1,70 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "Gemini-Notebook-Alternativen (NotebookLM) mit EU-Hosting: Worauf es bei der Auswahl ankommt",
+  description:
+    '"EU-Hosting" wird bei KI-Tools oft als Marketingaussage verwendet, ohne dass klar ist, was genau gemeint ist.',
+  date: "1. Juli 2026",
+  readTime: 4,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "gemini notebook alternative eu hosting",
+    "notebooklm alternative eu hosting",
+    "eu ki tool dokumente",
+    "ki tool dsgvo hosting europa",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+"EU-Hosting" wird bei KI-Tools oft als Marketingaussage verwendet, ohne dass klar ist, was genau gemeint ist. Für eine echte Bewertung zählen vier konkrete Kriterien: wo die Daten technisch verarbeitet werden, ob ein Auftragsverarbeitungsvertrag verfügbar ist, ob Kundendaten ins Training des Modells einfließen, und wie Unterauftragsverarbeiter außerhalb der EU eingebunden sind.
+
+## Die vier Kriterien im Detail
+
+| Kriterium                                 | Warum es zählt                                                               | Worauf achten                                                        |
+| ----------------------------------------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Serverstandort der Verarbeitung           | Bestimmt anwendbares Datenschutzrecht                                        | Nicht nur Speicherort, auch wo die eigentliche KI-Verarbeitung läuft |
+| Auftragsverarbeitungsvertrag (AVV)        | Gesetzliche Grundlage für Verarbeitung personenbezogener Daten               | Muss aktiv angeboten und abschließbar sein, nicht nur erwähnt        |
+| Kein Training auf Kundendaten             | Verhindert, dass Firmeninhalte ins allgemeine Modell einfließen              | Explizit in den AGB oder der Datenschutzerklärung nachlesen          |
+| Unterauftragsverarbeiter (Subprozessoren) | Auch "EU-gehostete" Tools nutzen teils US-Cloud-Infrastruktur im Hintergrund | Liste der Subprozessoren beim Anbieter anfragen                      |
+
+## Warum "EU-Server" allein nicht ausreicht
+
+Ein Tool kann technisch auf einem Server in Europa laufen und trotzdem von einem US-Mutterkonzern betrieben werden, der laut US-Recht zur Herausgabe von Daten verpflichtet werden kann, unabhängig vom physischen Serverstandort. Für eine belastbare Bewertung reicht der Blick auf den Serverstandort deshalb nicht, relevant ist zusätzlich, unter welchem Recht der Anbieter selbst operiert und welche Subprozessoren im Hintergrund eingebunden sind.
+
+## Wie eine Prüfung in der Praxis abläuft
+
+Drei Schritte, die sich ohne Rechtsabteilung durchführen lassen, bevor eine vertiefte juristische Prüfung folgt:
+
+1. **Datenschutzerklärung und AVV-Vorlage direkt beim Anbieter anfragen**, nicht nur die Marketing-Aussagen auf der Website glauben.
+2. **Nach der Liste der Subprozessoren fragen**, insbesondere ob und welche US-Anbieter im Hintergrund für Hosting oder Modellinferenz genutzt werden.
+3. **Explizit nach der Trainingsdaten-Politik fragen**: Werden hochgeladene Dokumente zur Verbesserung des allgemeinen Modells verwendet oder ausschließlich für die eigene Antwort genutzt.
+
+## Häufige Fragen
+
+### Reicht ein Server-Standort in Deutschland als Nachweis für DSGVO-Konformität?
+
+Nicht allein. Der Serverstandort ist ein Faktor von mehreren, entscheidend sind zusätzlich der AVV, die Trainingsdaten-Politik und die vollständige Liste der eingebundenen Subprozessoren.
+
+### Was bedeutet "kein Training auf Kundendaten" konkret?
+
+Es bedeutet, dass hochgeladene Dokumente ausschließlich zur Erstellung der eigenen Antwort oder des eigenen Kurses verwendet werden, nicht aber zur Verbesserung eines allgemeinen KI-Modells, das auch andere Kunden nutzen.
+
+### Wie findet man heraus, welche Subprozessoren ein Anbieter nutzt?
+
+Seriöse Anbieter veröffentlichen eine Subprozessoren-Liste, oft im Rahmen des Auftragsverarbeitungsvertrags oder auf einer eigenen Trust-Seite. Fehlt eine solche Liste komplett, ist das selbst ein Warnsignal.
+
+### Ist ein europäischer Anbieter automatisch besser als ein US-Anbieter mit EU-Servern?
+
+Nicht automatisch, aber europäische Anbieter unterliegen in der Regel direkt EU-Recht ohne den zusätzlichen Prüfaufwand rund um US-Zugriffsrechte. Die konkrete Vertragsgrundlage bleibt trotzdem in jedem Einzelfall entscheidend.
+
+</PostLayout>

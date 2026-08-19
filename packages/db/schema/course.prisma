@@ -1,0 +1,29 @@
+model Course {
+  id                String                   @id @default(cuid())
+  organizationId    String
+  organization      Organization             @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  title             String
+  /// LESSON courses hold exactly one lesson and open directly into it —
+  /// the unit an author embeds when a whole course is too much.
+  mode              CourseMode               @default(COURSE)
+  category          String?
+  tags              String[]                 @default([])
+  description       String?
+  thumbnail         String?
+  /// Minimum score (0-100 %) a learner must achieve to receive a certificate. null = no minimum.
+  passingScorePct   Int?
+  /// Maximum number of times a learner may complete the course. null = unlimited.
+  maxTries          Int?
+  /// When true, the course is accessible via a public link without authentication.
+  allowAnonymous    Boolean                  @default(false)
+  createdAt         DateTime                 @default(now())
+  updatedAt         DateTime                 @updatedAt
+  lessons           Lesson[]
+  enrollments       CourseEnrollment[]
+  versions          CourseVersion[]
+  anonymousSessions AnonymousCourseSession[]
+  notebooks         Notebook[]
+
+  @@index([organizationId])
+  @@map("course")
+}

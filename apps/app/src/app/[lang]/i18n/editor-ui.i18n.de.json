@@ -1,0 +1,10 @@
+{
+  "editorUi": {
+    "previewTooltip": "Lernenden-Vorschau",
+    "publishTooltip": "Arbeitsblatt veroffentlichen",
+    "publishSuccess": "Arbeitsblatt erfolgreich veröffentlicht",
+    "publishLoading": "Arbeitsblatt wird veröffentlicht",
+    "hintPlaceholder": "Hinweis eingeben",
+    "editorTitleUntitled": "Unbenannt"
+  }
+}

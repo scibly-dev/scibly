@@ -1,0 +1,187 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "Skills-Gap-Analyse: So findest du heraus, was dein Team wirklich braucht",
+  description:
+    "Eine Skills-Gap-Analyse zeigt, wo die Fähigkeiten deines Teams hinter den Anforderungen zurückbleiben. Eine praktische Methode, die auch ohne L&D-Abteilung funktioniert.",
+  date: "12. Mai 2026",
+  readTime: 7,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "Skills-Gap-Analyse",
+    "Kompetenzlücken",
+    "Trainingsbedarf ermitteln",
+    "Personalentwicklungsplanung",
+    "Weiterbildungsplanung",
+    "L&D Strategie",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+Die meisten Trainingsprogramme werden rückwärts gebaut: Jemand entscheidet sich für einen Kurs, führt ihn durch und hofft, dass er das Problem löst, das ihn ausgelöst hat. Eine Skills-Gap-Analyse dreht das um – sie beginnt mit dem, was das Unternehmen braucht, vergleicht das mit dem, was die Mitarbeitenden heute können, und identifiziert die spezifischen Lücken, die es wert sind, geschlossen zu werden.
+
+Das klingt offensichtlich. Es wird trotzdem viel seltener richtig gemacht, als es sollte.
+
+Dieser Artikel beschreibt eine praktische Methode für eine Skills-Gap-Analyse – ohne großes L&D-Team oder teure Berater.
+
+## Was eine Skills-Gap-Analyse wirklich ist
+
+Eine Skills-Gap-Analyse ist ein strukturierter Vergleich zwischen zwei Zuständen:
+
+- **Benötigte Kompetenzen**: Was müssen Mitarbeitende können, um aktuelle und absehbare Unternehmensziele zu erfüllen?
+- **Vorhandene Kompetenzen**: Was können Mitarbeitende heute tatsächlich?
+
+Die Differenz zwischen beiden ist die Entwicklungsprioritätsliste. Alles andere – Trainingsprogramme, Budgetplanung, Neueinstellungen – ergibt sich daraus.
+
+<Callout type="info">
+  Eine Skills-Gap-Analyse ist keine Leistungsbeurteilung. Es handelt sich um
+  eine organisatorische Diagnose. Die Frage lautet: „Verfügt dieses Team über
+  die Kompetenzen, die das Unternehmen braucht?" – nicht „Macht diese Person
+  ihre Arbeit gut?"
+</Callout>
+
+## Wann eine Skills-Gap-Analyse sinnvoll ist
+
+Die häufigsten Anlässe:
+
+- **Strategische Neuausrichtung**: Eintritt in neue Märkte, neues Produkt, digitale Transformation
+- **Wiederkehrende Leistungsprobleme**: Dieselben Fehler treten immer wieder auf, derselbe Projekttyp scheitert regelmäßig
+- **Jährliche L&D-Planung**: Wo soll das Trainingsbudget nächstes Jahr hinfließen?
+- **Hohe Fluktuation in bestimmten Rollen**: Verstehen, ob Rollenanforderungen das mitgebrachte Niveau übersteigen
+- **Post-Merger-Integration**: Zwei Teams mit unterschiedlichen Kompetenzprofilen sollen als eines funktionieren
+
+Du brauchst keinen Auslöser für eine Gap-Analyse – aber ohne klaren Business-Kontext werden die Ergebnisse oft unscharf.
+
+## Eine praktische 4-Schritte-Methode
+
+### Schritt 1: Benötigte Kompetenzen nach Rolle definieren
+
+Mit dem Geschäftsergebnis beginnen, das erreicht werden soll. Dann rückwärts zu den konkreten Fähigkeiten, die dafür nötig sind.
+
+Für jede analysierte Rolle auflisten:
+
+- **Fachliche Kompetenzen**: Tools, Systeme, Prozesse, Fachwissen
+- **Verhaltenskompetenzen**: Kommunikation, Problemlösung, Zusammenarbeit, Führung
+- **Compliance-Anforderungen**: Zertifizierungen, gesetzliche Vorgaben, Pflichtqualifikationen
+
+Konkret bleiben. „Kommunikationsfähigkeiten" ist keine Kompetenz. „Projektbriefings schreiben, die externe Dienstleister ohne Rückfragen umsetzen können" ist eine.
+
+<Table>
+  <thead>
+    <tr>
+      <Th>Rolle</Th>
+      <Th>Benötigte Kompetenz</Th>
+      <Th>Priorität</Th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <Td>Vertriebsleitung</Td>
+      <Td>Teammitglieder bei Discovery-Call-Methodik coachen</Td>
+      <Td>Hoch</Td>
+    </tr>
+    <tr>
+      <Td>Customer Success</Td>
+      <Td>Expansionspotenzial aus Produktnutzungsdaten identifizieren</Td>
+      <Td>Hoch</Td>
+    </tr>
+    <tr>
+      <Td>Operations</Td>
+      <Td>Neues ERP-Modul konfigurieren und warten</Td>
+      <Td>Kritisch</Td>
+    </tr>
+    <tr>
+      <Td>Alle Mitarbeitenden</Td>
+      <Td>Auskunftsersuchen nach DSGVO korrekt bearbeiten</Td>
+      <Td>Erforderlich</Td>
+    </tr>
+  </tbody>
+</Table>
+
+### Schritt 2: Aktuellen Kompetenzstand erheben
+
+Es gibt mehrere Methoden, um den Ist-Stand zu erfassen. Die richtige hängt von der Kompetenz und der Teamgröße ab:
+
+**Selbsteinschätzungsumfragen** – schnell durchführbar, nützlich für Richtungsentscheidungen, aber anfällig für den Dunning-Kruger-Effekt (Menschen mit den geringsten Kompetenzen schätzen sich oft am höchsten ein). Als Startpunkt nutzen, nicht als Schlussfolgerung.
+
+**Führungskräftebeurteilungen** – zuverlässiger für Verhaltenskompetenzen, brauchen aber Kalibrierung für konsistente Ergebnisse. Funktioniert gut für Teams von 10–30 Personen.
+
+**Kompetenzprüfungen oder Tests** – die objektivste Methode für fachliche Kompetenzen. Ein kurzer praktischer Test oder ein szenariobasiertes Quiz zeigt, was jemand tatsächlich kann – nicht was er zu können glaubt.
+
+**Leistungsdaten** – Muster in Qualitätskennzahlen, Fehlerquoten, Kundenzufriedenheitswerten oder Projektergebnissen suchen. Diese zeigen Kompetenzlücken oft ehrlicher als jede Umfrage.
+
+**Beobachtung** – für kleinere Teams: Führungskraft schaut sich Arbeitsergebnisse an oder begleitet Calls für eine Woche. Liefert qualitative Daten, die Umfragen verpassen.
+
+<Callout type="tip">
+  Mindestens zwei Methoden pro Kompetenzbereich kombinieren. Selbsteinschätzung
+  allein ist bestenfalls eine Richtungsangabe. Selbsteinschätzung plus kurzer
+  praktischer Test ist deutlich belastbarer.
+</Callout>
+
+### Schritt 3: Lücken kartieren und priorisieren
+
+Sobald benötigte und vorhandene Kompetenzen vorliegen, können Lücken bewertet werden. Eine einfache 1–4-Skala funktioniert:
+
+- **1 — Keine Lücke**: Aktuelle Kompetenz erfüllt oder übertrifft die Anforderung
+- **2 — Geringe Lücke**: Kompetenz ist nahe, kurze Auffrischung würde reichen
+- **3 — Erhebliche Lücke**: Strukturiertes Training erforderlich
+- **4 — Kritische Lücke**: Kompetenz fehlt, unmittelbarer Business-Impact
+
+Dann eine zweite Dimension hinzufügen: **Business-Impact, wenn die Lücke nicht geschlossen wird**. Eine Lücke mit Score 3, die einen Kerngeschäftsprozess betrifft, ist wichtiger als eine Lücke mit Score 4 bei einem selten auftretenden Sonderfall.
+
+Diese zweiachsige Betrachtung verhindert, dass die Analyse zu einer Liste aller Verbesserungsmöglichkeiten wird – was erfahrungsgemäß dazu führt, dass nichts davon umgesetzt wird.
+
+### Schritt 4: Lücken in Entwicklungsmaßnahmen übersetzen
+
+Eine Gap-Analyse ist nur nützlich, wenn sie zu Entscheidungen führt. Für jede priorisierte Lücke die passende Maßnahme identifizieren:
+
+| Lückentyp                                        | Geeignete Maßnahme                               |
+| ------------------------------------------------ | ------------------------------------------------ |
+| Wissenslücke (weiß es nicht)                     | Schulung, Dokumentation, Kurs                    |
+| Kompetenslücke (weiß es, kann es aber nicht gut) | Übung, Coaching, Simulation                      |
+| Kapazitätslücke (kann es, aber hat keine Zeit)   | Prozessänderung, Delegation, Einstellung         |
+| Motivationslücke (kann es, will es aber nicht)   | Führungsgespräch, Rollenklarheit – kein Training |
+
+Dieser letzte Punkt ist entscheidend: **Training ist nicht die Antwort auf jede Lücke.** Wenn jemand weiß, wie etwas geht, aber es nicht tut, hilft mehr Training nicht. Die Diagnose der eigentlichen Ursache bestimmt, ob L&D überhaupt eine Rolle spielt.
+
+<Callout type="warning">
+  Vor dem Design eines Trainingsprogramms sicherstellen, dass die Lücke
+  tatsächlich ein Wissens- oder Kompetensproblem ist. Wenn es ein Motivations-,
+  Klarheits- oder Prozessproblem ist, verbraucht Training Zeit und Budget ohne
+  Wirkung.
+</Callout>
+
+## Häufige Fehler
+
+**Zu viele Rollen gleichzeitig analysieren**: Eine breite Analyse, die alle Rollen oberflächlich abdeckt, ist weniger nützlich als eine tiefe Analyse von drei kritischen Rollen. Fokussiert beginnen.
+
+**HR ohne Führungskräfte einbeziehen**: HR versteht den organisatorischen Kontext; Führungskräfte verstehen, was die Arbeit im Alltag wirklich erfordert. Beides ist nötig. Eine Analyse ohne Führungsbeteiligung produziert eine Liste, der niemand gehört.
+
+**Benötigte Kompetenzen als statisch behandeln**: Das Unternehmen verändert sich. Eine Skills-Gap-Analyse ist eine Momentaufnahme, keine dauerhafte Wahrheit. Bei veränderten strategischen Prioritäten aktualisieren – typischerweise alle 12–18 Monate.
+
+**Gap-Analyse mit Leistungsmanagement verwechseln**: Wenn einzelne Namen in der Analyse auftauchen, gleitet sie in Leistungsmanagement ab. Die Analyse sollte über Rollenanforderungen und aggregierte Teamkompetenz sprechen – nicht über einzelne Personen.
+
+## Was mit dem Ergebnis zu tun ist
+
+Eine abgeschlossene Skills-Gap-Analyse liefert:
+
+- Eine priorisierte Liste von Kompetenzen, die das Unternehmen braucht, die aber noch nicht auf dem erforderlichen Niveau vorhanden sind
+- Eine klare Grundlage für die Trainingsbudget-Allokation
+- Eine Entscheidungsgrundlage für interne Entwicklung vs. Neueinstellung
+- Eine Ausgangsmessung, gegen die Fortschritte gemessen werden können
+
+Der wichtigste nächste Schritt: Das Ergebnis mit relevanten Stakeholdern teilen, bevor es zum Trainingsplan wird. Die Business-Outcome-Rahmung – „Hier haben wir eine Lücke, die X beeinflusst" – macht das Gespräch über Ressourcen deutlich produktiver als „Wir wollen einen Kurs zu Y machen."
+
+Wenn das daraus entstehende Training über ein LMS durchgeführt wird, lässt sich mit Scibly Kursaufbau und Completion-Tracking direkt auf die identifizierten Lücken ausrichten – damit die Gap-Analyse ein lebendiges Entwicklungs-Tracker wird und kein Dokument, das in einem Ordner landet.
+
+</PostLayout>

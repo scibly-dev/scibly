@@ -1,0 +1,39 @@
+/// Per-scene, per-block answer-level analytics shared by both
+/// authenticated enrollments and anonymous sessions.
+/// Exactly one of enrollmentId / anonymousSessionId must be set.
+model SceneAnalytics {
+  id String @id @default(cuid())
+
+  /// Authenticated user — set when the row belongs to a CourseEnrollment.
+  enrollmentId String?
+  enrollment   CourseEnrollment? @relation(fields: [enrollmentId], references: [id], onDelete: SetNull)
+
+  /// Anonymous user — set when the row belongs to an AnonymousCourseSession.
+  anonymousSessionId String?
+  anonymousSession   AnonymousCourseSession? @relation(fields: [anonymousSessionId], references: [id], onDelete: SetNull)
+
+  lessonId String
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  sceneId  String
+  scene    Scene  @relation(fields: [sceneId], references: [id], onDelete: Cascade)
+
+  spEarned    Int      @default(0)
+  completedAt DateTime @default(now())
+
+  /// JSON array of per-block grading results with learner answers.
+  /// Shape: [{ blockId, blockType, learnerAnswer, achievedPoints, maxPoints, spEarned }]
+  gradedBlocks Json?
+
+  attempt Int @default(1)
+
+  createdAt DateTime @default(now())
+
+  // Only one analytics row per scene per enrollment or session and attempt
+  @@unique([enrollmentId, lessonId, sceneId, attempt])
+  @@unique([anonymousSessionId, lessonId, sceneId, attempt])
+  @@index([enrollmentId])
+  @@index([anonymousSessionId])
+  @@index([sceneId])
+  @@index([lessonId])
+  @@map("scene_analytics")
+}

@@ -1,0 +1,83 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "ADDIE Model",
+  definition:
+    "A five-phase instructional design process: Analysis, Design, Development, Implementation, and Evaluation — the most widely used framework for creating training programs.",
+  keywords: [
+    "ADDIE model",
+    "ADDIE instructional design",
+    "ADDIE framework",
+    "instructional design process",
+    "training development",
+  ],
+  relatedTerms: ["sam", "instructional-design", "action-mapping"],
+  relatedPost: "leaving-addie-for-sam",
+};
+
+<GlossaryLayout metadata={metadata} lang="en">
+
+ADDIE is the dominant process model in instructional design. The acronym stands for Analysis, Design, Development, Implementation, and Evaluation — a five-phase framework that describes the sequence of activities involved in creating a training program. It is not a single published model from a single author; it emerged from Florida State University in the 1970s as a synthesis of earlier instructional systems design (ISD) thinking developed for military training, and has since become the default vocabulary for the field.
+
+## The five phases
+
+### Analysis
+
+Analysis establishes the foundation for everything that follows. The core questions here are: Who are the learners, what do they already know, and what do they need to be able to do? What is the performance gap — the difference between current and desired behavior? What constraints exist (time, budget, technology, organizational context)?
+
+A thorough analysis phase prevents the most common and expensive training failure: building a solution to the wrong problem. Rushing through analysis to get to the visible, tangible work of development is a common mistake with predictable consequences.
+
+### Design
+
+In the design phase, the analysis findings are translated into a blueprint: learning objectives, content structure, assessment strategy, instructional approach, and delivery format. Objectives should be behavioral and measurable — describing what learners will do, not what they will know. The design document serves as the agreement between learning team and stakeholders before expensive development begins.
+
+This phase is where the major structural decisions are made. Changing the approach at the development stage costs significantly more than changing it at design.
+
+### Development
+
+Development is the production phase: building the actual content, creating assessments, producing media, and assembling the course in whatever authoring tool or format has been selected. This is typically where the majority of the team's effort and budget is spent, which is why a solid design phase matters — rework at this stage is expensive.
+
+Good development practices include building to the approved design document, testing components as they're built, and involving subject matter experts in review cycles rather than dumping all review to the end.
+
+### Implementation
+
+Implementation covers the logistics of delivery: setting up the LMS or venue, communicating with learners, running the training, and managing the practical realities of getting content to its audience. For e-learning this might be relatively simple; for a large-scale classroom rollout across multiple locations, implementation planning is itself a significant project.
+
+### Evaluation
+
+Evaluation in ADDIE encompasses two distinct activities. Formative evaluation happens throughout the process — pilot tests, SME reviews, and learner feedback that feed back into revisions. Summative evaluation happens after implementation and assesses whether the training achieved its goals, typically using the Kirkpatrick framework or similar measures.
+
+<Callout type="info">
+  The arrows in ADDIE diagrams often suggest a clean linear flow, but the model
+  itself has always accommodated feedback loops. Analysis findings can trigger
+  redesign. Development reveals design gaps. In practice, most experienced ID
+  practitioners treat ADDIE as a set of checkpoints rather than a rigid
+  sequence.
+</Callout>
+
+## Strengths of ADDIE
+
+ADDIE's longevity reflects genuine strengths. It is widely understood across organizations, clients, and professional communities — using ADDIE as a shared vocabulary reduces friction in stakeholder conversations. The five-phase structure creates natural checkpoints for review and approval, which matters in organizational contexts where sign-off is required before resources are committed. For stable content domains with clear requirements and long shelf lives, ADDIE's thoroughness is an asset.
+
+## Weaknesses and criticisms
+
+The model's main weakness is its linearity. In traditional ADDIE, substantive learner feedback comes late — often not until a pilot or launch — which means that significant problems with the design or approach may not surface until considerable investment has already been made.
+
+This matters most when requirements are unclear or likely to change, when the subject matter is evolving, or when the intended audience is difficult to access for early testing. In these situations, discovering at implementation that the design doesn't land means expensive rework.
+
+## When ADDIE still makes sense
+
+ADDIE is well-suited to projects where requirements are stable and well-understood before development begins, where compliance or regulatory standards make thorough documentation necessary, and where the content has a long expected lifespan. Large, complex programs with significant stakeholder investment in approval processes also benefit from ADDIE's structured checkpoints.
+
+<Callout type="tip">
+  The most common mistake with ADDIE is treating the phases as equal in
+  importance. Analysis is the highest-leverage phase — poor analysis produces
+  confidently built solutions to the wrong problems. If you're going to invest
+  unevenly, invest in analysis.
+</Callout>
+
+## ADDIE versus SAM
+
+The Successive Approximation Model (SAM), developed by Michael Allen as an explicit ADDIE alternative, replaces the linear phases with iterative design-prototype-review cycles. SAM is better suited to projects where requirements are unclear, learner feedback is accessible early, and the team can work rapidly through iterations. The two models are not universally interchangeable — context determines which serves a project better.
+
+</GlossaryLayout>

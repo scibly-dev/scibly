@@ -1,0 +1,14 @@
+{
+  "editorUi": {
+    "matchingPairs": {
+      "editLabel": "Paare bearbeiten",
+      "addPairLabel": "Paar hinzufügen",
+      "leftColumnLabel": "Links",
+      "rightColumnLabel": "Rechts",
+      "tapToMatchLabel": "Tippe die Paare an",
+      "resetLabel": "Zurücksetzen",
+      "optionalLabel": "Optional",
+      "removePairLabel": "Paar entfernen"
+    }
+  }
+}

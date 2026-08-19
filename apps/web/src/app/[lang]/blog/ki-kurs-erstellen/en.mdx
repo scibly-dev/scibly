@@ -1,0 +1,128 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "Creating Courses with AI: What Actually Works",
+  description:
+    "AI tools promise to cut course creation time dramatically. An honest look at what they deliver, where they fall short, and how to get usable results fast.",
+  date: "June 11, 2026",
+  readTime: 7,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "AI course creation",
+    "e-learning AI",
+    "create course with AI",
+    "AI authoring tool",
+    "AI training content",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+More training demand, same resources. That's the reality for most L&D teams. A new compliance requirement lands, a process changes, a tool rolls out — and somehow a new course needs to be ready in four weeks with no external budget and no extra headcount.
+
+AI can genuinely help here. Just not in the way most vendors describe. This article covers what AI reliably delivers in course development, where it fails, and what a realistic workflow looks like — one that actually cuts development time without sacrificing quality.
+
+## What AI Can Actually Do in Course Development
+
+AI is good at generating structured outputs from unstructured inputs. In course development, that means:
+
+**Initial structure from a brief.** Describe your learning objective, audience, and main topics — AI produces a course outline with modules, sections, and learning objectives in minutes. What used to take half a day is now a starting point you refine in 30 minutes.
+
+**Script from source documents.** Upload an existing policy, a process description, or a slide deck — AI summarizes, restructures, and rewrites it for learning. This eliminates the blank-page problem that slows every new project.
+
+**Quiz questions and scenarios.** AI derives test questions, multiple-choice options, and short decision scenarios from learning objectives and content. Not all of them are usable, but 60–70% are a solid starting point.
+
+**Translation and language editing.** Courses developed in one language translated into another without an agency.
+
+**Metadata, descriptions, learning objectives.** Not a big deal individually, but AI saves a lot of small tasks.
+
+<Callout type="info">
+  A realistic estimate: a simple e-learning course that used to take 40–60 hours
+  to develop is achievable in 15–25 hours with AI support. The effort shifts
+  from creating to reviewing and refining.
+</Callout>
+
+## Where AI Falls Short
+
+**Company-specific knowledge is invisible to AI.** AI doesn't know your processes, your internal systems, or your culture. It can generate a generic course about "data privacy" — but a course that explains exactly how your organization handles customer data, which systems are involved, and what your DPO expects when an incident occurs requires someone with internal knowledge. AI can't write that.
+
+**Regulatory nuance is risky.** AI can produce text that looks like a DSGVO compliance course. Whether it correctly reflects the requirements of your industry, your supervisory authority, and your internal policies — only a subject matter expert can verify. AI-generated compliance content published without expert review is a liability.
+
+**Instructional decisions are made poorly.** Which format fits which learning objective? When is a short information module enough, and when does a learner need a decision scenario to practice? AI defaults to the obvious, not the right. Those decisions stay with the instructional designer.
+
+**AI hallucinates facts.** Numbers, legal requirements, norms — especially with specific regulatory content, AI produces plausible-sounding but incorrect information. Every fact needs to be checked.
+
+<Callout type="warning">
+  No AI-generated compliance course should be published without review by a
+  subject matter expert. This applies especially to GDPR, workplace safety, and
+  financial regulations — areas where incorrect content has direct liability
+  implications.
+</Callout>
+
+## What the Process Actually Looks Like
+
+A working AI workflow doesn't mean entering a prompt and getting a finished course. It looks like this:
+
+### Step 1: Define Learning Objectives — Still a Human Job
+
+Before AI generates anything, you need to know: what should the learner do or know differently at the end? AI can help formulate and sharpen objectives, but the content decision belongs to you and the subject matter experts.
+
+### Step 2: Gather Source Materials
+
+Collect everything that exists: existing policies, SOPs, old slide decks, notes from SME conversations. This is the raw material. Without source content, AI only produces generic output.
+
+### Step 3: Generate Structure and Script
+
+Feed AI your learning objectives and source materials. Ask for a course structure, then a script for each module. Use the output as a draft, not a finished product.
+
+A prompt that works well:
+
+> "Create a course structure for a 20-minute e-learning course on [topic]. Audience: [description]. Learning objectives: [list]. Source materials: [attached document]. The structure should have 3–4 modules, each with learning objectives and a brief content description."
+
+### Step 4: Review and Revise
+
+This step is consistently underestimated. Plan at least 30–40% of your original development time for review and revision. Check every fact, add company-specific context, adjust tone and style.
+
+### Step 5: Add Media, Interactions, and Assessments
+
+Screen recordings, real case examples, interactive scenarios — these come from you. AI can suggest scenarios, but implementation in the authoring tool or LMS is on the team.
+
+### Step 6: Expert Review
+
+For regulatory content especially: an SME reads through it. This isn't optional.
+
+## Which Tools Work for What
+
+**ChatGPT / Claude** for text work: structuring, script generation, deriving quiz questions, language editing. Used outside an authoring tool — you copy the output into your course editor.
+
+**Articulate Rise AI** offers a built-in function to generate course modules from a prompt. Useful for straightforward informational courses. Limited for more complex instructional structures.
+
+**iSpring Suite** has similar AI features, also solid for simple content.
+
+**Scibly** connects the AI step directly to the course structure and LMS — no manual copying between tools. You provide a brief and source materials, AI generates a course structure, you edit and publish in the same system. The biggest time saving is eliminating the friction between tools.
+
+<Callout type="tip">
+  If you're using AI tools in compliance or HR contexts: check with your legal
+  or data protection team which content you're allowed to enter into external AI
+  services (ChatGPT, Claude). Internal process documents and employee data don't
+  belong there. For sensitive content, tools with their own data processing or
+  on-premise options are more appropriate.
+</Callout>
+
+## What to Expect from AI-Assisted Course Development
+
+The honest summary: AI cuts the effort for initial development roughly in half — but not for quality assurance. Teams that understand this and build their process accordingly save significant time. Teams expecting a prompt to deliver a publish-ready course will be disappointed.
+
+The biggest gain isn't text generation itself — it's eliminating the blank page. A first draft that's 70% of the way there and needs editing is enormously more valuable than a blank document with a blinking cursor.
+
+If you want to build a workflow that integrates AI into course development without juggling separate tools, see [how Scibly handles it](/en).
+
+</PostLayout>

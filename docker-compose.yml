@@ -1,0 +1,95 @@
+# Self-hosted Scibly: Postgres + all three apps. See docs/docker.md.
+services:
+  postgres:
+    # pgvector, not plain postgres: an old migration (embeddings, since
+    # removed) runs CREATE EXTENSION "vector" and replays on every fresh
+    # install. Migration history is immutable, so plain postgres:16 fails
+    # `migrate deploy` on a new DB even though nothing uses vector anymore.
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-scibly}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-scibly}
+      POSTGRES_DB: ${POSTGRES_DB:-scibly}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-scibly} -d ${POSTGRES_DB:-scibly}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  migrate:
+    build:
+      context: .
+      dockerfile: packages/db/Dockerfile
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-scibly}:${POSTGRES_PASSWORD:-scibly}@postgres:5432/${POSTGRES_DB:-scibly}
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  collab:
+    build:
+      context: .
+      dockerfile: apps/collab/Dockerfile
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-scibly}:${POSTGRES_PASSWORD:-scibly}@postgres:5432/${POSTGRES_DB:-scibly}
+    ports:
+      - "${COLLAB_PORT:-4000}:4000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  app:
+    build:
+      context: .
+      dockerfile: apps/app/Dockerfile
+      args:
+        NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3001}
+        NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3001}
+        NEXT_PUBLIC_WEB_URL: ${NEXT_PUBLIC_WEB_URL:-http://localhost:3000}
+        NEXT_PUBLIC_COLLAB_WS_URL: ${NEXT_PUBLIC_COLLAB_WS_URL:-ws://localhost:4000}
+        NEXT_PUBLIC_DOCS_URL: ${NEXT_PUBLIC_DOCS_URL:-http://localhost:3000/docs}
+        NEXT_PUBLIC_ENV: ${NEXT_PUBLIC_ENV:-production}
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-scibly}:${POSTGRES_PASSWORD:-scibly}@postgres:5432/${POSTGRES_DB:-scibly}
+    ports:
+      - "3001:3001"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      collab:
+        condition: service_started
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_BASE_URL: ${NEXT_PUBLIC_WEB_URL:-http://localhost:3000}
+        NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3001}
+        NEXT_PUBLIC_WEB_URL: ${NEXT_PUBLIC_WEB_URL:-http://localhost:3000}
+        NEXT_PUBLIC_DOCS_URL: ${NEXT_PUBLIC_DOCS_URL:-http://localhost:3000/docs}
+        NEXT_PUBLIC_ENV: ${NEXT_PUBLIC_ENV:-production}
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-scibly}:${POSTGRES_PASSWORD:-scibly}@postgres:5432/${POSTGRES_DB:-scibly}
+    ports:
+      - "3000:3000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+volumes:
+  postgres_data:

@@ -1,0 +1,372 @@
+/**
+ * Homepage / marketing motion — owned once by the Next CSS pipeline.
+ * Prefer these classes over runtime <style>{KEYFRAMES}</style> injection.
+ */
+
+@keyframes sc-in {
+  from {
+    opacity: 0;
+    transform: translate3d(-6px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes sc-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes sc-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes sc-grow-y {
+  from {
+    transform: scaleY(0);
+    opacity: 0.4;
+  }
+  to {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+@keyframes sc-catch {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0) scale(0.92);
+  }
+  60% {
+    opacity: 1;
+    transform: translate3d(0, -2px, 0) scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes sc-import-document-loop {
+  0%,
+  17.5% {
+    transform: translate3d(0, -33.333%, 0);
+  }
+  20%,
+  37.5% {
+    transform: translate3d(0, -26.667%, 0);
+  }
+  40%,
+  57.5% {
+    transform: translate3d(0, -20%, 0);
+  }
+  60%,
+  77.5% {
+    transform: translate3d(0, -13.333%, 0);
+  }
+  80%,
+  97.5% {
+    transform: translate3d(0, -6.667%, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes sc-import-capture-focus {
+  0%,
+  18%,
+  100% {
+    border-color: rgba(122, 180, 255, 0.45);
+    box-shadow: 0 0 0 4px rgba(185, 215, 255, 0.25);
+  }
+  25% {
+    border-color: rgba(11, 79, 176, 0.7);
+    box-shadow: 0 0 0 6px rgba(185, 215, 255, 0.45);
+  }
+}
+@keyframes sc-import-input-signal {
+  0%,
+  10% {
+    left: 0;
+    opacity: 0;
+  }
+  14% {
+    opacity: 1;
+  }
+  28% {
+    left: 48%;
+    opacity: 1;
+  }
+  32%,
+  100% {
+    left: 50%;
+    opacity: 0;
+  }
+}
+@keyframes sc-import-ai-process {
+  0%,
+  28%,
+  44%,
+  100% {
+    transform: scale(1);
+  }
+  33% {
+    transform: scale(0.94);
+  }
+  38% {
+    transform: scale(1.035);
+  }
+}
+@keyframes sc-import-lens-document {
+  0%,
+  25%,
+  76%,
+  100% {
+    opacity: 0;
+    transform: scale(0.72);
+  }
+  34%,
+  68% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes sc-import-ai-orbit {
+  0%,
+  27% {
+    opacity: 0.45;
+    transform: rotate(0deg);
+  }
+  43% {
+    opacity: 1;
+    transform: rotate(360deg);
+  }
+  52%,
+  100% {
+    opacity: 0.45;
+    transform: rotate(360deg);
+  }
+}
+@keyframes sc-import-output-signal {
+  0%,
+  43% {
+    left: 50%;
+    opacity: 0;
+  }
+  47% {
+    opacity: 1;
+  }
+  63% {
+    left: 98%;
+    opacity: 1;
+  }
+  67%,
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+@keyframes sc-import-course-resolve {
+  0%,
+  60%,
+  76%,
+  100% {
+    opacity: 0.68;
+    transform: translate3d(0, 0, 0);
+  }
+  66% {
+    opacity: 1;
+    transform: translate3d(3px, 0, 0);
+  }
+}
+@keyframes sc-xp-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.sc-paused * {
+  animation-play-state: paused !important;
+}
+
+/*
+ * Both rules hide markup the server already sent and wait on an
+ * IntersectionObserver to bring it back, so they must not apply where that
+ * observer will never run — the content would stay invisible for good.
+ */
+@media (scripting: enabled) {
+  .sc-reveal-hidden {
+    opacity: 0;
+  }
+
+  .sc-bento:not(.sc-bento-ready) [data-bento-anim] {
+    animation: none !important;
+    opacity: 0;
+  }
+}
+
+.sc-bento [data-bento-visual] {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+[data-import-document-track] {
+  transform: translate3d(0, -33.333%, 0);
+  will-change: transform;
+}
+
+[data-import-document-viewport] {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 14%,
+    #000 86%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    #000 14%,
+    #000 86%,
+    transparent 100%
+  );
+}
+
+[data-import-signal] {
+  opacity: 0;
+}
+
+.sc-bento-ready [data-import-document-track] {
+  animation: sc-import-document-loop 12s cubic-bezier(0.65, 0, 0.35, 1) 1.2s
+    infinite;
+}
+
+.sc-bento-ready [data-import-capture] {
+  animation: sc-import-capture-focus 2.4s ease-in-out 1.2s infinite;
+}
+
+.sc-bento-ready [data-import-signal="input"] {
+  animation: sc-import-input-signal 2.4s ease-in-out 1.2s infinite;
+}
+
+.sc-bento-ready [data-import-ai-lens] {
+  animation: sc-import-ai-process 2.4s ease-in-out 1.2s infinite;
+}
+
+.sc-bento-ready [data-import-lens-document] {
+  animation: sc-import-lens-document 2.4s ease-in-out 1.2s infinite;
+}
+
+.sc-bento-ready [data-import-ai-orbit] {
+  animation: sc-import-ai-orbit 2.4s ease-in-out 1.2s infinite;
+}
+
+.sc-bento-ready [data-import-signal="output"] {
+  animation: sc-import-output-signal 2.4s ease-in-out 1.2s infinite;
+}
+
+.sc-bento-ready [data-import-course-node] {
+  animation: sc-import-course-resolve 2.4s ease-in-out 1.2s infinite;
+}
+
+.sc-bento-ready [data-import-course-node="1"] {
+  animation-delay: 1.28s;
+}
+
+.sc-bento-ready [data-import-course-node="2"] {
+  animation-delay: 1.36s;
+}
+
+.sc-bento-ready [data-import-course-node="3"] {
+  animation-delay: 1.44s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sc-bento [data-bento-anim] {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .sc-bento [data-import-document-track],
+  .sc-bento [data-import-capture],
+  .sc-bento [data-import-ai-lens],
+  .sc-bento [data-import-lens-document],
+  .sc-bento [data-import-ai-orbit],
+  .sc-bento [data-import-course-node] {
+    animation: none !important;
+    transform: none !important;
+  }
+  .sc-bento [data-import-signal] {
+    display: none !important;
+  }
+  .sc-bento [data-import-lens-document] {
+    display: none !important;
+  }
+  .sc-bento [data-import-course-node] {
+    opacity: 1 !important;
+  }
+}
+
+@keyframes marketing-content-swap {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.product-copy-swap {
+  animation: marketing-content-swap 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.product-preview-swap {
+  animation: marketing-content-swap 320ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .product-copy-swap,
+  .product-preview-swap {
+    animation: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  [data-learning-path-step] {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
+/* The CTA board's floating chapter keys — slow enough to read as buoyancy
+   rather than as something asking to be clicked. */
+@keyframes sc-bob {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -7px, 0);
+  }
+}
+.sc-bob {
+  animation: sc-bob 5.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sc-bob {
+    animation: none;
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "editorUi": {
+    "inputField": {
+      "startTypingPlaceholder": "Starte mit der Eingabe...",
+      "optionalLabel": "Optional",
+      "caseSensitiveLabel": "Groß-/Kleinschreibung beachten"
+    }
+  }
+}

@@ -1,0 +1,79 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "Duolingo als Vorbild für Mitarbeiterschulungen? Was wirklich übertragbar ist",
+  description:
+    "Duolingo wird in L&D-Kreisen oft als Vorbild genannt, wenn es um Engagement in Schulungen geht.",
+  date: "13. Juli 2026",
+  readTime: 4,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "duolingo prinzip für unternehmen",
+    "gamification mitarbeiterschulung sinnvoll",
+    "spaced repetition mitarbeiterschulung",
+    "warum vergessen mitarbeiter schulungsinhalte",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+Duolingo wird in L&D-Kreisen oft als Vorbild genannt, wenn es um Engagement in Schulungen geht. Was tatsächlich übertragbar ist: der Aufbau von Wiederholung nach Vergessenskurve und die Progression von Wiedererkennen zu aktivem Abruf. Was nicht funktioniert: einfach Punkte, Badges und Ranglisten auf beliebige Firmeninhalte zu kleben, ohne dass die Inhalte selbst richtig sequenziert sind.
+
+## Was Duolingo lernwissenschaftlich richtig macht
+
+Zwei Mechanismen bei Duolingo sind gut erforscht und eindeutig auf Unternehmensschulungen übertragbar.
+
+Erstens die verteilte Wiederholung. Duolingo hat dafür ein eigenes Modell entwickelt, das die Vergessenskurve pro Lerneinheit und pro Person schätzt und Wiederholungen genau dann einspielt, wenn eine Information sonst verloren ginge. Das ist dieselbe Idee, die Hermann Ebbinghaus schon im 19. Jahrhundert beschrieben hat: Ohne Wiederholung sind nach einer Woche rund 90 Prozent des Gelernten wieder weg. Der Unterschied ist nur, dass Duolingo das inzwischen mit echten Nutzungsdaten pro Person berechnet statt mit einem festen Wiederholungsplan für alle.
+
+Zweitens die Progression von Erkennen zu Abruf. Frühe Übungen bei Duolingo setzen auf Wiedererkennen, spätere zwingen zu aktiver Produktion. Das deckt sich mit einem der robustesten Befunde der Lernpsychologie: aktiver Abruf stabilisiert Wissen deutlich stärker als reines Wiederlesen oder Wiedererkennen.
+
+## Wo Duolingo für Firmenschulungen an Grenzen stößt
+
+Die unabhängige Studienlage zu Duolingo zeigt ein konsistentes Muster: Lesen und passives Verstehen entwickeln sich gut, Sprechen und freie Produktion deutlich langsamer. Eine große Vergleichsstudie mit 337 Lernenden fand 2025, dass App-Lernen bei allgemeinem Sprachniveau und Wortschatz vorne lag, klassischer Unterricht aber beim Hörverstehen. Eine weitere Studie mit drei Gruppen, App-only, Unterricht-only und einer Kombination, zeigte 2026, dass alle drei Formen ähnlich gut abschnitten, die Kombination aber der einzigen Gruppe mit einem klaren Vorteil bei situativer, pragmatischer Kompetenz war, also bei der Frage, wann man welche Formulierung im echten Kontext benutzt.
+
+Für Mitarbeiterschulungen ist das der entscheidende Punkt. Eine Compliance-Schulung oder eine Einarbeitung in ein internes System lebt fast ausschließlich von genau der Art Wissen, die bei Duolingo am schwächsten abschneidet: situativ richtig handeln in einem konkreten, echten Kontext, nicht abstrakte Regeln erkennen. Ein generisches Gamification-Layer über Firmeninhalte zu legen, ohne dass die Übungen selbst auf die reale Arbeitssituation zugeschnitten sind, kopiert die Schwäche des Systems, nicht seine Stärke.
+
+Dazu kommt ein zweiter Punkt aus der Forschung zu Duolingo selbst: Nicht jedes Gamification-Element, das die Rückkehr in die App fördert, fördert auch tatsächlich das Lernen. Streaks und Ranglisten sind stark für Engagement belegt, aber nur gemischt für echten Kompetenzzuwachs. Wer das unreflektiert in eine Pflichtschulung überträgt, optimiert am Ende womöglich dafür, dass Mitarbeitende täglich einloggen, nicht dafür, dass sie den Prozess tatsächlich beherrschen.
+
+## Was L&D-Teams wirklich von Duolingo übernehmen sollten
+
+| Duolingo-Prinzip                              | Für Firmenschulung übertragbar? | Warum                                                                                |
+| --------------------------------------------- | ------------------------------- | ------------------------------------------------------------------------------------ |
+| Verteilte Wiederholung nach Vergessenskurve   | Ja, direkt                      | Einer der am besten belegten Effekte der Lernforschung, unabhängig von der Domäne    |
+| Progression von Erkennen zu Abruf             | Ja, direkt                      | Aktiver Abruf stabilisiert Wissen zuverlässig stärker als passives Wiederlesen       |
+| Kurze, tägliche Lerneinheiten (Microlearning) | Ja, mit Einschränkung           | Senkt die Einstiegshürde, ersetzt aber keine inhaltliche Qualität                    |
+| Streaks und Ranglisten                        | Nur vorsichtig                  | Stark für Rückkehr in die App, schwach belegt für tatsächlichen Kompetenzzuwachs     |
+| Generische, vorgefertigte Übungen             | Nein                            | Firmenrelevantes Wissen braucht Übungen zum echten Prozess, nicht zu Allgemeinwissen |
+
+Der praktische Schluss daraus: Die Wiederholungslogik von Duolingo lohnt sich zu kopieren. Die Inhalte lohnen sich nicht zu kopieren, weil Firmenschulungen anders als eine Sprache keinen großen, austauschbaren Wortschatz haben, sondern sehr spezifisches Wissen zu einem bestimmten Prozess, einer bestimmten Richtlinie oder einem bestimmten System.
+
+Das ist auch der Grund, warum Scibly nicht versucht, ein generisches Übungssystem für beliebige Inhalte zu bauen, sondern Kurse direkt aus den eigenen Dokumenten eines Unternehmens erzeugt und darauf die Wiederholung und die Abrufübungen aufbaut. Die Lernlogik von Duolingo, ohne den generischen Content von Duolingo.
+
+## Häufige Fragen
+
+### Ist Gamification in Mitarbeiterschulungen grundsätzlich sinnvoll?
+
+Teilweise. Elemente wie Fortschrittsanzeigen oder kurze, tägliche Einheiten sind gut belegt. Punkte und Ranglisten fördern vor allem die Rückkehr zur Anwendung, nicht zwangsläufig den Lernerfolg selbst.
+
+### Warum vergessen Mitarbeitende Schulungsinhalte so schnell?
+
+Weil die meisten Schulungen einmalig stattfinden und danach nicht wiederholt werden. Ohne Wiederholung sind nach einer Woche laut der klassischen Vergessenskurve rund 90 Prozent des Inhalts wieder verloren, unabhängig davon, wie gut die Schulung selbst war.
+
+### Reicht eine App wie Duolingo als Vorbild für Compliance-Schulungen?
+
+Nur teilweise. Die Wiederholungslogik lässt sich übertragen, die Inhalte nicht. Compliance-Wissen ist immer an einen konkreten, unternehmensspezifischen Kontext gebunden, den eine generische App nicht abbilden kann.
+
+### Was ist der wichtigste Unterschied zwischen Sprachenlernen und Firmenschulung?
+
+Eine Sprache hat einen großen, aber relativ stabilen und generischen Wortschatz. Firmenwissen ist dagegen hochspezifisch für ein einzelnes Unternehmen und ändert sich mit jedem neuen Prozess, jeder neuen Richtlinie oder jedem neuen System.
+
+</PostLayout>

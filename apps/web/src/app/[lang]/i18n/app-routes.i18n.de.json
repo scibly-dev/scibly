@@ -1,0 +1,9 @@
+{
+  "appRoutes": {
+    "loadingPage": "Seite wird geladen...",
+    "loadingEditor": "Editor wird geladen...",
+    "loadingWorksheet": "Arbeitsblatt wird geladen...",
+    "loadingWorksheets": "Arbeitsblätter werden geladen...",
+    "loadingSettings": "Einstellungen werden geladen..."
+  }
+}

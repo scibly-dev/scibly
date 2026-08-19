@@ -1,0 +1,44 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Productive Failure",
+  definition:
+    "An instructional design approach where learners attempt to solve a problem before receiving instruction on the underlying concept — the resulting failure activates prior knowledge and prepares learners for a more effective explanation.",
+  keywords: [
+    "productive failure",
+    "problem solving before instruction",
+    "PS-I",
+    "Kapur",
+    "instructional sequencing",
+  ],
+  relatedTerms: [
+    "worked-examples",
+    "cognitive-load-theory",
+    "guided-discovery-learning",
+  ],
+  relatedPost: "productive-failure-methode",
+};
+
+<GlossaryLayout metadata={metadata} lang="en">
+
+Productive failure describes a deliberately reversed teaching sequence: learners first attempt a problem on a topic they haven't been taught yet, typically fail at least partially, and only then receive the canonical explanation. The term was coined by Manu Kapur, whose research group has studied the concept across school and university settings for more than a decade.
+
+## A concrete example
+
+In a typical study, two groups receive the same statistics problem on variance. Group A gets an explanation of the variance concept first and then practices with problems. Group B works on the same problems first, without any prior explanation, in small groups, developing their own, often flawed solution attempts. Only afterward do both groups receive the same explanation, with Group B's attempts explicitly compared to the correct solution. The result: Group B consistently performs better on transfer problems, meaning new, slightly modified problems, even though it made more errors during the initial practice phase.
+
+## Why the failure itself is useful
+
+The mechanism behind this is prior-knowledge activation: someone who has attempted a problem has activated their own relevant knowledge and surfaced their own misconceptions. The subsequent explanation then lands on a concrete, personally experienced gap instead of running alongside unconnected content. The largest meta-analysis on this approach, by Sinha and Kapur (2021), found a moderate advantage for conceptual understanding and transfer across 53 studies, but no advantage for pure procedural knowledge such as correctly executing a fixed sequence of steps.
+
+<Callout type="info">
+  Without the follow-up consolidation phase, productive failure is not an
+  effective method — it is just unguided failure. The learning effect only
+  emerges through the explicit comparison between learners' own attempts and the
+  correct solution. That step is not optional; it is the actual point of the
+  method.
+</Callout>
+
+For workplace training, this approach works best where the goal is understanding and transfer, such as leadership decisions or customer communication, and less well for onboarding to a fixed software process, where a clear explanation before the first attempt is usually the better-supported sequence.
+
+</GlossaryLayout>

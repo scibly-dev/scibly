@@ -1,0 +1,43 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Progressionssteuerung",
+  definition:
+    "Progressionssteuerung bedeutet, Lernaufgaben schrittweise vom bloßen Erkennen einer richtigen Antwort hin zum selbstständigen Abrufen und Produzieren des Wissens zu steigern.",
+  keywords: [
+    "Progressionssteuerung",
+    "Recognition to Recall",
+    "Aufgabenprogression",
+    "Multiple Choice vs. freie Antwort",
+    "Kursdesign",
+  ],
+  relatedTerms: [
+    "retrieval-practice",
+    "blooms-taxonomy",
+    "formative-summative-assessment",
+  ],
+  relatedPost: "recognition-vs-recall-e-learning",
+};
+
+<GlossaryLayout metadata={metadata} lang="de">
+
+Progressionssteuerung beschreibt ein Kursdesign-Prinzip: Aufgaben zu einem Lerninhalt werden nicht alle auf demselben Schwierigkeitsniveau gestellt, sondern in einer festen Abfolge gesteigert, die der tatsächlichen Entwicklung von Gedächtnisstärke entspricht. Zuerst müssen Lernende eine richtige Antwort nur erkennen, danach eine Antwort teilweise selbst ergänzen, am Ende das Gelernte vollständig frei aus dem Gedächtnis formulieren.
+
+## Ein konkretes Beispiel
+
+Zu einem neuen internen Eskalationsprozess durchläuft eine Lerneinheit drei Stufen. Zuerst wählen Lernende aus vier vorgegebenen Antworten die richtige Reihenfolge der Eskalationsschritte aus (Multiple Choice, reines Erkennen). Anschließend bekommen sie dieselbe Frage mit einer Lücke, die sie selbst ausfüllen müssen (teilweiser Abruf). Am Ende beschreiben sie in eigenen Worten, was bei einer neuen, im Training nicht vorgekommenen Eskalationssituation zu tun wäre (vollständige Produktion aus dem Gedächtnis). Jede Stufe baut auf der vorherigen auf, statt alle drei Fragen unabhängig voneinander zu stellen.
+
+## Warum die Reihenfolge wichtig ist
+
+Ohne Progressionssteuerung bleiben die meisten E-Learning-Quizze auf der ersten Stufe stehen: Multiple-Choice-Fragen, bei denen die richtige Antwort nur erkannt, nicht erzeugt werden muss. Das Problem dabei ist die sogenannte Flüssigkeitsillusion: Lernende, die eine Antwort unter mehreren Optionen wiedererkennen, überschätzen systematisch, wie gut sie den Inhalt tatsächlich beherrschen. Erst die Produktionsstufe, also das freie Formulieren ohne Antwortvorgaben, zeigt zuverlässig, ob Wissen wirklich abrufbar ist.
+
+<Callout type="info">
+  Sprachlern-Apps wie Duolingo setzen dieses Muster seit Jahren konsequent um:
+  Frühe Übungen setzen auf Wiedererkennen, spätere zwingen zu aktiver
+  Produktion. Für betriebliche Schulungen lässt sich dasselbe Prinzip unabhängig
+  vom Fachthema anwenden, von Compliance-Richtlinien bis zu Softwareprozessen.
+</Callout>
+
+Der häufigste Fehler ist, ein Kursthema mit nur einer einzigen Fragenart über die gesamte Lerneinheit hinweg abzudecken. Drei kurze Fragen auf steigendem Niveau, statt zehn gleich schwere Multiple-Choice-Fragen, liefern ein deutlich ehrlicheres Bild davon, was Lernende tatsächlich können.
+
+</GlossaryLayout>

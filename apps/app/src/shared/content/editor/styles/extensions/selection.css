@@ -1,0 +1,81 @@
+.tiptap.ProseMirror[contenteditable="true"] .tiptap-node-selection {
+  position: relative;
+  background-color: rgba(35, 131, 226, 0.14);
+}
+
+.tiptap.ProseMirror[contenteditable="true"] .tiptap-node-selection::before {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  inset: 0px;
+  background: rgba(35, 131, 226, 0.14);
+  z-index: 81;
+  border-radius: 4px;
+  opacity: 1;
+  transition-property: opacity;
+  transition-duration: 200ms;
+  transition-timing-function: ease;
+}
+
+.tiptap.ProseMirror[contenteditable="true"] .selection-halo {
+  position: absolute;
+  pointer-events: none;
+  inset: 0px;
+  background: rgba(35, 131, 226, 0.14);
+  z-index: 10;
+  border-radius: 4px;
+  opacity: 1;
+  transition-property: opacity;
+  transition-timing-function: ease;
+}
+
+/* new selection */
+/* ::selection:not(.react-renderer *::selection):not(table *::selection) {
+  background-color: #70cff850;
+} */
+
+/*new selection */
+::selection {
+  background-color: #70cff850;
+}
+
+/* Override selection for specific elements */
+/* .react-renderer *::selection,
+table *::selection {
+  background-color: initial;
+} */
+
+.ProseMirror-noderangeselection {
+  *:not(.react-renderer *):not(table *)::selection {
+    background: transparent;
+  }
+
+  *:not(.react-renderer *):not(table *) {
+    caret-color: transparent;
+  }
+
+  /* Inputs inside node views inherit transparent caret from ProseMirror — restore it. */
+  .react-renderer input,
+  .react-renderer textarea,
+  .react-renderer [contenteditable="true"] {
+    caret-color: currentColor;
+  }
+}
+
+.ProseMirror-selectednode:not(.react-renderer):not(table),
+.ProseMirror-selectednoderange:not(.react-renderer):not(table) {
+  position: relative;
+
+  &::before {
+    position: absolute;
+    pointer-events: none;
+    z-index: -1;
+    content: "";
+    top: 0rem;
+    left: 0rem;
+    right: 0rem;
+    bottom: 0rem;
+    background: rgba(35, 131, 226, 0.14);
+    border-radius: 0.2rem;
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "userSettings": {
+    "title": "Einstellungen",
+    "subtitle": "Allgemein",
+    "saveChanges": "Änderungen speichern",
+    "savedSuccessfully": "Einstellungen erfolgreich gespeichert",
+    "name": {
+      "title": "Dein Name",
+      "description": "Dies ist dein Anzeigename auf Scibly.",
+      "footer": "Max. 32 Zeichen."
+    },
+    "username": {
+      "title": "Dein Benutzername",
+      "description": "Dies ist dein eindeutiger Benutzername auf Scibly.",
+      "footer": "Max. 32 Zeichen.",
+      "taken": "Dieser Benutzername ist bereits vergeben. Bitte wähle einen anderen."
+    },
+    "avatar": {
+      "title": "Dein Avatar",
+      "description": "Dies ist dein Profilbild auf Scibly.",
+      "footer": "Quadratisches Bild empfohlen. Akzeptierte Formate: .png, .jpg. Max. Dateigröße: 2MB.",
+      "uploadText": "Klicke auf den Avatar, um ein neues Bild hochzuladen."
+    },
+    "emailNotifications": {
+      "title": "E-Mail-Benachrichtigungen",
+      "description": "Erhalte E-Mails über dein Konto, Aktivitäten und Zuweisungen.",
+      "footer": "Du kannst dies jederzeit ändern."
+    },
+    "marketingNotifications": {
+      "title": "Marketing-Benachrichtigungen",
+      "description": "Erhalte E-Mails über neue Funktionen, Updates und Angebote.",
+      "footer": "Wir schicken keinen Spam."
+    },
+    "deleteAccount": {
+      "title": "Konto löschen",
+      "description": "Löschen Sie Ihr Konto und alle zugehörigen Daten endgültig. Diese Aktion kann nicht rückgängig gemacht werden - bitte gehen Sie mit Vorsicht vor.",
+      "button": "Konto löschen",
+      "modal": {
+        "title": "Konto löschen",
+        "warning": "Warnung: Dadurch werden Ihr Konto, Ihre Kurse und alle damit verbundenen Daten dauerhaft gelöscht.",
+        "label1": "Geben Sie Ihren Benutzernamen {username} ein, um fortzufahren:",
+        "label2": "Zur Überprüfung geben Sie bitte unten konto löschen bestätigen ein:",
+        "confirmText": "konto löschen bestätigen",
+        "deleteButton": "Löschen"
+      }
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "comparison": {
+    "title1": "Less administration.",
+    "title2": "More learning impact.",
+    "table": {
+      "headers": {
+        "legacy": "Others",
+        "scibly": "scibly"
+      },
+      "rows": [
+        {
+          "kind": "import",
+          "label": "Content Creation",
+          "legacy": "Manual course building",
+          "scibly": "Drafts from your sources"
+        },
+        {
+          "kind": "byoai",
+          "label": "AI Models",
+          "legacy": "Predefined models",
+          "scibly": "Bring your own AI and provider choice"
+        },
+        {
+          "kind": "learner",
+          "label": "Learning Format",
+          "legacy": "Long, static courses",
+          "scibly": "Short, interactive practice"
+        },
+        {
+          "kind": "channels",
+          "label": "Knowledge Access",
+          "legacy": "Isolated learning portal",
+          "scibly": "One learning space for your team"
+        },
+        {
+          "kind": "analytics",
+          "label": "Analytics",
+          "legacy": "Exports and completion rates",
+          "scibly": "Questions and direct insights"
+        }
+      ]
+    }
+  }
+}

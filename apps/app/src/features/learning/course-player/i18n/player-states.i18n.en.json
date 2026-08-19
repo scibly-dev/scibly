@@ -1,0 +1,39 @@
+{
+  "learn": {
+    "playerStates": {
+      "locked": {
+        "title": "Maximum attempts reached",
+        "description": "You have already completed {{courseTitle}} the maximum number of {{maxTries}} {{times}} allowed. Contact your administrator if you believe this is a mistake.",
+        "time": "time",
+        "times": "times"
+      },
+      "readOnly": {
+        "title": "Course Already Completed",
+        "description": "You have already earned a certificate for {{courseTitle}}. You cannot finish the course again to earn more SP or additional certificates."
+      },
+      "courseUnavailable": {
+        "notPublishedTitle": "This course isn't published yet",
+        "notPublishedDescription": "Nothing has been published for this course. Once it is, this page will show it.",
+        "notAvailableTitle": "This course isn't available",
+        "notAvailableDescription": "The link may have been switched off, or the course removed.",
+        "loadFailedTitle": "The course couldn't be loaded",
+        "loadFailedDescription": "Something went wrong on the way here. Check your connection and try again.",
+        "retry": "Try again"
+      },
+      "retryConfirm": {
+        "title": "Start another attempt?",
+        "description": "Your previous answers for {{courseTitle}} will be cleared and your progress starts over. Your earned certificate stays.",
+        "confirmCta": "Start over",
+        "confirmCtaPending": "Starting…",
+        "backToDashboard": "Back to dashboard"
+      },
+      "versionUpdateConfirm": {
+        "title": "This course has been updated",
+        "description": "A newer version of {{courseTitle}} is available. Continuing clears your current progress and starts you on the new version.",
+        "confirmCta": "Continue on the new version",
+        "confirmCtaPending": "Updating…",
+        "backToDashboard": "Back to dashboard"
+      }
+    }
+  }
+}

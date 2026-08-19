@@ -1,0 +1,65 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "Using SharePoint as an LMS: What Works and What's Missing",
+  description:
+    "SharePoint can be used with folder structures, pages, and Microsoft Lists as a makeshift repository for training materials, but it isn't a learning management system.",
+  date: "May 26, 2026",
+  readTime: 4,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1553484771-371a605b060b?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "sharepoint as lms",
+    "sharepoint training platform",
+    "sharepoint employee training",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+SharePoint can be used with folder structures, pages, and Microsoft Lists as a makeshift repository for training materials, but it isn't a learning management system. Core LMS functionality is missing: there's no automatic tracking of who completed which content, no learning paths with a defined sequence, and no reminder function for overdue mandatory training.
+
+## What SharePoint can do for training
+
+| Function                         | Achievable through SharePoint                         |
+| -------------------------------- | ----------------------------------------------------- |
+| Storing documents and videos     | Yes, well suited                                      |
+| Basic access rights              | Yes, via existing Microsoft 365 permissions           |
+| Automatic completion tracking    | No, only with add-on tools or manual effort           |
+| Reminders for mandatory training | No, not without additional Power Automate flows       |
+| Interactive exercises or quizzes | Only in a limited way, usually via external embedding |
+
+## Why many teams start with SharePoint anyway
+
+The appeal lies in availability: if you already use Microsoft 365, SharePoint is available with no additional license cost, and documents can be uploaded quickly. For a small number of materials and a small team, that works for a while. Once the number of training programs grows, or proof of completion becomes important, for example for mandatory training, the manual effort for tracking and reminders quickly becomes impractical.
+
+## When switching to a real LMS pays off
+
+Switching usually pays off as soon as one of the following questions is answered yes: Do you need to prove who completed a mandatory training program? Are there more than a handful of training items meant to be taken in a specific sequence? Is someone on the team already regularly spending time manually tracking who has opened which folder? Once any of these apply, the improvised SharePoint solution costs more time than introducing a dedicated LMS would.
+
+## Frequently asked questions
+
+### Can SharePoint be combined with a real LMS?
+
+Yes, many teams keep SharePoint as a general document repository and use a separate LMS for actual training with tracking and learning paths. The two aren't mutually exclusive.
+
+### Is there a proof-of-completion solution directly in SharePoint?
+
+Not directly, only through additional automation with Power Automate or external extensions, which means extra technical effort that a dedicated LMS provides out of the box.
+
+### Is SharePoint still a reasonable stopgap for small teams?
+
+For very few, unstructured training materials with no proof-of-completion requirement, it can work as a stopgap. Once mandatory training or several connected courses are added, the missing tracking function quickly becomes a problem.
+
+### What's the difference between SharePoint as an LMS and Microsoft Teams as an LMS?
+
+Both Microsoft tools share the same structural gap: good storage and communication features, but no real learning management with automatic tracking. A comparison is available in [Microsoft Teams as an LMS](/blog/microsoft-teams-als-lms).
+
+</PostLayout>

@@ -1,0 +1,42 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Near Transfer vs. Far Transfer",
+  definition:
+    "A distinction within learning transfer research: near transfer applies learned skills to situations very similar to the training context, while far transfer applies them to substantially different, novel situations — far transfer is harder to achieve and requires deeper conceptual understanding.",
+  keywords: [
+    "near transfer",
+    "far transfer",
+    "learning transfer",
+    "transfer of training",
+    "conceptual understanding",
+  ],
+  relatedTerms: [
+    "learning-transfer",
+    "productive-failure",
+    "kirkpatrick-model",
+  ],
+  relatedPost: "lernerfolg-messen",
+};
+
+<GlossaryLayout metadata={metadata} lang="en">
+
+Learning transfer isn't uniformly hard. Near transfer means applying what was learned to a situation very similar to the practice context. Far transfer means applying the same knowledge to a substantially different situation that never came up during training. This distinction explains why a training program can perform well in a test but still fail in real day-to-day work.
+
+## A concrete example
+
+A customer service team is trained to handle a specific complaint about a delayed package, using exactly the conversation script used in training. If the test presents the same type of complaint with slightly different details, such as a different product or a different delivery service, that's near transfer, and most employees pass it reliably after training. If instead a completely different type of complaint comes in, say about a defective product rather than a delayed one, that requires far transfer: the underlying principles of the conversation need to be recognized and applied to a new structure. Many training programs reliably produce near transfer but hardly any far transfer.
+
+A second example from security awareness training makes the same point even more clearly. Learners first practice spotting phishing indicators in one specific sample email. Near transfer means recognizing the same scam in a slightly modified version of that same email. Far transfer means evaluating a completely different, newly designed message and being able to explain, on their own, which warning signs point to a phishing attempt, without that specific design ever appearing in training. Only the second ability actually protects people on the job, where attackers keep changing their messages.
+
+## Why this distinction matters for training design
+
+If a training goal requires far transfer, practicing many similar examples of a single situation isn't enough. What's needed is explicitly naming the underlying principles and practicing them across several, deliberately varied cases, so learners learn to separate the principle from the specific instance.
+
+<Callout type="tip">
+  A simple test for your own training design: if the final exam or quiz only
+  tests a slightly modified version of the practice example, it's effectively
+  measuring near transfer only, even if the actual goal was far transfer.
+</Callout>
+
+</GlossaryLayout>

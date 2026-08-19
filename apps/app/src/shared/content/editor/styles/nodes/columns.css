@@ -1,0 +1,72 @@
+.ProseMirror {
+  /* Columns */
+  [data-type="columns"] {
+    margin-bottom: 3rem; /* Corresponds to mb-12 */
+    margin-top: 3.5rem; /* Corresponds to mt-14 */
+    display: grid; /* Corresponds to grid */
+    gap: 1.5rem; /* Increased from 1rem for breathing room */
+  }
+
+  [data-type="column"] {
+    overflow: hidden;
+  }
+
+  [data-type="columns"].layout-sidebar-left {
+    grid-template-columns: 40fr 60fr;
+  }
+
+  [data-type="columns"].layout-sidebar-right {
+    grid-template-columns: 60fr 40fr;
+  }
+
+  [data-type="columns"].layout-two-column {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Small screens: tighten the space around a columns block. */
+@media screen and (max-width: 768px) {
+  .ProseMirror {
+    [data-type="columns"] {
+      margin-bottom: 1.5rem;
+      margin-top: 1.75rem;
+      gap: 0.75rem;
+    }
+  }
+}
+
+/*
+ * Lower threshold than the spacing rule above: content maxes out well before
+ * the viewport does, so viewport width alone isn't proof the columns are
+ * narrow. Targets cases like an embedded course frame — often just under
+ * 768px — without stacking columns that still have room side by side.
+ */
+@media screen and (max-width: 640px) {
+  .ProseMirror {
+    [data-type="columns"].layout-sidebar-left,
+    [data-type="columns"].layout-sidebar-right,
+    [data-type="columns"].layout-two-column {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+/*Use different selector*/
+.ProseMirror:not(.isNotEditable) {
+  [data-type="column"]:first-child {
+    border-right: 1px dashed hsl(var(--secondary) / 0.7);
+    padding-right: 1.5rem;
+  }
+}
+
+/* Remove column separator on mobile since columns stack */
+@media screen and (max-width: 640px) {
+  .ProseMirror:not(.isNotEditable) {
+    [data-type="column"]:first-child {
+      border-right: none;
+      padding-right: 0;
+      border-bottom: 1px dashed hsl(var(--secondary) / 0.7);
+      padding-bottom: 1.5rem;
+    }
+  }
+}

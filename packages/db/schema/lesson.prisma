@@ -1,0 +1,36 @@
+enum LessonIcon {
+  BOOK
+  LIGHTBULB
+  PRACTICE
+  MILESTONE
+}
+
+model Lesson {
+  id                             String           @id @default(cuid())
+  courseId                       String
+  course                         Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title                          String
+  description                    String?
+  icon                           LessonIcon       @default(BOOK)
+  estimatedTimeToCompleteMinutes Int              @default(0)
+  order                          Int              @default(0)
+  /// Colour + font palette applied to every scene in this lesson.
+  design                         Json?
+  createdAt                      DateTime         @default(now())
+  updatedAt                      DateTime         @updatedAt
+  // Set when this is a published copy belonging to a version; null for draft lessons
+  courseVersionId                String?
+  courseVersion                  CourseVersion?   @relation(fields: [courseVersionId], references: [id], onDelete: Cascade)
+  // Original draft lesson this was copied from; null for draft lessons
+  sourceLessonId                 String?
+  sourceLesson                   Lesson?          @relation("LessonSource", fields: [sourceLessonId], references: [id], onDelete: SetNull)
+  publishedCopies                Lesson[]         @relation("LessonSource")
+  scenes                         Scene[]
+  sceneProgresses                SceneProgress[]
+  sceneAnalytics                 SceneAnalytics[]
+
+  @@index([courseId])
+  @@index([courseVersionId])
+  @@index([sourceLessonId])
+  @@map("lesson")
+}

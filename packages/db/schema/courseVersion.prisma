@@ -1,0 +1,22 @@
+model CourseVersion {
+  id                String                   @id @default(cuid())
+  courseId          String
+  course            Course                   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  version           Int
+  publishedAt       DateTime                 @default(now())
+  publishedById     String?
+  publishedBy       User?                    @relation(fields: [publishedById], references: [id], onDelete: SetNull)
+  /// A later publish retired this version. Set only when the author asks for it
+  /// at publish time — publishing on its own leaves earlier versions takeable.
+  superseded        Boolean                  @default(false)
+  enrollments       CourseEnrollment[]
+  lessons           Lesson[]
+  scenes            Scene[]
+  certificates      Certificate[]
+  anonymousSessions AnonymousCourseSession[]
+
+  @@unique([courseId, version])
+  @@index([courseId])
+  @@index([publishedById])
+  @@map("course_version")
+}

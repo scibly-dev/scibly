@@ -1,0 +1,185 @@
+{
+  "featureShowcase": {
+    "eyebrow": "Platform features",
+    "title": "Everything you need for learning that works, without the detours.",
+    "subtitle": "From source knowledge to a finished, interactive course. No content team, no weeks of lead time.",
+    "journeyLabel": "One connected learning loop",
+    "expandAriaLabel": "Open feature details",
+    "closeLabel": "Close",
+    "ctaPrimary": "Request demo",
+    "ctaSecondary": "Open notebook demo",
+    "import": {
+      "phase": "Connect",
+      "title": "Sources in. Learning structure out.",
+      "stageLabel": "From document to course",
+      "detail": {
+        "body": "Connect your approved sources once. Scibly reads policies, handbooks, and specialist documents and automatically builds structured lessons with matching learning objectives and quiz questions. When the original document changes, scibly updates the course automatically, with no manual work from you.",
+        "highlights": [
+          "Direct import from Confluence, Notion, PDF, DOCX, and PPTX",
+          "Automatically structured lessons including matching quiz questions",
+          "Courses stay current: source changes sync automatically",
+          "Runs on Scibly AI or your own model, you decide"
+        ]
+      },
+      "source1Label": "IT Security Policy",
+      "source1Sub": "Confluence · 34 pages",
+      "source2Label": "Onboarding Guide",
+      "source2Sub": "Notion · 12 pages",
+      "source3Label": "Compliance Manual",
+      "source3Sub": "PDF · 8 pages",
+      "source4Label": "Sales Enablement Playbook",
+      "source4Sub": "DOCX · 26 pages",
+      "source5Label": "Product Release Brief",
+      "source5Sub": "PPTX · 18 slides",
+      "modelLabel": "or your model",
+      "courseLabel": "Generated course",
+      "lessonCount": "4 lessons · 1 quiz",
+      "syncBadge": "Automatically synced",
+      "syncedLabel": "Updated · 2 min ago",
+      "lessons": ["Passwords", "MFA basics", "Access reviews", "Security quiz"]
+    },
+    "channels": {
+      "phase": "Embed",
+      "title": "Learning, right in the flow of work",
+      "stageLabel": "Learning in the flow",
+      "detail": {
+        "body": "Learning belongs in the workday, not just in another tool. Scibly delivers short lessons and quizzes right where your team already communicates: in Slack or Microsoft Teams. No one has to log in separately or open a new portal. The knowledge shows up exactly where and when it’s needed.",
+        "highlights": [
+          "Delivered directly in Slack and Microsoft Teams",
+          "Short micro lessons of a few minutes, right in the thread",
+          "Quiz questions with instant feedback",
+          "No extra portal for everyday practice"
+        ]
+      },
+      "channel": "all employees",
+      "botName": "Scibly AI",
+      "chat1Author": "Mia",
+      "chat1Text": "Anyone have the Q3 deck handy?",
+      "chat2Author": "Jonas",
+      "chat2Text": "In the shared drive, I’ll send the link in a sec.",
+      "lessonLabel": "2 minute micro lesson · Password security",
+      "quizQ": "How long does your password need to be per the security policy?",
+      "optCorrect": "12 characters",
+      "optWrong": "8 characters",
+      "correct": "Correct · plus 10 SP"
+    },
+    "learner": {
+      "phase": "Activate",
+      "title": "Motivating learning through playful elements",
+      "stageLabel": "Interactive learning challenge",
+      "detail": {
+        "body": "Nobody finishes long slide decks voluntarily. Scibly replaces them with short challenges your team actually wants to complete. Multiple choice, cloze, drag and drop, matching tasks, and more. The same question blocks you edit in the builder reach the learner directly, including points, progress, and recognition.",
+        "highlights": [
+          "Six interactive question blocks",
+          "Instant feedback after every answer",
+          "Progress, points, and levels keep people going"
+        ]
+      },
+      "question": "A Slack DM asks for your password to fix SSO. What do you do?",
+      "optA": "Refuse and report it to IT",
+      "optB": "Send the password so work can continue",
+      "optC": "Change it, then send the new one",
+      "spValue": "plus 15",
+      "earnedLabel": "earned",
+      "comboLabel": "3× multiplier",
+      "streakValue": "7 day streak",
+      "streakLabel": "Keep it going",
+      "levelValue": "Level 4",
+      "levelLabel": "Sales Rookie",
+      "xpLabel": "XP to Level 5",
+      "feedback": "Awesome!",
+      "nextLabel": "Continue",
+      "clozeBefore": "If someone emails for your password, you should",
+      "clozeMid": "and then",
+      "clozeAfter": "via ticket or phone",
+      "clozeGapOne": "refuse",
+      "clozeGapTwo": "report it",
+      "clozeBankLabel": "Word bank",
+      "clozeReset": "Reset",
+      "clozeBank": ["send it", "ignore it"]
+    },
+    "analytics": {
+      "phase": "Understand",
+      "title": "See where knowledge is missing.",
+      "stageLabel": "Live knowledge analysis",
+      "detail": {
+        "body": "Ask Scibly AI questions in plain everyday language instead of piecing reports together yourself. You instantly see where fail rates are rising, what changed, and where training is needed next. No spreadsheet export, no manual analysis.",
+        "highlights": [
+          "Ask questions in plain everyday language",
+          "Spot trends and knowledge gaps at a glance",
+          "Clear link between events and learning needs, with no extra work"
+        ]
+      },
+      "youLabel": "You",
+      "query": "Is there a knowledge gap in sales?",
+      "replyLabel": "Scibly AI",
+      "chartLabel": "Sales · quiz fail rate",
+      "peakLabel": "41 percent",
+      "eventLabel": "New commission model rolled out",
+      "gapBody": "Yes. Since the new commission model, the fail rate has risen noticeably. The team still isn’t solid on this topic.",
+      "series": [
+        {
+          "label": "W1",
+          "rate": 12
+        },
+        {
+          "label": "W2",
+          "rate": 11
+        },
+        {
+          "label": "W3",
+          "rate": 13
+        },
+        {
+          "label": "W4",
+          "rate": 14
+        },
+        {
+          "label": "W5",
+          "rate": 41
+        },
+        {
+          "label": "W6",
+          "rate": 38
+        }
+      ]
+    },
+    "byoai": {
+      "phase": "Control",
+      "title": "Use the AI your company already trusts.",
+      "stageLabel": "Your model choice, your control",
+      "detail": {
+        "body": "No vendor lock in. Use the models your security team has already approved instead of locking yourself into a single provider. Switch anytime between OpenAI, Anthropic, Scibly AI, or your own internal endpoint, without rebuilding the platform.",
+        "highlights": [
+          "OpenAI, Anthropic, and Scibly AI built in",
+          "Full company control, without locking into one provider",
+          "Your own internal model can be connected too"
+        ]
+      },
+      "panelLabel": "Model",
+      "inputPlaceholder": "Ask Scibly AI…",
+      "youLabel": "You",
+      "query": "Draft a 2 minute quiz on password phishing.",
+      "replyLabel": "Scibly AI",
+      "reply": "3 questions ready, based on your IT policy, not a public model.",
+      "viaLabel": "Via",
+      "trustChips": ["EU Endpoint", "Org Key", "IT approved"],
+      "providers": [
+        {
+          "name": "OpenAI",
+          "detail": "GPT 5.5 · Org Key"
+        },
+        {
+          "name": "Anthropic",
+          "detail": "Claude · Org Key"
+        },
+        {
+          "name": "Scibly AI",
+          "detail": "Managed · EU"
+        }
+      ],
+      "yoursLabel": "Your internal model",
+      "yoursDetail": "Approved · EU Endpoint"
+    }
+  }
+}

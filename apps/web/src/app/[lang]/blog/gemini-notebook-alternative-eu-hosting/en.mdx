@@ -1,0 +1,70 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "Gemini Notebook (NotebookLM) Alternatives with EU Hosting: What Matters When Choosing",
+  description:
+    '"EU hosting" is often used as a marketing claim for AI tools without it being clear what exactly is meant.',
+  date: "July 11, 2026",
+  readTime: 4,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "gemini notebook alternative eu hosting",
+    "notebooklm alternative eu hosting",
+    "eu ai tool documents",
+    "ai tool gdpr hosting europe",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+"EU hosting" is often used as a marketing claim for AI tools without it being clear what exactly is meant. For a real assessment, four concrete criteria matter: where the data is technically processed, whether a data processing agreement is available, whether customer data feeds into the model's training, and how subprocessors outside the EU are involved.
+
+## The four criteria in detail
+
+| Criterion                       | Why it matters                                                                 | What to check                                                       |
+| ------------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------- |
+| Server location of processing   | Determines applicable data protection law                                      | Not just storage location, also where the actual AI processing runs |
+| Data processing agreement (DPA) | Legal basis for processing personal data                                       | Must be actively offered and executable, not just mentioned         |
+| No training on customer data    | Prevents company content from feeding into the general model                   | Check explicitly in the terms of service or privacy policy          |
+| Subprocessors                   | Even "EU-hosted" tools sometimes use US cloud infrastructure in the background | Ask the vendor for the list of subprocessors                        |
+
+## Why "EU servers" alone isn't enough
+
+A tool can technically run on a server in Europe and still be operated by a US parent company that can be compelled under US law to hand over data, regardless of the physical server location. A solid assessment therefore can't stop at server location; what also matters is under which law the vendor itself operates and which subprocessors are involved behind the scenes.
+
+## How to run a check in practice
+
+Three steps you can do without a legal department, before a deeper legal review follows:
+
+1. **Request the privacy policy and DPA template directly from the vendor**, don't just take the marketing claims on the website at face value.
+2. **Ask for the list of subprocessors**, in particular whether and which US vendors are used in the background for hosting or model inference.
+3. **Explicitly ask about the training data policy**: are uploaded documents used to improve the general model, or used exclusively for your own answer.
+
+## Frequently asked questions
+
+### Is a server location in Germany enough proof of GDPR compliance?
+
+Not on its own. Server location is one factor among several; the DPA, the training data policy, and the complete list of subprocessors involved also matter.
+
+### What does "no training on customer data" mean concretely?
+
+It means uploaded documents are used exclusively to generate your own answer or course, not to improve a general AI model that other customers also use.
+
+### How do you find out which subprocessors a vendor uses?
+
+Reputable vendors publish a subprocessor list, often as part of the data processing agreement or on a dedicated trust page. If such a list is entirely missing, that's itself a warning sign.
+
+### Is a European vendor automatically better than a US vendor with EU servers?
+
+Not automatically, but European vendors are usually directly subject to EU law without the extra review effort around US access rights. The concrete contractual basis still matters in every individual case.
+
+</PostLayout>

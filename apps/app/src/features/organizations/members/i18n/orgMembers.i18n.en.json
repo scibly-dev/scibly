@@ -1,0 +1,52 @@
+{
+  "orgMembers": {
+    "title": "Members",
+    "subtitle": "Manage who has access to this organisation.",
+    "inviteMember": "Invite Member",
+    "role": "Role",
+    "joined": "Joined",
+    "owner": "Owner",
+    "admin": "Admin",
+    "member": "Member",
+    "remove": "Remove from organisation",
+    "removeSuccess": "Member removed successfully",
+    "updateRoleSuccess": "Role updated successfully",
+    "areYouSure": "Are you sure?",
+    "inviteModal": {
+      "title": "Invite Member",
+      "description": "Invite a new member to your organisation.",
+      "email": "Email Address",
+      "emailPlaceholder": "colleague@example.com",
+      "role": "Role",
+      "submit": "Send Invitation",
+      "success": "Invitation sent successfully",
+      "addEmail": "Add email",
+      "invalidEmail": "Invalid email address",
+      "failedToInvite": "Failed to invite {{count}} member(s)"
+    },
+    "invitations": {
+      "title": "Pending Invitations",
+      "expires": "Expires",
+      "cancel": "Cancel Invitation",
+      "cancelSuccess": "Invitation cancelled"
+    },
+    "table": {
+      "filter": "Filter",
+      "searchPlaceholder": "Search by name or email",
+      "allRoles": "All Roles",
+      "allStatuses": "All Statuses",
+      "statusActive": "Active",
+      "statusInvited": "Invited",
+      "status": "Status",
+      "previous": "Previous",
+      "next": "Next",
+      "viewingMembers": "Viewing {{start}}-{{end}} of {{total}} member(s)",
+      "name": "Name",
+      "role": "Role",
+      "removeMember": "Remove from organisation",
+      "loadMore": "Load More",
+      "loading": "Loading...",
+      "is": "is"
+    }
+  }
+}

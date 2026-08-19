@@ -1,0 +1,41 @@
+{
+  "name": "@scibly/i18n",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "merge-i18n": "tsx src/cli/merge-i18n.ts",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@formatjs/intl-localematcher": "^0.5.10",
+    "negotiator": "^0.6.4"
+  },
+  "devDependencies": {
+    "@scibly/eslint-config": "workspace:*",
+    "@tanstack/react-query": "^5.80.7",
+    "@types/negotiator": "^0.6.3",
+    "@types/node": "^20.17.29",
+    "@types/react": "^19.2.14",
+    "eslint": "^9.39.2",
+    "react": "^19.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.8.2"
+  },
+  "peerDependencies": {
+    "@tanstack/react-query": "^5.80.0",
+    "next": "^16.0.0",
+    "react": "^19.0.0"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./constants": "./src/constants.ts",
+    "./resolve-locale-from-headers": "./src/resolve-locale-from-headers.ts",
+    "./merge": "./src/merge-i18n.ts",
+    "./react": "./src/react/index.ts"
+  }
+}

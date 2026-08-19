@@ -1,0 +1,41 @@
+{
+  "notebook": {
+    "page": {
+      "sidebarTitle": "Notebook",
+      "collapseSidebar": "Collapse sidebar",
+      "historyButton": "History",
+      "leaveNotebook": "Leave notebook",
+      "newChat": "New notebook",
+      "newNotebook": "New notebook",
+      "generationsLeft": "{count} AI generations left",
+      "noChats": "No notebooks yet",
+      "searchPlaceholder": "Search notebooks...",
+      "recentsHeader": "Recent",
+      "quickPrompts": [
+        {
+          "label": "Design a course",
+          "prompt": "I want to build a new course from my sources. Ask me a few questions about the audience and what learners should be able to do afterward, then suggest a course structure with lessons and topics."
+        },
+        {
+          "label": "Practice scenarios",
+          "prompt": "Use my sources to create realistic practice scenarios where learners have to make decisions, choose the best option, and learn from the feedback."
+        },
+        {
+          "label": "Improve my course",
+          "prompt": "Review my current course and tell me where it feels too long, too passive, or hard to follow. Suggest concrete changes."
+        },
+        {
+          "label": "Summarize my sources",
+          "prompt": "Summarize the most important topics in my sources and suggest which ones are worth turning into a course and in what order."
+        }
+      ],
+      "greetings": [
+        "What shall we create, {name}?",
+        "Ready when you are, {name}.",
+        "Back at it, {name}.",
+        "Let's build something, {name}.",
+        "Good to see you, {name}."
+      ]
+    }
+  }
+}

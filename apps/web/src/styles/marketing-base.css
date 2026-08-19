@@ -1,0 +1,27 @@
+/**
+ * Site-wide marketing defaults — anchor scrolling and the hero composer.
+ * Focus rings and text wrapping are shared with the product app and live in
+ * `@scibly/ui/styles.css`.
+ */
+
+html {
+  scroll-behavior: smooth;
+  /* Anchor targets clear the floating navbar instead of sliding under it. */
+  scroll-padding-top: 100px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/*
+ * The hero composer is one surface: the card tints its own border on
+ * focus-within, so a second ring around the textarea would double up.
+ * Needs to live here — Tailwind utilities sit in a cascade layer and lose
+ * to the unlayered rule it is overriding.
+ */
+[data-hero-demo-composer] textarea:focus-visible {
+  outline: none;
+}

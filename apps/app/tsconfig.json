@@ -1,0 +1,25 @@
+{
+  "extends": "../../tsconfig.next.json",
+  "compilerOptions": {
+    "noUncheckedIndexedAccess": false,
+    "checkJs": false,
+    "baseUrl": ".",
+    "types": ["vitest/globals"],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@test/*": ["./__test__/*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "src/app/.well-known/**/*.ts",
+    "src/i18n/generated/**/*.json",
+    "src/shared/content/editor/html-schema/default-content/default-editor-after-joyride-content.js",
+    ".next/dev/types/**/*.ts",
+    "../../packages/ui/tailwind.config.ts"
+  ],
+  "exclude": ["node_modules"]
+}

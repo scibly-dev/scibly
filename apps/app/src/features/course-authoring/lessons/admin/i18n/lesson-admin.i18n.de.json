@@ -1,0 +1,63 @@
+{
+  "courses": {
+    "detail": {
+      "contentTab": {
+        "title": "Kurslektionen",
+        "noContent": "Noch keine Inhalte vorhanden",
+        "noContentSub": "Beginne deine Lernreise, indem du deine erste Lektion hinzufügst.",
+        "addFirst": "Erste Lektion hinzufügen",
+        "deleteTitle": "Lektion löschen",
+        "deleteDesc": "Bist du sicher, dass du die Lektion \"{{title}}\" löschen möchtest? Diese Aktion kann nicht rückgängig gemacht werden und löscht diese Lektion und all ihre Szenen dauerhaft.",
+        "openBuilder": "Builder öffnen",
+        "deleteBtn": "Lektion löschen",
+        "addBtn": "Lektion hinzufügen",
+        "addBlockedLessonMode": "Eine Lektion enthält eine Lektion. Wechsle in den Kursmodus, um mehr hinzuzufügen.",
+        "cancel": "Abbrechen",
+        "toastReorderSuccess": "Reihenfolge der Lektionen erfolgreich aktualisiert.",
+        "toastReorderError": "Reihenfolge konnte nicht aktualisiert werden. Bitte erneut versuchen.",
+        "toastDeleteSuccess": "Lektion erfolgreich gelöscht.",
+        "toastDeleteError": "Lektion konnte nicht gelöscht werden. Bitte erneut versuchen."
+      },
+      "lessonSheet": {
+        "titleCreate": "Lektion erstellen",
+        "titleEdit": "Lektion bearbeiten",
+        "descCreate": "Füge deinem Kurs ein neues Lernmodul hinzu.",
+        "descEdit": "Aktualisiere die Metadaten der Lektion und speichere die Änderungen.",
+        "fieldTitle": "Titel",
+        "fieldTitlePlaceholder": "z. B. Einführung in die Thermodynamik",
+        "fieldTitleRequired": "Titel ist erforderlich",
+        "fieldDesc": "Beschreibung (optional)",
+        "fieldDescPlaceholder": "Was werden die Lernenden in dieser Lektion erreichen?",
+        "fieldDescCounter": "{{current}} / {{max}}",
+        "fieldDescTooLong": "Die Beschreibung darf höchstens {{max}} Zeichen lang sein.",
+        "fieldIcon": "Pfad-Symbol",
+        "iconLabels": {
+          "book": {
+            "title": "Lesen",
+            "description": "Inhalte einführen: Text, Medien oder eine geführte Übersicht."
+          },
+          "lightbulb": {
+            "title": "Konzept",
+            "description": "Eine Idee, ein Modell oder eine Funktionsweise erklären."
+          },
+          "practice": {
+            "title": "Übung",
+            "description": "Lernende wenden Gelerntes an: Aufgaben, Szenarien oder Fragen."
+          },
+          "milestone": {
+            "title": "Meilenstein",
+            "description": "Checkpoint, Zusammenfassung oder Abschluss vor dem nächsten Abschnitt."
+          }
+        },
+        "fieldTime": "Geschätzte Zeit (Minuten)",
+        "toastCreateSuccess": "Lektion erfolgreich erstellt.",
+        "toastCreateError": "Fehler beim Erstellen der Lektion.",
+        "toastUpdateSuccess": "Lektion erfolgreich aktualisiert.",
+        "toastUpdateError": "Fehler beim Aktualisieren der Lektion.",
+        "cancel": "Abbrechen",
+        "saveChanges": "Änderungen speichern",
+        "createLesson": "Lektion erstellen"
+      }
+    }
+  }
+}

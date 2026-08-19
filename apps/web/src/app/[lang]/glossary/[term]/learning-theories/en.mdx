@@ -1,0 +1,107 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Learning Theories",
+  definition:
+    "The three foundational frameworks for understanding how learning occurs: Behaviorism (learning as conditioned response to stimuli), Cognitivism (learning as internal information processing), and Constructivism (learning as active knowledge construction from experience).",
+  keywords: [
+    "learning theories",
+    "behaviorism",
+    "cognitivism",
+    "constructivism",
+    "educational psychology",
+  ],
+  relatedTerms: ["andragogy", "cognitive-load-theory", "social-learning"],
+  relatedPost: "didaktische-grundlagen",
+};
+
+<GlossaryLayout metadata={metadata} lang="en">
+
+Learning theories are frameworks that explain the mechanisms by which learning happens. Three theories — Behaviorism, Cognitivism, and Constructivism — have had the most lasting influence on instructional design practice. They are not a historical progression where newer theories replaced older ones. They are complementary lenses, each explaining a different aspect of how learning works.
+
+An L&D practitioner who understands all three knows when each applies — and can diagnose why a specific design approach is or isn't working.
+
+## Behaviorism: learning as conditioned response
+
+**Core claim**: Learning is a change in observable behavior produced by the relationship between stimuli and responses. What matters is what the learner does — not what they think or feel. Learning is demonstrated through behavior, and behavior is shaped by reinforcement and consequences.
+
+**Key theorists**: Ivan Pavlov (classical conditioning), B.F. Skinner (operant conditioning). Skinner's programmed instruction — structured sequences of small steps with immediate confirmation of correct responses — was a direct precursor to much eLearning.
+
+**Direct implication for eLearning design**: Behavioral principles are most directly applicable to:
+
+- Compliance training where the goal is consistent rule-following behavior
+- Drill-and-practice for procedural skills (sales scripts, safety protocols, software navigation)
+- Immediate positive feedback after correct responses
+- Using consequences (not just information) to shape behavior
+
+**The trap**: A behaviorist-only design approach produces click-next compliance courses and rote quizzes. It works for behavior that needs to become automatic but is unsuitable for developing judgment, problem-solving, or adaptable expertise. If every eLearning course you build resembles a Skinnerian box — stimulus, response, reinforcement, repeat — you're applying one theory to learning challenges that require two or three.
+
+## Cognitivism: learning as information processing
+
+**Core claim**: Learning involves internal mental processes — attention, encoding, storage, and retrieval. The learner is not a passive responder to stimuli but an active processor of information. How information is organized, presented, and connected to prior knowledge determines how well it is learned.
+
+**Key theorists**: George Miller (working memory limits), Richard Atkinson and Richard Shiffrin (multi-store memory model), John Sweller (cognitive load theory), Robert Gagné (conditions of learning, nine events of instruction).
+
+**Direct implication for eLearning design**: Cognitive principles govern most of the structural decisions in eLearning:
+
+- Chunking content to avoid overloading working memory
+- Scaffolding from simpler to more complex to build organized mental models
+- Using worked examples to reduce extraneous cognitive load
+- Applying the multimedia principle (text + relevant visuals > text alone)
+- Spacing practice to exploit long-term memory consolidation
+
+**The trap**: Cognitivism can produce very well-organized information delivery that learners can recall but not apply. Structuring information clearly is necessary but not sufficient. A perfectly chunked, well-scaffolded, beautifully visualized eLearning course that has no practice, no application, no feedback is a high-quality lecture — and lectures don't develop skills.
+
+## Constructivism: learning as active knowledge construction
+
+**Core claim**: Learning is an active process in which learners construct knowledge from their experiences, connect new information to existing mental models, and build understanding through interaction with meaningful problems. Knowledge is not transmitted from teacher to learner — it is built by the learner.
+
+**Key theorists**: Jean Piaget (cognitive development stages, schema formation), Lev Vygotsky (zone of proximal development, social learning), Jerome Bruner (discovery learning), John Dewey (learning through experience).
+
+**Direct implication for eLearning design**: Constructivist principles support:
+
+- Problem-based learning: presenting learners with real problems before teaching the solution methodology
+- Scenario-based learning: learners construct understanding by navigating realistic situations
+- Reflection prompts: asking learners to connect new content to their own experience and context
+- Social learning approaches: discussion, peer review, collaborative problem-solving
+- Authentic assessment: measuring whether learners can apply knowledge in realistic contexts
+
+**The trap**: Constructivism without structure produces open-ended learning experiences where learners explore without feedback, build incorrect mental models, and never know if their constructed understanding is accurate. Pure discovery learning without guidance is consistently less effective than guided instruction, particularly for novices. The most effective constructivist designs are not unguided — they're carefully scaffolded experiences that require active sense-making.
+
+<Callout type="info">
+  All three theories are active in every effective training program, even if
+  unintentionally. A well-designed scenario-based module uses behaviorist
+  reinforcement (consequences for choices), cognitive principles (managing
+  working memory, sequencing from simpler to complex), and constructivist
+  mechanisms (active meaning-making, connection to prior experience). The
+  question isn't which theory to follow — it's which theory's principles are
+  most relevant for a given objective.
+</Callout>
+
+## A practical design guide: which theory for which objective
+
+| Objective type                                           | Primary theory               | Key design move                                          |
+| -------------------------------------------------------- | ---------------------------- | -------------------------------------------------------- |
+| Habitual behavior change (compliance, safety procedures) | Behaviorism                  | Practice + immediate consequence; repeat until automatic |
+| Knowledge and concept understanding                      | Cognitivism                  | Chunk, scaffold, worked examples, spaced retrieval       |
+| Procedural skill (step-by-step process)                  | Cognitivism + Behaviorism    | Worked example → guided practice → feedback              |
+| Judgment and decision-making                             | Constructivism + Cognitivism | Realistic scenarios, reflection, consequences            |
+| Complex problem-solving                                  | Constructivism               | Authentic problems, expert modeling, iteration           |
+| Attitude and behavior toward others                      | Constructivism + Behaviorism | Social scenarios, perspective-taking, social norms       |
+
+<Callout type="tip">
+  When diagnosing a training program that isn't working, check which theory it's
+  predominantly built on. Most underperforming corporate eLearning is
+  behaviorist-only (click-next with a quiz) or cognitivist-only (well-organized
+  content with no application). Adding one element from a missing theory — a
+  brief scenario, a reflection prompt, or a spaced retrieval check — often
+  produces more improvement than rebuilding the course.
+</Callout>
+
+## Why all three remain relevant
+
+The history of educational psychology is sometimes framed as Behaviorism giving way to Cognitivism, which gave way to Constructivism. This framing is misleading. Behaviorism didn't stop being true; it stopped being the complete explanation. Operant conditioning still explains how consequences shape behavior — that's still how habits form. Cognitive load theory is still the most practical tool available for structuring instruction. Constructivism still explains why learners who engage actively with material learn more than learners who consume passively.
+
+For practitioners designing for the real constraints of a 50–300 person company — where training time is limited, budgets are fixed, and the learning objective is usually behavioral change in a specific context — the practical skill is applying the right theory to the right problem. That starts with knowing what each one actually claims.
+
+</GlossaryLayout>

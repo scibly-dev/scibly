@@ -1,0 +1,67 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "Spaced Repetition in Practice: How to Build Distributed Repetition Into Training",
+  description:
+    "Spaced repetition means repeating the same learning content at growing intervals, instead of learning it once and never touching it again.",
+  date: "May 22, 2026",
+  readTime: 4,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1555255707-c07966088b7b?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "spaced repetition employee training",
+    "distributed repetition learning",
+    "spaced repetition in practice",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+Spaced repetition means repeating the same learning content at growing intervals, instead of learning it once and never touching it again. The forgetting curve shows why that's necessary: without repetition, the recall value of newly learned content drops fastest in the first few days. A repetition placed deliberately at exactly that point brings the recall value back up, and with every further repetition cycle, the effect lasts longer.
+
+## What a spaced repetition cycle looks like in practice
+
+| Repetition          | Approximate timing after first learning it                             |
+| ------------------- | ---------------------------------------------------------------------- |
+| First repetition    | After 1 to 2 days                                                      |
+| Second repetition   | After about 1 week                                                     |
+| Third repetition    | After about 2 to 4 weeks                                               |
+| Further repetitions | Increasingly larger gaps, as long as the content is recalled correctly |
+
+The interval grows with each successful repetition. If content is recalled incorrectly at a repetition, the interval shrinks again, so the content gets refreshed more often until it sticks reliably again.
+
+## Why most corporate training doesn't build in repetition
+
+Classic training is usually designed as a one-off event: a workshop, an e-learning module, a final test, after which the topic is considered done. Without planned repetition, that's exactly the point where most of what was learned gets lost again over the following weeks, regardless of how good the original training was. Spaced repetition doesn't fix the quality of the original delivery, it fixes the absence of any follow-up afterward.
+
+## Implementing spaced repetition without complicated software
+
+Even without a specialized flashcard tool, you can build in the principle: a short reminder question by email or chat after a few days, a brief refresher block at the start of a follow-up training session, or automated reminders from the LMS triggered based on completion date. What matters is less the tool than the principle: repetition doesn't happen by itself, it has to be actively planned, ideally automated, so it doesn't depend on manual follow-up.
+
+## Frequently asked questions
+
+### Is spaced repetition the same as retrieval practice?
+
+No, but the two go together. Retrieval practice describes how you repeat, namely through active recall instead of passive rereading. Spaced repetition describes when you repeat, namely at growing intervals. More on this in [Retrieval Practice: The Simplest Way to Make Training Content Stick Long-Term](/blog/retrieval-practice-mitarbeiterschulung).
+
+### How often should content be repeated?
+
+There's no fixed number that applies to every piece of content. The timings in the table above serve as a rough guideline, adjusted based on how reliably the content was recalled at each repetition.
+
+### Does spaced repetition also work for practical skills, not just facts?
+
+Yes, the principle transfers by not just quizzing knowledge but re-practicing the application itself at intervals, for example a short case study instead of a pure knowledge question.
+
+### How much effort does spaced repetition mean for an L&D team?
+
+Manually, the follow-up effort can be high. Automated reminders through an LMS, based on completion date and past results, significantly reduce that effort and make spaced repetition practical even for larger teams.
+
+</PostLayout>

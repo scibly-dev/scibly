@@ -1,0 +1,82 @@
+{
+  "courses": {
+    "detail": {
+      "peopleTab": {
+        "toastRemoveSuccess": "Mitglied erfolgreich entfernt.",
+        "toastRemoveError": "Fehler beim Entfernen des Mitglieds.",
+        "searchPlaceholder": "Eingeschriebene Benutzer suchen...",
+        "statusAll": "Alle Status",
+        "statusNotStarted": "Nicht gestartet",
+        "statusInProgress": "In Bearbeitung",
+        "statusCompleted": "Abgeschlossen",
+        "addMembers": "Mitglieder hinzufügen",
+        "showingUsers": "Zeige {{start}}-{{end}} von {{total}} Benutzern",
+        "colUser": "Benutzer",
+        "colStatus": "Status",
+        "colVersion": "Version",
+        "colTries": "Versuche",
+        "colProgress": "Fortschritt",
+        "colLastActive": "Zuletzt aktiv",
+        "neverActive": "Nie",
+        "removeBtn": "Aus Kurs entfernen",
+        "emptyMessage": "Keine Benutzer passend zu \"{{search}}\" gefunden",
+        "emptyTitle": "Noch niemand eingeschrieben",
+        "emptyDescription": "Schreibe Mitglieder deiner Organisation ein, damit sie diesen Kurs sehen.",
+        "emptyFiltered": "Keine Benutzer mit diesem Status."
+      },
+      "enrollDialog": {
+        "title": "Mitglieder einschreiben",
+        "desc": "Wähle Mitglieder aus deiner Organisation aus, um sie in diesen Kurs einzuschreiben.",
+        "searchPlaceholder": "Nach Name oder E-Mail suchen...",
+        "dueDate": "Fälligkeitsdatum (optional)",
+        "noMembers": "Keine verfügbaren Mitglieder gefunden.",
+        "enrollBtn": "Einschreiben",
+        "enrollBtnCount": "Einschreiben ({{count}})",
+        "toastSuccess": "{{count}} Mitglieder erfolgreich eingeschrieben.",
+        "toastError": "Fehler beim Einschreiben der Mitglieder",
+        "cancel": "Abbrechen",
+        "seatGateTitle": "Zum Einschreiben brauchst du mindestens {{plan}}",
+        "seatGateDescription": "Dein aktueller Plan enthält keine Lernplätze, deshalb kann noch niemand eingeschrieben werden. Wechsle den Plan oder kaufe Plätze dazu, um Kurse zuzuweisen.",
+        "seatGateLapsedTitle": "Dieses Abonnement ist beendet",
+        "seatGateLapsedDescription": "Es können keine Lernenden mehr eingeschrieben werden. Reaktiviere das Abonnement, um wieder einzuschreiben. Bereits zugewiesene Kurse laufen weiter.",
+        "seatGateFallbackPlan": "einen kostenpflichtigen Plan",
+        "seatGateViewPlans": "Pläne ansehen",
+        "seatShortfallTitle": "Es fehlen {{count}} Lernplätze",
+        "seatShortfallDescription": "Unter den ausgewählten Personen sind mehr neue Lernende, als diese Organisation noch Plätze hat. Kaufe die fehlenden Plätze dazu und schreibe dann erneut ein. Deine Auswahl bleibt bestehen.",
+        "seatShortfallLink": "{{count}} Plätze dazukaufen"
+      },
+      "statusBadge": {
+        "notPassed": "Nicht bestanden",
+        "notStarted": "Nicht gestartet",
+        "inProgress": "In Bearbeitung",
+        "completed": "Abgeschlossen"
+      },
+      "share": {
+        "triggerLabel": "Teilen",
+        "title": "Kurs teilen",
+        "description": "Gib Personen außerhalb deiner Organisation Zugang zu diesem Kurs.",
+        "publicAccessLabel": "Öffentlicher Zugriff",
+        "publicAccessDescription": "Jede Person mit dem Link kann den Kurs öffnen, ohne Registrierung.",
+        "toastEnabled": "Öffentlicher Zugriff ist aktiv. Jede Person mit dem Link kann den Kurs öffnen.",
+        "toastDisabled": "Öffentlicher Zugriff ist deaktiviert. Link und Einbettung funktionieren nicht mehr.",
+        "toastFailed": "Öffentlicher Zugriff konnte nicht geändert werden.",
+        "offTitle": "Öffentlicher Zugriff ist deaktiviert",
+        "offDescription": "Aktiviere ihn, um einen Link zum Teilen und einen Code zum Einbetten zu erhalten.",
+        "tabLink": "Link",
+        "tabEmbed": "Einbetten",
+        "linkLabel": "Öffentlicher Link",
+        "linkHint": "Jede Person mit diesem Link kann den Kurs öffnen.",
+        "embedLanguage": "Sprache",
+        "embedLanguageAuto": "Sprache der Besucher",
+        "embedHeight": "Höhe",
+        "embedHeightDescription": "Womit der Rahmen startet und welche Höhe er behält, wenn du die Option darunter ausschaltest. Lektionen bekommen immer mindestens {{px}} px. Weniger schneidet eine Szene ab, statt sie kompakter zu machen.",
+        "embedResizeLabel": "An Inhalt anpassen",
+        "embedResizeDescription": "Fügt ein kleines Skript hinzu, damit der Rahmen mit dem Kurs mitwächst. Ohne das Skript scrollt der Kurs innerhalb der oben angegebenen Höhe.",
+        "embedCodeLabel": "Einbettungscode",
+        "embedHint": "Füge beide Tags in deine Seite ein. Wer den öffentlichen Link öffnen kann, kann auch die Einbettung öffnen. Es gibt keine separate Zugriffseinstellung.",
+        "copy": "Kopieren",
+        "copied": "Kopiert"
+      }
+    }
+  }
+}

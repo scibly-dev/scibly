@@ -1,0 +1,27 @@
+{
+  "demoTour": {
+    "placeholder": "Create a course from your PDF or playbook…",
+    "sendLabel": "Open notebook demo",
+    "modelMenuLabel": "Model",
+    "modelTriggerLabel": "Choose AI model",
+    "models": {
+      "scibly": {
+        "name": "Scibly AI",
+        "detail": "Managed · EU hosted"
+      },
+      "openai": {
+        "name": "OpenAI",
+        "detail": "GPT · org key"
+      },
+      "anthropic": {
+        "name": "Anthropic",
+        "detail": "Claude · org key"
+      },
+      "byoai": {
+        "name": "Your AI model",
+        "detail": "Your approved endpoint"
+      }
+    },
+    "seedPrompt": "Turn our IT policy into a short phishing course."
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "notebook": {
+    "sources": {
+      "title": "Quellen",
+      "searchPlaceholder": "Quellen durchsuchen...",
+      "emptyTitle": "Noch keine Quellen",
+      "pasteText": "Text einfügen",
+      "deleteSource": "Quelle entfernen",
+      "retrySource": "Verarbeitung erneut starten",
+      "resyncSource": "Quelle neu synchronisieren",
+      "replaceFile": "Datei ersetzen",
+      "downloadFile": "Datei herunterladen",
+      "openExternal": "In Quelle öffnen",
+      "staleSource": "Quelle hat sich seit Kurserstellung geändert",
+      "staleBadge": "veraltet",
+      "sourceLimitReached": "Dieses Notebook kann höchstens {max} Quellen enthalten. Entfernen Sie eine Quelle, um weitere hinzuzufügen.",
+      "dropzone": {
+        "title": "Dateien ablegen oder auswählen",
+        "subtitle": "PDF oder TXT bis 20MB"
+      },
+      "pasteDialog": {
+        "title": "Textinhalt einfügen",
+        "namePlaceholder": "Quellenname...",
+        "contentPlaceholder": "Fügen Sie Ihren Text hier ein...",
+        "cancel": "Abbrechen",
+        "add": "Quelle hinzufügen",
+        "wordCount": "{count} / {max} Wörter",
+        "wordLimitExceeded": "Textquellen dürfen höchstens 50.000 Wörter enthalten."
+      },
+      "pagePicker": {
+        "title": "Von Notion importieren",
+        "searchPlaceholder": "Seiten suchen...",
+        "filterPages": "Seiten filtern…",
+        "noResults": "Keine Seiten gefunden. Versuchen Sie eine andere Suche.",
+        "noSubpagesFound": "Keine Unterseiten hier gefunden.",
+        "addSelected": "{count} Seite(n) hinzufügen",
+        "cancel": "Abbrechen",
+        "clear": "Zurücksetzen",
+        "adding": "Wird hinzugefügt…",
+        "limitWarning": "Sie können noch maximal {remaining} Seite(n) hinzufügen.",
+        "loading": "Lädt…",
+        "backToRoot": "Zurück zum Start",
+        "selectAll": "Alle auswählen ({count})",
+        "deselectAll": "Auswahl aufheben ({count})",
+        "pagesSelected": "{count} von {max} ausgewählt",
+        "pagesVisible": "{count} Seite(n) sichtbar",
+        "pagesVisibleInfo": "Über die Seitenanzahl",
+        "pagesVisibleNote": "Nur in dieser Ansicht geladene Seiten werden angezeigt. Große Arbeitsbereiche können mehr Seiten enthalten. Nutzen Sie die Suche oder navigieren Sie in Unterordner.",
+        "openInSource": "{title} in Notion öffnen",
+        "openInSourceLabel": "In Notion öffnen",
+        "browseDatabase": "Datenbank durchsuchen",
+        "browseSubpages": "Unterseiten durchsuchen",
+        "failedToLink": "Seite konnte nicht verknüpft werden"
+      },
+      "statusPending": "Ausstehend",
+      "statusProcessing": "Verarbeitung",
+      "statusReady": "Bereit",
+      "statusFailed": "Fehlgeschlagen",
+      "processingNoticeOne": "1 Quelle wird noch verarbeitet, die KI kann sie noch nicht lesen.",
+      "processingNoticeMany": "{count} Quellen werden noch verarbeitet, die KI kann sie noch nicht lesen.",
+      "processingNoticeDismiss": "Ausblenden",
+      "deleteConfirmTitle": "Quelle entfernen?",
+      "deleteConfirmDescription": "\"{{name}}\" wird dauerhaft entfernt und der importierte Inhalt gelöscht. Dies kann nicht rückgängig gemacht werden.",
+      "deleteConfirmButton": "Entfernen",
+      "cancelButton": "Abbrechen",
+      "importFrom": "Von {name} importieren",
+      "connectIn": "Verbinden Sie {name} zuerst in Ihren Organisationseinstellungen, um Seiten daraus zu importieren.",
+      "entitlement": {
+        "sourceCapOne": "In diesem Notebook ist Platz für 1 Quelle weniger als angefragt. Entfernen Sie eine Quelle oder wechseln Sie den Plan.",
+        "sourceCapMany": "In diesem Notebook ist Platz für {shortfall} Quellen weniger als angefragt. Entfernen Sie Quellen oder wechseln Sie den Plan.",
+        "creditsOne": "Der Import dieser Quelle kostet 1 Generierung, das Guthaben beträgt {balance}. Kaufen Sie ein Guthabenpaket, um sie hinzuzufügen. Alles bereits Importierte funktioniert weiter.",
+        "creditsMany": "Der Import dieser {sources} Quellen kostet {credits} Generierungen, das Guthaben beträgt {balance}. Kaufen Sie ein Guthabenpaket, um sie hinzuzufügen. Alles bereits Importierte funktioniert weiter.",
+        "creditsNone": "Es sind keine KI-Generierungen mehr übrig. Kaufen Sie ein Guthabenpaket, um Quellen hinzuzufügen. Alles bereits Importierte funktioniert weiter.",
+        "generationsLapsed": "Das Abonnement dieser Organisation ist abgelaufen, daher wurden KI-Generierungen gestoppt. Reaktivieren Sie das Abonnement, um wieder Quellen hinzuzufügen. Alles bereits Importierte bleibt erhalten."
+      }
+    }
+  }
+}

@@ -1,0 +1,91 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Microlearning",
+  definition:
+    "A training format that delivers focused learning content in short, discrete units — typically 3–10 minutes — designed to match a specific learning objective or performance need.",
+  keywords: [
+    "microlearning",
+    "micro learning",
+    "short-form learning",
+    "bite-sized learning",
+    "e-learning format",
+  ],
+  relatedTerms: [
+    "blended-learning",
+    "learning-in-the-flow-of-work",
+    "spaced-repetition",
+  ],
+  relatedPost: "was-ist-microlearning",
+};
+
+<GlossaryLayout metadata={metadata} lang="en">
+
+Microlearning refers to delivering focused learning content in short, discrete units — typically between 3 and 10 minutes — each targeting a single, well-defined learning objective or performance need. The term covers a range of formats, but the defining characteristic is not just brevity. It is specificity: a microlearning unit addresses one thing, precisely enough that a learner can apply it immediately.
+
+## What makes a learning unit "micro"
+
+Duration alone does not define microlearning. A 5-minute video that broadly surveys a topic is not microlearning — it is a compressed lecture. True microlearning units share three properties:
+
+**Focus**: Each unit addresses exactly one concept, skill, or task. "Customer objection handling" is too broad. "How to respond when a prospect says the price is too high" is appropriately scoped.
+
+**Specificity**: The content is concrete enough to transfer directly to a real situation. Abstract frameworks without application context rarely qualify.
+
+**Completeness**: The unit stands alone. A learner who encounters it without background should walk away with something immediately usable — not a piece of a larger puzzle that requires the rest of the series to make sense.
+
+This definition immediately reveals why much of what gets labeled "microlearning" in practice is simply short e-learning — the content is brief but not focused, or focused but not applicable. The label is applied loosely.
+
+## Formats
+
+Microlearning takes many forms, and the appropriate format depends on what the learner needs to do:
+
+- **Short video (2–5 min)**: Best for demonstrating a process, showing correct behavior, or conveying emotional or social nuance. Works well for soft skills and procedural training
+- **Interactive scenario**: A decision-point scenario that takes 3–6 minutes, used where judgment or context-reading is the target skill
+- **Quiz or knowledge check**: 3–10 questions targeting recall of specific facts or rules. Most useful as a spaced repetition trigger, not as a standalone learning event
+- **Job aid**: A one-page reference document, checklist, or decision tree. Not always framed as microlearning, but functionally identical in its specificity and standalone utility
+- **Flashcard set**: Particularly effective for vocabulary, definitions, and procedural sequences when combined with a spaced repetition schedule
+
+<Callout type="tip">
+  When designing a microlearning unit, write the performance objective first,
+  then ask: could someone do this task using only the content in this unit? If
+  the answer is no, either reduce the scope or extend the content. Most
+  microlearning fails because the unit covers too much.
+</Callout>
+
+## When microlearning works
+
+Microlearning is well-matched to several training situations:
+
+**Performance support at the point of need**: A technician who needs to remember the torque spec for a specific bolt, or a customer service rep who needs to recall the escalation process mid-call — these are exact-fit situations for a well-designed microlearning unit.
+
+**Reinforcement after a longer course**: A structured 3-week onboarding program can be followed by a series of weekly microlearning units that revisit the core concepts. This leverages the spacing effect and prevents the rapid decay that typically follows a one-time training event.
+
+**Knowledge updates for existing employees**: When a policy changes, a product feature launches, or a procedure is revised, a 3-minute update video or a short module is far more appropriate than a new course.
+
+**Mobile learning contexts**: Short units work on mobile devices in a way that 45-minute modules do not. If your learner population regularly needs training without access to a desktop, microlearning formats are almost always preferable.
+
+## When microlearning does not work
+
+Microlearning is frequently overapplied. It is the wrong tool for:
+
+**Complex skill development**: Learning to manage difficult conversations, develop strategic thinking, or acquire a new programming language requires extended practice, feedback, and reflection. These cannot be meaningfully compressed into 5-minute units without losing the substance of the skill.
+
+**Building shared mental models**: When a team needs to develop a shared understanding of a complex system — a new organizational strategy, a major process redesign — microlearning alone lacks the scaffolding to build that understanding reliably.
+
+**Initial conceptual learning in unfamiliar domains**: A learner encountering an entirely new field needs orientation and context before specifics. Microlearning assumes a foundation that may not exist.
+
+<Callout type="info">
+  Research on microlearning's effectiveness is mixed precisely because the term
+  covers such a wide range of content. Short, focused, application-oriented
+  units with built-in retrieval practice show strong results. Short, narrated
+  slide decks rebranded as microlearning show weak results. The format matters
+  less than the design principles underneath it.
+</Callout>
+
+## Relationship to spaced repetition
+
+Microlearning and spaced repetition are most powerful in combination. A series of microlearning units revisiting the same core concepts at increasing intervals — day 1, day 5, day 14, day 30 — dramatically outperforms a single training event at any of those points alone. Many modern learning platforms support this pattern through scheduled push notifications, automated assignment sequences, or built-in spaced repetition algorithms.
+
+The practical constraint is design overhead: a meaningful spaced repetition schedule requires multiple distinct review units per concept, not just the same unit repeated. Building that library takes time but produces substantially better retention outcomes than single-exposure training.
+
+</GlossaryLayout>

@@ -1,0 +1,18 @@
+{
+  "learn": {
+    "courses": {
+      "status": {
+        "completed": "Completed",
+        "notPassed": "Not Passed",
+        "inProgress": "In Progress",
+        "notStarted": "Not Started"
+      },
+      "noDescription": "No description provided.",
+      "lessons": "Lessons",
+      "noEstimatedTime": "No estimated time",
+      "attempts": "attempts",
+      "noCourses": "No courses yet",
+      "notEnrolled": "You are not enrolled in any courses currently."
+    }
+  }
+}

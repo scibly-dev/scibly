@@ -1,0 +1,32 @@
+{
+  "name": "@scibly/routes",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@scibly/i18n": "workspace:*",
+    "@scibly/lib": "workspace:*"
+  },
+  "devDependencies": {
+    "@scibly/eslint-config": "workspace:*",
+    "@types/node": "^20.17.29",
+    "eslint": "^9.39.2",
+    "react": "^19.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.8.2"
+  },
+  "peerDependencies": {
+    "next": "^16.0.0",
+    "react": "^19.0.0"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  }
+}

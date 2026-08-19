@@ -1,0 +1,50 @@
+export type OrgMembersTranslations = {
+  title: string;
+  subtitle: string;
+  inviteMember: string;
+  role: string;
+  joined: string;
+  owner: string;
+  admin: string;
+  member: string;
+  remove: string;
+  removeSuccess: string;
+  updateRoleSuccess: string;
+  areYouSure: string;
+  inviteModal: {
+    title: string;
+    description: string;
+    email: string;
+    emailPlaceholder: string;
+    role: string;
+    submit: string;
+    success: string;
+    addEmail: string;
+    invalidEmail: string;
+    failedToInvite: string;
+  };
+  invitations: {
+    title: string;
+    expires: string;
+    cancel: string;
+    cancelSuccess: string;
+  };
+  table: {
+    filter: string;
+    searchPlaceholder: string;
+    allRoles: string;
+    allStatuses: string;
+    statusActive: string;
+    statusInvited: string;
+    status: string;
+    previous: string;
+    next: string;
+    viewingMembers: string;
+    name: string;
+    role: string;
+    removeMember: string;
+    loadMore: string;
+    loading: string;
+    is: string;
+  };
+};

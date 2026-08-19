@@ -1,0 +1,82 @@
+{
+  "courses": {
+    "detail": {
+      "peopleTab": {
+        "toastRemoveSuccess": "Member removed successfully.",
+        "toastRemoveError": "Failed to remove member.",
+        "searchPlaceholder": "Search enrolled users...",
+        "statusAll": "All statuses",
+        "statusNotStarted": "Not Started",
+        "statusInProgress": "In Progress",
+        "statusCompleted": "Completed",
+        "addMembers": "Add Members",
+        "showingUsers": "Showing {{start}}-{{end}} of {{total}} users",
+        "colUser": "User",
+        "colStatus": "Status",
+        "colVersion": "Version",
+        "colTries": "Tries",
+        "colProgress": "Progress",
+        "colLastActive": "Last Active",
+        "neverActive": "Never",
+        "removeBtn": "Remove from course",
+        "emptyMessage": "No users found matching \"{{search}}\"",
+        "emptyTitle": "No one enrolled yet",
+        "emptyDescription": "Enroll members of your organisation so they can take this course.",
+        "emptyFiltered": "No users with this status."
+      },
+      "enrollDialog": {
+        "title": "Enroll Members",
+        "desc": "Select members from your organization to enroll them in this course.",
+        "searchPlaceholder": "Search by name or email...",
+        "dueDate": "Due Date (optional)",
+        "noMembers": "No available members found.",
+        "enrollBtn": "Enroll",
+        "enrollBtnCount": "Enroll ({{count}})",
+        "toastSuccess": "Successfully enrolled {{count}} members.",
+        "toastError": "Failed to enroll members",
+        "cancel": "Cancel",
+        "seatGateTitle": "Enrolling learners needs {{plan}} or above",
+        "seatGateDescription": "Your current plan includes no learner seats, so nobody can be enrolled yet. Upgrade or buy seats to start assigning courses.",
+        "seatGateLapsedTitle": "This subscription has lapsed",
+        "seatGateLapsedDescription": "Learners can no longer be enrolled. Reactivate the subscription to enroll again. Courses already assigned keep running.",
+        "seatGateFallbackPlan": "a paid plan",
+        "seatGateViewPlans": "View plans",
+        "seatShortfallTitle": "{{count}} more learner seats are needed",
+        "seatShortfallDescription": "The people you selected include more newcomers than this organization has seats left. Add the missing seats, then enroll again. Your selection stays as it is.",
+        "seatShortfallLink": "Add {{count}} seats"
+      },
+      "statusBadge": {
+        "notPassed": "Not Passed",
+        "notStarted": "Not Started",
+        "inProgress": "In Progress",
+        "completed": "Completed"
+      },
+      "share": {
+        "triggerLabel": "Share",
+        "title": "Share course",
+        "description": "Give people outside your organization a way into this course.",
+        "publicAccessLabel": "Public access",
+        "publicAccessDescription": "Let anyone open this course with a link, no sign-up required.",
+        "toastEnabled": "Public access is on. Anyone with the link can open this course.",
+        "toastDisabled": "Public access is off. The link and embed no longer work.",
+        "toastFailed": "Could not change public access.",
+        "offTitle": "Public access is off",
+        "offDescription": "Turn it on to get a link you can share and a code you can embed.",
+        "tabLink": "Link",
+        "tabEmbed": "Embed",
+        "linkLabel": "Public link",
+        "linkHint": "Anyone with this link can open the course.",
+        "embedLanguage": "Language",
+        "embedLanguageAuto": "Visitor's language",
+        "embedHeight": "Height",
+        "embedHeightDescription": "Where the frame starts, and the height it keeps if you turn the option below off. Lessons always get at least {{px}} px. Less crops a scene rather than tightening it.",
+        "embedResizeLabel": "Resize to fit content",
+        "embedResizeDescription": "Adds a small script so the frame grows with the course. Without it the course scrolls inside the height above.",
+        "embedCodeLabel": "Embed code",
+        "embedHint": "Paste both tags into your page. Anyone who can open the public link can open the embed. There is no separate access setting.",
+        "copy": "Copy",
+        "copied": "Copied"
+      }
+    }
+  }
+}

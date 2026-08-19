@@ -1,0 +1,88 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [".env"],
+  "globalEnv": [
+    "SKIP_ENV_VALIDATION",
+    "DATABASE_URL",
+    "AWS_REGION",
+    "AWS_ACCESS_KEY_ID",
+    "AWS_SECRET_ACCESS_KEY",
+    "MEDIA_BUCKET_NAME",
+    "GOOGLE_CLIENT_ID",
+    "GOOGLE_CLIENT_SECRET",
+    "RESEND_API_KEY",
+    "STRIPE_SECRET_KEY",
+    "STRIPE_WEBHOOK_SECRET",
+    "STRIPE_PRICE_STARTER",
+    "STRIPE_PRICE_BUSINESS",
+    "STRIPE_PRICE_PRO",
+    "STRIPE_PRICE_TOPUP_SMALL",
+    "STRIPE_PRICE_TOPUP_LARGE",
+    "STRIPE_PRICE_SEAT_STARTER",
+    "STRIPE_PRICE_SEAT_BUSINESS",
+    "STRIPE_PRICE_SEAT_PRO",
+    "STRIPE_PORTAL_CONFIGURATION_ID",
+    "NEXT_PUBLIC_BASE_URL",
+    "NEXT_PUBLIC_WEB_URL",
+    "NEXT_PUBLIC_APP_URL",
+    "NEXT_PUBLIC_COLLAB_WS_URL",
+    "NEXT_PUBLIC_ENV",
+    "NEXT_PUBLIC_DOCS_URL",
+    "NEXT_PUBLIC_PYTHON_BACKEND_BASE_URL",
+    "NEXT_PUBLIC_BETA_FLAG",
+    "BETTER_AUTH_SECRET",
+    "COLLAB_TOKEN_SECRET",
+    "LOG_LEVEL",
+    "NODE_ENV",
+    "AI_GATEWAY_API_KEY",
+    "ANTHROPIC_API_KEY",
+    "SCIBLY_DEFAULT_CHAT_MODEL",
+    "SCIBLY_DEFAULT_IMAGE_MODEL",
+    "NOTION_CLIENT_ID",
+    "NOTION_CLIENT_SECRET",
+    "NOTION_PERSONAL_ACCESS_TOKEN",
+    "OPENAI_API_KEY",
+    "ENCRYPTION_KEY",
+    "CRON_SECRET",
+    "NEXT_PUBLIC_FREE_ACCESS_FLAG",
+    "NEXT_PUBLIC_POSTHOG_KEY",
+    "NEXT_PUBLIC_POSTHOG_HOST",
+    "NEXT_PUBLIC_POSTHOG_ENABLED"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env"],
+      "outputs": [
+        "!.next/cache/**",
+        ".next/**",
+        "dist/**",
+        "packages/*/dist/**"
+      ]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "start": {
+      "cache": true,
+      "persistent": true
+    },
+    "clean": {
+      "cache": false
+    },
+    "test": {
+      "dependsOn": ["^build"]
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+    "format:check": {},
+    "format:write": {
+      "cache": false
+    },
+    "typecheck": {
+      "dependsOn": ["^typecheck"]
+    }
+  }
+}

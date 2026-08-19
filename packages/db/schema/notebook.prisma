@@ -1,0 +1,209 @@
+enum NotebookSourceType {
+  PDF
+  TEXT
+  NOTION_PAGE
+  CONFLUENCE_PAGE
+  SHAREPOINT_PAGE
+
+  @@map("notebook_source_type")
+}
+
+enum NotebookSourceStatus {
+  PENDING
+  PROCESSING
+  READY
+  FAILED
+
+  @@map("notebook_source_status")
+}
+
+enum ChatRole {
+  USER
+  ASSISTANT
+
+  @@map("chat_role")
+}
+
+model Notebook {
+  id                          String                   @id @default(cuid())
+  title                       String
+  organizationId              String
+  organization                Organization             @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId                      String
+  user                        User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  courseId                    String?
+  course                      Course?                  @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  promptTemplateId            String?
+  promptTemplate              PromptTemplate?          @relation(fields: [promptTemplateId], references: [id], onDelete: SetNull)
+  /// Rolling LLM summary standing in for every message up to
+  /// `chatSummaryThroughMessageId`. Only the model's context shrinks — the
+  /// stored chat keeps every message.
+  chatSummary                 String?                  @db.Text
+  chatSummaryThroughMessageId String?
+  createdAt                   DateTime                 @default(now())
+  updatedAt                   DateTime                 @updatedAt
+  sources                     NotebookSource[]
+  generatedImages             NotebookGeneratedImage[]
+  chats                       NotebookChat[]
+  creditLedgerEntries         CreditLedgerEntry[]
+
+  @@index([organizationId])
+  @@index([userId])
+  @@index([courseId])
+  @@index([promptTemplateId])
+  @@map("notebook")
+}
+
+model NotebookSource {
+  id                  String               @id @default(cuid())
+  notebookId          String
+  notebook            Notebook             @relation(fields: [notebookId], references: [id], onDelete: Cascade)
+  name                String
+  type                NotebookSourceType
+  url                 String? // S3 key
+  content             String? // Full extracted text — inlined verbatim into the chat prompt in Tier 1
+  /// Estimated model tokens for `content` (chars / 4). 0 means the row predates
+  /// full-text storage: its `content` is still the old 10k-char truncation, so
+  /// it must never be inlined as if it were the whole source.
+  tokenCount          Int                  @default(0)
+  /// Digest part 1, in the source's own language: what it covers and is for.
+  summary             String?
+  /// Digest part 2, in the source's own language: flat list of its sections.
+  outline             String?
+  status              NotebookSourceStatus @default(PENDING)
+  error               String? // Error message if processing failed
+  warning             String? // Non-fatal notice (e.g. content was truncated)
+  fileSize            Int? // File size in bytes
+  pageCount           Int? // Number of pages (for documents)
+  /// Provider-specific page ID (e.g. Notion page UUID)
+  externalId          String?
+  /// Human-readable URL to the original external page
+  externalUrl         String?
+  /// FK to IntegrationConnection — nullable so sources survive disconnected integrations
+  integrationId       String?
+  /// When content was last fetched from the provider (for re-sync tracking)
+  lastSyncedAt        DateTime?
+  /// SHA-256 content hash (first 16 hex chars) of full extracted text — used for change detection
+  contentHash         String?
+  /// Set by the freshness poll when the provider reports the page changed, and
+  /// cleared by the ingestion that opening the notebook triggers. The poll
+  /// itself never extracts, so this is the whole record that it noticed.
+  staleAt             DateTime?
+  /// Set when a claim moves the source into PROCESSING. An expired lease makes
+  /// the source explicitly retryable by the normal awaited ingestion use case.
+  processingStartedAt DateTime?
+  /// Fencing token minted by the claim that owns the current PROCESSING run.
+  /// Every write a run makes is conditional on it, so a run whose claim was
+  /// taken over or reset underneath it lands nothing.
+  processingToken     String?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  sceneLineages       SceneSourceLineage[]
+
+  @@unique([notebookId, integrationId, externalId])
+  @@index([notebookId])
+  // KS5: the scheduled refresh selects one integration's syncable sources.
+  // Without this it sequentially scans the largest table in the product, every
+  // run, for every connection.
+  @@index([integrationId, status])
+  @@map("notebook_source")
+}
+
+model NotebookGeneratedImage {
+  id          String   @id @default(cuid())
+  notebookId  String
+  notebook    Notebook @relation(fields: [notebookId], references: [id], onDelete: Cascade)
+  prompt      String
+  alt         String
+  s3Key       String
+  width       Int?
+  height      Int?
+  byteSize    Int
+  aspectRatio String?
+  toolCallId  String?
+  createdAt   DateTime @default(now())
+
+  @@unique([notebookId, toolCallId])
+  @@index([notebookId, createdAt(sort: Desc)])
+  @@map("notebook_generated_image")
+}
+
+model NotebookChat {
+  id         String   @id @default(cuid())
+  notebookId String
+  notebook   Notebook @relation(fields: [notebookId], references: [id], onDelete: Cascade)
+  role       ChatRole
+  parts      Json
+  createdAt  DateTime @default(now())
+
+  // Every read of this table is a notebook's messages in timeline order — the
+  // chat path's tail after the compaction cutoff, the transcript's newest page.
+  @@index([notebookId, createdAt(sort: Desc)])
+  @@map("notebook_chat")
+}
+
+model PromptTemplate {
+  id             String        @id @default(cuid())
+  name           String
+  description    String
+  systemPrompt   String
+  organizationId String? // null = global preset
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  notebooks      Notebook[]
+
+  @@index([organizationId])
+  @@map("prompt_template")
+}
+
+enum OrganizationAIModelType {
+  CHAT
+  /// Inert. The embedding pipeline is gone and nothing loads a model of this
+  /// type; the value stays only because dropping it would rewrite the type.
+  EMBEDDING
+  IMAGE
+
+  @@map("organization_ai_model_type")
+}
+
+enum OrganizationAIModelTestStatus {
+  OK
+  FAILED
+
+  @@map("organization_ai_model_test_status")
+}
+
+model OrganizationAIModel {
+  id              String                         @id @default(cuid())
+  organizationId  String
+  organization    Organization                   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  /// CHAT = language model for the AI Creator chat, IMAGE = image generation
+  type            OrganizationAIModelType        @default(CHAT)
+  /// User-visible name shown in the model selector (e.g. "Ollama Gemma 4")
+  name            String
+  /// OpenAI-compatible base URL (e.g. http://localhost:11434/v1)
+  baseUrl         String
+  /// AES-256-GCM encrypted API key — never returned to the client
+  apiKeyEncrypted String
+  /// Provider-specific model ID passed to the API (e.g. "gemma4", "gpt-4o")
+  modelId         String
+  /// Optional short description shown in the model selector (e.g. "Fast local inference")
+  description     String?
+  /// Tokens this endpoint accepts. Unlike gateway models it cannot be introspected,
+  /// so it is asked for; null means assume the conservative default.
+  contextWindow   Int?
+  /// IMAGE only: which of the configured image endpoints generation runs on.
+  /// A CHAT row is chosen by `organizationsAsDefault` or by explicit id, so
+  /// nothing reads this flag for one.
+  isActive        Boolean                        @default(true)
+  lastTestStatus  OrganizationAIModelTestStatus?
+  lastTestedAt    DateTime?
+  createdAt       DateTime                       @default(now())
+  updatedAt       DateTime                       @updatedAt
+
+  organizationsAsDefault Organization[] @relation("OrgDefaultChatModel")
+
+  @@index([organizationId])
+  @@map("organization_ai_model")
+}

@@ -1,0 +1,26 @@
+{
+  "dashboard": {
+    "title": "Welcome to Scibly",
+    "subtitle": "Your workspace is ready. Let's get started.",
+    "createOrg": {
+      "heading": "Create your organization",
+      "description": "Set up your organization workspace to collaborate with your team.",
+      "nameLabel": "Organization name",
+      "namePlaceholder": "e.g. Acme School",
+      "slugLabel": "URL slug",
+      "slugPlaceholder": "e.g. acme-school",
+      "slugHint": "Lowercase letters, numbers and hyphens only. Used for your unique organization URL.",
+      "submit": "Create organization",
+      "submitting": "Creating...",
+      "successToast": "Organization created!",
+      "errorToast": "Failed to create organization.",
+      "slugTaken": "This slug is already taken. Please choose another."
+    },
+    "orgReady": {
+      "heading": "You're all set!",
+      "description": "Your organization has been created. More features coming soon.",
+      "orgLabel": "Organization",
+      "goToEditor": "Open editor showcase"
+    }
+  }
+}

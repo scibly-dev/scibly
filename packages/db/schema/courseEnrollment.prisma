@@ -1,0 +1,33 @@
+model CourseEnrollment {
+  id              String           @id @default(cuid())
+  userId          String?
+  user            User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+  courseId        String
+  course          Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  /// Denormalised from the course so the billable learner count is an indexed
+  /// distinct-count over [organizationId, userId] instead of a join.
+  organizationId  String
+  organization    Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  courseVersionId String
+  courseVersion   CourseVersion    @relation(fields: [courseVersionId], references: [id], onDelete: Cascade)
+  status          EnrollmentStatus @default(NOT_STARTED)
+  lastActive      DateTime?
+  completedAt     DateTime?
+  dueDate         DateTime?
+  /// Final score percentage, frozen at the moment of finishing. Never recomputed on read.
+  scorePct        Int?
+  /// How many times this enrollment has been completed (pass or fail).
+  triesUsed       Int              @default(0)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  sceneProgresses SceneProgress[]
+  sceneAnalytics  SceneAnalytics[]
+  certificate     Certificate?
+
+  @@unique([userId, courseVersionId])
+  @@index([userId])
+  @@index([courseId])
+  @@index([courseVersionId])
+  @@index([organizationId, userId])
+  @@map("course_enrollment")
+}

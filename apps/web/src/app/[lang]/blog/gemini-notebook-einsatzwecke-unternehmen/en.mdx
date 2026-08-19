@@ -1,0 +1,73 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "Gemini Notebook in the Enterprise: The Main Use Cases, and Where a Finished Course Does More",
+  description:
+    "Gemini Notebook, known as NotebookLM until July 2026, is used in a business context mainly for four things: making existing documents searchable, onboarding new employees into extensive documentation, consolidating meeting notes and project knowledge, and creating fast summaries of long documents.",
+  date: "July 9, 2026",
+  readTime: 4,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1553484771-371a605b060b?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "gemini notebook use cases enterprise",
+    "notebooklm business use cases",
+    "what to use gemini notebook for",
+    "gemini notebook in the enterprise",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+Gemini Notebook, known as NotebookLM until July 2026, is used in a business context mainly for four things: making existing documents searchable, onboarding new employees into extensive documentation, consolidating meeting notes and project knowledge, and creating fast summaries of long documents. The same caveat applies to all four purposes: the result stays a chat window for one session, not a reusable format for several people.
+
+## The four most common enterprise use cases
+
+| Use case                                          | What Gemini Notebook actually delivers                                                                  |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Making documents searchable                       | Upload manuals, policies, or specs and search them by asking a question instead of manually searching   |
+| Onboarding into extensive documentation           | New employees or project members no longer read through everything, they ask targeted questions instead |
+| Consolidating meeting notes and project knowledge | Combine multiple documents from a project and ask about connections between them                        |
+| Fast summaries                                    | Condense long documents down to the key points, including an audio overview as a feature                |
+
+## Where a chat window hits its limits for actual L&D purposes
+
+All four use cases solve an individual lookup problem: one person has a question, gets an answer, the session ends. For training and onboarding purposes, that's only half the solution. As soon as several people need the same knowledge, not just one, the same question gets asked in Gemini Notebook over and over, each person individually, with no way for an organization to track who has already understood the topic and who hasn't.
+
+| Criterion                               | Gemini Notebook (chat)                    | Finished course                                                                         |
+| --------------------------------------- | ----------------------------------------- | --------------------------------------------------------------------------------------- |
+| For a single person, one-off question   | Well suited                               | Unnecessary overhead                                                                    |
+| For several people, recurring topic     | Every person asks the same question again | Built once, can be taken by everyone                                                    |
+| Proof that someone understood the topic | Not available                             | Knowledge check with a per-person result                                                |
+| Repetition after a few days             | Not designed for this                     | Can be planned in (see [Spaced Repetition in Practice](/blog/spaced-repetition-praxis)) |
+
+## When the step from chat to course pays off
+
+The transition pays off as soon as one of the following applies: more than a handful of people need the same knowledge; you need proof of who understood the topic, for example for mandatory training; or the knowledge should remain available beyond the moment, instead of being re-asked in chat every time. For a single, one-off research question, Gemini Notebook remains the faster choice.
+
+## Frequently asked questions
+
+### Can Gemini Notebook create a course directly?
+
+No, the result stays a chat conversation with summaries and answers about the uploaded sources, not a structured learning environment with progress tracking and knowledge checks. That step requires an additional tool.
+
+### What company size do the four use cases above make sense for?
+
+Basically any size, since the effort for the chat itself is low. The point at which a course becomes more sensible than a chat depends less on company size than on how many people need the same knowledge.
+
+### Does renaming NotebookLM to Gemini Notebook come with a functional change?
+
+The rename itself doesn't change the core functionality; according to Google it's the same product with a new name and logo. Details on the privacy question for enterprise use are covered in [Gemini Notebook in the Enterprise: Where the GDPR Line Sits](/blog/gemini-notebook-unternehmen-dsgvo).
+
+### What's the simplest first step from a Gemini Notebook chat to an actual course?
+
+Use the document you already uploaded, which already served as the basis for the chat, directly as the starting point for a structured course, instead of using it again for every new question in chat.
+
+</PostLayout>

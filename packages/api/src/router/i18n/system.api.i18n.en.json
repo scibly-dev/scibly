@@ -1,0 +1,6 @@
+{
+  "internalUnexpected": "An unexpected error occurred while processing your request",
+  "couldNotProcessRequest": "We couldn't process your request. Please try again later.",
+  "captchaFailed": "Security check failed. Please try again.",
+  "tooManyRequests": "Too many requests. Please try again later."
+}

@@ -1,0 +1,12 @@
+{
+  "notebook": {
+    "mediaLibrary": {
+      "title": "Medien",
+      "emptyTitle": "Noch keine generierten Bilder",
+      "empty": "Vom Assistenten erstellte Bilder erscheinen hier zur Wiederverwendung im Kurs.",
+      "loading": "Medien werden geladen…",
+      "insertIntoScene": "In Szene einfügen",
+      "open": "Öffnen"
+    }
+  }
+}

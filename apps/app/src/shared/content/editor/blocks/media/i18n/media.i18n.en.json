@@ -1,0 +1,21 @@
+{
+  "editorUi": {
+    "media": {
+      "imageType": "image",
+      "videoType": "video",
+      "audioType": "audio",
+      "noInternetConnection": "No internet connection",
+      "addImage": "Add an image",
+      "addVideo": "Add a video",
+      "addAudio": "Add audio",
+      "mediaLinkPlaceholder": "Add media link",
+      "changeMedia": "Change media",
+      "addOrEditImageLink": "Add/edit image link",
+      "addOrEditVideoLink": "Add/edit video link",
+      "addOrEditAudioLink": "Add/edit audio link",
+      "unexpectedLoadError": "An unexpected error occurred while loading the {{mediaType}}",
+      "videoExportUnsupported": "Videos are not supported when exporting worksheets",
+      "uploadNotAvailable": "Media upload is not available in the showcase editor"
+    }
+  }
+}

@@ -1,0 +1,159 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "Schulungsinhalte kaufen oder selbst erstellen? Ein praktischer Entscheidungsrahmen",
+  description:
+    "Fertige Schulungsinhalte sparen Zeit, treffen aber oft nicht deinen Kontext. Ein klarer Rahmen für die Entscheidung: kaufen, selbst erstellen — oder beides kombinieren.",
+  date: "12. Juni 2026",
+  readTime: 7,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "Schulungsinhalte kaufen oder erstellen",
+    "fertige E-Learning-Kurse",
+    "eigene Schulungsinhalte",
+    "Training Content Bibliothek",
+    "vorgefertigte Kurse",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+Wenn ein neuer Schulungsbedarf entsteht, lautet die erste Frage fast immer: Kaufen oder selbst entwickeln? Die meisten Teams beantworten sie reflexartig, entweder immer kaufen (weil es schnell geht) oder immer selbst entwickeln (weil es "besser passt"). Beides ist eine Vereinfachung, die regelmäßig zu falschen Entscheidungen führt.
+
+Die richtige Antwort hängt vom Inhaltstyp ab.
+
+## Was fertige Schulungsinhalte leisten (und was nicht)
+
+Fertige Kurse funktionieren gut, wenn der Inhalt universell und stabil ist. Das ist bei diesen Themen der Fall:
+
+**Compliance-Grundlagen:** DSGVO-Basis, allgemeine Arbeitssicherheit, IT-Sicherheitsbewusstsein, Verhaltenskodex-Grundlagen. Diese Themen sind regulatorisch definiert und ändern sich langsam. Ein hochwertiger Fertigkurs deckt 80–90% ab, was die meisten Mitarbeitenden wissen müssen.
+
+**Universelle Soft Skills:** Kommunikation, Präsentationstechniken, Zeitmanagement, Grundlagen des Projektmanagements. Diese Fähigkeiten sind rollenübergreifend relevant, und die Grundprinzipien ändern sich kaum.
+
+**Breit anwendbare Technologien:** Microsoft 365, Excel-Grundlagen, Grundlagen von Videokonferenz-Tools. Für Standardsoftware gibt es hochwertige Fertigkurse zu einem Bruchteil der Eigenentwicklungskosten.
+
+Fertige Kurse funktionieren nicht gut bei:
+
+- Firmenspezifischen Prozessen und internen Systemen
+- Regulatorischen Themen, bei denen die Interpretation branchen- oder unternehmensspezifisch ist
+- Inhalten, bei denen eigene Szenarien, Beispiele oder Branding wichtig sind
+- Themen, die sich häufig ändern und regelmäßige Updates erfordern
+
+## Die echten Kosten des Selbsterstellen
+
+Die Industrie-Faustregel für die Entwicklung von E-Learning-Inhalten liegt bei 40–80 Entwicklungsstunden pro Stunde fertigen Lerninhalts. Das klingt viel, aber es ist realistisch, wenn du Planung, Skripting, visuelle Gestaltung, Voiceover, Review-Zyklen und Korrekturen einrechnest.
+
+Ein 30-minütiges E-Learning-Modul kostet intern 20–40 Entwicklungsstunden. Bei einem internen Stundensatz von €60 sind das €1.200–2.400 allein für die Entwicklungszeit, ohne Werkzeugkosten oder externe Zulieferungen.
+
+Dazu kommen:
+
+- Review-Zyklen mit Fachexperten (2–5 Stunden pro Modul)
+- Pflege und Updates bei Inhaltsänderungen
+- Qualitätssicherung und technische Tests
+
+Eigenentwicklung ist sinnvoll, wenn der Inhalt die Zeit rechtfertigt. Für Standard-Compliance-Themen ist das selten der Fall.
+
+## Die echten Kosten des Kaufens
+
+Fertige Kurse klingen günstig, aber die Rechnung hat zwei Seiten.
+
+Direkte Kosten:
+
+- Einzelkurs-Lizenzen: €15–80 pro Mitarbeitendem (einmalig oder jährlich)
+- Content-Bibliothek-Abos: €10–30 pro Nutzer/Monat (LinkedIn Learning, GoodHabitz, vergleichbare Anbieter)
+
+Versteckte Kosten:
+
+Fertige Inhalte, die nicht zu deiner Zielgruppe passen, produzieren niedrige Abschlussraten und schlechten Transfer. Ein Kurs, der technisch vollständig ist, aber für ein Call-Center-Team in einer Sprache und mit Beispielen aus der Versicherungsbranche entwickelt wurde, wird für Mitarbeitende in einer Produktionsfirma weniger wirksam sein.
+
+Abschlussraten für schlecht passende Inhalte können 40–60% unter denen für relevante Inhalte liegen. Das ist keine Kleinigkeit, besonders bei Pflichttrainings.
+
+## Der Entscheidungsrahmen
+
+<Table>
+  <thead>
+    <tr>
+      <Th>Situation</Th>
+      <Th>Empfehlung</Th>
+      <Th>Begründung</Th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <Td>Standard-Compliance (DSGVO, Arbeitssicherheit, IT-Sicherheit)</Td>
+      <Td>Kaufen</Td>
+      <Td>
+        Inhalte sind regulatorisch definiert, Fertigkurse decken den Bedarf ab
+      </Td>
+    </tr>
+    <tr>
+      <Td>Universelle Soft Skills</Td>
+      <Td>Kaufen</Td>
+      <Td>Geringe Eigenentwicklungs-Notwendigkeit, breite Marktangebote</Td>
+    </tr>
+    <tr>
+      <Td>Interne Prozesse und Systeme</Td>
+      <Td>Selbst erstellen</Td>
+      <Td>Kein Fertigkurs kann deinen spezifischen Prozess abbilden</Td>
+    </tr>
+    <tr>
+      <Td>Unternehmenskultur und Onboarding</Td>
+      <Td>Selbst erstellen</Td>
+      <Td>Branding, Werte und Kontext sind einzigartig</Td>
+    </tr>
+    <tr>
+      <Td>Compliance mit branchen- oder firmenspez. Interpretation</Td>
+      <Td>Hybrid</Td>
+      <Td>Fertiger Grundlagenkurs + eigenes Ergänzungsmodul</Td>
+    </tr>
+    <tr>
+      <Td>Schnelle Abdeckung eines bekannten Standardthemas</Td>
+      <Td>Kaufen</Td>
+      <Td>Speed-to-market wichtiger als Customization</Td>
+    </tr>
+  </tbody>
+</Table>
+
+## Wichtige Anbieter von fertigen Schulungsinhalten
+
+Das ist keine vollständige Liste, aber eine Orientierung für den deutschsprachigen Markt:
+
+**Compliance-Schwerpunkt:**
+
+- **Haufe** und **Pinktum** haben starke deutschsprachige Compliance-Bibliotheken mit Fokus auf deutsches Arbeitsrecht und DSGVO
+- **OpenSesame** bietet ein breites internationales Angebot, gut für mehrsprachige Teams
+
+**Breite Content-Bibliotheken:**
+
+- **GoodHabitz** ist im DACH-Markt stark und deckt Soft Skills, Kommunikation und Persönlichkeitsentwicklung gut ab
+- **LinkedIn Learning** für Technologie- und Fachthemen, stark in englischsprachigem Content
+- **Coursera for Business** für tiefere fachliche Themen, gut für akademisch-nahe Inhalte
+
+**KI-generierte Inhalte auf Anfrage:**
+
+- **Coursebox** generiert Kursinhalte auf Basis eigener Dokumente, gut für schnelle Erstversionen eigener Inhalte
+
+## Das hybride Modell in der Praxis
+
+<Callout type="tip">
+  Das Hybrid-Modell funktioniert für die meisten Mittelstands-Teams am besten:
+  Kauf einen soliden DSGVO-Grundlagenkurs für €20 pro Person. Entwickle dann ein
+  15-minütiges Modul, das zeigt, wie dein Unternehmen konkret mit
+  Betroffenenanfragen umgeht, wer zuständig ist und welche internen Prozesse
+  gelten. Eine Stunde Eigenentwicklung, erheblich relevanterer Gesamtkurs.
+</Callout>
+
+Das Gleiche gilt für Onboarding: Kaufe einen guten Kurs zu Microsoft 365-Grundlagen. Entwickle selbst das Modul, das zeigt, wie dein Unternehmen Teams, SharePoint und die interne Ordnerstruktur nutzt.
+
+Scibly unterstützt beide Wege: Fertige Inhalte einbinden und eigene Kurse direkt in der Plattform entwickeln, ohne zusätzliche Authoring-Tools. Alles läuft an einem Ort.
+
+</PostLayout>

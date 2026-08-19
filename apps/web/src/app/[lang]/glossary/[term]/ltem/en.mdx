@@ -1,0 +1,93 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "LTEM",
+  definition:
+    "Will Thalheimer's Learning-Transfer Evaluation Model — an eight-tier evidence-based alternative to Kirkpatrick that distinguishes between attention, memory, decision-making, task competence, and actual transfer to real work performance.",
+  keywords: [
+    "LTEM",
+    "learning transfer evaluation model",
+    "Thalheimer",
+    "training evaluation",
+    "Kirkpatrick alternative",
+  ],
+  relatedTerms: ["kirkpatrick-model", "learning-transfer", "action-mapping"],
+  relatedPost: "lernerfolg-messen",
+};
+
+<GlossaryLayout metadata={metadata} lang="en">
+
+The Learning-Transfer Evaluation Model (LTEM) was developed by Will Thalheimer and published in 2018 as a more precise alternative to the Kirkpatrick Model for evaluating training effectiveness. Where Kirkpatrick's four levels bundle several distinct phenomena into single categories — particularly at Level 2 (Learning) — LTEM separates them into eight tiers that map more accurately to what training actually does and doesn't do for performance on the job.
+
+LTEM is not just an evaluation tool. It is also useful as a design framework, because its tiers describe a progression of outcomes that training can aim for — not just a ladder of measurement sophistication.
+
+## The eight tiers
+
+**Tier 1: Attending**
+The learner was present and paying attention during the learning event. This is the minimum threshold for learning to begin. It is, notably, the level at which most mandated eLearning completions actually operate.
+
+**Tier 2: Remembering when prompted**
+The learner can recall information immediately after the learning event when actively prompted with cues from the training itself. This is what most end-of-course quizzes measure. It confirms short-term recall under favorable conditions but says nothing about whether the information will be accessible in a different context days or weeks later.
+
+**Tier 3: Remembering**
+The learner can recall information after a delay and in a context different from the training. This is a meaningfully higher bar than Tier 2 — and research on the forgetting curve suggests that most training produces Tier 2 outcomes at best, not Tier 3. Spaced practice and retrieval practice are specifically designed to move learners from Tier 2 to Tier 3.
+
+**Tier 4: Decision-making ability**
+The learner can use the knowledge to make good decisions in relevant situations. This is the first tier that predicts job performance. A learner who remembers a concept (Tier 3) has not necessarily developed the ability to apply it when it matters — under time pressure, with incomplete information, with competing priorities. Tier 4 requires realistic scenario practice, not just knowledge recall.
+
+**Tier 5: Task competence**
+The learner can perform the full task under realistic conditions — not just make individual decisions within the task, but complete the whole workflow with acceptable quality. This tier encompasses skill development that goes beyond decision-making to include fluency, speed, and execution quality.
+
+**Tier 6: Near transfer**
+The learner can apply the skill in job situations that closely resemble the training context. This is the minimum condition for transfer to produce business value. Training that only achieves Tier 5 (task competence in the training environment) may not generalize even to slightly different real-world situations.
+
+**Tier 7: Far transfer**
+The learner can apply the skill in novel situations — contexts that differ meaningfully from the training scenarios. Far transfer represents genuine adaptive expertise and is the standard required for roles where situations are unpredictable and variable.
+
+**Tier 8: Transfer maintenance**
+The learner continues to apply the skill effectively over time, without degradation. This is the highest and most demanding tier — and it depends heavily on factors outside the training itself: ongoing feedback, reinforcement, opportunity to practice, and a work environment that supports the behavior.
+
+<Callout type="info">
+  The critical distinction between LTEM and Kirkpatrick is that LTEM separates
+  what Kirkpatrick calls "Learning" (Level 2) into five distinct tiers (2
+  through 6). A learner who achieves Kirkpatrick Level 2 might be at LTEM Tier 2
+  (remembers when prompted immediately after the course), Tier 3 (retains over
+  time), Tier 4 (can make decisions), or Tier 5 (can perform the full task).
+  These are not equivalent outcomes — and designing training to hit Tier 2
+  requires completely different choices than designing to hit Tier 5.
+</Callout>
+
+## The key difference from Kirkpatrick
+
+Kirkpatrick's "Learning" level conflates three very different states: knowing, deciding, and doing. A learner who scores 80% on a knowledge quiz has demonstrated some degree of Kirkpatrick Level 2. But so has a learner who can make sound decisions in realistic scenarios, and so has a learner who can complete the full task fluently. LTEM insists that these are not the same thing and should not be treated as equivalent evidence of training effectiveness.
+
+The practical consequence: most organizations that claim to measure Kirkpatrick Level 2 are actually measuring LTEM Tier 2 — immediate recall under prompted conditions — and calling it learning. The gap between Tier 2 and Tier 5 is the gap between passing a quiz and being able to do the job.
+
+This matters for L&D credibility. If your organization reports Level 2 assessment scores as evidence of capability development, and those scores are based on immediate post-course quizzes, you are reporting Tier 2 evidence as if it were Tier 4 or 5. When business leaders later discover that training didn't change performance, the disconnect is traceable to this gap.
+
+## Using LTEM as a design tool
+
+LTEM's most practical application for L&D teams in mid-sized companies is not as a measurement framework — it is as a design target. Before designing a training program, specify the target tier:
+
+- **Tier 2 is appropriate** for low-stakes awareness content, where the goal is exposure rather than performance change. An organization-wide update on a new policy might reasonably target Tier 2.
+- **Tiers 4–5 are appropriate** for skill development that needs to change job behavior — the standard for most professional skills training.
+- **Tiers 6–7 are appropriate** for complex roles where performance in unpredictable situations is required — leadership, sales, technical problem-solving.
+- **Tier 8 requires ongoing reinforcement infrastructure** beyond the training event itself.
+
+<Callout type="tip">
+  When a stakeholder asks for training on a topic, ask which LTEM tier the
+  business actually needs. If the answer is Tier 4 or above, a single e-learning
+  module cannot deliver that outcome — no matter how well designed. The
+  conversation about Tier 4+ outcomes immediately raises the right questions:
+  what practice will learners get? What feedback will they receive? What happens
+  in the weeks after training? Those questions change the scope and structure of
+  the solution.
+</Callout>
+
+## LTEM and learning transfer
+
+LTEM's tiers 6 through 8 correspond to what Baldwin & Ford's transfer research calls "near transfer," "far transfer," and "transfer maintenance." The model makes explicit what Kirkpatrick leaves implicit: learning does not equal transfer, and the upper tiers require conditions beyond the training event to achieve. An organization that designs only the training event and considers its job done will reliably reach Tiers 2–3 and rarely exceed Tier 4. Reaching Tiers 6–8 requires designed interventions in the work environment — manager reinforcement, structured practice opportunities, and feedback over time.
+
+This alignment with transfer research is one of the reasons LTEM has gained traction with evidence-oriented L&D teams. It doesn't just describe what to measure; it describes what has to be true for measurement at the higher tiers to yield positive results.
+
+</GlossaryLayout>

@@ -1,0 +1,14 @@
+{
+  "editorUi": {
+    "audioPlayer": {
+      "label": "Audio",
+      "loading": "Lädt…",
+      "playing": "Wird abgespielt",
+      "stopped": "Gestoppt",
+      "restart": "Neustart",
+      "playbackSpeed": "Wiedergabegeschwindigkeit",
+      "skipBack": "Zurück",
+      "skipForward": "Vorwärts"
+    }
+  }
+}

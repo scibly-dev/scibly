@@ -1,0 +1,13 @@
+{
+  "editorUi": {
+    "freeFormInput": {
+      "optionalLabel": "Optional",
+      "minLengthLabel": "Min. Zeichen",
+      "maxLengthLabel": "Max. Zeichen",
+      "placeholderAuthor": "Die Lernenden schreiben ihre Antwort hier...",
+      "placeholderLearner": "Schreibe deine Antwort hier...",
+      "charactersLabel": "Zeichen",
+      "minLabel": "Min."
+    }
+  }
+}

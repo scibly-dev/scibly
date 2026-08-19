@@ -1,0 +1,47 @@
+{
+  "name": "@scibly/email",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./src/resend/index.ts",
+  "module": "./src/resend/index.ts",
+  "types": "./src/resend/index.ts",
+  "scripts": {
+    "clean": "rm -rf .turbo node_modules",
+    "dev": "email dev --dir ./src/templates -p 3003",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@scibly/i18n": "workspace:*",
+    "react-email": "^6.1.1",
+    "resend": "^4.0.0"
+  },
+  "devDependencies": {
+    "@react-email/ui": "6.1.1",
+    "@scibly/eslint-config": "workspace:*",
+    "@types/node": "^20.11.24",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.39.2",
+    "typescript": "^5.4.4"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "exports": {
+    "./i18n": {
+      "import": "./src/i18n/index.ts",
+      "require": "./src/i18n/index.ts"
+    },
+    "./templates/*": {
+      "import": "./src/templates/*.tsx",
+      "require": "./src/templates/*.tsx"
+    },
+    "./resend": {
+      "import": "./src/resend/index.ts",
+      "require": "./src/resend/index.ts"
+    }
+  }
+}

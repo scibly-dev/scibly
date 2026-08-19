@@ -1,0 +1,151 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "Digitale Unterweisungen: Software, Pflichten und rechtssichere Umsetzung",
+  description:
+    "Unterweisungen am Arbeitsplatz sind gesetzlich vorgeschrieben – und ein Dokumentationsproblem. Wie Sie Unterweisungen digital abwickeln, ohne Compliance-Risiken einzugehen.",
+  date: "30. April 2026",
+  readTime: 7,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "digitale Unterweisungen",
+    "Unterweisung Software",
+    "Arbeitsschutzunterweisung",
+    "Pflichtunterweisung digital",
+    "Unterweisung Mitarbeiter",
+    "ArbSchG Unterweisung",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+Jeder Arbeitgeber ist gesetzlich verpflichtet, Mitarbeiter vor Aufnahme ihrer Tätigkeit zu unterweisen – und danach mindestens jährlich. Das wissen die meisten Unternehmen. Die meisten wissen auch, dass ihr aktueller Prozess für diese Unterweisungen irgendwo zwischen „Excel-Tabelle" und „Ordner mit Unterschriften in einer Schublade" liegt.
+
+Diese Lücke ist ein Haftungsrisiko. Berufsgenossenschaften, Gewerbeaufsichtsämter und Arbeitsgerichte verlangen dokumentierte Nachweise: dass Unterweisungen stattgefunden haben, welche Inhalte abgedeckt wurden, und dass Mitarbeiter ihr Verständnis bestätigt haben. Eine Schublade mit Unterschriften übersteht einen ernsthaften Vorfall nicht.
+
+Dieser Artikel erklärt, was rechtssichere digitale Unterweisungen leisten müssen – und wie man sie ohne komplizierte Systeme einrichtet.
+
+## Was das Gesetz wirklich verlangt
+
+Die Anforderungen ergeben sich in Deutschland vor allem aus dem **Arbeitsschutzgesetz (ArbSchG, § 12)** sowie aus berufsgenossenschaftlichen Vorschriften (DGUV) und branchenspezifischen Regelwerken. Zusammengefasst müssen Arbeitgeber:
+
+1. **Vor Aufnahme der Tätigkeit unterweisen** – über arbeitsplatzbezogene Gefährdungen, Notfallmaßnahmen, persönliche Schutzausrüstung und relevante Vorschriften
+2. **Jährlich wiederholen** – oder bei wesentlichen Änderungen von Arbeitsbedingungen, Betriebsmitteln oder Prozessen
+3. **Dokumentieren** – Datum, Inhalte, wer unterwiesen hat, und Bestätigung durch die Mitarbeitenden
+4. **Nachweise aufbewahren** – in der Regel mindestens zwei Jahre, in bestimmten Branchen deutlich länger
+
+Der entscheidende Punkt: Eine Unterweisung ohne Dokumentation ist rechtlich gleichwertig mit keiner Unterweisung. Die Beweislast liegt beim Arbeitgeber.
+
+<Callout type="info">
+  „Wir haben unterwiesen" ist keine rechtssichere Aussage ohne Nachweis. Wenn es
+  zu einem Arbeitsunfall kommt und der Nachweis fehlt, dass die betreffende
+  Unterweisung durchgeführt wurde, steigt die Haftungsexposition erheblich.
+</Callout>
+
+## Warum der Papierweg scheitert
+
+Der klassische papierbasierte Unterweisungsprozess hat vorhersehbare Schwachstellen:
+
+- **Neue Mitarbeiter beginnen montags, Unterweisung findet freitags statt** – die Person bedient bereits Maschinen, bevor sie formal unterwiesen wurde
+- **Jährliche Wiederholungen werden vergessen** – HR trackt manuell, ein paar Personen fallen immer durch das Raster, niemand merkt es bis zur nächsten Prüfung
+- **Unterschriftenblätter gehen verloren** – bei Umzügen, Systemmigrationen oder weil ein Ordner falsch abgelegt wird
+- **Inhalte veralten** – das gedruckte Unterweisungsblatt beschreibt noch Maschinen, die vor zwei Jahren ausgetauscht wurden
+- **Mehrere Standorte** – konsistente Unterweisungen über mehrere Orte hinweg ohne zentrales System ist ab einer gewissen Größe kaum handhabbar
+
+Digitale Unterweisungen lösen jeden dieser Punkte strukturell – nicht durch mehr Disziplin.
+
+## Was eine digitale Unterweisung leisten muss
+
+Nicht jede digitale Lösung erfüllt die rechtlichen Anforderungen. Ein rechtssicheres System muss:
+
+**Strukturierten Inhalt liefern** – die Unterweisung selbst muss mehr sein als ein Video, auf das Mitarbeitende klicken. Sie sollte spezifische Themen abdecken und idealerweise das Verständnis aktiv prüfen – durch kurze Quizfragen oder themenspezifische Bestätigungen.
+
+**Aktive Bestätigung des Verständnisses erfassen** – Mitarbeitende müssen aktiv bestätigen, dass sie die Inhalte erhalten und verstanden haben. Eine digitale Bestätigung mit Zeitstempel ist das Minimum; in bestimmten Branchen ist eine Identitätsverifikation erforderlich.
+
+**Metadaten automatisch protokollieren** – Datum, Uhrzeit, Dauer, Abschlussstatus und welche Version der Unterweisung gezeigt wurde. Das sollte ohne manuellen Aufwand für HR passieren.
+
+**Automatische Erinnerungen für Wiederholungen senden** – das System sollte ablaufende Fristen im Voraus anzeigen, nicht erst nach einer Prüfung.
+
+**Prüfungstaugliche Berichte erzeugen** – HR oder Führungskräfte müssen jederzeit belegen können, wer aktuelle Unterweisungsnachweise hat und wer nicht.
+
+<Callout type="tip">
+  Ein guter Test: Wenn morgen ein Prüfer käme und Nachweise aller durchgeführten
+  Unterweisungen der letzten 24 Monate verlangte – könntest du das in 10 Minuten
+  liefern? Wenn die Antwort nein ist, hat der aktuelle Prozess eine Lücke.
+</Callout>
+
+## Unterweisungen digital einrichten: Schritt für Schritt
+
+### Schritt 1: Unterweisungspflichten inventarisieren
+
+Alle Themen auflisten, zu denen Mitarbeitende gesetzlich unterwiesen werden müssen. In Kategorien gliedern:
+
+- **Allgemeine Unterweisungen**: Brandschutz, Notfallmaßnahmen, Datenschutz, Arbeitssicherheit – gilt für alle Mitarbeitenden
+- **Tätigkeitsbezogene Unterweisungen**: Maschinenbedienung, Umgang mit Gefahrstoffen, Arbeiten in der Höhe – gilt für bestimmte Rollen oder Abteilungen
+- **Anlassbezogene Unterweisungen**: Prozessänderungen, neue Betriebsmittel, Rückkehr nach langer Abwesenheit
+
+### Schritt 2: Modulare Inhalte erstellen
+
+Für jedes Thema einen Kurs oder ein Modul erstellen. Kurz halten – 5 bis 15 Minuten. Eine allgemeine Brandschutzunterweisung muss keine Stunde dauern; sie muss die vorgeschriebenen Inhalte abdecken, nicht mehr.
+
+Am Ende eine kurze Verständnisprüfung einbauen (3–5 Fragen). Das erfüllt zwei Zwecke: Es fördert die Retention und liefert dokumentierten Nachweis, dass die Inhalte aktiv rezipiert wurden – nicht nur weggeklickt.
+
+### Schritt 3: Automatische Zuweisung einrichten
+
+In einem LMS können Unterweisungen automatisch basierend auf Rolle, Abteilung oder Standort zugewiesen werden. Neue Mitarbeitende in einem Lagerbereich erhalten automatisch die Lagersicherheits-Unterweisung in ihrer ersten Woche. Erinnerungen für die jährliche Wiederholung gehen 30 Tage vor Ablauf heraus.
+
+Das eliminiert den manuellen Tracking-Aufwand vollständig.
+
+### Schritt 4: Den Prüfungsbericht konfigurieren
+
+Vor dem Go-live sicherstellen, dass das LMS einen Bericht erzeugen kann, der enthält: wer welche Unterweisung wann in welcher Version abgeschlossen hat und mit welchem Ergebnis. Das ist das Dokument, das man einem Prüfer vorlegt.
+
+Einen Test-Export durchführen und prüfen, ob alles enthalten ist, was zur rechtssicheren Dokumentation nötig ist.
+
+## Was nicht als digitale Unterweisung zählt
+
+Zwei häufige Fehler, die falsches Sicherheitsgefühl erzeugen:
+
+**PDF per E-Mail versenden** – Mitarbeitende, die in einem E-Mail-Client auf „Ich habe das gelesen" klicken, erhalten keine rechtssichere Unterweisung. Es gibt keine Verständnisprüfung, keine garantierte Zustellung und der Nachweis liegt im Posteingang jemandes.
+
+**Video mit Pflicht zum Durchschauen** – Completion-Tracking, das nur „bis zum Ende abgespielt" protokolliert, belegt kein Verständnis. Eine kurze Überprüfung ergänzen.
+
+<Callout type="warning">
+  Wenn das digitale Unterweisungssystem abgeschlossen werden kann, indem man auf
+  Play drückt und den Raum verlässt, bietet es nicht den Dokumentationsschutz,
+  den man erwartet.
+</Callout>
+
+## Branchen mit besonderen Anforderungen
+
+Einige Branchen haben über das ArbSchG hinausgehende Anforderungen:
+
+- **Bauwirtschaft**: DGUV-Vorschriften, BGV A1, häufige Unterweisungsintervalle
+- **Lebensmittelverarbeitung**: Hygieneunterweisungen nach HACCP, oft monatlich
+- **Gesundheitswesen**: Medizinproduktegesetz, Infektionsschutz
+- **Chemie/Labor**: Gefahrstoffverordnung (GefStoffV), Betriebsanweisungen als Unterweisung
+- **Logistik**: Fahrerunterweisung, Ladungssicherung, Flurförderfahrzeuge
+
+In diesen Branchen ist ein digitales System keine Komfortoption – es ist die einzige praktikable Lösung, um Nachweispflichten bei großen Belegschaften zuverlässig zu erfüllen.
+
+## Der Mehrwert jenseits der Compliance
+
+Compliance ist die Untergrenze, nicht die Obergrenze. Unternehmen, die digitale Unterweisungen konsequent einsetzen, berichten weitere Vorteile:
+
+- **Schnellere Einarbeitung neuer Mitarbeitenden** – Unterweisungen werden asynchron vor dem ersten Arbeitstag abgeschlossen
+- **Niedrigere Unfallquoten** – strukturierte, quiz-gestützte Unterweisungen verbessern die Wissensretention im Vergleich zu mündlichen Einführungen
+- **Weniger HR-Aufwand** – automatisches Tracking eliminiert manuelle Nachverfolgung und Erinnerungs-E-Mails
+- **Prüfungssicherheit** – zu wissen, dass die Nachweise vollständig und aktuell sind, verändert die Haltung gegenüber Prüfungen
+
+Scibly unterstützt genau diesen Workflow: Modulare Kurserstellung, automatische Zuweisung, digitale Abschlussnachweise und prüfungstaugliche Berichte. Wenn Unterweisungen aktuell auf Papier oder in Tabellen verwaltet werden, ist die Umstellung einfacher als sie aussieht.
+
+</PostLayout>

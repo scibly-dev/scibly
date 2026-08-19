@@ -1,0 +1,31 @@
+Scibly Enterprise License
+
+Copyright (c) Scibly. All code under the `ee/` directory of this repository
+is licensed, not sold. This license applies only to code inside `ee/`; the
+rest of this repository is licensed separately (see the repository root
+[LICENSE](../LICENSE)).
+
+## Permitted use
+
+You may view, copy, and modify this software for non-production purposes
+only — development, testing, and evaluation. You may not use it, or any
+modified version of it, in production, and you may not make it or any
+modified version of it available to any third party, in any form, without a
+separate written license from Scibly.
+
+"Production use" means any use of the software, or a service built on it, to
+serve real users, customers, or workloads — including running it as part of
+a live self-hosted instance, whether or not you charge for access.
+
+## Getting a production license
+
+Email [team@scibly.com](mailto:team@scibly.com) to license this code for
+production use.
+
+## Other
+
+- You may not remove or obscure any licensing, copyright, or other notices.
+- This license does not grant you any right to use Scibly's trademarks,
+  logos, or brand assets.
+- This license terminates automatically if you violate its terms.
+- The software is provided "as is", without warranty of any kind.

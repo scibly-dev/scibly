@@ -1,0 +1,114 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "Moodle Alternatives: What to Use When Moodle Gets in the Way",
+  description:
+    "Moodle is free and powerful — but it comes with significant complexity. Here's an honest look at when Moodle stops making sense and what to use instead.",
+  date: "May 9, 2026",
+  readTime: 7,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "Moodle alternatives",
+    "alternatives to Moodle",
+    "Moodle replacement",
+    "Moodle vs other LMS",
+    "best Moodle alternative",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+Moodle has been the dominant free LMS for over two decades. It powers universities, government agencies, and thousands of smaller organizations worldwide. If you're using it, you're in good company.
+
+But "free" and "good for us" aren't the same thing. If you're reading this, something about Moodle isn't working for your team. This article looks honestly at what Moodle does well, where it falls short, and what types of alternatives exist.
+
+## What Moodle does well
+
+Before criticizing Moodle, it's worth acknowledging what it's genuinely excellent at:
+
+- **Cost**: The software itself is free. For organizations with limited budgets and available developer time, that's a significant advantage.
+- **Flexibility**: Moodle can be configured and extended in almost any direction. If you need a specific feature, there's probably a plugin.
+- **Compliance and data control**: Self-hosted Moodle gives you full control over your data — important for regulated industries and certain GDPR configurations.
+- **Community**: The Moodle community is massive. Documentation, plugins, and developer expertise are widely available.
+
+If your team includes developers who maintain the platform, and you need deep customization, Moodle remains a serious option.
+
+## Where Moodle falls short
+
+Most organizations that leave Moodle leave for one of these reasons:
+
+**Admin complexity**: Moodle's interface was built for flexibility, not ease of use. Common admin tasks — setting up a course, managing user groups, building a quiz — require more clicks and more configuration than they should. Non-technical admins often struggle.
+
+**Learner experience**: The default learner interface is functional but dated. Compared to modern SaaS platforms, it feels heavy. Mobile experience is a common complaint.
+
+**Maintenance burden**: A self-hosted Moodle instance needs regular updates, plugin maintenance, server management, and backups. For organizations without IT staff, this becomes a hidden ongoing cost.
+
+**Implementation time**: Getting Moodle properly configured for a production use case typically takes weeks or months — not days.
+
+**Support**: Moodle itself has no official commercial support. You either hire a Moodle partner, pay for MoodleCloud (the hosted version), or figure it out yourself.
+
+<Callout type="info">
+  MoodleCloud — Moodle's official hosted offering — removes the infrastructure
+  burden but still carries the admin complexity and learner UX of the underlying
+  platform. It's cheaper than self-hosting with a developer, but not simpler to
+  use.
+</Callout>
+
+## The right alternative depends on your reason for leaving
+
+There's no universal "best Moodle alternative." The right choice depends on why Moodle isn't working:
+
+### If the problem is admin complexity → modern cloud LMS
+
+Cloud-based LMS platforms like Scibly, TalentLMS, or LearnUpon are designed for non-technical admins. Setup is hours, not weeks. Course creation, user management, and reporting are built to be intuitive.
+
+Best for: HR teams, small L&D functions, and companies without dedicated IT support.
+
+### If the problem is learner experience → UX-first platforms
+
+Some platforms prioritize the learner interface — clean design, mobile-first, engaging content display. If your completion rates are low and learner complaints are high, this is the direction to look.
+
+Best for: organizations where learner engagement is a known problem.
+
+### If the problem is cost and you still need flexibility → open source alternatives
+
+If open-source is the requirement but Moodle is too complex, alternatives like Open edX exist — though they come with their own implementation complexity.
+
+Best for: technical teams in education or government who need open-source but want a different architecture.
+
+### If the problem is that you've outgrown Moodle → corporate LMS
+
+Large organizations with sophisticated needs (complex org structures, deep integrations, advanced analytics) eventually look at corporate platforms like Cornerstone, Docebo, or SAP SuccessFactors.
+
+Best for: companies with 1,000+ employees and dedicated L&D teams.
+
+## A practical evaluation checklist when switching
+
+Before moving off Moodle, answer these:
+
+1. **What data do you need to migrate?** Completion records, course content, user accounts. Can you export from Moodle in a standard format (CSV, SCORM)?
+2. **Who currently maintains Moodle?** If it's a developer or IT staff member, factor their freed-up time into the ROI calculation.
+3. **What integrations do you rely on?** SSO, HRIS sync, or specific Moodle plugins may need replacements.
+4. **How long can the transition take?** If you have compliance cycles tied to the current calendar, time the migration carefully.
+
+<Callout type="tip">
+  The best time to migrate off Moodle is immediately after a major compliance
+  cycle completes — not in the middle of one. Give yourself a quarter of overlap
+  where both systems run if you have existing learner data to preserve.
+</Callout>
+
+## The honest bottom line
+
+Moodle is the right tool when you have developer resources, need maximum customization, and want full data control. It's the wrong tool when your team wants to focus on training outcomes rather than platform maintenance.
+
+If the barrier to using your LMS is the LMS itself — courses aren't getting built, admins avoid the system, learner completion is low — the platform is part of the problem. Switching to something simpler doesn't mean settling for less. It usually means more training actually gets done.
+
+</PostLayout>

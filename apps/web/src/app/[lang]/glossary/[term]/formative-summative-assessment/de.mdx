@@ -1,0 +1,93 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Formative vs. summative Lernzielkontrolle",
+  definition:
+    "Der Unterschied zwischen Lernkontrolle während des Lernens (formativ – zur Steuerung und Korrektur) und nach dem Lernen (summativ – zur Messung der Zielerreichung): beide erfüllen unterschiedliche Funktionen im Instructional Design.",
+  keywords: [
+    "formative Beurteilung",
+    "summative Beurteilung",
+    "Lernkontrolle",
+    "Wissenscheck",
+    "Quizgestaltung",
+  ],
+  relatedTerms: ["kirkpatrick-model", "blooms-taxonomy", "retrieval-practice"],
+  relatedPost: "lernerfolg-messen",
+};
+
+<GlossaryLayout metadata={metadata} lang="de">
+
+Assessment im Training hat zwei klar unterschiedliche Zwecke — und wer sie verwechselt, designt schlecht. Formatives Assessment findet während des Lernens statt, mit dem Ziel, den Lernprozess zu steuern. Summatives Assessment findet nach dem Lernen statt, mit dem Ziel zu bestimmen, ob die Lernziele erreicht wurden. Der Unterschied liegt nicht nur im Zeitpunkt, sondern in der Funktion, dem Design, dem Feedbackansatz und dem Umgang mit den Ergebnissen.
+
+In der Praxis vermischt betriebliches eLearning beides — oder beschränkt sich vollständig auf summatives Assessment: ein Quiz am Ende, das einen Score für die Abschlussquote erzeugt. Das ist eine verpasste Designchance und eine Messlücke.
+
+## Formatives Assessment: den Lernprozess steuern
+
+Formatives Assessment gibt Lernenden und Gestalterinnen Informationen während der Lernerfahrung. Sein Zweck ist Korrektur, nicht Zertifizierung. Wenn eine lernende Person eine formative Frage falsch beantwortet und erklärendes Feedback erhält, ist das kein Scheitern — es ist der Mechanismus.
+
+Gutes formatives Assessment hat mehrere Merkmale:
+
+**Es zielt auf die konkreten Missverständnisse und Fehler, die Lernende wahrscheinlich machen.** Ein formativer Check, der fragt „Welche der folgenden Optionen ist ein Phishing-Angriff?" und nur eine plausible Falschantwort bietet, testet nicht die relevanten Fehler. Formative Items sollten um die tatsächlichen Fehler der Zielgruppe herum gebaut werden — nicht um die richtige Antwort.
+
+**Es liefert Feedback, das lehrt, nicht nur korrigiert.** „Falsch — die richtige Antwort ist B" ist kein didaktisches Feedback. Didaktisches Feedback erklärt, warum B richtig ist, was am Denken der lernenden Person nicht stimmte, und was anders zu tun ist. Das Feedback übernimmt die Instruktion — es ist kein Türsteher.
+
+**Es erfolgt an der Stelle wahrscheinlicher Verwirrung.** Formative Checks nach jedem Kapitel oder jedem Screen einzubauen bedeutet nicht, dass sie dann erscheinen, wenn sie gebraucht werden. Die Platzierung sollte widerspiegeln, wo die Lernarchitektur Schwierigkeiten erwartet — direkt nach einem kontraintuitiven Konzept, bevor Lernende von der Theorie zur Anwendung übergehen.
+
+### Formatives Assessment und die Bloom-Taxonomie
+
+Das kognitive Niveau einer formativen Frage sollte dem kognitiven Niveau des Lernziels entsprechen, das sie unterstützt. Wenn das Ziel verlangt, dass Lernende analysieren oder bewerten, messen Checks, die nur Wiedererkennung testen, das Falsche — und geben Lernenden ein falsches Sicherheitsgefühl.
+
+- **Erinnern/Verstehen-Ziele**: Erkennungsfragen, Definitionen, einfache Identifikation
+- **Anwenden-Ziele**: kurze Szenarien, die den Einsatz eines Konzepts im Kontext erfordern
+- **Analysieren/Bewerten-Ziele**: fallbasierte Items, die Vergleich, Diagnose oder Urteilsvermögen erfordern
+- **Erstellen-Ziele**: Entwurfsreviews, Peer-Feedback, strukturierte Reflexion
+
+## Summatives Assessment: Zielerreichung messen
+
+Summatives Assessment misst, ob Lernende die Lernziele am Ende einer Einheit, eines Moduls oder eines Programms erreicht haben. Es beantwortet die Frage: Hat diese Person die Kompetenz entwickelt, die das Training aufbauen sollte?
+
+Summative Assessments sollten:
+
+- **Direkt auf Terminal-Lernziele abgestimmt sein** — jedes Item sollte mindestens einem Ziel entsprechen, und jedes Ziel sollte durch mindestens ein Item repräsentiert werden
+- **Das für die Cognitive-Level passende Format verwenden** — Multiple Choice ist effizient, testet aber nur Wiedererkennung auf niedrigeren Bloom-Niveaus; für höhere Ziele braucht es Performance-Aufgaben, Szenario-Simulationen oder strukturierte Demonstrationen
+- **Eine Bestehensgrenze auf Basis akzeptabler Leistung festlegen**, nicht auf Basis statistischer Verteilung — eine Bestehensgrenze von 70 % ist nicht per se sinnvoll; sie sollte eine bewusste Entscheidung darüber widerspiegeln, was minimale akzeptable Kompetenz bedeutet
+
+<Callout type="info">
+  Das Abschlussquiz ist gleichzeitig das häufigste summative Assessment und die
+  häufigste verpasste formative Gelegenheit. Weil Lernende es nur einmal
+  absolvieren und die Ergebnisse nur einmal sehen, wird Feedback zu Fehlern nie
+  konsolidiert. Eine Umgestaltung, die es Lernenden ermöglicht, falsch
+  beantwortete Items zu überprüfen, die relevante Instruktion erneut aufzurufen
+  und ähnliche Fragen zu versuchen, verwandelt ein rein summatives Instrument in
+  eines, das auch Lernen unterstützt.
+</Callout>
+
+## Retrieval Practice: Wenn formatives Assessment zum Lernwerkzeug wird
+
+Zwischen formativem Assessment und Retrieval Practice besteht ein wichtiger Zusammenhang. Die Forschung zum Testing-Effekt — dem Befund, dass das Abrufen von Informationen aus dem Gedächtnis das Gedächtnis stärker festigt als erneutes Lesen — bedeutet: Gut gestaltete formative Fragen prüfen Lernen nicht nur, sie erzeugen es.
+
+Das hat praktische Konsequenzen. Häufige, risikoarme Retrieval-Practice-Elemente, die durch einen Kurs hindurch eingebettet werden, sind wirksamer für den Aufbau von Behaltensleistung als eine Reduktion der Fragen zugunsten von mehr Content. Die Frage, die eine lernende Person dazu auffordert, ein früher im Modul gelerntes Konzept abzurufen oder anzuwenden, erfüllt eine Doppelfunktion: Sie misst den aktuellen Stand (formativ) und stärkt die Gedächtnisspur des Konzepts (Lernintervention).
+
+Die praktische Einschränkung: Das funktioniert nur, wenn der Abrufversuch anstrengend ist. Erkennungsfragen, bei denen die Antwort im Fragetext impliziert ist, erzeugen keine Abrufanstrengung. Szenariobasierte Fragen, die Lernende zu einer Schlussfolgerung zwingen, schon.
+
+<Callout type="tip">
+  Die formative Fragenbank vor dem Content designen. Wenn spezifiziert werden
+  kann, welche Fragen Lernende beantworten können müssen — und was häufige
+  Falschantworten über ihr Denken verraten —, ist damit im Wesentlichen
+  festgelegt, was die Instruktion leisten muss. Das ist eine nützliche Disziplin
+  gegen Scope Creep und stellt sicher, dass Content den Lernzielen dient, nicht
+  umgekehrt.
+</Callout>
+
+## Ein praktischer Rahmen für beide Assessment-Typen
+
+Die meisten Trainingsprogramme profitieren von einer gestuften Assessment-Strategie:
+
+1. **Pre-Assessment** (optional, aber oft aufschlussreich): identifiziert Vorwissen, ermöglicht Personalisierung und setzt eine Baseline für die Messung des Wissenszuwachses
+2. **Formative Checks eingebettet im Verlauf**: 2–4 Items pro Abschnitt, auf konkrete Missverständnisse ausgerichtet, mit didaktischem Feedback
+3. **Summatives Assessment am Ende**: auf Terminal-Lernziele abgestimmt, mit einer begründeten Bestehensgrenze, im für das kognitive Niveau passenden Format
+4. **Nachtraining-Anwendungsmessung** (Kirkpatrick-Ebene 3): 30–60 Tage später, mit Fokus auf tatsächliche Verhaltensänderung am Arbeitsplatz, nicht auf Kurs-Performance
+
+Die letzte Ebene ist es, die Assessment von einem Abschlussmechanismus in einen Nachweis von Trainingswert verwandelt.
+
+</GlossaryLayout>

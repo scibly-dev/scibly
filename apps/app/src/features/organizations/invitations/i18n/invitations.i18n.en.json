@@ -1,0 +1,26 @@
+{
+  "invitations": {
+    "title": "Organization Invitations",
+    "subtitle": "Manage your pending invitations to organizations.",
+    "searchPlaceholder": "Search organizations...",
+    "loading": "Loading invitations...",
+    "emptyState": "You don't have any pending invitations.",
+    "noMatches": "No invitations found matching your filters.",
+    "clearFilters": "Clear filters",
+    "card": {
+      "unknownOrg": "Unknown Organization",
+      "invitedByAs": "Invited by {{email}} as {{role}}",
+      "invitedAs": "Invited as {{role}}",
+      "sent": "Sent {{date}}",
+      "expires": "Expires {{date}}",
+      "decline": "Decline",
+      "accept": "Accept"
+    },
+    "toast": {
+      "accepted": "Invitation accepted successfully!",
+      "failedAccept": "Failed to accept",
+      "rejected": "Invitation rejected",
+      "failedReject": "Failed to reject invitation"
+    }
+  }
+}

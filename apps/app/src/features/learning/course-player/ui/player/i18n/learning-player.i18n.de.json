@@ -1,0 +1,118 @@
+{
+  "learningPlayer": {
+    "courseCompleteSuccess": {
+      "badge": "Kurs abgeschlossen 🎉",
+      "earnedSp": "Du hast den Kurs abgeschlossen und {{sp}} SP erhalten.",
+      "greatJob": "Gute Arbeit!",
+      "certReady": "Dein Zertifikat liegt bereit unter",
+      "myCertificates": "Meine Zertifikate",
+      "backToDashboard": "Zurück zum Dashboard",
+      "viewCert": "Zertifikat anzeigen"
+    },
+    "courseCompleteFail": {
+      "badge": "Punktzahl zu niedrig",
+      "desc": "Du hast alle Lektionen abgeschlossen, aber nicht die Mindestpunktzahl erreicht, die für ein Zertifikat erforderlich ist.",
+      "yourScore": "Deine Punktzahl",
+      "required": "Erforderlich",
+      "attemptsUsed": "Genutzte Versuche",
+      "remaining": "Verbleibend",
+      "remainingNone": "Keine",
+      "remainingCount": "noch {{count}}",
+      "instructionRetry": "Starte den Kurs erneut, um deine Punktzahl zu verbessern.",
+      "instructionMaxTriesReached": "Du hast alle erlaubten Versuche aufgebraucht.",
+      "instructionContactAdminRetry": "Kontaktiere deinen Administrator, um für einen weiteren Versuch freigeschaltet zu werden.",
+      "instructionContactAdminMaxTriesReached": "Du hast alle erlaubten Versuche aufgebraucht. Kontaktiere deinen Administrator, falls du denkst, dass dies ein Fehler ist.",
+      "backToDashboard": "Zurück zum Dashboard",
+      "resetting": "Wird zurückgesetzt…",
+      "tryAgain": "Erneut versuchen"
+    },
+    "restartConfirm": {
+      "title": "Diesen Kurs neu starten?",
+      "description": "Beim Neustart werden deine Punktzahl und dein Fortschritt in diesem Versuch gelöscht. Dies kann nicht rückgängig gemacht werden.",
+      "cancel": "Abbrechen",
+      "confirm": "Neu starten"
+    },
+    "overview": {
+      "progressLessonsCount": "{{completed}} von {{total}} Lektionen",
+      "attemptsUsedStatus": "{{tries}} / {{max}} Versuche genutzt",
+      "nextLesson": "Nächste Lektion",
+      "start": "Start",
+      "minutesSuffix": "Min.",
+      "badgeLessons": "{{count}} Lektionen",
+      "badgeLesson": "{{count}} Lektion",
+      "noEstimatedTime": "Keine geschätzte Zeit",
+      "courseCover": "Kurs-Cover",
+      "lessonProgress": "Lektion {{current}} von {{total}}",
+      "sceneProgress": "{{completed}} von {{total}} Szenen",
+      "sciblyPointsLabel": "Scibly-Punkte",
+      "courseProgress": "{{pct}}% abgeschlossen",
+      "pathEyebrow": "Lernpfad",
+      "nextUp": "Als Nächstes",
+      "lessonDetail": "Lektion",
+      "completedLesson": "Abgeschlossen",
+      "lockedLesson": "Gesperrt",
+      "lessonLockedHint": "Schließe die vorherige Lektion ab, um freizuschalten.",
+      "closeLessonDetail": "Schließen",
+      "estimatedTime": "{{minutes}} Min.",
+      "noLessonDescription": "Keine Beschreibung für diese Lektion."
+    },
+    "lessonComplete": {
+      "title": "Lektion abgeschlossen!",
+      "titlePerfect": "Fantastisch!",
+      "titleGreat": "Super gemacht!",
+      "titleDone": "Lektion geschafft!",
+      "subtitlePerfect": "Du hast jede Szene gemeistert, weiter so!",
+      "subtitleGreat": "Starke Leistung. Du machst echten Fortschritt.",
+      "subtitleDone": "Ein Schritt weiter auf deinem Lernpfad.",
+      "sciblyPointsTotal": "Scibly-Punkte",
+      "scoreLabel": "Ergebnis",
+      "claimSciblyPoints": "Scibly-Punkte abholen",
+      "totalCourseSp": "Total Kurs SP: {{total}} / {{max}} SP",
+      "continueOnPath": "Weiter",
+      "courseCompleted": "Kurs abschließen",
+      "nextLabel": "Als Nächstes:"
+    },
+    "exitModal": {
+      "title": "Moment, du hast gerade Schwung!",
+      "descriptionEarly": "Nutze den Schwung! Jede Szene, die du schaffst, wird gespeichert, und mit dem Lektionsabschluss hakt sie auf deinem Lernpfad ab.",
+      "descriptionRemaining": "Nur noch {{remaining}} Szenen, du bist fast da. Mach weiter, solange du im Flow bist, und hol dir den Abschluss.",
+      "descriptionAlmostDone": "Nur noch eine Szene! Schaff sie jetzt und sieh die Lektion auf deinem Lernpfad abgehakt.",
+      "stay": "Weiterlernen",
+      "exit": "Trotzdem verlassen"
+    },
+    "topBar": {
+      "createCoursesPrompt": "Kurse auf Scibly erstellen →"
+    },
+    "navigation": {
+      "done": "Fertig",
+      "saving": "Wird gespeichert...",
+      "check": "Überprüfen",
+      "complete": "Abschließen",
+      "next": "Weiter",
+      "previous": "Zurück",
+      "goBack": "Zurück",
+      "submissionError": "Deine Antwort konnte nicht überprüft werden. Bitte versuche es erneut.",
+      "sceneLoadError": "Diese Szene konnte nicht geladen werden.",
+      "tryAgain": "Erneut versuchen",
+      "noScenes": "Diese Lektion hat noch keine Szenen."
+    },
+    "feedback": {
+      "perfectTitle": "Super!",
+      "partialTitle": "Fast geschafft!",
+      "incorrectTitle": "Nicht ganz!",
+      "scoreSummary": "{{correct}} von {{total}} richtig"
+    },
+    "spAnimation": {
+      "earned": "Verdient"
+    },
+    "branding": {
+      "successTitle": "Gefällt dir dieser interaktive Kurs?",
+      "successDesc": "Erstelle kostenlos ähnliche Kurse auf Scibly und teile sie mit deinen Usern.",
+      "successCta": "Kostenlosen Kurs erstellen",
+      "failTitle": "Erstelle solche Kurse kostenlos",
+      "failDesc": "Registriere dich auf Scibly, um noch heute interaktive Lernerlebnisse zu erstellen.",
+      "failCta": "Jetzt starten",
+      "poweredBy": "Bereitgestellt von Scibly"
+    }
+  }
+}

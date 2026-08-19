@@ -1,0 +1,51 @@
+{
+  "name": "@scibly/observability",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./client": "./src/next/client-root.tsx",
+    "./consent": "./src/consent/cookie.ts",
+    "./autocapture": "./src/autocapture/attributes.ts",
+    "./provider": "./src/provider.tsx",
+    "./provider/deferred": "./src/provider-deferred.tsx",
+    "./proxy": "./src/proxy/index.ts",
+    "./proxy/matcher": "./src/proxy/matcher.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@posthog/next": "^0.8.0",
+    "@posthog/react": "^1.10.3",
+    "@scibly/i18n": "workspace:*",
+    "@scibly/lib": "workspace:*",
+    "@scibly/next-proxy": "workspace:*",
+    "@scibly/ui": "workspace:*",
+    "cookies-next": "^4.3.0",
+    "server-only": "^0.0.1",
+    "zod": "^4.0.0"
+  },
+  "peerDependencies": {
+    "next": "^16.1.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@scibly/eslint-config": "workspace:*",
+    "@testing-library/react": "^16.3.0",
+    "@types/node": "^20.17.29",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "^4.7.0",
+    "eslint": "^9.39.2",
+    "jsdom": "^26.1.0",
+    "next": "^16.3.0",
+    "react": "^19.0.0",
+    "react-dom": "19.2.4",
+    "typescript": "^5.8.2",
+    "vitest": "^4.1.5"
+  }
+}

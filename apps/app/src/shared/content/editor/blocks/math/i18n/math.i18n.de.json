@@ -1,0 +1,9 @@
+{
+  "editorUi": {
+    "math": {
+      "invalidEquationPrefix": "Ungultige Gleichung:",
+      "enterFormula": "Formel eingeben",
+      "formulaPlaceholder": "E = mc^2"
+    }
+  }
+}

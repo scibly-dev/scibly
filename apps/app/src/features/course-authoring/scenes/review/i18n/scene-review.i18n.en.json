@@ -1,0 +1,12 @@
+{
+  "courses": {
+    "detail": {
+      "outdatedAlert": {
+        "title": "{{count}} scene(s) out of sync",
+        "description": "Source material changed since these scenes were generated. Review and update them before publishing.",
+        "actionLabel": "Review & update",
+        "updatePrompt": "Review outdated scenes in course {{courseId}} (\"{{courseTitle}}\"). Load the scene-content skill first and follow its outdated-scene workflow. For each outdated scene: regenerate with insertContent if sources still contain relevant material, or call deleteScene with a clear reason if the topic was removed from sources. Deletion requires user confirmation in chat."
+      }
+    }
+  }
+}

@@ -1,0 +1,99 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "LMS with Certificates: What to Check Before You Buy",
+  description:
+    "Completion certificates sound like a given — but LMS certificate features vary dramatically. Here's what to check so your certificates actually hold up for compliance and audits.",
+  date: "June 11, 2026",
+  readTime: 5,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1589330273594-fade1ee91647?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "LMS certificates",
+    "LMS completion certificate",
+    "training certificate LMS",
+    "compliance certificate LMS",
+    "course certificate",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+"The LMS automatically issues certificates" — sounds like a basic requirement and is often assumed. But teams that don't ask the right questions during evaluation only discover the gaps after go-live: certificates without timestamps, no option to customize the design, no export for external audits.
+
+For compliance training especially, the stakes are higher than a nice-looking PDF. Regulators, insurers, and internal auditors ask for specific evidence — who was trained, what was covered, when they completed it, and whether the content was current.
+
+## What an LMS Certificate Needs to Do
+
+A certificate that holds up for compliance purposes needs at minimum:
+
+**Learner's name**, exactly as stored in the system — no "Hello [FirstName]" placeholders.
+
+**Course name and version**, so it's clear which course revision was completed. If you update a course after a regulation changes, the certificate needs to reflect which version someone finished.
+
+**Completion date with timestamp** — not just "June 2026" but a specific date, ideally with time.
+
+**Issuing organization**, ideally with your logo and a signature or company seal if the certificate will be presented externally.
+
+**Unique certificate number** that maps to a record in your system — for third-party verification.
+
+<Callout type="info">
+  For GDPR training, workplace safety inductions, and similar mandatory courses:
+  the certificate isn't a nice-to-have. It's the evidence you present during a
+  regulatory inspection. A PDF without a timestamp and without a version
+  reference won't hold up.
+</Callout>
+
+## The Most Common Weaknesses in Practice
+
+### No expiry date or recertification workflow
+
+Many courses require annual repetition — workplace safety, GDPR, fire safety. An LMS that issues certificates but doesn't manage expiry dates or send automated reminders solves only half the problem.
+
+Ask during evaluation: can I define a validity period per course? Are learners and managers automatically notified before a certificate expires?
+
+### No ability to customize the certificate template
+
+Generic certificates branded with the LMS vendor's logo look unprofessional when employees present them to clients or regulators. Most LMS platforms allow at least a logo and company name — but check whether that's included in your pricing tier or a paid add-on.
+
+### Export only as non-searchable PDF
+
+If certificates are saved only as image PDFs, an auditor can't search for a name or course title by text. For audits covering many certificates (200 employees, 5 mandatory courses per year), that becomes a real problem fast.
+
+### No bulk export
+
+An auditor requests all certificates for 2025. If you have to download each one individually, you lose hours. Ask: can I export certificates filtered by course, date range, or department?
+
+<Callout type="warning">
+  If a vendor says certificates are "on the roadmap" or "coming next quarter" —
+  plan accordingly. These features typically arrive late, and you don't want to
+  build a compliance program on a feature that doesn't exist yet.
+</Callout>
+
+## Questions to Ask During Evaluation
+
+1. Show me a sample certificate — which fields are auto-populated?
+2. Can I define an expiry date per course?
+3. Are learners and managers automatically notified when certificates are about to expire?
+4. How do I customize the certificate design? Is that included in the standard package?
+5. How do I export all certificates for a department over a specific time period?
+6. Can a third party verify the authenticity of a certificate?
+
+Platforms that can answer these questions without retreating to a product demo are better suited for compliance use cases.
+
+## When Simple Certificates Are Enough
+
+Not every course needs audit-grade documentation. For onboarding content, product knowledge, or optional development courses, a simple completion PDF with name and date is fine. Compliance requirements apply primarily to legally mandated training.
+
+If you need both — simple courses and compliance documentation — make sure your LMS handles both in one system without requiring a separate compliance module purchase.
+
+Scibly automatically generates certificates with timestamps, course version, and company reference for every completed course — no additional setup required. [Try it free](/en).
+
+</PostLayout>

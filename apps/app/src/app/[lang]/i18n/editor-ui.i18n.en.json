@@ -1,0 +1,10 @@
+{
+  "editorUi": {
+    "previewTooltip": "Learner preview",
+    "publishTooltip": "Publish worksheet",
+    "publishSuccess": "Worksheet published successfully",
+    "publishLoading": "Publishing worksheet",
+    "hintPlaceholder": "Enter hint",
+    "editorTitleUntitled": "Untitled"
+  }
+}

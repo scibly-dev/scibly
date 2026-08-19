@@ -1,0 +1,9 @@
+{
+  "editorUi": {
+    "math": {
+      "invalidEquationPrefix": "Invalid equation:",
+      "enterFormula": "Enter a formula",
+      "formulaPlaceholder": "E = mc^2"
+    }
+  }
+}

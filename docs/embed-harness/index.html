@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Scibly embed harness</title>
+    <style>
+      body {
+        margin: 0;
+        font: 16px/1.6 system-ui, sans-serif;
+        color: #171717;
+        background: #fafafa;
+      }
+      main {
+        max-width: 760px;
+        margin: 0 auto;
+        padding: 24px 20px 120px;
+      }
+      .filler {
+        padding: 40vh 0;
+        color: #737373;
+        text-align: center;
+      }
+      code,
+      input {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 13px;
+      }
+      input {
+        width: 100%;
+        padding: 8px 10px;
+        border: 1px solid #d4d4d4;
+        border-radius: 6px;
+      }
+      #log {
+        position: fixed;
+        right: 12px;
+        bottom: 12px;
+        width: 280px;
+        max-height: 40vh;
+        overflow: auto;
+        padding: 10px;
+        border-radius: 8px;
+        background: #171717;
+        color: #e5e5e5;
+        font: 11px/1.5 ui-monospace, monospace;
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Scibly embed harness</h1>
+      <p>
+        A stand-in for a customer's website. Serve this from a
+        <strong>different origin</strong> than the app — a same-origin page
+        proves nothing, because none of the behaviours under test (framing
+        headers, <code>postMessage</code> origin checks, partitioned storage,
+        the referrer that feeds attribution) apply within one origin.
+      </p>
+
+      <h2>Running it</h2>
+      <ol>
+        <li>Start the app: <code>pnpm --filter app dev</code> (port 3001).</li>
+        <li>
+          Serve this folder on another port:
+          <code>npx serve docs/embed-harness -l 4173</code>
+        </li>
+        <li>
+          Open <code>http://localhost:4173</code> and paste an embed URL below,
+          or append <code>?src=…</code> to this page's URL.
+        </li>
+      </ol>
+
+      <h2>What to check</h2>
+      <ul>
+        <li>The course renders — a broken frame means the framing header is wrong.</li>
+        <li>
+          The URL above carries no language, and the course renders in the one
+          your browser asks for. Putting <code>/en/</code> or <code>/de/</code>
+          back in front of <code>/embed/</code> pins it to that language
+          instead. Neither form may set a cookie — check the Application panel
+          for this origin after a reload.
+        </li>
+        <li>
+          Before the course arrives you see its skeleton, not a spinner, and the
+          frame does not change height as the real course replaces it.
+        </li>
+        <li>
+          The frame grows to fit the course rather than scrolling internally
+          (that is the script working).
+        </li>
+        <li>
+          The height <em>settles</em>. Watch the log: a few resize messages then
+          silence. A steady stream of ever-smaller heights is F1 —
+          something in the course is sized against the frame instead of against
+          the learner's screen. Check the loading state and both completion
+          screens, which are the tallest such states.
+        </li>
+        <li>
+          Open a lesson. The frame becomes the height from the snippet (600px
+          here) and the player fills it, and it stays at that height as you
+          advance through scenes. A frame that collapses to a strip of top bar
+          and buttons is F2; one that fills the whole window is F4. The change
+          is animated in, and leaving the lesson animates back — the log marks
+          those two messages <code>eased</code> and no others. With the OS set
+          to reduce motion, nothing is marked.
+        </li>
+        <li>
+          Set the frame's height to 480px in the markup above and open a lesson:
+          it still gets 600, because a shorter frame crops the scene rather than
+          tightening it (F7). The overview and completion screens keep sizing
+          themselves to their content, so the resting height is still 480's.
+        </li>
+        <li>
+          On the overview, open a lesson's popover. The frame ends just below
+          the course, with no blank stretch under it and no inner scrollbar. A
+          few hundred pixels of empty frame is F5 — something pinned to the
+          visible band has stopped being <code>position: fixed</code> and is
+          being counted as content.
+        </li>
+        <li>
+          Scenes lay out for the width the frame actually has. A two-column
+          content block stays two columns, and a question's answer zones stay
+          side by side, at any frame wide enough for them — a frame around
+          700-760px used to fall just short of the desktop breakpoint and stack
+          everything, which doubled the height of a scene and blew its images
+          up to full width.
+        </li>
+        <li>
+          The course reads as a component of this page, not as a phone screen
+          blown up inside it — type, buttons and the footer dock are a step
+          smaller than on the public share link, and a whole question scene
+          fits the snippet's 600px. Open the same course at
+          <code>/public/courses/…</code> to confirm it is <em>unchanged</em>
+          there; the rescale is the embed document's alone.
+        </li>
+        <li>
+          Open a lesson and scroll this page part-way past the frame: overlays
+          stay on the part of the course you can see.
+        </li>
+        <li>
+          Advance a scene while the frame's top is above the viewport — the page
+          should scroll the frame back into view, and should <em>not</em> when
+          the frame is already visible.
+        </li>
+        <li>
+          Remove the <code>&lt;script&gt;</code> tag and reload: the frame keeps
+          its snippet height, the course scrolls inside it, nothing else breaks.
+          This is exactly what an oEmbed consumer renders — the
+          <code>html</code> field is the frame alone — so it is the state a
+          directory judges us in, not the pasted snippet's.
+        </li>
+        <li>
+          Narrow this page to 280px and widen it to 800px: the course stays
+          usable at both ends, with nothing clipped and no horizontal scrollbar
+          inside the frame. Directories reject an embed that only works at
+          desktop widths, and 280 is the floor Embedly names.
+        </li>
+        <li>
+          The session lands in Traffic sources under this page's origin. Serving
+          the harness with <code>Referrer-Policy: no-referrer</code> should
+          instead produce "Embedded (source hidden)".
+        </li>
+        <li>
+          Nothing appears in the app's own analytics for this page's visitors,
+          and no consent banner is shown.
+        </li>
+      </ul>
+
+      <p>
+        <label for="src">Embed URL</label>
+        <input
+          id="src"
+          value="http://localhost:3001/embed/courses/REPLACE_WITH_COURSE_ID"
+        />
+      </p>
+
+      <div class="filler">↓ scroll — the frame starts below the fold ↓</div>
+
+      <!-- Kept byte-for-byte in the shape the Embed tab produces, minus the
+           course id. If this drifts from buildEmbedSnippet, the harness is
+           testing something customers never paste. -->
+      <iframe
+        id="frame"
+        title="Scibly course"
+        data-scibly-embed
+        width="640"
+        height="600"
+        style="width: 100%; height: 600px; border: 0;"
+        allow="autoplay"
+        referrerpolicy="strict-origin-when-cross-origin"
+        loading="lazy"
+      ></iframe>
+
+      <div class="filler">↑ frame above, page continues below ↑</div>
+    </main>
+
+    <pre id="log"></pre>
+
+    <script>
+      var input = document.getElementById("src");
+      var frame = document.getElementById("frame");
+      var log = document.getElementById("log");
+
+      var fromQuery = new URLSearchParams(location.search).get("src");
+      if (fromQuery) input.value = fromQuery;
+
+      function line(text) {
+        log.textContent = (text + "\n" + log.textContent).slice(0, 4000);
+      }
+
+      /* The real script is loaded from the app so the harness exercises the
+         file customers get, not a copy of it. */
+      function load() {
+        var url = input.value.trim();
+        if (!url) return;
+        frame.src = url;
+        var script = document.createElement("script");
+        script.src = new URL("/embed/v1.js", url).href;
+        script.async = true;
+        script.onerror = function () {
+          line("could not load /embed/v1.js — is the app running?");
+        };
+        document.body.appendChild(script);
+      }
+
+      input.addEventListener("change", function () {
+        location.search = "?src=" + encodeURIComponent(input.value.trim());
+      });
+
+      window.addEventListener("message", function (event) {
+        var data = event.data;
+        if (!data || data.source !== "scibly-embed") return;
+        line(
+          event.origin +
+            " → " +
+            data.type +
+            " " +
+            (data.height ?? "") +
+            (data.transitionMs ? " eased " + data.transitionMs + "ms" : ""),
+        );
+      });
+
+      load();
+    </script>
+  </body>
+</html>

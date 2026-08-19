@@ -1,0 +1,70 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Retrieval Practice",
+  definition:
+    "A learning strategy where recalling information from memory — through testing, quizzing, or free recall — strengthens long-term retention more effectively than re-reading or reviewing notes.",
+  keywords: [
+    "retrieval practice",
+    "testing effect",
+    "spaced retrieval",
+    "active recall",
+    "learning science",
+  ],
+  relatedTerms: ["spaced-repetition", "forgetting-curve"],
+  relatedPost: "make-it-stick-buch",
+};
+
+<GlossaryLayout metadata={metadata} lang="en">
+
+Retrieval practice is one of the most robust findings in cognitive psychology: the act of pulling information out of memory — not just reading it again — produces dramatically stronger long-term retention. This effect is well-documented across decades of research, has replicated in both laboratory and classroom settings, and holds up across a wide range of content types and learner populations.
+
+## The testing effect
+
+The core phenomenon is known as the testing effect: being tested on material produces better long-term retention than spending an equivalent amount of time re-studying the same material. This is counterintuitive. Most learners — and many instructors — treat tests as measurement tools. The testing effect reveals that they are also learning tools, and often more powerful ones.
+
+The mechanism is not fully settled in the research literature, but the leading explanation involves what cognitive scientists call elaborative retrieval: when you pull information from memory, you strengthen the neural pathways associated with that memory and create richer connections to related knowledge. Re-reading, by contrast, creates a sense of familiarity (the information feels known) without necessarily strengthening the retrieval pathway.
+
+Henry Roediger III and Jeffrey Karpicke published a landmark 2006 study demonstrating this effect clearly: students who spent time in retrieval practice after an initial learning period retained 50% more material one week later than students who spent the same additional time re-reading. The study has been replicated extensively.
+
+<Callout type="info">
+  The gap between how people think they should study and what actually works is
+  well-documented. Re-reading produces high fluency — material feels familiar —
+  which learners misinterpret as retention. This is sometimes called the fluency
+  illusion, and it is one reason students consistently underestimate the value
+  of practice testing and overestimate the value of re-reading.
+</Callout>
+
+## Implementation methods
+
+**Low-stakes quizzing**: Short, frequent tests on recent material. The stakes should be low enough that learners are not anxious, which would interfere with the retrieval process itself. Daily or weekly pop quizzes at the start of a session are a straightforward implementation.
+
+**Flashcards with active recall**: The key is to generate the answer before flipping — not to read the question and the answer together. The generation effort is what produces the retention benefit. Digital flashcard systems (Anki is the most commonly used) support this with spaced repetition algorithms.
+
+**Free recall exercises**: After covering material, ask learners to write down everything they can remember about a topic without referring to notes. This is sometimes called a "brain dump." It is uncomfortable, which is part of why it works — desirable difficulty is a feature.
+
+**Practice retrieval in discussion**: Asking learners to explain a concept back in their own words, or to teach it to a peer, forces retrieval in a social context. This works because it is not possible to explain something from notes — the explanation must come from memory.
+
+**Post-event reflection protocols**: After a project, sales call, or training simulation, structured reflection questions that ask learners to recall what happened and connect it to principles function as retrieval events, not just reflective exercises.
+
+## Interleaving vs. massed practice
+
+Retrieval practice works better when it is interleaved — mixing retrieval of multiple topics within a session — rather than massed — completing all retrieval on one topic before moving to the next. Blocked practice on a single topic also creates fluency illusions: the material feels mastered because it was just reviewed. Interleaved practice, though harder and less comfortable, produces better long-term retention and better ability to apply knowledge flexibly.
+
+This finding extends to the spacing of retrieval sessions. A retrieval event 24 hours after initial learning produces more benefit than one immediately after. A retrieval event 7 days later produces more benefit than one 24 hours later. This is the basis for spaced repetition systems, which schedule retrieval at algorithmically optimal intervals.
+
+<Callout type="tip">
+  A simple way to build retrieval practice into existing training: end each
+  module not with a summary slide but with a blank page and the instruction
+  "write down the three most important things you learned and one way you will
+  apply them." This 2-minute exercise outperforms a well-designed summary slide
+  for retention purposes.
+</Callout>
+
+## What the research shows about retention gains
+
+The retention gains from retrieval practice over passive review are substantial and consistent. In the original Roediger and Karpicke study, the advantage was approximately 50% better recall at the one-week mark. Follow-up research has shown that the advantage compounds: the more retrieval events, the larger the gap between retrieval-practiced learners and re-reading learners at longer time horizons.
+
+The research also shows that retrieval practice benefits transfer — the ability to apply knowledge to new situations — not just recall of memorized facts. This matters for corporate training, where the goal is application, not recitation. A sales representative who can retrieve objection-handling principles during a live call is the outcome that training is trying to produce, and retrieval practice is the design strategy most directly aligned with producing it.
+
+</GlossaryLayout>

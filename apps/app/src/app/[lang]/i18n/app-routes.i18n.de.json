@@ -1,0 +1,13 @@
+{
+  "appRoutes": {
+    "brokenLinkError": "Es sieht so aus, als wurdest du einen defekten Link verwenden. Bitte wende dich an deinen Lehrer, um einen funktionierenden Link zu erhalten.",
+    "dashboardTitle": "Dashboard",
+    "loadingPage": "Seite wird geladen...",
+    "loadingEditor": "Editor wird geladen...",
+    "loadingWorksheet": "Arbeitsblatt wird geladen...",
+    "loadingWorksheets": "Arbeitsblätter werden geladen...",
+    "loadingSettings": "Einstellungen werden geladen...",
+    "errorBoundaryTitle": "Etwas ist schief gelaufen",
+    "errorBoundaryRetryLabel": "Nochmal versuchen"
+  }
+}

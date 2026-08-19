@@ -1,0 +1,86 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Spaced Repetition",
+  definition:
+    "A learning technique that schedules review of material at increasing intervals over time, exploiting the spacing effect to maximize long-term retention with minimal study time.",
+  keywords: [
+    "spaced repetition",
+    "spacing effect",
+    "spaced practice",
+    "memory retention",
+    "learning science",
+  ],
+  relatedTerms: ["retrieval-practice", "forgetting-curve", "microlearning"],
+  relatedPost: "die-vergessenskurve",
+};
+
+<GlossaryLayout metadata={metadata} lang="en">
+
+Spaced repetition is a learning technique that schedules review of material at increasing intervals over time. Instead of reviewing information immediately after learning it or massing all reviews into one session, spaced repetition distributes reviews across days, weeks, and months — timed to catch the information just before it would be forgotten.
+
+The underlying phenomenon is the spacing effect: two review sessions separated by a gap produce better long-term retention than two review sessions back-to-back, even when total study time is identical. Hermann Ebbinghaus documented this in his 1885 memory research, and it has been one of the most consistently replicated findings in cognitive psychology since.
+
+## How spaced repetition systems work
+
+The core insight of a spaced repetition system (SRS) is that review should be scheduled based on the learner's demonstrated memory of each item, not based on a fixed calendar.
+
+### The Leitner box system
+
+Sebastian Leitner's paper-based system (1970) was one of the first systematic implementations of spaced repetition. The system uses a set of boxes, each representing a review interval. New cards start in box 1 (reviewed daily). When a card is recalled correctly, it moves to box 2 (reviewed every few days). Success again moves it to box 3 (weekly), and so on. Incorrect recall moves the card back to box 1. The result is that well-known material gets reviewed less frequently and poorly-known material gets reviewed more frequently — exactly calibrated to how memory works.
+
+### The SM-2 algorithm
+
+The SM-2 algorithm, developed by Piotr Wozniak in 1987 for his SuperMemo software, formalized spaced repetition into a computational model. After each review, the learner rates how difficult the recall was (typically on a 0–5 scale). The algorithm uses this rating to calculate the next optimal review interval:
+
+- Easy recall → longer interval before next review
+- Difficult recall → shorter interval before next review
+- Failed recall → reset to a short interval
+
+SM-2 and its descendants power most modern digital SRS implementations, including Anki (the most widely used open-source SRS tool) and numerous commercial language learning apps.
+
+<Callout type="info">
+  The key variable in SRS algorithms is the "ease factor" — a multiplier that
+  controls how quickly review intervals grow. Cards that are consistently
+  recalled correctly get a higher ease factor and reviews become progressively
+  more spaced. Cards that are frequently missed maintain a lower ease factor and
+  are reviewed more persistently. This personalization is what makes SRS
+  substantially more efficient than time-based review schedules.
+</Callout>
+
+## What the research shows about retention gains
+
+The evidence for the spacing effect is among the most reliable in learning science:
+
+**Versus massed practice**: Studies consistently show that spaced practice produces better long-term retention than the same amount of massed practice, typically by 50–200% measured at delays of a week or more. The advantage grows as the retention interval lengthens — spaced practice has its largest advantage at the six-month and one-year marks.
+
+**Compounding with retrieval practice**: Spaced repetition is most effective when each review session is an active retrieval event, not passive re-reading. Flashcard review that forces the learner to generate an answer before checking it (rather than reading the question and answer together) produces substantially better retention than passive review at the same intervals.
+
+**Transfer, not just recall**: Several studies have shown that the retention benefits of spaced practice extend to transfer tasks — applying knowledge to new situations — not only to direct recall of reviewed material. This matters for training design where application is the goal.
+
+## Practical applications in corporate training design
+
+Spaced repetition is underused in corporate training relative to its evidence base. Several practical approaches:
+
+**Post-course reinforcement sequences**: After a training event (course, workshop, onboarding program), schedule a series of short review activities at increasing intervals: day 1 after the event, day 5, day 15, day 30. Each review can be a 5-question quiz, a short reflection prompt, or a micro-scenario. The total time investment is minimal; the retention improvement is substantial.
+
+**Embedded SRS in learning platforms**: Some LMSs and microlearning platforms now include native spaced repetition functionality — scheduling push notifications or assignments based on learner performance rather than fixed dates.
+
+**Manager-facilitated review**: At the start of team meetings, spend 5 minutes on a structured review of recent training content. This creates spaced retrieval events without requiring additional learning platform infrastructure.
+
+<Callout type="tip">
+  The most common mistake in implementing spaced repetition in corporate
+  training is scheduling reviews at fixed intervals (e.g., "every two weeks")
+  rather than calibrating to learner performance. Fixed-interval schedules are
+  better than no review, but they waste time on material learners already know
+  and under-review material they have forgotten. Performance-calibrated review —
+  even a simple "easy/hard" rating — substantially improves efficiency.
+</Callout>
+
+## The relationship between spaced repetition and forgetting curves
+
+Ebbinghaus's forgetting curve shows that memory decays exponentially without reinforcement, with roughly 50–80% of new information lost within a week. Spaced repetition is the direct counter-strategy: each review event resets the decay curve at a higher baseline, so subsequent forgetting is slower.
+
+After three or four well-timed reviews, the forgetting rate for a well-learned item slows dramatically. Material reviewed with an optimal spaced repetition schedule can remain accessible for months or years with increasingly infrequent review events — a fundamentally different outcome from a single training session followed by no reinforcement.
+
+</GlossaryLayout>

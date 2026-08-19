@@ -1,0 +1,115 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "Creating Training Materials: Structure, Template, and Checklist",
+  description:
+    "Training materials are what a training session is actually delivered with: a slide deck, a guide, a worksheet, or e-learning content.",
+  date: "May 28, 2026",
+  readTime: 6,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "training materials",
+    "create training materials",
+    "structuring training materials",
+    "training materials template",
+    "training material",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+Training materials are what a training session is actually delivered with: a slide deck, a guide, a worksheet, or e-learning content. The training plan determines when and for whom training happens; the training materials are the content itself. Good training materials follow a clear structure: learning objective, core message, example, exercise, summary. This template shows that structure and the steps to get there.
+
+## Training materials vs. training plan: the difference
+
+The two terms often get mixed up, but they mean different things:
+
+- **Training plan** answers: what gets trained when, for whom, and who's responsible? The output is an overview, not learning content.
+- **Training materials** answer: what exactly does someone learn, and with what? The output is the actual content, slides, script, exercises, quiz.
+
+A training plan with no finished materials is a schedule with no substance. Finished materials with no plan, on the other hand, never find their way to the right people. Both belong together, but they're separate work steps.
+
+## Structure of training materials
+
+Every section of good training materials serves one of four functions. This template can be filled in directly for your own topic:
+
+| Section          | Function                                                  | Typical length                    | Example (topic: recognizing phishing)                |
+| ---------------- | --------------------------------------------------------- | --------------------------------- | ---------------------------------------------------- |
+| Opener           | Shows why the topic matters before content arrives        | 1 slide / 2–3 sentences           | Short case: a real phishing email that almost worked |
+| Core content     | Delivers the actual knowledge, in small units             | 3–5 sections, 1 core message each | Features of a phishing email, one per section        |
+| Example          | Shows the content in a concrete case, not just abstractly | 1 example per core message        | Screenshot of a real email with flagged red flags    |
+| Exercise / check | Forces active application instead of just reading         | 1 question or task per section    | "Is this email real or phishing? How can you tell?"  |
+| Summary          | Compactly recaps the core messages                        | 3–5 bullet points                 | The key warning signs as a list                      |
+
+The most common mistake is making the core content too big and skipping the example and exercise. Plain running text with no example and no exercise gets read, but rarely retained.
+
+## Step by step: creating training materials
+
+### Step 1: Set the learning objective before content is written
+
+What should someone actually be able to do after the training that they couldn't do before? "Employees understand data protection" isn't a learning objective, it's a topic. "Employees recognize which customer data they may share without asking first" is one. Without this learning objective, you end up with content that covers a topic instead of building a skill.
+
+### Step 2: Reduce content to the essentials
+
+The biggest trap with training materials is too much content. An SME interview or an existing manual usually contains ten times more than what's needed for the learning objective. Reduce to what directly contributes to the learning objective, everything else can be linked as a further resource instead of migrating into the main materials.
+
+### Step 3: Fill in the structure using the table above
+
+Opener, core content in small units, example, exercise, summary. This sequence works for almost any topic, from compliance to software rollout.
+
+### Step 4: Choose a format
+
+| Content                               | Suitable format                             |
+| ------------------------------------- | ------------------------------------------- |
+| Factual knowledge that rarely changes | E-learning module, built once, used often   |
+| Process knowledge for a new system    | Short video or screenshots plus a live demo |
+| Soft skills that need practice        | Workshop with roleplay or a case study      |
+| Knowledge that changes frequently     | Short, easily updatable microlearning unit  |
+
+### Step 5: Test before rolling out broadly
+
+Have a test person from the target audience who doesn't yet know the topic work through the materials. Wherever they get stuck or have questions, an example or an intermediate step is missing.
+
+## Creating training materials with AI
+
+AI tools substantially shorten the path from an existing document (manual, process description, SME notes) to a first rough draft. The bottleneck thereby shifts from "who writes this?" to "who checks whether it actually works instructionally?", an AI rough draft with no reduction to the learning objective and no genuine exercise elements is ultimately the same problem as an overly long manual, just produced faster. The structure from this article applies regardless of whether the first draft comes from a human or an AI.
+
+This is exactly where Scibly comes in: an existing document becomes the starting point for a finished, interactive course, not a slide deck that still needs instructional design work. The structure above, opener, core content in small units, example, exercise, is directly the structure Scibly proposes when generating from an uploaded document.
+
+## Common mistakes with training materials
+
+**Too much text per slide or section.** If reading a slide aloud takes longer than a minute, it's too full. Split it up instead of condensing it.
+
+**No example, only a definition.** "GDPR regulates the handling of personal data" is a definition. An example shows what that looks like in a real situation, and that's what sticks.
+
+**Exercise is missing entirely, or only comes at the very end.** A single closing question after 20 slides isn't genuine application of what was learned. The exercise belongs right after the corresponding content, not at the end.
+
+**Materials get created and never touched again.** Processes, software, and regulations change. Materials with no clearly assigned owner for updates go stale unnoticed and undermine trust in the entire training.
+
+## Frequently asked questions
+
+### What's the difference between training materials and a training plan?
+
+The training plan determines what gets trained when, for whom. The training materials are the actual learning content the training is delivered with. A [Training Plan Template](/blog/schulungsplan-vorlage) answers the planning question, this article answers the content question.
+
+### How long should training materials be?
+
+As short as possible for the given learning objective. A single, clearly formulated learning objective can often be covered in 5 to 10 minutes of learning time, if the opener, core content, example, and exercise are consistently reduced to the essentials. Long materials are usually a sign that several learning objectives got mixed together.
+
+### Isn't a PDF or manual enough as training material on its own?
+
+A manual is a good source, but rarely good training material, because reference works are structured differently from learning content. A manual wants to be complete; training material wants to deliver exactly one learning objective. Going through the structure above is worth it even when a manual exists as a source.
+
+### How often do training materials need updating?
+
+Whenever the underlying process, software, or regulation changes, not on a fixed calendar interval. A clearly assigned owner per set of materials makes sure that actually happens instead of falling through the cracks.
+
+</PostLayout>

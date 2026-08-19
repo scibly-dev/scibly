@@ -1,0 +1,12 @@
+{
+  "editorUi": {
+    "multipleChoice": {
+      "addOption": "Option hinzufügen",
+      "optionPlaceholder": "Optionstext...",
+      "optionalLabel": "Optional",
+      "allowMultipleLabel": "Mehrere Antworten",
+      "removeOption": "Entfernen",
+      "pointDeductionRemark": "Du hast inkorrekte Optionen ausgewählt. Dafür wurden Punkte abgezogen."
+    }
+  }
+}

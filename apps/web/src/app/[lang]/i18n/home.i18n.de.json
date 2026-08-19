@@ -1,0 +1,57 @@
+{
+  "home": {
+    "metadata": {
+      "title": "scibly | Aus Unternehmenswissen werden wirksame Kurse",
+      "description": "Verwandle Richtlinien, Playbooks und Fachwissen in kurze, interaktive Kurse, mit Quellenbelegen und direkter Bereitstellung in Slack oder Teams."
+    },
+    "navbar": {
+      "home": "Startseite",
+      "blog": "Blog",
+      "solutions": "Lösungen",
+      "allUseCases": "Alle Anwendungsfälle",
+      "useCases": [
+        {
+          "label": "IT & Tech",
+          "slug": "it-unternehmen"
+        },
+        {
+          "label": "KI-Enablement",
+          "slug": "ki-enablement"
+        },
+        {
+          "label": "Handwerk & Bau",
+          "slug": "handwerk"
+        },
+        {
+          "label": "Gastronomie & Hotel",
+          "slug": "gastronomie"
+        },
+        {
+          "label": "Pflege & Soziales",
+          "slug": "pflege"
+        },
+        {
+          "label": "Logistik & Transport",
+          "slug": "logistik"
+        },
+        {
+          "label": "Einzelhandel",
+          "slug": "einzelhandel"
+        }
+      ],
+      "aiSkills": "KI-Skills",
+      "signIn": "Anmelden",
+      "createAccount": "Account erstellen",
+      "skipToContent": "Zum Inhalt springen",
+      "openMenu": "Menü öffnen",
+      "closeMenu": "Menü schließen"
+    },
+    "footer": {
+      "brand": "scibly",
+      "glossary": "Glossar",
+      "impressum": "Impressum",
+      "privacy": "Datenschutz",
+      "copyright": "© 2026 scibly"
+    }
+  }
+}

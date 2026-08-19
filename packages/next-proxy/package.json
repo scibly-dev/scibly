@@ -1,0 +1,36 @@
+{
+  "name": "@scibly/next-proxy",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./pathname": "./src/pathname.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@formatjs/intl-localematcher": "^0.5.10",
+    "@scibly/auth": "workspace:*",
+    "@scibly/i18n": "workspace:*",
+    "@scibly/lib": "workspace:*",
+    "@scibly/routes": "workspace:*",
+    "negotiator": "^0.6.4"
+  },
+  "devDependencies": {
+    "@scibly/eslint-config": "workspace:*",
+    "@types/negotiator": "^0.6.3",
+    "@types/node": "^20.17.29",
+    "eslint": "^9.39.2",
+    "next": "^16.3.0",
+    "typescript": "^5.8.2",
+    "vitest": "^4.1.6"
+  },
+  "peerDependencies": {
+    "next": "^16.0.0"
+  }
+}

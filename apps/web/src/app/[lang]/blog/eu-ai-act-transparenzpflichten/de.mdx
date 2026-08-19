@@ -1,0 +1,94 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "EU AI Act Artikel 50: Was die Transparenzpflichten für dein Unternehmen bedeuten",
+  description:
+    "Artikel 50 des EU AI Act verlangt ab dem 2. August 2026 Kennzeichnungspflichten für Chatbots, KI-generierte Inhalte und Deepfakes. Wer betroffen ist und was konkret zu tun ist.",
+  date: "24. Juli 2026",
+  readTime: 10,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1555255707-c07966088b7b?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "eu ai act artikel 50",
+    "transparenzpflicht ki",
+    "chatbot kennzeichnungspflicht",
+    "ki generierte inhalte kennzeichnen",
+    "deepfake kennzeichnungspflicht",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+Artikel 50 des EU AI Act verpflichtet ab dem 2. August 2026 Unternehmen dazu, den Einsatz bestimmter KI-Systeme offenzulegen: Chatbots müssen sich als KI zu erkennen geben, KI-generierte Inhalte müssen maschinenlesbar gekennzeichnet werden, und Deepfakes brauchen einen sichtbaren Hinweis. Das ist eine eigenständige Pflicht, unabhängig von der KI-Kompetenzpflicht aus [Artikel 4](/de/blog/eu-ai-act-ki-kompetenz-pflicht), und betrifft nicht die interne Schulung von Mitarbeitenden, sondern das, was gegenüber Kundinnen, Nutzern und der Öffentlichkeit sichtbar wird.
+
+## Artikel 4 und Artikel 50: zwei unterschiedliche Pflichten
+
+Die beiden Artikel werden häufig verwechselt, weil beide zum selben Stichtag, dem 2. August 2026, voll durchsetzbar werden. Der Unterschied ist trotzdem grundlegend: Artikel 4 verlangt, dass deine Mitarbeitenden ausreichend kompetent im Umgang mit KI-Systemen sind, eine interne, personenbezogene Pflicht. Artikel 50 verlangt, dass bestimmte KI-Nutzungen für Außenstehende erkennbar gemacht werden, eine nach außen gerichtete, produktbezogene Pflicht. Ein Unternehmen kann Artikel 4 vollständig erfüllen und trotzdem gegen Artikel 50 verstoßen, wenn zum Beispiel der Chatbot auf der Website sich nicht als KI zu erkennen gibt.
+
+## Die vier Teilpflichten aus Artikel 50 im Überblick
+
+Artikel 50 bündelt vier unterschiedliche Kennzeichnungspflichten, die sich an unterschiedliche Situationen richten:
+
+| Absatz     | Wer ist betroffen                                                                                                   | Was ist zu tun                                                                                                                         |
+| ---------- | ------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Art. 50(1) | Anbieter von KI-Systemen im direkten Personenkontakt (Chatbots, Sprachassistenten)                                  | Nutzende müssen erkennen können, dass sie mit einer KI interagieren, außer es ist aus dem Kontext ohnehin offensichtlich               |
+| Art. 50(2) | Anbieter von KI-Systemen, die synthetische Audio-, Bild-, Video- oder Textinhalte erzeugen                          | Ausgaben müssen in maschinenlesbarem Format als KI-generiert markiert werden                                                           |
+| Art. 50(3) | Betreiber von Emotionserkennungs- oder biometrischen Kategorisierungssystemen                                       | Betroffene Personen müssen über den Einsatz des Systems informiert werden                                                              |
+| Art. 50(4) | Betreiber von Systemen, die Deepfakes oder KI-generierte Texte zu Themen von öffentlichem Interesse veröffentlichen | Offenlegung, dass der Inhalt künstlich erzeugt oder manipuliert wurde, außer bei redaktioneller menschlicher Prüfung mit Verantwortung |
+
+Ausnahmen bestehen für befugte Strafverfolgungstätigkeiten unter bestimmten Voraussetzungen sowie für offensichtlich künstlerische, kreative, satirische oder fiktionale Werke, sofern ein angemessener Hinweis die Wahrnehmung des Werks nicht beeinträchtigt.
+
+<Callout type="info">
+  Für Artikel 50 gibt es, genau wie für Artikel 4, kein eigenständiges Bußgeld.
+  Ein Verstoß fällt unter die allgemeine Kategorie „Verstoß gegen sonstige
+  Pflichten" nach Artikel 99 AI Act, mit einem Bußgeldrahmen von bis zu 15 Mio.
+  EUR oder 3 % des weltweiten Jahresumsatzes, je nachdem, welcher Betrag höher
+  ist.
+</Callout>
+
+## Was das für den Alltag in deinem Unternehmen bedeutet
+
+Drei Situationen kommen in der Praxis am häufigsten vor:
+
+Erstens, ein Chatbot auf der eigenen Website oder im Kundenservice. Ein einfacher Hinweis wie „Sie chatten gerade mit unserem KI-Assistenten" direkt zu Beginn der Unterhaltung reicht in den meisten Fällen aus. Ist bereits aus dem Kontext eindeutig erkennbar, dass es sich um ein automatisiertes System handelt, etwa bei einem klar als „Bot" bezeichneten Hilfe-Widget, kann der Hinweis entfallen, im Zweifel ist ein expliziter Hinweis aber die sicherere Wahl.
+
+Zweitens, mit KI erstellte Marketing-Texte, Bilder oder Videos, die veröffentlicht werden. Betrifft der Inhalt ein Thema von öffentlichem Interesse, etwa ein Beitrag zu einem politischen oder gesellschaftlichen Thema, greift die Kennzeichnungspflicht aus Artikel 50(4) auch dann, wenn nur der Text KI-generiert ist. Reine Produktbeschreibungen oder interne Kommunikation fallen in aller Regel nicht darunter.
+
+Drittens, KI-gestützte Auswertung von Kundengesprächen oder Bewerbungsvideos, etwa zur Emotionserkennung im Callcenter oder bei der Vorauswahl von Bewerbenden. Hier verlangt Artikel 50(3) eine Information der betroffenen Personen, unabhängig davon, ob das System als Hochrisiko-System nach Anhang III des AI Act gilt oder nicht.
+
+<Callout type="tip">
+  Wenn du ohnehin gerade eine Schulung zur KI-Kompetenzpflicht aus Artikel 4
+  aufbaust, lohnt sich ein eigener, kurzer Abschnitt zu den Transparenzpflichten
+  aus Artikel 50 gleich mit. Beide Pflichten betreffen dieselben Teams, meist
+  Marketing, Kundenservice und Produkt, und beide greifen zum selben Stichtag.
+</Callout>
+
+Genau diese Kombination lässt sich direkt in Scibly abbilden: Eine interne KI-Richtlinie, die sowohl die Kompetenzanforderungen aus Artikel 4 als auch die Kennzeichnungspflichten aus Artikel 50 abdeckt, wird in einen interaktiven Mikro-Kurs umgewandelt, inklusive dokumentiertem Abschlussnachweis pro Team. Die [KI-Richtlinien-Vorlage](/de/blog/ki-richtlinie-unternehmen-vorlage) ist dafür ein guter Ausgangspunkt.
+
+## Häufige Fragen
+
+### Muss jede Website mit einem Chatbot diesen jetzt kennzeichnen?
+
+Ja, wenn der Chatbot direkt mit Nutzenden interagiert und nicht aus dem Kontext offensichtlich als automatisiertes System erkennbar ist. Ein kurzer, sichtbarer Hinweis zu Gesprächsbeginn erfüllt die Pflicht in den meisten Fällen.
+
+### Gilt die Kennzeichnungspflicht auch für intern genutzte KI-generierte Texte?
+
+Nein. Artikel 50(4) betrifft explizit Inhalte, die veröffentlicht werden und Themen von öffentlichem Interesse behandeln. Rein interne Dokumente oder Kommunikation fallen nicht darunter.
+
+### Was passiert, wenn ein Mensch den KI-generierten Text vor Veröffentlichung redigiert?
+
+Bei redaktioneller Verantwortung und menschlicher Überprüfung entfällt die Kennzeichnungspflicht für Text nach Artikel 50(4). Entscheidend ist, dass tatsächlich eine inhaltliche redaktionelle Kontrolle stattgefunden hat, nicht nur eine oberflächliche Durchsicht.
+
+### Reicht ein Hinweis im Impressum oder in den AGB aus?
+
+Nein. Die Information muss zum Zeitpunkt der ersten Interaktion beziehungsweise Konfrontation mit dem Inhalt klar und deutlich erkennbar sein, nicht in einem separaten Rechtsdokument versteckt, das die meisten Nutzenden nie lesen.
+
+</PostLayout>

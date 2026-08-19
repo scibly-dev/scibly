@@ -1,0 +1,45 @@
+{
+  "courses": {
+    "list": {
+      "title": "Courses",
+      "subtitle": "Manage your organization's learning content and courses.",
+      "searchPlaceholder": "Search courses...",
+      "createButton": "Create Course",
+      "noCourses": "No courses found",
+      "adjustQuery": "Try adjusting your search query.",
+      "publishStatus": {
+        "published": "Live",
+        "publishedShort": "Live · v{{version}}",
+        "publishedSubtitle": "Visible to learners",
+        "unpublished": "Draft",
+        "unpublishedShort": "Draft · v{{version}}",
+        "unpublishedSubtitle": "Not published yet"
+      }
+    },
+    "mode": {
+      "sectionTitle": "Format",
+      "courseLabel": "Course",
+      "courseDescription": "Several lessons, opening on an overview.",
+      "lessonLabel": "Lesson",
+      "lessonDescription": "Exactly one lesson, opening straight into it.",
+      "badge": "Lesson",
+      "lockedByLessons": "Delete the other lessons first, or keep this a course."
+    },
+    "createSheet": {
+      "title": "Create Programme",
+      "description": "Configure the initial metadata for your new training programme.",
+      "fieldTitle": "Programme Title",
+      "fieldTitlePlaceholder": "e.g. Information Security 101",
+      "titleRequired": "Title is required",
+      "fieldDescription": "Description",
+      "fieldDescriptionPlaceholder": "Briefly describe the learning objectives...",
+      "fieldCategory": "Category",
+      "fieldCategoryPlaceholder": "e.g. Compliance",
+      "cancel": "Cancel",
+      "creating": "Creating...",
+      "createButton": "Create Programme",
+      "toastSuccess": "Course created successfully.",
+      "toastError": "Failed to create course."
+    }
+  }
+}

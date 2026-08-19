@@ -1,0 +1,82 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Lernmanagementsystem (LMS)",
+  definition:
+    "Eine Softwareplattform zum Erstellen, Bereitstellen, Verfolgen und Auswerten von Schulungsprogrammen – eingesetzt von Unternehmen, um Mitarbeiterlernen in großem Maßstab zu verwalten.",
+  keywords: [
+    "LMS",
+    "Lernmanagementsystem",
+    "E-Learning-Plattform",
+    "Schulungssoftware",
+    "betriebliches Lernen",
+  ],
+  relatedTerms: ["lxp", "scorm", "xapi"],
+  relatedPost: "lms-anwendungsfaelle",
+};
+
+<GlossaryLayout metadata={metadata} lang="de">
+
+Ein Lernmanagementsystem ist das administrative Rückgrat betrieblicher Weiterbildung. Im Kern leistet ein LMS vier Dinge: Es speichert und stellt Lerninhalte bereit, verwaltet, wer für welche Schulungen eingeschrieben ist, verfolgt, ob Mitarbeitende zugewiesene Trainings abgeschlossen haben, und erzeugt Berichte über diese Aktivitäten. Unternehmen nutzen LMSs, um alles von Pflicht-Compliance-Kursen bis hin zu freiwilligen Kompetenzentwicklungsprogrammen für hunderte oder tausende Mitarbeitende zu koordinieren.
+
+## Was ein LMS tatsächlich leistet
+
+Die zentrale Funktion eines LMS ist die Einschreibungsverwaltung in Verbindung mit dem Abschluss-Tracking. Eine Administratorin erstellt oder lädt einen Kurs hoch, weist ihn einer Gruppe von Mitarbeitenden zu – nach Rolle, Abteilung, Standort oder Einstellungsdatum – und das System protokolliert, wann jede Person den Kurs öffnet, durchläuft und abschließt. Diese Abschlussdaten fließen in Reporting-Dashboards und, wo relevant, in Compliance-Audit-Nachweise ein.
+
+Über die Grundfunktionen hinaus umfassen die meisten modernen LMS-Plattformen:
+
+- **Content-Authoring oder Integration**: Entweder integrierte Tools zur Kurserstellung oder Anbindungen an Authoring-Tools wie Articulate oder Adobe Captivate, die im SCORM- oder xAPI-Format exportieren
+- **Prüfungen und Zertifizierungen**: Tests, Wissensabfragen und automatisch generierte Zertifikate nach Abschluss oder beim Erreichen einer Mindestpunktzahl
+- **Benachrichtigungs- und Erinnerungsworkflows**: Automatische E-Mails bei bevorstehenden Fristen, ausstehenden Abschlüssen oder neuen Zuteilungen
+- **Reporting und Analysen**: Abschlussquoten, Testergebnisse, Verweildauer im Kurs und Compliance-Status nach Person, Team oder Gesamtorganisation
+
+Die meisten LMS unterstützen außerdem die Verwaltung von Blended-Learning-Programmen – Buchung von Präsenzseminaren, Erfassung der Teilnahme und Verknüpfung von Präsenzaktivitäten mit digitalen Kursdaten.
+
+<Callout type="info">
+  SCORM-Kompatibilität ist die de-facto-Voraussetzung für die Interoperabilität
+  von LMS-Inhalten. Ein in Articulate Storyline erstellter Kurs lässt sich als
+  SCORM-Paket exportieren und in jedes SCORM-konforme LMS importieren und
+  tracken – ohne aufwändige individuelle Integration.
+</Callout>
+
+## LMS vs. LXP
+
+Der Unterschied zwischen einem LMS und einer Learning Experience Platform (LXP) wird häufig missverstanden. Ein LMS ist admin-gesteuert: Eine Administratorin entscheidet, welche Inhalte verfügbar sind, wer Zugriff hat und wann etwas Pflicht ist. Ein LXP ist lernerzentriert: Es aggregiert Inhalte aus verschiedenen Quellen und nutzt Algorithmen, um Empfehlungen basierend auf Rolle, Interessen und Verhalten des Lernenden anzuzeigen.
+
+Praktisch gesagt: Im LMS lebt das Compliance-Training. Im LXP leben kuratierte Lernpfade und freiwillige Kompetenzentwicklung. Viele Unternehmen betreiben beide Systeme – das LMS für Pflichtprogramme, das LXP für selbstgesteuertes Lernen. Kleinere Organisationen stellen häufig fest, dass ein System ausreichend viele Funktionen beider Kategorien abdeckt.
+
+## Kernfunktionen bei der Bewertung
+
+Bei der Auswahl eines LMS wirken sich folgende Funktionen am stärksten auf den täglichen Betrieb aus:
+
+**Unterstützung von Content-Standards**: Werden SCORM 1.2, SCORM 2004 und xAPI unterstützt? Die meisten modernen Plattformen decken alle drei ab, ältere Systeme möglicherweise nicht.
+
+**Zuteilungs- und Gruppenverwaltung**: Lassen sich Zuteilungen nach Rolle, Abteilung oder benutzerdefinierten Attributen steuern? Können Einschreibungen automatisiert werden – etwa nach Einstellungsdatum oder Beförderung?
+
+**Flexibles Reporting**: Lassen sich die Compliance-Daten exportieren, die die Rechts- oder HR-Abteilung benötigt? Genügt das Reporting den eigenen Audit-Anforderungen?
+
+**Integration mit dem HR-System**: Die manuelle Synchronisation von Mitarbeiterdaten zwischen HRIS und LMS ist fehleranfällig. Native Integrationen oder API-Zugang reduzieren den Verwaltungsaufwand erheblich.
+
+**Nutzererfahrung**: Eine schlecht gestaltete Lernoberfläche senkt die Abschlussquoten unabhängig von der Inhaltsqualität. Testen Sie das System mit einer Stichprobe realer Lernender, bevor Sie sich festlegen.
+
+## Wann ein LMS das richtige Werkzeug ist – und wann nicht
+
+Ein LMS ist das richtige Werkzeug, wenn Sie Schulungen bestimmten Personen zuweisen, verfolgen müssen, ob diese sie absolviert haben, und dies nachweisen können müssen. Compliance-Trainings, regulatorische Zertifizierungen und Onboarding-Programme passen auf dieses Beschreibung.
+
+Ein LMS ist das falsche Werkzeug – oder zumindest nicht ausreichend –, wenn Sie informelles Lernen, bedarfsorientierte Performance-Unterstützung, soziales Wissensaustausch oder personalisierte Lernpfade unterstützen möchten, die sich an individuelle Kompetenzlücken anpassen. Diese Anwendungsfälle erfordern entweder ein LXP, ein Wissensmanagementsystem oder Performance-Support-Tools, die direkt in die Arbeit integriert sind.
+
+<Callout type="tip">
+  Bevor Sie LMS-Anbieter evaluieren, dokumentieren Sie Ihre drei dringlichsten
+  Anwendungsfälle mit konkreten Zahlen: wie viele Lernende, wie viele Kurse, wie
+  häufig Inhalte sich ändern und welche Compliance-Dokumentation erzeugt werden
+  muss. Anbieter, die auf diese Fragen nicht direkt eingehen können, verkaufen
+  ein Produkt, das nicht auf Ihre Situation zugeschnitten ist.
+</Callout>
+
+## Corporate-LMS vs. LMS für KMU
+
+Der LMS-Markt reicht von Corporate-Plattformen (Cornerstone, SAP SuccessFactors, Docebo) über mittelständische Systeme (TalentLMS, Absorb, Tovuti) bis hin zu Lösungen für kleinere Unternehmen (Scibly, LearnUpon, Thinkific Business). Die Unterschiede liegen weniger primär in den Funktionen – die meisten Plattformen decken die Kernfunktionen ab – sondern in Implementierungskomplexität, Konfigurationsaufwand und administrativem Betrieb.
+
+Corporate-Plattformen setzen dedizierte L&D-Administratoren und IT-Unterstützung voraus. Mittelständische und KMU-fokussierte Plattformen sind zunehmend für Organisationen ausgelegt, in denen die Schulungsverantwortliche gleichzeitig drei weitere Aufgaben übernimmt. Das operative Modell der Plattform an die tatsächliche Kapazität des eigenen Teams anzupassen, ist mindestens genauso wichtig wie der Abgleich der Funktionsliste mit den Anforderungen.
+
+</GlossaryLayout>

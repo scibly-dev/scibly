@@ -1,0 +1,45 @@
+{
+  "onboarding": {
+    "createOrg": {
+      "eyebrow": "Willkommen bei Scibly",
+      "title": "Erstelle deine ",
+      "titleAccent": "Organisation",
+      "subtitle": "Deine Kurse, Notebooks und dein Team leben darin.",
+      "logoLabel": "Logo hochladen",
+      "nameLabel": "Name der Organisation",
+      "namePlaceholder": "Gib deiner Organisation einen Namen",
+      "slugLabel": "URL-Kennung",
+      "slugPlaceholder": "deine-organisation",
+      "contents": {
+        "notebooks": "Notebooks",
+        "courses": "Kurse",
+        "team": "Team"
+      },
+      "submit": "Organisation erstellen",
+      "submitting": "Wird erstellt...",
+      "skip": "Später erstellen",
+      "errorToast": "Organisation konnte nicht erstellt werden."
+    },
+    "invite": {
+      "eyebrow": "Willkommen bei Scibly",
+      "title": "Du wurdest ",
+      "titleAccent": "eingeladen",
+      "subtitle": "Nimm eine Einladung an, um der Organisation deines Teams beizutreten.",
+      "skip": "Später entscheiden"
+    },
+    "plans": {
+      "eyebrow": "Deine Organisation steht",
+      "title": "Du bist in der ",
+      "titleAccent": "kostenlosen Testphase",
+      "subtitle": "Wechsle jederzeit auf einen Plan oder starte erst einmal mit der Testphase.",
+      "credits": {
+        "eyebrow": "Test-Gutschein",
+        "unit": "KI-Credits",
+        "headline": "Schon in deinem Konto",
+        "note": "Gratis nutzbar, ohne Karte.",
+        "pending": "Deine kostenlosen KI-Credits sind unterwegs."
+      },
+      "continue": "Weiter zum Dashboard"
+    }
+  }
+}

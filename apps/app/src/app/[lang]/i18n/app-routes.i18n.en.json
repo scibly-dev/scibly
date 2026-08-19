@@ -1,0 +1,13 @@
+{
+  "appRoutes": {
+    "brokenLinkError": "It looks like you are using a broken link. Please contact your teacher to receive a working link.",
+    "dashboardTitle": "Dashboard",
+    "loadingPage": "Loading page...",
+    "loadingEditor": "Loading editor...",
+    "loadingWorksheet": "Loading worksheet...",
+    "loadingWorksheets": "Loading worksheets...",
+    "loadingSettings": "Loading settings...",
+    "errorBoundaryTitle": "Something went wrong",
+    "errorBoundaryRetryLabel": "Try again"
+  }
+}

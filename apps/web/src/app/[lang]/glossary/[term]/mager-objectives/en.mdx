@@ -1,0 +1,110 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Mager's Performance-Based Objectives",
+  definition:
+    "Robert Mager's framework for writing precise learning objectives with three components: Performance (the observable behavior), Conditions (the circumstances under which it occurs), and Criterion (the standard for acceptable performance).",
+  keywords: [
+    "Mager objectives",
+    "performance-based objectives",
+    "learning objectives",
+    "Robert Mager",
+    "instructional design",
+  ],
+  relatedTerms: ["action-mapping", "blooms-taxonomy", "instructional-design"],
+  relatedPost: "map-it-cathy-moore",
+};
+
+<GlossaryLayout metadata={metadata} lang="en">
+
+Robert Mager's 1962 book _Preparing Instructional Objectives_ is one of the most practically influential texts in instructional design, and it rests on a simple argument: if you don't know where you're going, you'll probably end up somewhere else. A learning objective that cannot be observed, measured, or assessed is not an objective — it's a wish.
+
+Mager's framework insists that objectives specify exactly what a learner will be able to do after instruction. That means using verbs that describe observable behavior, not internal states. The result is a three-part structure that remains the most precise tool available for writing objectives that can actually drive course design.
+
+## The three components
+
+### Performance: what the learner will do
+
+Performance is the core of a Mager objective — the observable, measurable action the learner will perform. The key word is observable. Performance must be something a third party could watch and evaluate.
+
+**Performance verbs that work**: calculate, identify, classify, write, demonstrate, list, select, troubleshoot, explain (verbally), distinguish between.
+
+**Performance verbs that don't work**: understand, know, appreciate, be aware of, learn, recognize the importance of.
+
+The problem with "understand" isn't that it's vague — it's that it's invisible. You cannot watch someone understand something. You can watch them explain it, apply it, or use it to solve a problem. The moment you substitute an observable action for "understand," the objective becomes testable and the instruction becomes designable.
+
+**Before**: Learners will understand the company's data privacy policy.
+**After**: Given a description of a data handling scenario, the learner will classify it as compliant or non-compliant and cite the relevant policy section.
+
+### Conditions: the circumstances under which performance occurs
+
+Conditions specify the context in which the performance will take place — the tools, information, or constraints that will be present or absent. Not every objective requires a detailed conditions statement, but when the context materially affects performance, it should be made explicit.
+
+Conditions can include:
+
+- **Resources available**: "given a product catalog and customer order form..."
+- **Resources not available**: "without access to reference materials..."
+- **Setting**: "in a live customer call..."
+- **Information provided**: "given a patient's presenting symptoms..."
+
+Without conditions, an objective like "the learner will calculate the correct dosage" is incomplete. The difficulty of the calculation — and whether the training needs to prepare learners for it — depends entirely on what information they'll have in front of them.
+
+### Criterion: the standard for acceptable performance
+
+Criterion defines what counts as good enough. It turns the objective into something that can be evaluated pass/fail or with a score. Criteria typically specify:
+
+- **Accuracy**: "with no more than one error"
+- **Speed**: "within 90 seconds"
+- **Quality threshold**: "achieving a score of 80% or higher"
+- **Completeness**: "identifying all five required steps"
+
+Without a criterion, "the learner will write a project brief" is not an objective — it's a task description. "The learner will write a project brief that includes all four required sections in under 30 minutes" is an objective that can be assessed.
+
+<Callout type="tip">
+  Not every objective needs all three components spelled out in equal detail.
+  Performance is mandatory in every objective. Conditions are worth specifying
+  when the context would materially affect how you design the instruction or the
+  assessment. Criterion is worth specifying when there's a meaningful
+  distinction between acceptable and unacceptable performance. When all three
+  are obvious from context, it's acceptable to let them be implied — but be
+  honest with yourself about whether they're actually obvious or just
+  unexamined.
+</Callout>
+
+## Terminal vs. enabling objectives
+
+Mager distinguishes between two levels of objectives:
+
+**Terminal objectives** state the overall capability the learner should have at the end of instruction — what they can do after completing the module. There is typically one terminal objective per learning unit.
+
+**Enabling objectives** are the sub-skills or knowledge elements required to achieve the terminal objective. They represent the building blocks. Not all enabling objectives need to be taught explicitly; some learners will already have them.
+
+This distinction matters for course design. If your terminal objective is "the learner will conduct a structured performance review conversation," the enabling objectives might include: explaining the review framework, asking open questions, providing specific behavioral feedback, and documenting agreed actions. Each enabling objective can be assessed and taught independently — which means you can identify gaps without running the full simulation.
+
+## Mager and Bloom: complementary tools
+
+Bloom's taxonomy and Mager's framework are often discussed together, and they serve different purposes.
+
+**Bloom tells you the cognitive level** of the objective — whether you're asking learners to recall, apply, analyze, evaluate, or create. It helps ensure the objective is set at the right level of complexity for the intended performance.
+
+**Mager tells you how to write it** — with observable performance, specified conditions, and a measurable criterion.
+
+The two frameworks combine naturally. "Given a set of five customer complaint scenarios, the learner will select the appropriate escalation path for each, with no more than one error" combines a Bloom-level analysis task (selecting and applying a framework) with Mager's three-component structure.
+
+<Callout type="info">
+  A common design failure is writing Bloom-level objectives ("the learner will
+  analyze the root cause of system failures") without Mager conditions or
+  criteria, then designing instruction around the topic rather than around what
+  the learner needs to be able to do with that topic. Mager's framework forces
+  you to decide: what does applying this analysis actually look like? In what
+  context? What counts as doing it well? Those questions cannot be answered
+  without designing different instruction.
+</Callout>
+
+## Why this still matters in eLearning
+
+In eLearning practice, vague objectives don't just produce bad measurement — they produce bad courses. When the objective is "understand data privacy," there is no constraint on what content to include, and the temptation is to include everything. When the objective is "classify a data handling scenario as compliant or non-compliant within 30 seconds," the instruction can be designed specifically to build that capability: practice with feedback, increasing complexity, realistic scenarios.
+
+Mager's framework hasn't aged because the challenge it addresses hasn't changed: the gap between "we delivered training on topic X" and "our people can now do Y" is still where most training programs fail.
+
+</GlossaryLayout>

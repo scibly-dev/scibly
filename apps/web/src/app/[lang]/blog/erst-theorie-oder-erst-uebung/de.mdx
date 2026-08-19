@@ -1,0 +1,86 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "Erst Theorie oder erst Übung? Was die Lernforschung für Mitarbeiterschulungen bedeutet",
+  description:
+    "Soll man einer neuen Kollegin zuerst das Prozesshandbuch erklären oder sie direkt ins kalte Wasser werfen und danach korrigieren?",
+  date: "5. Juli 2026",
+  readTime: 5,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "erst theorie oder praxis lernen",
+    "beste reihenfolge für schulungen",
+    "wie sollte eine schulung aufgebaut sein",
+    "productive failure schulung",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+Soll man einer neuen Kollegin zuerst das Prozesshandbuch erklären oder sie direkt ins kalte Wasser werfen und danach korrigieren? Die Lernforschung gibt darauf keine einheitliche Antwort, aber eine klare Faustregel: Es hängt davon ab, was gelernt werden soll. Für reines Verständnis und Transfer schneidet Praxis zuerst im Schnitt besser ab. Für die korrekte Ausführung eines neuen Verfahrens schneidet Theorie zuerst besser ab.
+
+## Was die Forschung tatsächlich zeigt
+
+Die bislang gründlichste Auswertung dazu stammt von Sinha und Kapur (2021), die 53 Studien mit 166 Vergleichen zusammengefasst haben. Ergebnis: Wer zuerst ein Problem bearbeitet und danach die Erklärung bekommt, versteht Konzepte im Mittel besser und überträgt sie leichter auf neue Situationen (Effektstärke g = 0,36). Bei reinem Verfahrenswissen, also "kann die Person die Schritte korrekt ausführen", gibt es dagegen keinen Unterschied (g = -0,03).
+
+Das erklärt, warum beide Lager in der Trainingspraxis recht haben können, je nachdem worüber sie reden. Eine Compliance-Schulung zu einem neuen SAP-Prozess braucht andere Sequenzierung als ein Workshop zu "wie bewerte ich ein Vorstellungsgespräch fair".
+
+Gegen unstrukturiertes "einfach machen lassen" spricht allerdings eine zweite große Auswertung. Alfieri und Kolleg:innen (2011) fanden, dass ungestützte Entdeckung schlechter abschneidet als klare Instruktion (d = -0,38). Sobald die Exploration aber angeleitet ist, also mit klarem Rahmen, Zeitlimit und Hilfestellung, kehrt sich das Bild um: geführte Exploration schlägt den Vergleich (d = 0,30). Der Unterschied liegt nicht in "Praxis vor Theorie", sondern in der Qualität der Anleitung.
+
+## Wann Theorie zuerst die bessere Wahl ist
+
+Drei Situationen sprechen klar für Erklärung vor Übung:
+
+- **Der Stoff ist neu und komplex.** Novizen verbrauchen beim freien Ausprobieren zu viel Kapazität für Suchprozesse. Ein gutes Beispiel oder eine kurze Erklärung vorweg reduziert diese Last spürbar. Eine Meta-Analyse zu ausgearbeiteten Beispielen im Mathematikunterricht fand hier einen mittleren Vorteil (g = 0,48).
+- **Es geht um korrekte Erstausführung, nicht um Verständnis.** Ein neuer Sicherheitsprozess in der Produktion muss von Anfang an richtig laufen, nicht "irgendwann verstanden" werden.
+- **Es gibt keine Zeit für eine gute Nachbesprechung.** Praxis-zuerst funktioniert nur, wenn danach jemand die Lösungen der Lernenden explizit mit der richtigen Lösung vergleicht. Ohne diese Phase verpufft der Vorteil.
+
+## Wann Praxis zuerst die bessere Wahl ist
+
+Praxis zuerst lohnt sich, wenn das Ziel Verständnis, Transfer oder das Aufdecken von Fehlvorstellungen ist, und wenn danach genug Zeit für eine echte Konsolidierung bleibt. Der Mechanismus dahinter ist nicht "aus Fehlern lernen" im simplen Sinn, sondern Voraktivierung: Wer vorher an einem Problem gescheitert ist, hört der anschließenden Erklärung gezielter zu, weil er weiß, wo genau die eigene Lücke liegt.
+
+Wichtig dabei: Der Effekt ist größer, wenn Lernende mehrere eigene Lösungsideen entwickeln und diese danach mit der kanonischen Lösung verglichen werden, nicht wenn einfach nur "geraten" wird.
+
+## Die Formel, die in der Praxis am häufigsten funktioniert
+
+Kaum eine Studie empfiehlt ein reines Zweiphasenmodell. Die robustere Sequenz ist meist dreiteilig: kurze Aktivierung oder Beispiel, explizite Erklärung, danach variierte erneute Anwendung. Diese Struktur taucht in der Literatur unter dem Kürzel PS-I-PS auf (Problem, Instruktion, erneutes Problem) und schlägt in mehreren Vergleichen sowohl das reine Praxis-zuerst- als auch das reine Theorie-zuerst-Modell.
+
+| Situation                                                 | Empfohlene Sequenz                                            | Warum                                                      |
+| --------------------------------------------------------- | ------------------------------------------------------------- | ---------------------------------------------------------- |
+| Neues, komplexes Verfahren, wenig Vorwissen               | Erklärung/Beispiel → geführte Übung → variierte Anwendung     | Reduziert kognitive Überlastung bei Novizen                |
+| Begriffsverständnis, Transfer, Diagnose von Wissenslücken | Kurzes Problem → explizite Konsolidierung → erneute Anwendung | Aktiviert Vorwissen, macht Lücken sichtbar                 |
+| Sehr junge oder unsichere Lernende                        | Kurze geführte Exploration statt offenes Problemlösen         | Offenes Praxis-zuerst wirkt bei dieser Gruppe eher negativ |
+| Langfristiges Behalten unabhängig von der Reihenfolge     | Abrufübungen, Wiederholung über Zeit verteilt                 | Stärkt Gedächtnisspuren nach jeder Sequenz                 |
+
+Für die Praxis heißt das: Bevor man über "Theorie oder Praxis zuerst" streitet, lohnt sich die Frage, was am Ende gemessen werden soll. Korrekte Ausführung morgen früh, oder Verständnis, das auch noch in drei Monaten trägt, wenn sich der Prozess leicht geändert hat.
+
+Genau diese zweite Frage, ob Wissen einen Monat später noch trägt, ist der Grund, warum Kurse bei Scibly nicht nur Inhalte darstellen, sondern nach jedem Abschnitt eine kurze Abruf- und eine Transferfrage einbauen. Nicht als Quiz am Ende zur Kontrolle, sondern direkt im Fluss, weil genau das laut Forschung den Unterschied zwischen "einmal gelesen" und "hängengeblieben" macht.
+
+## Häufige Fragen
+
+### Ist Praxis zuerst also generell die bessere Methode?
+
+Nein. Praxis zuerst hilft vor allem beim Verständnis und Transfer, nicht bei der reinen korrekten Ausführung eines Verfahrens. Ohne eine gute Nachbesprechung verpufft der Vorteil außerdem komplett.
+
+### Bedeutet das, klassischer Frontalunterricht ist wissenschaftlich belegt?
+
+Teilweise. Explizite Erklärung und ausgearbeitete Beispiele sind bei komplexem, neuem Stoff nachweislich wirksam, besonders für Anfänger. Das ist aber etwas anderes als reiner Vortrag ohne anschließende aktive Anwendung.
+
+### Was ist der größte Fehler bei praxisorientierten Schulungen?
+
+Lernende ein Problem bearbeiten zu lassen und danach keine explizite Konsolidierung anzuschließen. Ohne den Vergleich zwischen eigener Lösung und richtiger Lösung bleibt die Praxisphase reine Verwirrung statt Lerneffekt.
+
+### Gilt das auch für kurze Microlearning-Formate?
+
+Ja, die Sequenzierung ist unabhängig von der Formatlänge relevant. Auch eine fünfminütige Lerneinheit profitiert davon, Abruf oder eine kleine Anwendungsfrage einzubauen statt nur Inhalte zu präsentieren.
+
+</PostLayout>

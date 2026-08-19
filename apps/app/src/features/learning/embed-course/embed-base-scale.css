@@ -1,0 +1,24 @@
+/*
+ * A course on its own page is the page, and is sized to be read at arm's
+ * length. Embedded, it is one component among a customer's own paragraphs and
+ * headings, and the same sizes read as an enlarged phone screenshot dropped
+ * into an article: the frame is desktop-wide, so its media queries put the
+ * course in the layout meant for a 390px phone, but a phone's type and its
+ * 124px button dock were never meant to be seen at that width.
+ *
+ * Everything the player sizes in `rem` is therefore rooted a little smaller
+ * here — type, spacing, control heights, the reading column — which shrinks the
+ * course as a whole without moving a single breakpoint, since `rem` in a media
+ * query resolves against the initial font size rather than this one. Course
+ * text that authors sized in px is deliberately left where it is: the point is
+ * to make the surround less bulky, not to make the content harder to read.
+ *
+ * The value is fixed rather than derived from the frame. A course that changed
+ * size as the customer's column changed size would be a second, invisible set
+ * of breakpoints for authors to design against. This is the largest step down
+ * that keeps a full question scene — prompt, four options, dock — inside the
+ * 600px frame the embed snippet ships with.
+ */
+html[data-scibly-surface="embed"] {
+  font-size: 13px;
+}

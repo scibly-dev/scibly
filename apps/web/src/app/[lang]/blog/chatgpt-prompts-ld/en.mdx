@@ -1,0 +1,177 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "ChatGPT Prompts for L&D: 20 Templates You Can Use Today",
+  description:
+    "Copy-paste ChatGPT prompts for L&D teams: course structure, learning objectives, quiz questions, scenario writing, needs analysis, and more — with real examples.",
+  date: "June 12, 2026",
+  readTime: 8,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "ChatGPT prompts L&D",
+    "ChatGPT e-learning",
+    "AI prompts training",
+    "ChatGPT course creation",
+    "L&D AI prompts",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+The quality of the output almost always comes down to the quality of the input. Feeding ChatGPT a vague "write me a course on data protection" produces vague output. Giving the model context, audience, format, and constraints produces something usable.
+
+Three principles before the prompts:
+
+**1. Always include audience and context.** ChatGPT doesn't know whether you're writing for customer service reps in a call centre or senior leaders in a pharmaceutical company. That information changes the output substantially.
+
+**2. Specify the format you want.** A bulleted list, a flowing explanation, a table, a dialogue example: say explicitly what you need.
+
+**3. Tell it what you don't want.** "No jargon without explanation", "no lists with more than five items", "no introductory paragraph explaining the benefits of learning this topic." Constraints often improve output more than instructions.
+
+The 20 prompts below are starting points. Adjust the placeholders in square brackets to your specific context.
+
+## Course Structure and Planning
+
+**Prompt 1: Course outline from topic, audience, and objectives**
+
+> Create a course outline for an e-learning module on [topic]. Audience: [describe the audience, e.g. sales reps with no technical background]. Learning objectives: [list 2–3 objectives]. Give me 5–7 module topics, each with a brief description (1–2 sentences) of what learners will cover in that module. No introduction, start directly with the list.
+
+Use this when you're starting a new course project and need a first structural proposal. Check whether the module sequence creates a logical didactic progression.
+
+**Prompt 2: Learning objectives from a job description**
+
+> Here is a job description: [paste job description]. Identify the 5 most important competencies required for this role and write a measurable learning objective for each using the format: "After completing this module, learners will be able to [verb] [content] [condition/standard]." Use concrete action verbs (analyse, apply, distinguish), not abstract ones (understand, know, appreciate).
+
+Helpful for needs-driven course planning. Check the objectives against real job performance, not just the formal job description.
+
+**Prompt 3: Microlearning sequence from a longer topic**
+
+> The topic [topic] needs to be adapted as microlearning. Break it into 5 standalone learning units of no more than 5 minutes each. Each unit should: have a specific title, communicate a single key idea, and end with a short reflection question. Give me the overview as a numbered list.
+
+Useful when converting an existing 60-minute module into a microlearning format. Make sure each unit can genuinely stand alone.
+
+**Prompt 4: Scenarios for a decision-making course**
+
+> I'm developing a course on [topic, e.g. handling objections in sales conversations]. The audience is [audience]. Develop 3 realistic scenarios where learners must make a decision. Each scenario should: describe the situation in 3–4 sentences, include 2–3 decision options, and include a brief description of the consequence for each option. No right/wrong framing, only realistic options with realistic outcomes.
+
+Scenarios make compliance and soft-skills topics practical. Have the generated scenarios reviewed by someone from the relevant business area.
+
+**Prompt 5: Breaking a complex topic into learnable chunks**
+
+> The topic [complex topic] needs to be taught to [audience], who has [no/limited] prior knowledge. Break the topic into its building blocks. What must be understood first before the next concept can be learned? Create a learning progression as a numbered list, from the simplest to the most complex unit, with a short rationale for the sequence.
+
+Particularly useful for technical or abstract topics. The progression helps you structure courses that don't overwhelm.
+
+## Writing and Editing Content
+
+**Prompt 6: Rewrite a policy document in learner-friendly language**
+
+> Here is an excerpt from an internal policy: [paste text]. Rewrite it for an e-learning module. Audience: [audience]. Requirements: clear, direct language without bureaucratic phrasing, sentences under 20 words, no passive constructions, no jargon without immediate explanation. Preserve all factual information.
+
+Compliance documents are written for legal documentation, not for learning. This transformation is one of the most common applications.
+
+**Prompt 7: Convert a bulleted list into a narrative explanation**
+
+> Here is a list of points: [paste list]. Rewrite this as a coherent, explanatory paragraph. The text should make the connections between points explicit and be understandable for [audience]. Maximum 150 words.
+
+Useful when you have bullet points from a meeting or an expert interview and need to turn them into learning content.
+
+**Prompt 8: Simplify technical jargon for a non-expert audience**
+
+> The following text contains technical terms that [audience, e.g. administrative staff with no IT background] won't know: [paste text]. Replace each technical term with a plain-language explanation, or add a brief clarification directly in parentheses after each term. Keep the structure of the text intact.
+
+Technical documentation, IT security policies, legal texts: all benefit from this simplification step.
+
+**Prompt 9: Add a real-world example to an abstract concept**
+
+> Explain the concept of [abstract concept, e.g. confirmation bias in risk assessment] using a concrete example from the day-to-day work of [audience]. The example should be realistic, told in 3–5 sentences, and show how the concept appears in a typical work situation. No artificial extreme examples.
+
+Abstract learning without connection to the learner's reality stays abstract. This prompt helps build the transfer.
+
+**Prompt 10: Make formal text conversational**
+
+> Here is a formal text: [paste text]. Rewrite it for an e-learning module with a conversational, direct tone. Address learners directly using "you". No academic style, no passive voice. The content must remain fully intact. Audience: [audience].
+
+Especially useful for content that originated as internal documentation and was written for an entirely different reader.
+
+## Quiz Questions and Assessments
+
+**Prompt 11: Generate multiple-choice questions from a text**
+
+> Here is some learning content: [paste text]. Create 5 multiple-choice questions that test comprehension of this text. Each question should: have a clear question stem, include 4 answer options (one correct, three incorrect), and include the correct answer at the end with a one-sentence explanation. No questions that only test recall of definitions.
+
+Review generated questions for ambiguity. ChatGPT sometimes produces questions where more than one answer is defensible.
+
+**Prompt 12: Scenario-based questions for compliance topics**
+
+> I need scenario-based questions for a compliance module on [e.g. data protection in the workplace]. Create 3 situation descriptions (3–4 sentences each), followed by the question: "What is the correct course of action?" with 3 answer options (one correct). The scenarios should reflect typical everyday situations for [audience].
+
+Scenario-based questions test applied knowledge rather than pure fact recall. For compliance topics, almost always the better choice.
+
+**Prompt 13: True/false statements with explanations**
+
+> Create 8 true/false statements on the topic [topic]. Each statement should: be unambiguously true or false (no grey areas), include a brief explanation (1–2 sentences) of why it is true or false, and address common misconceptions held by [audience]. List at the end which statements are true and which are false.
+
+Good for warm-up questions at the start of a module or for quick knowledge checks in short units.
+
+**Prompt 14: A short knowledge check for a module**
+
+> Create a short knowledge check (5 questions) for an e-learning module on [topic]. Audience: [audience]. Use a mix of question types: 2 multiple-choice, 2 true/false, 1 scenario-based. Provide the correct answer and a brief rationale for each question. The check should cover the key learning objectives of the module: [list objectives].
+
+Useful when you need a complete test for a new module quickly.
+
+**Prompt 15: Plausible distractors for multiple-choice questions**
+
+> Here is a multiple-choice question: [paste question and correct answer]. Create 3 incorrect answer options (distractors) that: sound plausible to [audience], reflect typical misconceptions or false assumptions, and are clearly wrong (no edge cases). Briefly explain why each distractor might be tempting for the target audience.
+
+Good distractors are harder to write than good questions. This prompt saves significant time.
+
+## Training Needs Analysis and Planning
+
+**Prompt 16: Interview questions for a training needs analysis**
+
+> I'm conducting a training needs analysis for [role/department, e.g. the customer service team in a financial services company]. Create 10 open-ended interview questions to identify where specific knowledge or skills gaps exist. Questions should: ask about behaviour and situations rather than opinions, be specific enough to generate actionable answers, and not lead the respondent. No closed yes/no questions.
+
+Open questions yield more actionable information than scales or checklists. Complement the questions with your own assessment of the context.
+
+**Prompt 17: Identify training gaps from a job description**
+
+> Here is a job description: [paste text]. Compare the requirements with a typical onboarding programme for this role [briefly describe current onboarding or write "no structured onboarding in place"]. Identify the 5 most likely competency gaps for someone new in this role. Prioritise by impact on job performance in the first 90 days.
+
+Useful as a starting point for developing an onboarding curriculum.
+
+**Prompt 18: Training plan template for a specific role**
+
+> Create a training plan template for the role of [job title] in a [industry/company type] organisation. The plan should cover 90 days and include: Weeks 1–2 (orientation and foundations), Month 2 (core competencies), Month 3 (deepening and application). For each phase: learning objectives, recommended content/formats, and how progress can be measured. No generic filler, make it specific to the role described.
+
+Give the model as much context as possible about the role and company to get more specific results.
+
+## Communication and Rollout
+
+**Prompt 19: Launch email for a new mandatory training**
+
+> Write a short email (maximum 150 words) to all employees announcing a new mandatory training on [topic]. The email should: explain why the training matters (without threats or hyperbole), state the specific time commitment ([X minutes], by [date]), and include a clear next step. Tone: direct and collegial, not formal. No opening paragraph explaining the history of the training initiative.
+
+Check that the stated duration is accurate and the deadline is realistic. The email should be signed by a real person.
+
+**Prompt 20: Reminder message for employees who haven't completed training**
+
+> Write a short reminder email (maximum 100 words) for employees who haven't yet completed mandatory training on [topic]. Deadline: [date]. The email should: politely but clearly reference the deadline, avoid inducing guilt, and include a direct link or action step. No explanatory opening paragraph.
+
+Short, direct reminders work better than long ones. ChatGPT tends to add too much explanation. Edit actively for brevity.
+
+<Callout type="tip">
+  These prompts are starting points. Review all outputs for factual accuracy,
+  especially on compliance topics. ChatGPT doesn't know your company, your
+  industry, or your internal processes. You do.
+</Callout>
+
+</PostLayout>

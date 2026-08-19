@@ -1,0 +1,78 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Forgetting Curve",
+  definition:
+    "Hermann Ebbinghaus's 1885 finding that memory of new information declines exponentially over time without reinforcement — typically losing 50–80% within a week.",
+  keywords: [
+    "forgetting curve",
+    "Ebbinghaus",
+    "memory retention",
+    "spaced repetition",
+    "learning science",
+  ],
+  relatedTerms: ["spaced-repetition", "retrieval-practice", "microlearning"],
+  relatedPost: "die-vergessenskurve",
+};
+
+<GlossaryLayout metadata={metadata} lang="en">
+
+The forgetting curve describes the exponential decline in memory retention that occurs when newly learned information is not revisited or applied. It was first described by Hermann Ebbinghaus, a German psychologist who published his findings in 1885 based on meticulous self-experimentation conducted over several years. His work remains foundational in the learning sciences and has direct implications for how training programs should be designed and spaced.
+
+## The 1885 experiments
+
+Ebbinghaus memorized and tested himself on thousands of nonsense syllables — invented strings like "DAX," "BUP," and "ZOL" — chosen specifically because they had no prior associations that might assist recall. By removing the effect of meaning and context, he aimed to study memory in its most fundamental form.
+
+His key finding: after a single learning session, recall fell sharply. Roughly half of the material was forgotten within an hour, with continued decline over the following days until a small stable residue remained. The rate of forgetting was fastest immediately after learning and gradually slowed — producing the characteristic exponential decay curve.
+
+Ebbinghaus also discovered what he called the "savings effect": when relearning previously forgotten material, the number of repetitions required was significantly lower than the original learning effort. Even when material could not be consciously recalled, the brain had retained some representation of it that made relearning faster. This finding suggests that "forgotten" material is not fully lost — it has become inaccessible rather than erased.
+
+## What the curve actually measures
+
+An important clarification often missing in L&D discussions: the Ebbinghaus forgetting curve was specifically about rote memorization of meaningless material with no prior context, no application, and no personal relevance. Real workplace learning differs on every one of these dimensions — knowledge that is meaningful, contextually situated, emotionally significant, or immediately applied is typically retained better and forgotten more slowly.
+
+The precise percentages (50% forgotten in an hour, 70% in a day, etc.) are frequently cited as if they apply universally. They do not. They describe a specific experimental condition. The general shape of the curve — rapid initial decay that levels off — is well-established and broadly applicable, but the exact rate depends on the meaningfulness of the material, the learner's prior knowledge, and how actively the information was processed.
+
+<Callout type="info">
+  The forgetting curve should be understood as a family of curves rather than a
+  single universal rate. Content that is meaningful, applied in practice, and
+  emotionally engaging decays far more slowly than nonsense syllables. The
+  practical implication is not "70% will be forgotten in 24 hours" — it is
+  "unreviewed learning decays, and the decay is fastest in the period
+  immediately following the learning event."
+</Callout>
+
+## The spacing effect: the main counter to the curve
+
+The most well-supported intervention against the forgetting curve is spacing — distributing practice and review across time rather than concentrating it in a single session. Ebbinghaus himself identified this: relearning before forgetting is complete requires fewer repetitions than waiting until the material is lost and starting over.
+
+Subsequent research has consistently confirmed that spaced practice produces better long-term retention than massed practice (cramming), even when total study time is identical. The spacing effect is one of the most robust findings in cognitive psychology, replicated across materials, ages, and contexts.
+
+## Retrieval practice as a reinforcement mechanism
+
+A second well-evidenced strategy is retrieval practice — actively recalling information from memory rather than passively re-reading it. Testing and self-quizzing force the learner to reconstruct the information, which strengthens the memory trace more effectively than review alone. Research by Roediger, Karpicke, and others has consistently shown that retrieval practice outperforms study time for long-term retention.
+
+Retrieval practice and spacing work well together: periodic low-stakes quizzes spaced over weeks or months after initial learning are a practically implementable and highly effective reinforcement strategy.
+
+## Implications for training design
+
+The forgetting curve creates a clear design imperative: training cannot be a single event. A one-day workshop or a completed e-learning course represents only the initial encoding event. Without reinforcement — through practice, application, spaced review, or retrieval activities — the majority of the learning investment will decay within days.
+
+Practical responses include:
+
+- **Spaced modules** that revisit key content days or weeks after initial instruction
+- **Post-training quizzes or scenarios** deployed via email or LMS at intervals after the main course
+- **Manager follow-up conversations** that require application and create a recall opportunity
+- **Performance support resources** that prompt retrieval in the flow of work
+
+<Callout type="tip">
+  The most cost-effective application of the forgetting curve research is adding
+  a follow-up element to existing training rather than extending the training
+  itself. A short five-question quiz sent one week and again one month after a
+  course, requiring active recall of key points, can significantly improve
+  long-term retention at minimal additional design cost.
+</Callout>
+
+The forgetting curve is not a counsel of despair — it is a design specification. It tells learning professionals not just that forgetting happens, but when it happens and what slows it down. That knowledge translates directly into more durable training programs.
+
+</GlossaryLayout>

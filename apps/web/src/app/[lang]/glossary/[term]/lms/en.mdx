@@ -1,0 +1,82 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Learning Management System (LMS)",
+  definition:
+    "A software platform for creating, delivering, tracking, and reporting on training programs — used by organizations to manage employee learning at scale.",
+  keywords: [
+    "LMS",
+    "learning management system",
+    "e-learning platform",
+    "training software",
+    "corporate learning",
+  ],
+  relatedTerms: ["lxp", "scorm", "xapi"],
+  relatedPost: "lms-anwendungsfaelle",
+};
+
+<GlossaryLayout metadata={metadata} lang="en">
+
+A Learning Management System is the administrative backbone of corporate training. At its core, an LMS does four things: it stores and delivers learning content, manages who is enrolled in what, tracks whether people have completed assigned training, and generates reports on that activity. Organizations use LMSs to coordinate everything from mandatory compliance courses to optional skill development programs across hundreds or thousands of employees.
+
+## What an LMS actually does
+
+The central function of an LMS is enrollment management paired with completion tracking. An administrator creates or uploads a course, assigns it to a group of employees (by role, department, location, or hire date), and the system records when each person opens, progresses through, and completes it. That completion data feeds into reporting dashboards and, where relevant, compliance audit trails.
+
+Beyond the basics, most LMS platforms today include:
+
+- **Content authoring or integration**: Either built-in tools to create courses, or integration with authoring tools like Articulate or Adobe Captivate that export in SCORM or xAPI format
+- **Assessment and certification**: Quizzes, tests, and automatically generated certificates upon completion or after passing a score threshold
+- **Notification and reminder workflows**: Automated emails for upcoming due dates, overdue completions, or new assignments
+- **Reporting and analytics**: Completion rates, assessment scores, time-in-course, and compliance status by individual, team, or organization
+
+Most LMSs also support blended learning administration — booking instructor-led sessions, tracking in-person attendance, and connecting classroom activities to digital course records.
+
+<Callout type="info">
+  SCORM compliance is the de facto requirement for LMS content interoperability.
+  A course built in Articulate Storyline exports as a SCORM package that any
+  SCORM-compliant LMS can import and track — without any custom integration
+  work.
+</Callout>
+
+## LMS vs. LXP
+
+The distinction between an LMS and a Learning Experience Platform (LXP) is frequently misunderstood. An LMS is admin-driven: an administrator decides what content exists, who can access it, and when it is required. An LXP is learner-driven: it aggregates content from multiple sources and uses algorithms to surface recommendations based on a learner's role, interests, and behavior.
+
+In practice: an LMS is where compliance training lives. An LXP is where curated learning pathways and voluntary skill development live. Many organizations run both — the LMS for mandatory programs, the LXP for discretionary learning. Smaller organizations often find that one system handles enough of both functions adequately.
+
+## Core features to evaluate
+
+When assessing an LMS, the features that most directly affect day-to-day operations are:
+
+**Content standards support**: Does it handle SCORM 1.2, SCORM 2004, and xAPI? Most modern platforms support all three, but older systems may not.
+
+**Assignment and group management**: Can you assign by role, department, or custom attribute? Can you automate enrollment based on events like hire date or promotion?
+
+**Reporting flexibility**: Can you export the compliance data your legal or HR team needs? Does the reporting match your audit requirements?
+
+**Integration with your HR system**: Syncing employee records between your HRIS and your LMS manually is error-prone. Native integrations or API access reduce administrative overhead substantially.
+
+**User experience**: A poorly designed learner interface reduces completion rates regardless of content quality. Test it with a sample of actual learners before committing.
+
+## When an LMS is the right tool — and when it isn't
+
+An LMS is the right tool when you need to assign training to specific people, track whether they completed it, and prove that they did. Compliance training, regulatory certification, and onboarding programs fit this description precisely.
+
+An LMS is the wrong tool — or at least not sufficient — when you need to support informal learning, moment-of-need performance support, social knowledge sharing, or personalized learning journeys that adapt to individual skill gaps. These use cases require either an LXP, a knowledge management system, or performance support tools designed to work alongside the actual work.
+
+<Callout type="tip">
+  Before evaluating LMS vendors, document your three most urgent use cases with
+  specific numbers: how many learners, how many courses, how often content
+  changes, and what compliance documentation you need to produce. Vendors who
+  can't address those specifics directly are selling a product that isn't
+  calibrated to your situation.
+</Callout>
+
+## A note on corporate vs. SMB LMSs
+
+The LMS market spans from corporate platforms (Cornerstone, SAP SuccessFactors, Docebo) to mid-market systems (TalentLMS, Absorb, Tovuti) to SMB-focused tools (Scibly, LearnUpon, Thinkific Business). The differences are not primarily about features — most platforms cover the core functions — but about implementation complexity, configuration overhead, and administrative burden.
+
+Corporate platforms assume dedicated L&D administrators and IT support. Mid-market and SMB platforms are increasingly designed for organizations where the training manager is also doing three other jobs. Matching the platform's operational model to your team's actual capacity is as important as matching the feature list to your requirements.
+
+</GlossaryLayout>

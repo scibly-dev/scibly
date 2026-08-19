@@ -1,0 +1,137 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "GDPR-Compliant AI Tools for HR and L&D: What You Can Actually Use",
+  description:
+    "Can you use ChatGPT to create training content? What data can go into AI tools under GDPR? A practical guide for HR and L&D teams navigating AI compliance in Germany.",
+  date: "June 12, 2026",
+  readTime: 8,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "GDPR AI tools HR",
+    "GDPR compliant AI",
+    "AI tools data protection",
+    "ChatGPT GDPR compliance",
+    "AI HR tools Europe",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+The question comes up in almost every HR and L&D team before a single prompt is typed: "Are we actually allowed to use this?" The uncertainty around GDPR and AI tools is real and understandable. But in many organizations, it results in AI tools being avoided entirely, even when legal use would be straightforward.
+
+The answer is not a simple yes or no. It depends on what data you put into which tool, under what contractual conditions, and for what purpose.
+
+## The Real Question: Which Data Goes Where?
+
+The most common mistake is asking the wrong question. The issue isn't whether ChatGPT or Claude are "GDPR-compliant" as products. The issue is what you put in as input.
+
+**What you can safely put into external AI tools:**
+
+- Anonymised course content and learning scenarios with no personal data
+- General process descriptions without names or role identifiers that could point to specific individuals
+- Publicly available information and subject-matter content
+- Compliance texts and policy documents already published internally
+- Abstract learning objectives and course structures
+
+**What does not belong in external AI tools:**
+
+- Names, email addresses, or other direct identifiers of employees
+- Performance data, appraisals, or feedback records linked to individuals
+- Health data (specially protected under Article 9 UK/EU GDPR)
+- Salary and compensation data
+- Disciplinary records or HR files
+- Organisational data that could allow identification of specific individuals
+
+The simple rule: if you read the text and can tell who it's about, it does not go into an external AI tool without a clear legal basis.
+
+## ChatGPT and Claude: What a Data Processing Agreement Actually Means
+
+Both OpenAI and Anthropic offer a Data Processing Agreement (DPA) for their Business and Corporate tiers. This is the contractual foundation required under Article 28 UK/EU GDPR when you have a third-party processor handling personal data on your behalf.
+
+With a signed DPA, using these tools for business content creation is significantly cleaner from a legal standpoint. Without one, it isn't. Anyone using a personal ChatGPT account for work doesn't have this foundation.
+
+One further point remains relevant: data is processed on servers in the United States. This means that in addition to a DPA, Standard Contractual Clauses (SCCs) are required to legitimise the data transfer to third countries under Article 46 GDPR. The major providers include SCCs as part of their business contracts.
+
+For creating course content with anonymised inputs, the combination of DPA and SCCs is practically workable. For processing employee data in a US-hosted tool, the assessment remains more complex.
+
+## Three Categories of AI Tools by Data Protection Risk
+
+Not all AI tools carry the same data protection risk. A rough classification helps with prioritisation:
+
+**Green: Usable without special restrictions**
+
+- Tools with EU data residency or on-premise deployment options
+- Tools where you only ever input non-personal content
+- Internal LLM solutions running on your own infrastructure
+
+**Amber: Check before using**
+
+- Major US providers (OpenAI, Anthropic, Google) with a DPA and SCCs available
+- Suitable for non-personal content creation with the correct contractual basis in place
+- Not suitable for direct processing of employee data without a DPIA
+
+**Red: Avoid for business use**
+
+- Tools without a DPA or with unclear data retention practices
+- Free consumer versions for business content (e.g. ChatGPT Free with a personal account)
+- Tools where inputs are explicitly used for model training with no opt-out
+- Providers with non-transparent data protection documentation
+
+## What Data Protection Officers and Works Councils Require
+
+In organisations with a works council (Betriebsrat), Article 87(1)(6) of the German Works Constitution Act (BetrVG) gives the council co-determination rights over the introduction of technical systems capable of monitoring employee behaviour or performance. Whether an AI tool used to create L&D content falls under this depends on the specific use case. A tool that generates course content is different from a system that tracks learning behaviour and makes inferences about performance.
+
+For organisations outside Germany, equivalent consultation requirements may apply depending on jurisdiction.
+
+Your Data Protection Officer (DPO) becomes relevant as soon as personal data is processed. For tools that use employee data — such as personalised learning paths based on performance data — a Data Protection Impact Assessment (DPIA) under Article 35 GDPR is likely required.
+
+Practical advice: involve your DPO early, not retrospectively. Document which tools you use, what data is processed within them, and on what legal basis. This protects you and is the key evidence in an audit.
+
+## Practical Checklist Before Deployment
+
+Before deploying a new AI tool in your HR or L&D context, check these five points:
+
+1. **DPA signed?** For every provider processing data on your behalf, you need a Data Processing Agreement.
+2. **EU data residency or SCCs in place?** If data is processed in third countries, SCCs must be in place.
+3. **No personal data as input?** If there is, you need a clear legal basis and potentially a DPIA.
+4. **DPO informed?** Especially for new categories of tools or anything touching employee data.
+5. **Works council or staff consultation completed?** Where the tool is capable of monitoring behaviour or performance.
+
+<Callout type="warning">
+  Free consumer versions of AI tools (e.g. ChatGPT Free) typically offer no DPA
+  and are therefore not recommended for business use, even for anonymised
+  content. Upgrading to a Business or Team tier is the first necessary step.
+</Callout>
+
+## Which Tools Are Practical Recommendations
+
+For **content creation without personal data** (writing courses, developing scenarios, formulating learning objectives):
+
+- **ChatGPT Business/Corporate** and **Claude for Work**: Both offer DPAs and SCCs. With non-personal inputs, using these tools for course content is legally workable.
+- Important: conclude the contract at the organisational level, not through a personal account.
+
+For tools that **process employee data** (learning progress, performance data, personalised recommendations):
+
+- EU-hosted solutions or providers with a clearly audited DPA and DPIA documentation are required.
+- When evaluating LMS providers, check EU data residency explicitly.
+
+**Scibly** is built GDPR-compliant by design and holds all data within the EU. For HR and L&D teams who want a platform that doesn't force compliance questions at every step, that's a practical difference.
+
+## The Takeaway
+
+"Can we use AI?" is the wrong starting question. The right one is: "Which AI tool do we use for which purpose, with which data, under what contractual conditions?"
+
+For creating training content without personal data, ChatGPT Business or Claude for Work with a valid DPA is a realistic and legally workable option today. For anything that touches employee data, more due diligence is needed, but that's no reason to rule out AI altogether.
+
+Compliance anxiety that leads to total paralysis is not a data protection strategy. A deliberate decision about which tools are used under which conditions, is.
+
+</PostLayout>

@@ -1,0 +1,139 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "DSGVO-konforme KI-Tools für HR und L&D: Was du wirklich einsetzen darfst",
+  description:
+    "Darf ich ChatGPT für die Kurserstellung nutzen? Welche Daten dürfen in KI-Tools? Ein praktischer Leitfaden für HR und L&D unter der DSGVO.",
+  date: "12. Juni 2026",
+  readTime: 8,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "DSGVO KI-Tools HR",
+    "DSGVO-konforme KI",
+    "KI-Tools Datenschutz",
+    "ChatGPT DSGVO",
+    "KI HR-Tools Deutschland",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+Die Frage taucht in fast jedem HR- und L&D-Team auf, bevor auch nur ein Prompt eingegeben wird: "Dürfen wir das überhaupt?" Die Unsicherheit rund um DSGVO und KI-Tools ist real und verständlich. Aber sie führt in vielen Organisationen dazu, dass KI-Werkzeuge gar nicht genutzt werden, obwohl legale Nutzung möglich wäre.
+
+Die Antwort ist kein einfaches Ja oder Nein. Sie hängt davon ab, welche Daten du in welches Tool eingibst, unter welchen vertraglichen Bedingungen, und für welchen Zweck.
+
+## Die eigentliche Frage: Welche Daten gehen wohin?
+
+Der häufigste Fehler ist, die Frage falsch zu stellen. Es geht nicht darum, ob ChatGPT oder Claude "DSGVO-konform" sind. Es geht darum, welche Daten du als Input nutzt.
+
+**Was du bedenkenlos in externe KI-Tools eingeben kannst:**
+
+- Anonymisierte Kursinhalte und Lernszenarien ohne Personenbezug
+- Allgemeine Prozessbeschreibungen ohne Namen oder Rollenbezeichnungen, die Rückschlüsse auf Personen erlauben
+- Öffentlich bekannte Informationen und Fachinhalte
+- Compliance-Texte und Policy-Dokumente, die bereits veröffentlicht sind
+- Abstrakte Lernziele und Kursstrukturen
+
+**Was nicht in externe KI-Tools gehört:**
+
+- Namen, E-Mail-Adressen oder andere direkte Identifikatoren von Mitarbeitenden
+- Leistungsdaten, Beurteilungen oder Feedbackberichte mit Personenbezug
+- Gesundheitsdaten (besonders geschützt unter Art. 9 DSGVO)
+- Gehalts- und Vergütungsdaten
+- Disziplinarische Vorgänge oder HR-Akten
+- Organisationsdaten, die Rückschlüsse auf konkrete Personen erlauben
+
+Die einfache Regel: Wenn du den Text liest und daraus ablesen kannst, um wen es geht, gehört er nicht in ein externes KI-Tool ohne klare rechtliche Grundlage.
+
+## ChatGPT und Claude: Was der Auftragsverarbeitungsvertrag bedeutet
+
+Sowohl OpenAI als auch Anthropic bieten für ihre Business- und Corporate-Tarife einen Auftragsverarbeitungsvertrag (AVV) an. Das ist die vertragliche Grundlage, die nach Art. 28 DSGVO erforderlich ist, wenn du personenbezogene Daten durch einen Dienstleister verarbeiten lässt.
+
+Mit einem unterschriebenen AVV ist die Nutzung dieser Tools für die geschäftliche Inhaltserstellung deutlich rechtssicherer. Wichtig: Ohne AVV gilt das nicht. Wer ChatGPT mit einem privaten Account für die Arbeit nutzt, hat diese Grundlage nicht.
+
+Allerdings bleibt ein relevanter Punkt: Die Daten werden auf Servern in den USA verarbeitet. Das bedeutet, dass zusätzlich zu einem AVV sogenannte Standardvertragsklauseln (Standard Contractual Clauses, SCCs) erforderlich sind, um den Datentransfer in Drittstaaten nach Art. 46 DSGVO zu legitimieren. Die großen Anbieter liefern diese SCCs in der Regel als Teil ihrer Business-Verträge mit.
+
+Für die Kurserstellung mit anonymisierten Inhalten ist das Gesamtpaket aus AVV und SCCs in der Praxis gut handhabbar. Für die Verarbeitung von Mitarbeiterdaten in einem US-Tool bleibt die Bewertung komplizierter.
+
+## Die drei Kategorien von KI-Tools nach Datenschutzrisiko
+
+Nicht alle KI-Tools tragen das gleiche Datenschutzrisiko. Eine grobe Einteilung hilft bei der Priorisierung:
+
+**Grün: Einsatz ohne besondere Einschränkungen möglich**
+
+- Tools mit EU-Datenhaltung oder On-Premise-Option
+- Tools, in die ausschließlich nicht-personenbezogene Inhalte eingegeben werden
+- Interne LLM-Lösungen, die auf eigener Infrastruktur laufen
+
+**Gelb: Prüfen vor dem Einsatz**
+
+- Große US-Anbieter (OpenAI, Anthropic, Google) mit verfügbarem AVV und SCCs
+- Geeignet für nicht-personenbezogene Inhaltserstellung, wenn die Vertragsgrundlage steht
+- Nicht geeignet für die direkte Verarbeitung von Mitarbeiterdaten ohne DPIA
+
+**Rot: Finger weg für geschäftliche Nutzung**
+
+- Tools ohne AVV oder mit unklarer Datenretention
+- Kostenlose Consumer-Versionen für Geschäftsinhalte (ChatGPT Free, kein Business-Konto)
+- Tools, bei denen Eingabedaten explizit für das Training genutzt werden und kein Opt-out besteht
+- Anbieter ohne transparente Datenschutzdokumentation
+
+## Was Betriebsräte und Datenschutzbeauftragte verlangen
+
+Wenn KI-Tools in HR-Prozesse integriert werden, kommen zwei weitere Instanzen ins Spiel.
+
+Nach § 87 Abs. 1 Nr. 6 BetrVG hat der Betriebsrat ein Mitbestimmungsrecht bei der Einführung und Anwendung technischer Einrichtungen, die dazu geeignet sind, das Verhalten oder die Leistung der Arbeitnehmer zu überwachen. Ob ein KI-Tool, das L&D-Inhalte erstellt, darunter fällt, hängt vom konkreten Einsatz ab. Ein Tool, das nur Kurse generiert, ist etwas anderes als ein System, das Lernverhalten trackt und auswertet.
+
+Der Datenschutzbeauftragte (DSB) kommt ins Spiel, sobald personenbezogene Daten verarbeitet werden. Bei Tools, die Mitarbeiterdaten nutzen (z.B. personalisierte Lernpfade auf Basis von Performance-Daten), ist eine Datenschutz-Folgenabschätzung (DPIA) nach Art. 35 DSGVO wahrscheinlich erforderlich.
+
+Praktischer Rat: Involviere den DSB frühzeitig, nicht nachträglich. Dokumentiere, welche Tools du einsetzt, welche Daten darin verarbeitet werden, und auf welcher Rechtsgrundlage. Das schützt dich und ist bei einem Audit der entscheidende Nachweis.
+
+## Praktische Checkliste vor dem Einsatz
+
+Bevor du ein neues KI-Tool in deinem HR- oder L&D-Kontext einsetzt, prüfe diese fünf Punkte:
+
+1. **AVV unterschrieben?** Für jeden Anbieter, der Daten für dich verarbeitet, brauchst du einen Auftragsverarbeitungsvertrag.
+2. **EU-Datenhaltung oder SCCs vorhanden?** Wenn die Daten in Drittstaaten verarbeitet werden, müssen SCCs vorliegen.
+3. **Kein Personenbezug als Input?** Wenn doch, braucht es eine klare Rechtsgrundlage und ggf. eine DPIA.
+4. **DSB informiert?** Insbesondere bei neuen Kategorien von Tools oder bei Tools, die Mitarbeiterdaten berühren.
+5. **Betriebsrat konsultiert?** Wenn das Tool geeignet ist, Verhalten oder Leistung zu überwachen.
+
+<Callout type="warning">
+  Kostenlose Consumer-Versionen von KI-Tools (z.B. ChatGPT Free) bieten in der
+  Regel keinen AVV und sind daher für die geschäftliche Verarbeitung auch
+  anonymisierter Inhalte nicht empfehlenswert. Der Umstieg auf einen Business-
+  oder Team-Tarif ist der erste notwendige Schritt.
+</Callout>
+
+## Welche Tools konkret empfehlenswert sind
+
+Für die **Inhaltserstellung ohne Personenbezug** (Kurse schreiben, Szenarien entwickeln, Lernziele formulieren) gilt:
+
+- **ChatGPT Business/Corporate** und **Claude for Work**: Beide bieten AVV und SCCs. Mit nicht-personenbezogenen Inputs ist die Nutzung für Kursinhalte rechtlich gut handhabbar.
+- Wichtig: Schließe die Verträge auf Unternehmensebene ab, nicht über einen privaten Account.
+
+Für Tools, die **Mitarbeiterdaten verarbeiten** (Lernfortschritte, Performancedaten, personalisierte Empfehlungen):
+
+- Hier sind EU-gehostete Lösungen oder Anbieter mit klarem, geprüftem AVV und einer DPIA-Dokumentation notwendig.
+- Achte bei LMS-Anbietern explizit auf EU-Datenhaltung.
+
+**Scibly** ist von Grund auf DSGVO-konform entwickelt und hält alle Daten in der EU. Für HR- und L&D-Teams, die eine Plattform suchen, die Compliance-Anforderungen nicht zum Nachdenken zwingt, ist das ein entscheidender Unterschied.
+
+## Was du mitnehmen solltest
+
+Die Frage "Dürfen wir KI nutzen?" ist die falsche Ausgangsfrage. Die richtige Frage ist: "Welches KI-Tool setzen wir für welchen Zweck ein, mit welchen Daten, unter welchen vertraglichen Bedingungen?"
+
+Für die Erstellung von Schulungsinhalten ohne Personenbezug ist der Einsatz von ChatGPT Business oder Claude for Work mit einem gültigen AVV heute eine realistische und rechtlich handhabbare Option. Für alles, was Mitarbeiterdaten berührt, braucht es mehr Sorgfalt, aber das ist kein Grund, KI vollständig auszuklammern.
+
+Compliance-Angst, die zur Totalblockade führt, ist keine Datenschutzstrategie. Eine durchdachte Entscheidung darüber, welche Tools unter welchen Bedingungen genutzt werden, schon.
+
+</PostLayout>

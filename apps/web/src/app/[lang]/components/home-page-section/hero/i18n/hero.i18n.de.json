@@ -1,0 +1,268 @@
+{
+  "hero": {
+    "eyebrow": "KI gestützte Lernplattform",
+    "title": "Die Lernplattform für ",
+    "titleHighlight": "moderne",
+    "titleSuffix": " Teams",
+    "subtitle": "Wir verwandeln vorhandenes Unternehmenswissen in interaktive Kurse.",
+    "complianceBadges": [
+      {
+        "kind": "euServer",
+        "label": "Nur EU",
+        "detail": "Jedes Dokument und jeder Modellaufruf wird auf Servern innerhalb der EU verarbeitet."
+      },
+      {
+        "kind": "gdpr",
+        "label": "100% DSGVO",
+        "detail": "Vollständig konform mit allen Datenschutzanforderungen der EU."
+      },
+      {
+        "kind": "aes",
+        "label": "AES verschlüsselt",
+        "detail": "Daten werden mit AES verschlüsselt gespeichert und geschützt übertragen."
+      },
+      {
+        "kind": "noTraining",
+        "label": "Kein Modelltraining",
+        "detail": "Deine Daten werden niemals für das Training von KI Modellen verwendet."
+      }
+    ],
+    "video": {
+      "label": "Produkttour ansehen",
+      "play": "Scibly Produkttour abspielen",
+      "title": "Scibly — Die Lernplattform für moderne Teams"
+    },
+    "previewSection": {
+      "eyebrow": "Produkt im Detail",
+      "title": "Der Arbeitsbereich hinter jedem Kurs.",
+      "demoCta": "Notebook Demo öffnen"
+    },
+    "productAlt": "scibly KI Notebook: Kurs aus Dokumenten erstellen",
+    "tabs": {
+      "notebook": {
+        "label": "KI Notebook",
+        "description": "Das Notebook ist kein Chat, der einfach drauflos generiert. Du arbeitest hand in hand mit der KI, während direkt daneben eine Live Vorschau des Kurses mitwächst.",
+        "points": [
+          {
+            "label": "Du steuerst, es entwirft",
+            "text": "Scibly stellt gezielte Fragen und schlägt Struktur, Szenen und passende Infografiken vor."
+          },
+          {
+            "label": "Ganze Workspaces",
+            "text": "Notion, Confluence und Co. anbinden, nicht nur einzelne Dokumente."
+          },
+          {
+            "label": "Nie veraltet",
+            "text": "Ändert sich eine Quelle, meldet scibly die betroffenen Lektionen und schlägt Updates vor."
+          }
+        ]
+      },
+      "courseBuilder": {
+        "label": "Kurs Builder",
+        "description": "Obwohl wir AI native sind, seid ihr nie nur Zuschauer. Der Kurs Builder ist ein vollwertiger, kollaborativer Editor.",
+        "points": [
+          {
+            "label": "Gemeinsam bearbeiten",
+            "text": "Euer Team arbeitet am selben Kurs. Szenen, Ton, Übungen und Reihenfolge bleiben anpassbar."
+          },
+          {
+            "label": "Baustein System",
+            "text": "Hinweise, Lernkarten, Charaktere und Frageblöcke wie Multiple Choice."
+          },
+          {
+            "label": "Ihr behaltet die Hoheit",
+            "text": "Ob mit der KI oder untereinander: jede Gestaltungsentscheidung bleibt bei euch."
+          }
+        ]
+      },
+      "gamification": {
+        "label": "Übung",
+        "description": "Ein Kurs wirkt erst, wenn er hängen bleibt.",
+        "points": [
+          {
+            "label": "Abwechslung beim Üben",
+            "text": "Quiz, Lückentext und Zuordnung wechseln sich durch die Lektion hindurch ab."
+          },
+          {
+            "label": "Sichtbarer Fortschritt",
+            "text": "Streaks, Combo Punkte und ein Skilltree, der zeigt, wie weit es schon ging."
+          },
+          {
+            "label": "Spielerisch, aber fundiert",
+            "text": "Alles basiert auf euren freigegebenen Inhalten."
+          }
+        ]
+      }
+    },
+    "notebook": {
+      "brand": "scibly",
+      "leave": "Notebook verlassen",
+      "newNotebook": "Neues Notebook",
+      "history": "Verlauf",
+      "historyActive": "Feedback Skills aus dem Playbook",
+      "historyItemTwo": "Cyber Sicherheit aus dem Handbuch",
+      "historyItemThree": "Compliance Refresh Q2",
+      "chatTitle": "Feedback, das ankommt",
+      "userMessage": "Lass uns aus dem Manager Playbook einen Feedback Kurs bauen. Ich steuere die Struktur, du hilfst beim Entwurf.",
+      "aiReply": "Perfekt. Ich schlage Szenen und Texte im Studio vor, du änderst alles, bevor wir weitergehen.",
+      "aiFollowUp": "Verstanden, erfahrene Führungskräfte. Ich setze auf Coaching Szenarien und Peer Review statt Einstiegsstoff.",
+      "thinking": "Nachdenken",
+      "studioBuilding": "Entwurf im Studio",
+      "studioSceneOne": "1:1 Coaching Szenarien",
+      "studioSceneTwo": "Peer Review Übung",
+      "studioSceneThree": "Feedback Checkliste",
+      "questionTitle": "Wer sind die Lernenden und was wissen sie bereits?",
+      "questionStep": "1 von 4",
+      "optBeginner": "Überwiegend neue Führungskräfte",
+      "optAdvanced": "Führen schon regelmäßig 1:1s",
+      "optMixed": "Gemischte Erfahrung im Team",
+      "skip": "Überspringen",
+      "inputPlaceholder": "Umformulierung bitten, Szene ergänzen oder Ton ändern…",
+      "tabSources": "Quellen",
+      "tabMedia": "Medien",
+      "tabStudio": "Studio",
+      "sourcesLabel": "Hochgeladen",
+      "sourceReady": "Bereit",
+      "sourceOne": "Manager_Playbook_2026.pdf",
+      "sourceOneMeta": "PDF · 24 Seiten",
+      "sourceTwo": "People Ops Workspace",
+      "sourceTwoMeta": "Notion",
+      "sourceThree": "Feedback_Beispiele.md",
+      "sourceThreeMeta": "Markdown"
+    },
+    "courseBuilder": {
+      "title": "Kurs Builder",
+      "courseTitle": "Feedback, das ankommt",
+      "previewCta": "Kurs in Aktion sehen",
+      "lessonOne": "Verhalten benennen",
+      "lessonTwo": "Gespräch führen",
+      "lessonThree": "Nachhalten",
+      "estTime": "18 Min.",
+      "scenes": "Szenen",
+      "sceneCount": "4",
+      "sceneOne": "Warum Feedback stockt",
+      "sceneTwo": "Verhalten benennen, nicht die Person",
+      "sceneThree": "Die andere Sicht einholen",
+      "sceneFour": "Nächste Schritte vereinbaren",
+      "addScene": "Szene hinzufügen",
+      "sceneLabel": "Szene 2 / 4",
+      "heading": "Verhalten benennen, nicht die Person",
+      "slashHint": "Szene gestalten… (\"/\" für Widgets)",
+      "bodyParagraph": "Gutes Feedback beschreibt, was passiert ist, nicht, wer jemand ist. So bleibt das Gespräch sachlich und lösbar.",
+      "slashInteractiveTitle": "Interaktive Blöcke",
+      "slashQuestionTitle": "Frageblöcke",
+      "slashCommands": [
+        {
+          "id": "hint",
+          "group": "interactive",
+          "label": "Hinweis",
+          "description": "Hinweis für den Leser"
+        },
+        {
+          "id": "flashcard",
+          "group": "interactive",
+          "label": "Lernkarte",
+          "description": "Interaktive Lernkarte (Flashcard)"
+        },
+        {
+          "id": "character",
+          "group": "interactive",
+          "label": "Charakter",
+          "description": "Charakter mit Sprechblase für Tipps und Erklärungen"
+        },
+        {
+          "id": "input",
+          "group": "question",
+          "label": "Eingabefeld",
+          "description": "Ideal für kurze Antworten"
+        },
+        {
+          "id": "multipleChoice",
+          "group": "question",
+          "label": "Multiple Choice",
+          "description": "Multiple Choice Frageblock"
+        },
+        {
+          "id": "cloze",
+          "group": "question",
+          "label": "Lückentext",
+          "description": "Lückentext mit Wortauswahl"
+        },
+        {
+          "id": "dragDrop",
+          "group": "question",
+          "label": "Drag & Drop",
+          "description": "Interaktives Drag & Drop"
+        },
+        {
+          "id": "freeForm",
+          "group": "question",
+          "label": "Freitextfeld",
+          "description": "Offenes Textfeld für freie Antworten"
+        },
+        {
+          "id": "matching",
+          "group": "question",
+          "label": "Paare zuordnen",
+          "description": "Linke und rechte Spalte per Antippen zuordnen"
+        }
+      ],
+      "mcLabel": "Multiple Choice",
+      "optOne": "„Du lässt bei Launches immer alles liegen“",
+      "optTwo": "„Beim Launch am Dienstag wurde die Checkliste nicht geteilt“",
+      "optThree": "„Du bist einfach nicht detailorientiert“",
+      "addOption": "Option hinzufügen",
+      "tabScene": "Szene",
+      "tabDesign": "Design",
+      "tabPreview": "Vorschau",
+      "livePreview": "Live Vorschau",
+      "replay": "Replay",
+      "checkAnswer": "Überprüfen",
+      "deviceLabel": "iPhone 15"
+    },
+    "gamification": {
+      "courseTitle": "Cyber Sicherheit im Job",
+      "comboChip": "3× Combo",
+      "streakChip": "7",
+      "nextUp": "Als Nächstes",
+      "pathStops": [
+        "Verdächtige Mails erkennen",
+        "Login schützen",
+        "Dateien sicher teilen",
+        "Vorfälle melden"
+      ],
+      "lockedLabel": "Gesperrt",
+      "lessonProgress": "Lektion 1 von 2",
+      "sceneProgress": "2 von 6 Szenen",
+      "guideTip": "IT fragt nie nach deinem Passwort im Chat. Wenn’s dringend wirkt: kurz pausieren.",
+      "question": "Eine Slack DM fragt nach deinem Passwort „zum SSO Fix“. Was tust du?",
+      "optWrong": "Passwort schicken, damit die Arbeit weitergeht",
+      "optCorrect": "Ablehnen und an die IT melden",
+      "spValue": "+18",
+      "earnedLabel": "Verdient",
+      "feedback": "Super!",
+      "backLabel": "Zurück",
+      "finishLabel": "Weiter",
+      "sceneTypeQuiz": "Quiz",
+      "sceneTypeCloze": "Lücke",
+      "sceneTypeSort": "Sortieren",
+      "clozePrompt": "Vervollständige den Satz. Beide Lücken zählen.",
+      "clozeBefore": "Fragt jemand per Mail nach deinem Passwort, solltest du",
+      "clozeMid": "und dann",
+      "clozeAfter": "über Ticket oder Telefon.",
+      "clozeGapOne": "ablehnen",
+      "clozeGapTwo": "melden",
+      "clozeBankLabel": "Wortauswahl",
+      "clozeReset": "Zurücksetzen",
+      "clozeBank": ["abschicken", "ignorieren"],
+      "dndPrompt": "Sortiere jede Inbox Situation in die passende Reaktion.",
+      "dndAvailableLabel": "Verfügbare Elemente",
+      "dndItems": [
+        "E-Mail: Passwort in 15 Minuten über neuen Link zurücksetzen",
+        "Zufällige Nachricht verspricht ein gratis Handy beim Öffnen"
+      ],
+      "dndZones": ["An IT melden", "Löschen oder ignorieren", "Sicher öffnen"],
+      "dndPlacedItem": "Dein Manager schickt eine Kalendereinladung, die ihr schon besprochen habt"
+    }
+  }
+}

@@ -1,0 +1,186 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "Planning Employee Training: A Complete Guide for HR and L&D Teams",
+  description:
+    "How to plan employee training that actually sticks — from needs analysis to delivery and measurement. A practical guide for HR managers and L&D teams without a big budget.",
+  date: "June 12, 2026",
+  readTime: 9,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "employee training plan",
+    "training planning",
+    "L&D planning",
+    "staff training guide",
+    "training needs analysis",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+Employee training programs rarely fail because of a lack of effort — they fail because of a lack of planning. Courses get built because someone said a course was needed. Content gets assembled without clarifying what the training is actually supposed to change. And employees end up clicking through modules that have no connection to their daily work.
+
+This guide describes a planning process that prevents that. Not a theoretical framework, but a practical sequence — from needs analysis to measurement — that works even if you don't have a large L&D team or a large budget.
+
+## Step 1: Identify Training Needs Properly
+
+The most common mistake: training gets planned before the need is clear. "We need GDPR training" is not a needs analysis — it's a solution looking for a problem.
+
+A real needs analysis answers three questions:
+
+**What should change?** Not "employees should know GDPR basics," but: what specific behavior should be different? Access requests are handled correctly and within the deadline. Data breaches are reported internally within 24 hours. Those are measurable changes.
+
+**Why isn't it happening now?** Missing knowledge is only one possible cause. Often it's missing processes, time pressure, unclear responsibilities, or tools that don't support the desired behavior. Training only fixes knowledge and skill gaps — not process or system problems.
+
+**Who is affected?** Not everyone needs the same training. A needs analysis segments by role, experience level, and actual risk exposure.
+
+Practical methods:
+
+- 5–10 short interviews with employees and their direct managers (15 minutes is enough)
+- Analysis of errors, complaints, or audit findings from the past 12 months
+- Ask managers: "What do employees do today that you'd like to see done differently?"
+
+<Callout type="tip">
+  When a manager says "we need training on X," always follow up: "What should be
+  different afterward?" If the answer stays vague, training probably isn't the
+  right solution — or at least not in this form.
+</Callout>
+
+## Step 2: Write Learning Objectives That Actually Guide
+
+A learning objective that doesn't work: "Employees will know GDPR basics."
+
+A learning objective that works: "Employees can correctly identify a subject access request under Art. 15 GDPR, compile the relevant data, and respond within the 30-day deadline."
+
+The difference: the second objective describes observable behavior that should happen after the training. The first describes a mental state that can't be verified.
+
+Good learning objectives follow the pattern: **[audience] can [action] in [situation] [quality criterion].**
+
+Learning objectives are the foundation for three further decisions: what format the training should take, how the assessment is structured, and how success is measured. Skip them and you make these decisions implicitly — and usually wrong.
+
+## Step 3: Choose the Right Format
+
+Not every training need requires an e-learning course.
+
+| Learning goal type                            | Suitable formats                          |
+| --------------------------------------------- | ----------------------------------------- |
+| Building knowledge (facts, rules, processes)  | E-learning, microlearning, video          |
+| Mastering procedures (step-by-step workflows) | Screencasts, guided simulation, checklist |
+| Making decisions (judging situations)         | Scenario-based e-learning, case studies   |
+| Changing attitudes                            | Discussions, peer learning, coaching      |
+| Developing practical skills                   | Practice exercises, feedback loops        |
+
+E-learning is good for knowledge and procedure goals — and weak for anything that requires real human interaction. Knowing this prevents a lot of unnecessary courses.
+
+<Callout type="info">
+  Blended learning doesn't mean "e-learning plus a meeting." It means combining
+  formats so they reinforce each other: e-learning for foundational knowledge
+  before a workshop, followed by a short microlearning sequence over 4 weeks to
+  aid retention.
+</Callout>
+
+## Step 4: Develop or Source Content
+
+Only now comes the question: build or buy?
+
+**Build it yourself** makes sense when:
+
+- Content is company-specific (your processes, systems, culture)
+- Content changes frequently
+- External courses are too generic for your context
+
+**Buy external courses** makes sense when:
+
+- Standardized compliance topics (GDPR basics, workplace safety fundamentals)
+- Soft skills (communication, time management)
+- Specialist topics where you lack internal expertise
+
+**Use AI** makes sense when:
+
+- Quickly generating course structures and text drafts for self-built content
+- Translating or rewriting existing materials
+- Generating quiz questions and assessment tasks
+
+For most mid-market companies, a combination works best: buy compliance basics as ready-made courses, build company-specific onboarding and process content yourself. The [AI authoring tools guide](/en/blog/ki-autorentools-ratgeber) covers what that looks like in practice.
+
+## Step 5: Deploy Training Systematically
+
+Having a course is not the same as deploying it. Deployment covers:
+
+**Organizing access.** Who gets which course? Are new employees automatically assigned? Are there repeat deadlines for mandatory training?
+
+**Preparing communication.** Employees who don't know why they're supposed to take a course complete it halfheartedly. A short message from their direct manager — why this course, why now, what comes after — measurably increases completion rates.
+
+**Setting deadlines.** Mandatory training needs a deadline. Optional development needs a clear incentive or explicit integration into the working day.
+
+**Involving managers.** The strongest predictor of course completion isn't the LMS — it's whether the direct manager considers the training important. Teams whose managers completed the course themselves or actively talk about it have significantly higher completion rates.
+
+<Callout type="tip">
+  Mandatory training without a deadline rarely gets completed. Set a realistic
+  deadline — typically 2–4 weeks for a simple course — and communicate it
+  clearly. Automated reminders from the LMS shortly before expiry significantly
+  increase completion rates.
+</Callout>
+
+## Step 6: Measure Success
+
+Measuring learning effectiveness is simpler than most people think — if you know from the start what you're measuring (which is why Steps 1 and 2 come first).
+
+**Level 1 — Reaction:** Did employees find the training useful? Short satisfaction survey after completion. Important, but insufficient: high satisfaction correlates only weakly with actual learning.
+
+**Level 2 — Learning:** Were the learning objectives demonstrably achieved? Test results, case assignments, competency assessment. This is the most important measurement level for knowledge and procedure goals.
+
+**Level 3 — Behavior:** Did on-the-job behavior actually change? Observation, manager feedback, analysis of metrics like error rate or processing time. More effort, but the only level that shows whether training solved the original problem.
+
+**Level 4 — Results:** Did training affect business metrics? Relevant for large programs — disproportionately expensive for most individual courses.
+
+For most mid-market teams, Level 2 plus selected Level 3 indicators is the right scope. That's not a shortcut — it's a sensible resource decision.
+
+## What a Training Plan Should Contain
+
+A training plan isn't an extensive document. It answers these questions:
+
+- What training is planned for the year or quarter?
+- Who is the target audience?
+- By when should training have been completed?
+- Who is responsible?
+- How is success measured?
+
+It can be a spreadsheet, an entry in the HR system, or a course schedule in the LMS. What matters: everyone involved has the same overview.
+
+<Callout type="info">
+  Training plans that are too detailed don't get followed. Plan at the quarterly
+  level and review monthly. Flexibility for new requirements — regulation
+  changes, new systems, unplanned incidents — matters more than a perfect annual
+  plan.
+</Callout>
+
+## The Most Common Planning Mistakes
+
+**Treating all audiences the same.** An onboarding course for new sales staff doesn't work as mandatory training for experienced technicians. Training plans need to differentiate by role and experience level.
+
+**Confusing training with communication.** If a new policy simply needs to be announced, an email with the policy attached is enough. A course only makes sense when something genuinely needs to be learned or practiced.
+
+**Not allocating resources for updates.** Content goes stale. A GDPR course built in 2021 may not cover 2026 requirements. Schedule annual reviews for all mandatory training.
+
+**Equating completion rate with learning success.** 100% completion means everyone clicked "Next." It doesn't mean everyone can apply what they learned. Quiz questions and transfer tasks measure that better.
+
+## Tools That Support This Process
+
+**For needs analysis:** Simple surveys work for most teams.
+
+**For content development:** An AI-assisted authoring tool significantly speeds up initial creation. Compliance standard content is available from course marketplaces.
+
+**For delivery and tracking:** An LMS that automates course assignments, documents completions, issues certificates, and sends reminders. Tracking this in spreadsheets costs hours of administration instead of content work.
+
+Scibly connects course creation and LMS in one system — no implementation project required. [Try it free](/en).
+
+</PostLayout>

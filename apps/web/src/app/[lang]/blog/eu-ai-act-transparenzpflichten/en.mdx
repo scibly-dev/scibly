@@ -1,0 +1,94 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "EU AI Act Article 50: What the Transparency Obligations Mean for Your Company",
+  description:
+    "Article 50 of the EU AI Act requires disclosure for chatbots, AI-generated content, and deepfakes starting August 2, 2026. Who is affected and what to actually do about it.",
+  date: "July 24, 2026",
+  readTime: 10,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1555255707-c07966088b7b?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "eu ai act article 50",
+    "ai transparency obligation",
+    "chatbot disclosure requirement",
+    "labeling ai generated content",
+    "deepfake disclosure requirement",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+Article 50 of the EU AI Act requires companies, starting August 2, 2026, to disclose the use of certain AI systems: chatbots must identify themselves as AI, AI-generated content must be marked in a machine-readable format, and deepfakes need a visible disclosure. This is a separate obligation from the AI literacy requirement in [Article 4](/en/blog/eu-ai-act-ki-kompetenz-pflicht), and it doesn't concern training your staff internally, it concerns what becomes visible to customers, users, and the public.
+
+## Article 4 and Article 50: two different obligations
+
+The two articles are often confused because both become fully enforceable on the same date, August 2, 2026. The difference is still fundamental: Article 4 requires that your employees are sufficiently competent in using AI systems, an internal, personnel-facing obligation. Article 50 requires that certain AI uses are made recognizable to outsiders, an outward-facing, product-related obligation. A company can fully satisfy Article 4 and still violate Article 50, for example if the chatbot on its website never identifies itself as AI.
+
+## The four sub-obligations of Article 50 at a glance
+
+Article 50 bundles four distinct disclosure obligations that apply to different situations:
+
+| Paragraph  | Who is affected                                                                                | What needs to happen                                                                                                               |
+| ---------- | ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Art. 50(1) | Providers of AI systems intended to interact directly with people (chatbots, voice assistants) | Users must be able to tell they're interacting with an AI, unless this is already obvious from the context                         |
+| Art. 50(2) | Providers of AI systems generating synthetic audio, image, video, or text content              | Outputs must be marked as AI-generated in a machine-readable format                                                                |
+| Art. 50(3) | Deployers of emotion recognition or biometric categorization systems                           | Exposed persons must be informed that the system is in use                                                                         |
+| Art. 50(4) | Deployers publishing deepfakes or AI-generated text on matters of public interest              | Disclosure that the content was artificially generated or manipulated, unless there was human editorial review with accountability |
+
+Exemptions exist for authorized law enforcement activities under certain conditions, and for content that is evidently an artistic, creative, satirical, or fictional work, provided an appropriate disclosure doesn't hamper the display or enjoyment of the work.
+
+<Callout type="info">
+  Just like Article 4, Article 50 carries no dedicated fine of its own. A
+  violation falls under the general "infringement of other obligations" category
+  in Article 99 of the AI Act, with a fine range of up to €15 million or 3% of
+  worldwide annual turnover, whichever is higher.
+</Callout>
+
+## What this means for everyday operations
+
+Three situations come up most often in practice.
+
+First, a chatbot on your own website or in customer service. A simple notice such as "You're chatting with our AI assistant" at the start of the conversation is sufficient in most cases. If it's already clearly obvious from the context that this is an automated system, for example a widget explicitly labeled as a "bot," the notice can be omitted, but when in doubt, an explicit disclosure is the safer choice.
+
+Second, AI-generated marketing copy, images, or videos that get published. If the content addresses a matter of public interest, such as a post on a political or social topic, the disclosure requirement under Article 50(4) applies even if only the text is AI-generated. Plain product descriptions or internal communication generally don't fall under this.
+
+Third, AI-based analysis of customer calls or candidate videos, for example emotion recognition in a call center or automated screening of applicants. Here, Article 50(3) requires informing the people affected, regardless of whether the system also qualifies as a high-risk system under Annex III of the AI Act.
+
+<Callout type="tip">
+  If you're already building a training program to satisfy the Article 4 AI
+  literacy requirement, it's worth adding a short section on the Article 50
+  disclosure obligations at the same time. Both obligations affect the same
+  teams, usually marketing, customer service, and product, and both take effect
+  on the same date.
+</Callout>
+
+That combination maps directly onto Scibly: an internal AI policy that covers both the Article 4 competency requirements and the Article 50 disclosure obligations gets turned into an interactive micro-course, complete with a documented completion record per team. The [AI usage policy template](/en/blog/ki-richtlinie-unternehmen-vorlage) is a good starting point for that.
+
+## Frequently asked questions
+
+### Does every website with a chatbot now need to disclose it?
+
+Yes, if the chatbot interacts directly with users and isn't already obviously identifiable as an automated system from context. A short, visible notice at the start of the conversation satisfies the requirement in most cases.
+
+### Does the disclosure requirement also apply to AI-generated text used only internally?
+
+No. Article 50(4) explicitly concerns content that is published and addresses matters of public interest. Purely internal documents or communication don't fall under it.
+
+### What happens if a human edits the AI-generated text before publication?
+
+Where there is editorial responsibility and genuine human review, the text disclosure requirement under Article 50(4) doesn't apply. What matters is that substantive editorial control actually took place, not just a superficial glance.
+
+### Is a note in the imprint or terms and conditions enough?
+
+No. The information must be clearly and distinctly recognizable at the moment of the first interaction or exposure to the content, not buried in a separate legal document that most users never read.
+
+</PostLayout>

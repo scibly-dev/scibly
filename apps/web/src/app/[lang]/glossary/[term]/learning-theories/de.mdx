@@ -1,0 +1,108 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Lerntheorien",
+  definition:
+    "Die drei grundlegenden Frameworks zum Verständnis, wie Lernen stattfindet: Behaviorismus (Lernen als konditionierte Reaktion), Kognitivismus (Lernen als interne Informationsverarbeitung) und Konstruktivismus (Lernen als aktiver Wissensaufbau aus Erfahrung).",
+  keywords: [
+    "Lerntheorien",
+    "Behaviorismus",
+    "Kognitivismus",
+    "Konstruktivismus",
+    "Lernpsychologie",
+  ],
+  relatedTerms: ["andragogy", "cognitive-load-theory", "social-learning"],
+  relatedPost: "didaktische-grundlagen",
+};
+
+<GlossaryLayout metadata={metadata} lang="de">
+
+Lerntheorien sind Frameworks, die die Mechanismen erklären, durch die Lernen stattfindet. Drei Theorien — Behaviorismus, Kognitivismus und Konstruktivismus — haben den nachhaltigsten Einfluss auf die Instructional-Design-Praxis. Sie sind keine historische Abfolge, bei der neuere Theorien ältere abgelöst haben. Sie sind komplementäre Perspektiven, die jeweils einen anderen Aspekt des Lernens erklären.
+
+Wer als L&D-Praktikerin oder -Praktiker alle drei kennt, weiß, wann jede anwendbar ist — und kann diagnostizieren, warum ein konkreter Designansatz wirkt oder nicht.
+
+## Behaviorismus: Lernen als konditionierte Reaktion
+
+**Kernaussage**: Lernen ist eine Verhaltensänderung, die durch die Beziehung zwischen Reizen und Reaktionen entsteht. Was zählt, ist, was die lernende Person tut — nicht, was sie denkt oder fühlt. Lernen zeigt sich im Verhalten, und Verhalten wird durch Verstärkung und Konsequenzen geprägt.
+
+**Wichtige Theoretiker**: Ivan Pawlow (klassische Konditionierung), B.F. Skinner (operante Konditionierung). Skinners programmierter Unterricht — strukturierte Sequenzen kleiner Schritte mit sofortiger Bestätigung richtiger Reaktionen — war ein direkter Vorläufer vieler eLearning-Konzepte.
+
+**Direkte Implikation für eLearning-Design**: Behavioristische Prinzipien sind am direktesten anwendbar auf:
+
+- Compliance-Training, bei dem das Ziel konsistentes regelkonformes Verhalten ist
+- Drill-and-Practice für prozedurale Fähigkeiten (Verkaufsskripte, Sicherheitsprotokoll, Software-Navigation)
+- Unmittelbares positives Feedback nach richtigen Reaktionen
+- Einsatz von Konsequenzen (nicht nur Informationen) zur Verhaltenssteuerung
+
+**Die Falle**: Ein rein behavioristischer Designansatz erzeugt Click-Next-Compliance-Kurse und mechanische Quizze. Er funktioniert, wenn Verhalten automatisiert werden soll — aber er ist ungeeignet für die Entwicklung von Urteilsvermögen, Problemlösung oder adaptiver Expertise. Wenn jeder Kurs einer behavioristischen Box gleicht — Reiz, Reaktion, Verstärkung, wiederholen — wird eine Theorie auf Lernherausforderungen angewendet, die zwei oder drei erfordern.
+
+## Kognitivismus: Lernen als Informationsverarbeitung
+
+**Kernaussage**: Lernen beinhaltet interne mentale Prozesse — Aufmerksamkeit, Enkodierung, Speicherung und Abruf. Die lernende Person ist kein passiver Reaktionsautomat, sondern eine aktive Informationsverarbeiterin. Wie Informationen organisiert, präsentiert und mit Vorwissen verbunden werden, bestimmt, wie gut sie gelernt werden.
+
+**Wichtige Theoretiker**: George Miller (Grenzen des Arbeitsgedächtnisses), Richard Atkinson und Richard Shiffrin (Mehrspeicher-Gedächtnismodell), John Sweller (Cognitive-Load-Theorie), Robert Gagné (Lernbedingungen, neun Instruktionsereignisse).
+
+**Direkte Implikation für eLearning-Design**: Kognitive Prinzipien steuern die meisten strukturellen Entscheidungen im eLearning:
+
+- Content chunken, um das Arbeitsgedächtnis nicht zu überlasten
+- Von einfach zu komplex scaffolden, um organisierte mentale Modelle aufzubauen
+- Worked Examples verwenden, um extraneous Cognitive Load zu reduzieren
+- Das Multimedia-Prinzip anwenden (Text + relevante Visualisierung > Text allein)
+- Übung verteilen (Spaced Practice), um die Konsolidierung im Langzeitgedächtnis zu nutzen
+
+**Die Falle**: Kognitivismus kann sehr gut organisierte Informationsvermittlung produzieren, die Lernende zwar erinnern, aber nicht anwenden. Informationen klar zu strukturieren ist notwendig, aber nicht ausreichend. Ein perfekt gechunkter, gut gescaffoldeter, ansprechend visualisierter eLearning-Kurs ohne Übung, Anwendung und Feedback ist eine hochwertige Vorlesung — und Vorlesungen entwickeln keine Fähigkeiten.
+
+## Konstruktivismus: Lernen als aktiver Wissensaufbau
+
+**Kernaussage**: Lernen ist ein aktiver Prozess, in dem Lernende Wissen aus ihren Erfahrungen aufbauen, neue Informationen mit bestehenden mentalen Modellen verbinden und Verständnis durch die Auseinandersetzung mit bedeutsamen Problemen entwickeln. Wissen wird nicht von Lehrenden auf Lernende übertragen — es wird von den Lernenden konstruiert.
+
+**Wichtige Theoretiker**: Jean Piaget (kognitive Entwicklungsstufen, Schemabildung), Lew Wygotski (Zone der nächsten Entwicklung, soziales Lernen), Jerome Bruner (entdeckendes Lernen), John Dewey (Lernen durch Erfahrung).
+
+**Direkte Implikation für eLearning-Design**: Konstruktivistische Prinzipien unterstützen:
+
+- Problembasiertes Lernen: Lernende mit echten Problemen konfrontieren, bevor die Lösungsmethodik gelehrt wird
+- Szenariobasiertes Lernen: Lernende konstruieren Verständnis durch das Navigieren realistischer Situationen
+- Reflexionsprompts: Lernende bitten, neuen Content mit eigenen Erfahrungen und dem eigenen Kontext zu verbinden
+- Social-Learning-Ansätze: Diskussion, Peer-Review, kollaborative Problemlösung
+- Authentisches Assessment: Messen, ob Lernende Wissen in realistischen Kontexten anwenden können
+
+**Die Falle**: Konstruktivismus ohne Struktur erzeugt offene Lernerfahrungen, in denen Lernende ohne Feedback erkunden, falsche mentale Modelle aufbauen und nie wissen, ob ihr konstruiertes Verständnis korrekt ist. Reines entdeckendes Lernen ohne Anleitung ist konsistent weniger wirksam als geführte Instruktion, besonders für Novizinnen und Novizen. Die wirksamsten konstruktivistischen Designs sind nicht ungeleitet — sie sind sorgfältig gescaffoldte Erfahrungen, die aktive Sinnstiftung erfordern.
+
+<Callout type="info">
+  Alle drei Theorien sind in jedem wirksamen Trainingsprogramm aktiv — auch wenn
+  unbeabsichtigt. Ein gut gestaltetes szenariobasiertes Modul nutzt
+  behavioristische Verstärkung (Konsequenzen für Entscheidungen), kognitive
+  Prinzipien (Arbeitsgedächtnismanagement, Sequenzierung von einfach zu komplex)
+  und konstruktivistische Mechanismen (aktive Sinnstiftung, Verbindung zu
+  Vorerfahrungen). Die Frage lautet nicht, welcher Theorie man folgt — sondern
+  welche Prinzipien für ein bestimmtes Lernziel am relevantesten sind.
+</Callout>
+
+## Ein praktischer Designleitfaden: Welche Theorie für welches Ziel?
+
+| Zieltyp                                                            | Primäre Theorie                  | Zentrale Designentscheidung                                  |
+| ------------------------------------------------------------------ | -------------------------------- | ------------------------------------------------------------ |
+| Habituelles Verhaltensverhalten (Compliance, Sicherheitsverfahren) | Behaviorismus                    | Übung + unmittelbare Konsequenz; wiederholen bis automatisch |
+| Wissen und Konzeptverständnis                                      | Kognitivismus                    | Chunken, Scaffolding, Worked Examples, Spaced Retrieval      |
+| Prozedurale Fähigkeit (Schritt-für-Schritt-Prozess)                | Kognitivismus + Behaviorismus    | Worked Example → geführte Übung → Feedback                   |
+| Urteilsvermögen und Entscheidungsfähigkeit                         | Konstruktivismus + Kognitivismus | Realistische Szenarien, Reflexion, Konsequenzen              |
+| Komplexe Problemlösung                                             | Konstruktivismus                 | Authentische Probleme, Expertenmodeling, Iteration           |
+| Einstellungen und Verhalten gegenüber anderen                      | Konstruktivismus + Behaviorismus | Soziale Szenarien, Perspektivwechsel, soziale Normen         |
+
+<Callout type="tip">
+  Bei der Diagnose eines nicht funktionierenden Trainingsprogramms prüfen,
+  welche Theorie es vorwiegend umsetzt. Die meisten unterperformenden
+  betrieblichen eLearning-Kurse sind rein behavioristisch (Click-Next mit Quiz)
+  oder rein kognitivistisch (gut strukturierter Content ohne Anwendung). Ein
+  einziges Element aus einer fehlenden Theorie hinzuzufügen — ein kurzes
+  Szenario, ein Reflexionsprompt oder einen Spaced-Retrieval-Check — erzeugt oft
+  mehr Verbesserung als ein kompletter Neuaufbau.
+</Callout>
+
+## Warum alle drei weiterhin relevant sind
+
+Die Geschichte der Lernpsychologie wird manchmal so dargestellt, als habe der Kognitivismus den Behaviorismus abgelöst, und dann der Konstruktivismus den Kognitivismus. Das ist irreführend. Der Behaviorismus hat nicht aufgehört, zu gelten; er hat nur aufgehört, die vollständige Erklärung zu sein. Operante Konditionierung erklärt noch immer, wie Konsequenzen Verhalten formen — so entstehen Gewohnheiten. Die Cognitive-Load-Theorie ist noch immer das praktischste Werkzeug zur Strukturierung von Instruktion. Der Konstruktivismus erklärt noch immer, warum Lernende, die sich aktiv mit Stoff auseinandersetzen, mehr lernen als solche, die ihn passiv konsumieren.
+
+Für Praktizierende, die unter den realen Constraints eines Unternehmens mit 50 bis 300 Mitarbeitenden designen — begrenzte Trainingszeit, festes Budget, Lernziel ist meist Verhaltensänderung in einem konkreten Kontext —, ist die praktische Kompetenz, die richtige Theorie auf das richtige Problem anzuwenden. Das beginnt damit, zu wissen, was jede einzelne eigentlich behauptet.
+
+</GlossaryLayout>

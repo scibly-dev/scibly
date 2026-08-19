@@ -1,0 +1,28 @@
+{
+  "name": "@scibly/showcase",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@scibly/course-content": "workspace:*"
+  },
+  "devDependencies": {
+    "@scibly/eslint-config": "workspace:*",
+    "eslint": "^9.39.2",
+    "typescript": "^5.8.2",
+    "vitest": "^4.1.5"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./content": "./src/content.ts",
+    "./store": "./src/store.ts"
+  }
+}

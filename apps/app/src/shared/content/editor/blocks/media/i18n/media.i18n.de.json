@@ -1,0 +1,21 @@
+{
+  "editorUi": {
+    "media": {
+      "imageType": "Bild",
+      "videoType": "Video",
+      "audioType": "Audio",
+      "noInternetConnection": "Keine Internetverbindung",
+      "addImage": "Füge ein Bild hinzu",
+      "addVideo": "Füge ein Video hinzu",
+      "addAudio": "Füge eine Audiodatei hinzu",
+      "mediaLinkPlaceholder": "Medienlink hinzufügen",
+      "changeMedia": "Medien ändern",
+      "addOrEditImageLink": "Bildlink hinzufügen/bearbeiten",
+      "addOrEditVideoLink": "Videolink hinzufügen/bearbeiten",
+      "addOrEditAudioLink": "Audiolink hinzufügen/bearbeiten",
+      "unexpectedLoadError": "Ein unerwarteter Fehler ist aufgetreten, während das {{mediaType}} geladen wurde",
+      "videoExportUnsupported": "Videos werden beim Arbeitsblatt Export nicht unterstützt",
+      "uploadNotAvailable": "Medien-Upload ist im Showcase Editor nicht verfügbar"
+    }
+  }
+}

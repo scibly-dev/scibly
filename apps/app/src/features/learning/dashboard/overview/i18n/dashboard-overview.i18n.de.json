@@ -1,0 +1,20 @@
+{
+  "learn": {
+    "stats": {
+      "totalSP": "Gesamt SP",
+      "completed": "Abgeschlossen",
+      "inProgress": "In Bearbeitung",
+      "enrolled": "Eingeschrieben"
+    },
+    "overview": {
+      "recentActivity": "Letzte Aktivitäten",
+      "viewAll": "Alle ansehen →",
+      "noActivity": "Noch keine Aktivität. Starte einen Kurs, um deinen Fortschritt hier zu sehen.",
+      "upcomingDeadlines": "Anstehende Fristen",
+      "noDeadlines": "Keine anstehenden Fristen. Du bist auf dem neuesten Stand!",
+      "active": "Aktiv",
+      "dueInDay": "Fällig in 1 Tag",
+      "dueInDays": "Fällig in {{days}} Tagen"
+    }
+  }
+}

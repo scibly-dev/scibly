@@ -1,0 +1,23 @@
+{
+  "editorUi": {
+    "clozeText": {
+      "optionalLabel": "Optional",
+      "wordBankLabel": "Word bank",
+      "resetLabel": "Reset",
+      "placeholderLead": "Type your sentence here…",
+      "gapPlaceholder": "answer",
+      "insertGapLabel": "Insert blank",
+      "makeBlankLabel": "Make blank",
+      "tabKeyLabel": "Tab",
+      "tabHintSelectLabel": "Select word",
+      "tabHintOrLabel": "or",
+      "tabHintBlankLabel": "blank",
+      "removeGapLabel": "Remove blank",
+      "distractorsLabel": "Extra words",
+      "distractorPlaceholder": "Distractor",
+      "addDistractorLabel": "Add word",
+      "removeDistractorLabel": "Remove word",
+      "solutionHintLabel": "Correct"
+    }
+  }
+}

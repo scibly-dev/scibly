@@ -1,0 +1,38 @@
+/*
+ * Inside a frame, `position: fixed` anchors to the frame — which is as tall as
+ * the whole course, not as tall as what the learner can actually see. Once the
+ * host page starts reporting where the frame sits in its viewport, full-viewport
+ * layers are pinned to that band instead.
+ *
+ * The marker attribute is set only after a rectangle has arrived, so a plain
+ * `<iframe>` with no host script never matches these rules and keeps ordinary
+ * fixed positioning.
+ *
+ * Everything below moves a layer within its frame and never changes
+ * `position`. Staying fixed is what keeps these layers out of the frame's
+ * scrollable overflow: an absolute one is content, and the frame is sized to
+ * its content, so a band-tall transparent backdrop would add its own height to
+ * the course as a stretch of blank page under it (F5). It also keeps the
+ * offsets meaningful — they are measured from the frame, which is what fixed
+ * positioning resolves against, while absolute would resolve them against
+ * whichever ancestor happened to be positioned.
+ */
+
+/*
+ * The player's own viewport-filling views are excluded: the frame is the
+ * snippet's height while one of them is open, so their ordinary fixed
+ * positioning already fills exactly the space they were written for. Pinning
+ * them to the band as well would slide and squeeze the course inside its frame
+ * as the learner scrolls the page around it.
+ */
+html[data-scibly-embed-viewport="synced"]
+  .fixed.inset-0:not([data-player-viewport-layer]) {
+  top: var(--scibly-embed-band-top);
+  bottom: auto;
+  height: var(--scibly-embed-band-height);
+}
+
+/* Radix dialogs centre themselves on the viewport; centre them on the band. */
+html[data-scibly-embed-viewport="synced"] [role="dialog"][data-state] {
+  top: calc(var(--scibly-embed-band-top) + var(--scibly-embed-band-height) / 2);
+}

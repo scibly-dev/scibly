@@ -1,0 +1,99 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Kirkpatrick Model",
+  definition:
+    "A four-level framework for evaluating training effectiveness: Reaction (learner satisfaction), Learning (knowledge gain), Behavior (on-the-job application), and Results (business impact).",
+  keywords: [
+    "Kirkpatrick model",
+    "training evaluation",
+    "learning effectiveness",
+    "L&D ROI",
+    "training assessment",
+  ],
+  relatedTerms: ["instructional-design", "action-mapping"],
+  relatedPost: "lernerfolg-messen",
+};
+
+<GlossaryLayout metadata={metadata} lang="en">
+
+The Kirkpatrick Model is the most widely used framework for evaluating the effectiveness of training programs. Developed by Donald Kirkpatrick in the 1950s and formally published in 1959, it organizes evaluation into four sequential levels — Reaction, Learning, Behavior, and Results — each measuring a different aspect of training impact. Despite being over sixty years old, it remains the default vocabulary for training measurement in most organizations.
+
+## The four levels
+
+### Level 1: Reaction
+
+Reaction measures how learners respond to the training — whether they found it relevant, engaging, useful, and well-delivered. This is typically captured through post-training satisfaction surveys, often called "smile sheets" by practitioners who are skeptical of their predictive value.
+
+Reaction data is the easiest to collect, which is why it's the most commonly measured level. It is also the least informative about actual learning or behavior change. A learner can leave a training highly satisfied without having learned anything applicable; conversely, demanding or challenging training can receive poor satisfaction ratings while producing real capability development.
+
+Kirkpatrick Jr.'s updated model distinguishes between "customer satisfaction" reaction (did you like it?) and "relevance" reaction (will this help you do your job?), arguing that the latter has more predictive value for learning and transfer.
+
+### Level 2: Learning
+
+Learning measures the extent to which participants gained the knowledge, skills, or attitudes the training intended to produce — assessed through tests, demonstrations, simulations, or scored assessments before and after the training event.
+
+Pre/post testing is the most rigorous approach, since it establishes a baseline and measures actual gain rather than just final performance. Multiple-choice tests are common but can measure only recognition; performance-based assessments more accurately capture whether learners can apply what they've learned.
+
+### Level 3: Behavior
+
+Behavior measures whether participants actually apply their learning on the job — whether the training produced any transfer to real work performance. This is where most training programs' measurement stops being rigorous and starts being aspirational.
+
+Measuring Level 3 requires observation of on-the-job performance, which means: returning to the workplace after training has had time to take effect, using structured observation, supervisor ratings, 360-degree feedback, or performance records that exist independent of the training. It is more expensive and logistically complex than Levels 1 and 2, which is the primary reason most organizations don't do it.
+
+Transfer is also contingent on conditions outside the training itself — manager support, opportunity to practice the new behavior, feedback, and organizational culture. A well-designed training can produce genuine learning (Level 2) that never transfers because the environment doesn't support the behavior (a reminder of why the COM-B model matters).
+
+### Level 4: Results
+
+Results measures the organizational outcomes that the training was intended to affect — productivity, quality, sales performance, safety incident rates, customer satisfaction, cost reduction. It connects the training investment to business goals.
+
+Level 4 measurement is the most valuable and the least commonly done. The reasons are practical: establishing causality between a training program and a business outcome is methodologically difficult, particularly in organizations where many variables affect the metrics simultaneously. Measurement at this level requires baseline data collected before training, control groups or comparison populations when possible, and a time lag sufficient for the training to have affected the outcome.
+
+<Callout type="info">
+  Most organizations measure Level 1 consistently, some measure Level 2, few
+  measure Level 3, and almost none measure Level 4 rigorously. The result is
+  that L&D functions typically cannot demonstrate their business impact — not
+  because training doesn't work, but because they're not measuring it at the
+  level that would show the impact.
+</Callout>
+
+## The "New World Kirkpatrick Model"
+
+In 2016, James Kirkpatrick (Donald's son) and Wendy Kirkpatrick published an updated version of the framework — the "New World Kirkpatrick Model" — with a significant change in perspective: rather than measuring levels in sequence from 1 to 4, they advocate designing evaluation from Level 4 backward.
+
+The logic: start by identifying the business result (Level 4) the training is intended to support. Then identify what on-the-job behaviors (Level 3) contribute to that result. Then design the training to produce those behaviors and measure whether it does (Level 2). Then collect participant reaction data (Level 1) as a secondary metric.
+
+This inverted approach pushes L&D teams to connect training design to business goals from the outset — rather than designing a course and hoping the results follow. It is consistent with action mapping's principle of starting from a measurable business goal.
+
+## Implementing Level 3 and Level 4 measurement
+
+These are the levels where measurement creates genuine organizational value and where most L&D teams struggle.
+
+For **Level 3**, practical approaches include:
+
+- Manager observation checklists deployed 30–60–90 days after training
+- Self-assessment paired with manager assessment
+- Performance data reviews comparing pre/post metrics where those metrics are tracked
+- Mystery shopping, call monitoring, or quality review for relevant roles
+
+For **Level 4**, the challenge is connecting training to outcomes while controlling for confounding factors. Useful approaches:
+
+- Identify existing business metrics that the training is intended to affect and track them before and after
+- Use cohort comparisons — compare employees who completed training against similar employees who haven't, when feasible
+- Document the logic of how the training behavior change connects to the business metric (a "chain of evidence")
+
+<Callout type="tip">
+  The most practical improvement most L&D functions can make is adding 60-day
+  follow-up to existing training — even a brief manager check-in or structured
+  self-assessment creates Level 3 data that the program currently lacks. This
+  doesn't require rigorous experimental design; even directional evidence that
+  people are applying training is more useful than no evidence at all.
+</Callout>
+
+## The main criticism
+
+The Kirkpatrick Model is so widely adopted that critiques of it sometimes get lost. The main substantive criticism: the model implies that higher levels are harder to measure but not necessarily more important to track, when in fact Level 3 and 4 data is the only evidence that matters for demonstrating business value. Organizations that collect Level 1 data rigorously and Level 3/4 data not at all are measuring the wrong things with the wrong frequency — and the model's structure doesn't discourage this.
+
+The New World model addresses this by reordering the sequence, but the measurement practice gap remains wide in most L&D functions.
+
+</GlossaryLayout>

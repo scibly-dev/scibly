@@ -1,0 +1,42 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Worked Examples",
+  definition:
+    "Step-by-step demonstrations of how to solve a problem, shown before learners attempt one themselves — a technique that reduces cognitive load for novices and supports schema acquisition, especially for complex or unfamiliar procedures.",
+  keywords: [
+    "worked examples",
+    "example-based learning",
+    "Sweller",
+    "cognitive load",
+    "subgoal labeling",
+  ],
+  relatedTerms: [
+    "cognitive-load-theory",
+    "productive-failure",
+    "deliberate-practice",
+  ],
+  relatedPost: "erst-theorie-oder-erst-uebung",
+};
+
+<GlossaryLayout metadata={metadata} lang="en">
+
+A worked example shows a complete solution step by step before learners attempt a similar task on their own. Instead of "here is the problem, solve it," the message is "here is how an expert solves this problem, now try a similar one." The technique traces back to John Sweller's Cognitive Load Theory and is one of the most thoroughly studied instructional design techniques in existence.
+
+## A concrete example from practice
+
+When onboarding a new hire to a CRM system, a manager first demonstrates on screen, step by step, how to correctly create a new lead, categorize it, and assign it to a sales rep, explaining the reasoning behind each click. Only afterward does the new employee handle a similar, but not identical, case on their own. The difference from "just let them try it": the cognitive capacity that would otherwise go into trial and error is instead available for understanding the process itself.
+
+## What the research shows
+
+A meta-analysis of worked examples in mathematics education, covering 55 studies and 181 effects, found a moderate advantage over less guided learning formats (effect size g = 0.48). The effect was larger for correct, complete examples than for flawed or incomplete ones. A refinement of the technique, called subgoal labeling, further breaks an example into named sub-steps, such as "Step 1: verify the lead source" instead of one continuous sequence without intermediate headers. Studies in introductory programming courses show that subgoal labels are associated with lower dropout rates.
+
+<Callout type="tip">
+  Worked examples work best for novices and complex, unfamiliar material. For
+  more advanced learners, the effect can partially reverse, a well-documented
+  phenomenon called the expertise reversal effect: someone who already knows a
+  procedure benefits more from independent practice than from another
+  demonstration.
+</Callout>
+
+</GlossaryLayout>

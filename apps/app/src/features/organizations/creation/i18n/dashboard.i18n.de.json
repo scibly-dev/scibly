@@ -1,0 +1,26 @@
+{
+  "dashboard": {
+    "title": "Willkommen bei Scibly",
+    "subtitle": "Dein Workspace ist bereit. Los geht's.",
+    "createOrg": {
+      "heading": "Organisation erstellen",
+      "description": "Richte deinen Organisations-Workspace ein, um mit deinem Team zusammenzuarbeiten.",
+      "nameLabel": "Organisationsname",
+      "namePlaceholder": "z. B. Muster-Schule",
+      "slugLabel": "URL-Kürzel",
+      "slugPlaceholder": "z. B. muster-schule",
+      "slugHint": "Nur Kleinbuchstaben, Zahlen und Bindestriche. Wird für deine eindeutige Organisations-URL verwendet.",
+      "submit": "Organisation erstellen",
+      "submitting": "Wird erstellt...",
+      "successToast": "Organisation erfolgreich erstellt!",
+      "errorToast": "Fehler beim Erstellen der Organisation.",
+      "slugTaken": "Dieses Kürzel ist bereits vergeben. Bitte wähle ein anderes."
+    },
+    "orgReady": {
+      "heading": "Alles bereit!",
+      "description": "Deine Organisation wurde erstellt. Weitere Features folgen in Kürze.",
+      "orgLabel": "Organisation",
+      "goToEditor": "Editor-Showcase öffnen"
+    }
+  }
+}

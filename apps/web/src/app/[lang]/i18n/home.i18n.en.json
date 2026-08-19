@@ -1,0 +1,57 @@
+{
+  "home": {
+    "metadata": {
+      "title": "scibly | The next era of corporate learning | AI-Powered LMS",
+      "description": "Turn documents into interactive courses in minutes. scibly is the first AI-native micro-learning and learning in the flow of work platform."
+    },
+    "navbar": {
+      "home": "Home",
+      "blog": "Blog",
+      "solutions": "Solutions",
+      "allUseCases": "All use cases",
+      "useCases": [
+        {
+          "label": "IT & Tech",
+          "slug": "it-companies"
+        },
+        {
+          "label": "AI Enablement",
+          "slug": "ai-enablement"
+        },
+        {
+          "label": "Trades & Construction",
+          "slug": "trades-and-construction"
+        },
+        {
+          "label": "Hospitality",
+          "slug": "hospitality"
+        },
+        {
+          "label": "Healthcare & Social",
+          "slug": "healthcare"
+        },
+        {
+          "label": "Logistics & Transport",
+          "slug": "logistics"
+        },
+        {
+          "label": "Retail",
+          "slug": "retail"
+        }
+      ],
+      "aiSkills": "AI Skills",
+      "signIn": "Log in",
+      "createAccount": "Create account",
+      "skipToContent": "Skip to content",
+      "openMenu": "Open menu",
+      "closeMenu": "Close menu"
+    },
+    "footer": {
+      "brand": "scibly",
+      "glossary": "Glossary",
+      "impressum": "Imprint",
+      "privacy": "Privacy Policy",
+      "copyright": "© 2026 scibly"
+    }
+  }
+}

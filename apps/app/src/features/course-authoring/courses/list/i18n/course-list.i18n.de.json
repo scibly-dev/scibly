@@ -1,0 +1,45 @@
+{
+  "courses": {
+    "list": {
+      "title": "Kurse",
+      "subtitle": "Verwalte die Lerninhalte und Kurse deiner Organisation.",
+      "searchPlaceholder": "Kurse suchen...",
+      "createButton": "Kurs erstellen",
+      "noCourses": "Keine Kurse gefunden",
+      "adjustQuery": "Versuche, deine Suchanfrage anzupassen.",
+      "publishStatus": {
+        "published": "Live",
+        "publishedShort": "Live · v{{version}}",
+        "publishedSubtitle": "Für Lernende sichtbar",
+        "unpublished": "Entwurf",
+        "unpublishedShort": "Entwurf · v{{version}}",
+        "unpublishedSubtitle": "Noch nicht veröffentlicht"
+      }
+    },
+    "mode": {
+      "sectionTitle": "Format",
+      "courseLabel": "Kurs",
+      "courseDescription": "Mehrere Lektionen, öffnet mit einer Übersicht.",
+      "lessonLabel": "Lektion",
+      "lessonDescription": "Genau eine Lektion, öffnet direkt in ihr.",
+      "badge": "Lektion",
+      "lockedByLessons": "Lösche zuerst die anderen Lektionen, oder behalte dies als Kurs."
+    },
+    "createSheet": {
+      "title": "Programm erstellen",
+      "description": "Konfiguriere die ersten Metadaten für dein neues Trainingsprogramm.",
+      "fieldTitle": "Titel des Programms",
+      "fieldTitlePlaceholder": "z. B. Informationssicherheit 101",
+      "titleRequired": "Titel ist erforderlich",
+      "fieldDescription": "Beschreibung",
+      "fieldDescriptionPlaceholder": "Beschreibe kurz die Lernziele...",
+      "fieldCategory": "Kategorie",
+      "fieldCategoryPlaceholder": "z. B. Compliance",
+      "cancel": "Abbrechen",
+      "creating": "Wird erstellt...",
+      "createButton": "Programm erstellen",
+      "toastSuccess": "Kurs erfolgreich erstellt.",
+      "toastError": "Fehler beim Erstellen des Kurses."
+    }
+  }
+}

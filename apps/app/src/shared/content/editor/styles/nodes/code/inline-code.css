@@ -1,0 +1,6 @@
+.tiptap.ProseMirror :not(pre) > code {
+  background-color: rgba(247, 246, 243, 1);
+  color: red;
+  border-radius: 0.25rem;
+  padding: 0.25rem;
+}

@@ -1,0 +1,23 @@
+{
+  "editorUi": {
+    "clozeText": {
+      "optionalLabel": "Optional",
+      "wordBankLabel": "Wortauswahl",
+      "resetLabel": "Zurücksetzen",
+      "placeholderLead": "Satz hier eingeben…",
+      "gapPlaceholder": "Antwort",
+      "insertGapLabel": "Lücke einfügen",
+      "makeBlankLabel": "Als Lücke",
+      "tabKeyLabel": "Tab",
+      "tabHintSelectLabel": "Wort wählen",
+      "tabHintOrLabel": "oder",
+      "tabHintBlankLabel": "Lücke",
+      "removeGapLabel": "Lücke entfernen",
+      "distractorsLabel": "Zusätzliche Wörter",
+      "distractorPlaceholder": "Ablenkung",
+      "addDistractorLabel": "Wort hinzufügen",
+      "removeDistractorLabel": "Wort entfernen",
+      "solutionHintLabel": "Richtig"
+    }
+  }
+}

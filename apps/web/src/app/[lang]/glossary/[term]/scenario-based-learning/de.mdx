@@ -1,0 +1,99 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Szenariobasiertes Lernen",
+  definition:
+    "Eine Lernstrategie, bei der Lernende in realistische Arbeitssituationen versetzt werden, die Entscheidungen erfordern – wobei die Konsequenzen dieser Entscheidungen, nicht die Inhaltsvermittlung, den zentralen Lernmechanismus bilden.",
+  keywords: [
+    "szenariobasiertes Lernen",
+    "Branching Scenarios",
+    "Entscheidungstraining",
+    "Instructional Design",
+    "Fallbasiertes Lernen",
+  ],
+  relatedTerms: [
+    "instructional-design",
+    "action-mapping",
+    "merrills-first-principles",
+  ],
+  relatedPost: "map-it-cathy-moore",
+};
+
+<GlossaryLayout metadata={metadata} lang="de">
+
+Szenariobasiertes Lernen beruht auf einer einfachen Prämisse: Menschen lernen bessere Entscheidungen zu treffen, indem sie Entscheidungen üben — nicht, indem sie lesen, wie Entscheidungen getroffen werden sollten. Das Szenario versetzt die lernende Person in eine realistische Situation, stellt ihr eine Wahlmöglichkeit mit echten Konsequenzen vor und liefert Folgen, die davon abhängen, was sie gewählt hat. Die Konsequenz — nicht der erklärende Content danach — ist der eigentliche Lernmotor.
+
+Das ist ein wesentlicher Bruch mit dem inhaltsorientierten Standardmodell vieler eLearning-Kurse. Content-First-Design geht davon aus, dass Menschen etwas tun, wenn man ihnen erklärt, was zu tun ist. Szenariobasiertes Lernen geht davon aus, dass Urteilsvermögen durch Übung entsteht, nicht durch Erklärung.
+
+## Warum szenariobasiertes Lernen wirkt
+
+Die kognitiven Grundlagen sind solide. Wenn Lernende mit einem realistischen Szenario konfrontiert werden, aktivieren sie dieselben Problemlösungsprozesse, die sie in der echten Situation nutzen würden. Dieser Effekt — auch „desirable difficulty" genannt — macht deutlich: Die Anstrengung, eine realistische Entscheidung zu navigieren, ist der Lernmechanismus, kein Hindernis.
+
+Drei Wirkprinzipien stützen die Effektivität szenariobasierten Lernens:
+
+**Üben unter realistischen Bedingungen.** Je näher die Trainingsumgebung dem tatsächlichen Arbeitskontext entspricht, desto höher die Wahrscheinlichkeit des Transfers. Szenarien, die reale Arbeitssituationen spiegeln — mit denselben Constraints, unvollständigen Informationen und konkurrierenden Prioritäten — erzeugen mehr Transfer als abstrakte Fallstudien.
+
+**Unmittelbares, konsequentes Feedback.** Im szenariobasierten Lernen lautet Feedback nicht: „Falsch — die richtige Antwort ist C." Es lautet: „Sie haben entschieden, direkt zum Kunden zu eskalieren. Das ist passiert: Der Kunde ist frustriert, und Ihre Führungskraft fragt, warum Sie sie nicht vorab informiert haben." Die Konsequenz erzeugt die emotionale Relevanz, die die Lektion einprägsam macht.
+
+**Aktivierung von Vorwissen.** Szenarien zwingen Lernende, bereits Gelerntes abzurufen und anzuwenden — und verbinden neue Konzepte mit bestehenden mentalen Modellen. Dieser Abrufprozess ist selbst ein wirksamer Mechanismus zur Gedächtniskonsolidierung.
+
+## Fünf Prinzipien für wirksame Szenarien
+
+### 1. Von einem echten Performance-Gap ausgehen, nicht von einer Inhaltsliste
+
+Szenarien sollten um Entscheidungen herum gebaut werden, die Mitarbeitende in der Realität tatsächlich falsch treffen. Wer ohne vorherige Analyse des konkreten Fehlers designt, entwickelt wahrscheinlich ein Szenario, das lehrt, was der Subject-Matter-Expert für wichtig hält — nicht, was das Verhalten am Arbeitsplatz verändern wird.
+
+### 2. Distraktoren wirklich verlockend machen
+
+Der häufigste Fehler im szenariobasierten Lernen: Falschantworten, die offensichtlich falsch sind. Gute Distraktoren bilden die tatsächlichen Denkfehler der Zielgruppe ab. Wenn die falsche Wahl keine ist, die ein vernünftiger Mensch ernsthaft treffen würde, wird Wiedererkennung getestet, nicht Urteilsvermögen.
+
+### 3. Konsequenzen, nicht Erklärungen, die Arbeit machen lassen
+
+Der Impuls, nach jeder Fehlentscheidung sofort zu erklären, warum sie falsch war, sollte gebremst werden. Erst die Konsequenz ausrollen lassen. Wer das Ergebnis einer schlechten Entscheidung erlebt, erinnert sich daran besser als jemand, der gelesen hat, warum seine Wahl suboptimal war.
+
+### 4. Fidelity an die Entscheidung anpassen, nicht ans Budget
+
+Die Produktionstreue eines Szenarios — wie realistisch es aussieht — korreliert kaum mit seiner Lernwirksamkeit. Ein textbasiertes Branching-Szenario mit scharfen Distraktoren und realistischen Konsequenzen schlägt ein aufwändig produziertes Video-Szenario mit offensichtlichen Falschantworten jedes Mal. Das Budget besser in die Qualität der Entscheidungsarchitektur investieren als in die Optik.
+
+### 5. Die volle Komplexität der realen Situation abbilden
+
+Echte Entscheidungen im Arbeitsalltag sind mehrdeutig, basieren auf unvollständigen Informationen und erfordern das Abwägen konkurrierender Prioritäten. Szenarien, die diese Komplexität bereinigen, trainieren eine Version der Fähigkeit, die es am Arbeitsplatz nicht gibt.
+
+<Callout type="tip">
+  Bevor eine einzige Zeile Szenario-Content geschrieben wird: die drei
+  häufigsten Fehler identifizieren, die die Zielgruppe in dieser Situation
+  macht. Die Falschantworten sollten direkte Abbilder dieser Fehler sein. Lassen
+  sich keine drei realistischen Fehler benennen, fehlt noch das nötige Wissen
+  über den Performance-Gap für ein wirksames Szenario.
+</Callout>
+
+## Branching- vs. lineare Szenarien
+
+**Lineare Szenarien** präsentieren eine Situation, eine Entscheidung und eine Konsequenz. Sie eignen sich, wenn ein spezifischer Entscheidungspunkt isoliert geübt werden soll — etwa das Erkennen eines Social-Engineering-Versuchs oder die korrekte Kategorisierung einer Ausgabe.
+
+**Branching Scenarios** verketten Entscheidungen so, dass frühere Entscheidungen spätere Situationen beeinflussen. Sie bilden die Realität der meisten Arbeitsaufgaben treffender ab: Die Konsequenzen, wie der erste Teil einer Situation gehandhabt wird, formen, was als Nächstes kommt. Branching Scenarios sind deutlich komplexer im Design und in der Pflege. Sie sollten eingesetzt werden, wenn die Abhängigkeit zwischen Entscheidungen zentral für das Lernziel ist — nicht als Standard.
+
+## Wann szenariobasiertes Lernen nicht sinnvoll ist
+
+Szenariobasiertes Lernen ist nicht für jedes Lernziel geeignet. Es ist optimiert für die Entwicklung von Urteilsvermögen und Entscheidungsfähigkeit — Situationen, in denen es keine eindeutige Antwort gibt, Kontext eine Rolle spielt oder die Herausforderung darin besteht, Wissen unter realistischen Bedingungen anzuwenden.
+
+Es ist nicht das richtige Mittel für:
+
+- **Wissensabruf-Ziele**, bei denen die lernende Person schlicht eine Tatsache, einen Prozessschritt oder eine Definition erinnern muss. Eine Referenz oder Spaced Repetition ist effizienter.
+- **Prozedurale Fähigkeiten ohne Ambiguität**, bei denen die korrekte Reihenfolge fest definiert ist. Eine Schritt-für-Schritt-Anleitung ist besser als ein Entscheidungsszenario.
+- **Bewusstseinsziele**, bei denen es nur um Bekanntschaft mit einem Konzept geht, nicht um die Fähigkeit, danach zu handeln.
+
+<Callout type="info">
+  Eine der häufigsten Fehlanwendungen: Szenarien für Themen entwickeln, die kein
+  Urteilsvermögen erfordern — Compliance-Trainings, bei denen die richtige
+  Antwort immer „Richtlinie befolgen" lautet und jede andere Wahl offensichtlich
+  falsch ist. Wenn es wirklich nur eine richtige Antwort gibt und keinen
+  realistischen Grund, sich anders zu entscheiden, baut das Szenario kein
+  Urteilsvermögen auf — es fügt der Inhaltsvermittlung nur Reibung hinzu.
+</Callout>
+
+## Der Zusammenhang mit Action Mapping
+
+Cathy Moores Action-Mapping-Methodik ist in ihrer Logik eng mit szenariobasiertem Lernen verbunden. Beide gehen von einem realen Performance-Gap aus, identifizieren die Entscheidungen, die diesen Gap erzeugen, und gestalten Übungen rund um diese Entscheidungen. Wer eine Action Map erstellt hat, hat die zu übenden Entscheidungen bereits identifiziert — Szenarien sind das natürliche Übungsformat für Entscheidungsziele.
+
+</GlossaryLayout>

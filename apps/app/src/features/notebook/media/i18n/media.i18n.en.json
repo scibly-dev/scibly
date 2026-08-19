@@ -1,0 +1,12 @@
+{
+  "notebook": {
+    "mediaLibrary": {
+      "title": "Media",
+      "emptyTitle": "No generated images yet",
+      "empty": "Images created by the assistant will appear here for reuse in your course.",
+      "loading": "Loading media…",
+      "insertIntoScene": "Insert into scene",
+      "open": "Open"
+    }
+  }
+}

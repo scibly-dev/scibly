@@ -1,0 +1,268 @@
+{
+  "hero": {
+    "eyebrow": "AI powered learning platform",
+    "title": "The learning platform for ",
+    "titleHighlight": "modern",
+    "titleSuffix": " teams",
+    "subtitle": "We turn your existing company knowledge into interactive courses.",
+    "complianceBadges": [
+      {
+        "kind": "euServer",
+        "label": "EU only",
+        "detail": "Every document and every model call is processed on servers inside the EU."
+      },
+      {
+        "kind": "gdpr",
+        "label": "100% GDPR",
+        "detail": "Fully compliant with all European Union data protection requirements."
+      },
+      {
+        "kind": "aes",
+        "label": "AES encrypted",
+        "detail": "Data is stored with AES encryption and protected in transit."
+      },
+      {
+        "kind": "noTraining",
+        "label": "No model training",
+        "detail": "Your data is never used to train AI models."
+      }
+    ],
+    "video": {
+      "label": "Watch the product tour",
+      "play": "Play the Scibly product tour",
+      "title": "Scibly — The learning platform for modern teams"
+    },
+    "previewSection": {
+      "eyebrow": "Product in detail",
+      "title": "The workspace behind every course.",
+      "demoCta": "Open notebook demo"
+    },
+    "productAlt": "Scibly AI notebook: creating a course from your documents",
+    "tabs": {
+      "notebook": {
+        "label": "AI Notebook",
+        "description": "The notebook isn’t a chat that just generates on its own. You work hand in hand with the AI while a live preview of the course grows beside you.",
+        "points": [
+          {
+            "label": "You steer, it drafts",
+            "text": "Scibly asks targeted questions and proposes structure, scenes, and matching infographics."
+          },
+          {
+            "label": "Whole workspaces",
+            "text": "Connect Notion, Confluence, and more, not just single documents."
+          },
+          {
+            "label": "Never out of date",
+            "text": "When a source changes, scibly flags the affected lessons and suggests updates."
+          }
+        ]
+      },
+      "courseBuilder": {
+        "label": "Course Builder",
+        "description": "We’re AI native, but you’re never just a spectator. The Course Builder is a full collaborative editor.",
+        "points": [
+          {
+            "label": "Edit together",
+            "text": "Your team works on one course. Scenes, tone, exercises, and order stay editable."
+          },
+          {
+            "label": "Build with blocks",
+            "text": "Hints, flashcards, characters, and question types like multiple choice."
+          },
+          {
+            "label": "You keep control",
+            "text": "With AI or with each other, every creative call stays yours."
+          }
+        ]
+      },
+      "gamification": {
+        "label": "Practice",
+        "description": "A course only works when it sticks.",
+        "points": [
+          {
+            "label": "Mixed practice",
+            "text": "Quizzes, cloze, and matching take turns as learners work through a lesson."
+          },
+          {
+            "label": "Visible progress",
+            "text": "Streaks, combo points, and a skill tree that shows how far they got."
+          },
+          {
+            "label": "Playful, not shallow",
+            "text": "Everything is grounded in the content you approved."
+          }
+        ]
+      }
+    },
+    "notebook": {
+      "brand": "scibly",
+      "leave": "Leave notebook",
+      "newNotebook": "New notebook",
+      "history": "History",
+      "historyActive": "Feedback skills from playbook",
+      "historyItemTwo": "Cyber safety course from handbook",
+      "historyItemThree": "Compliance refresh Q2",
+      "chatTitle": "Feedback that lands",
+      "userMessage": "Let’s build a feedback course from our manager playbook. I’ll steer the structure, you help draft.",
+      "aiReply": "Perfect. I’ll propose scenes and copy in Studio, and you edit anything before we move on.",
+      "aiFollowUp": "Got it, experienced managers. I’ll lean on coaching scenarios and peer review instead of intro basics.",
+      "thinking": "Thinking",
+      "studioBuilding": "Drafting in Studio",
+      "studioSceneOne": "1:1 coaching scenarios",
+      "studioSceneTwo": "Peer review practice",
+      "studioSceneThree": "Feedback checklist",
+      "questionTitle": "Who are the learners, and what do they already know?",
+      "questionStep": "1 of 4",
+      "optBeginner": "Mostly new managers",
+      "optAdvanced": "Already run regular 1:1s",
+      "optMixed": "Mixed experience across teams",
+      "skip": "Skip",
+      "inputPlaceholder": "Ask for a rewrite, add a scene, or change the tone…",
+      "tabSources": "Sources",
+      "tabMedia": "Media",
+      "tabStudio": "Studio",
+      "sourcesLabel": "Uploaded",
+      "sourceReady": "Ready",
+      "sourceOne": "Manager_Playbook_2026.pdf",
+      "sourceOneMeta": "PDF · 24 pages",
+      "sourceTwo": "People Ops workspace",
+      "sourceTwoMeta": "Notion",
+      "sourceThree": "Feedback_Examples.md",
+      "sourceThreeMeta": "Markdown"
+    },
+    "courseBuilder": {
+      "title": "Course Builder",
+      "courseTitle": "Feedback that lands",
+      "previewCta": "See your course in action",
+      "lessonOne": "Name the behavior",
+      "lessonTwo": "Hold the conversation",
+      "lessonThree": "Follow through",
+      "estTime": "18 min",
+      "scenes": "Scenes",
+      "sceneCount": "4",
+      "sceneOne": "Why feedback stalls",
+      "sceneTwo": "Name the behavior, not the person",
+      "sceneThree": "Invite their view",
+      "sceneFour": "Agree on next steps",
+      "addScene": "Add scene",
+      "sceneLabel": "Scene 2 / 4",
+      "heading": "Name the behavior, not the person",
+      "slashHint": "Craft your scene… (\"/\" for widgets)",
+      "bodyParagraph": "Good feedback describes what happened, not who someone is. That keeps the conversation concrete and solvable.",
+      "slashInteractiveTitle": "Interactive blocks",
+      "slashQuestionTitle": "Question blocks",
+      "slashCommands": [
+        {
+          "id": "hint",
+          "group": "interactive",
+          "label": "Hint",
+          "description": "Hint for the reader"
+        },
+        {
+          "id": "flashcard",
+          "group": "interactive",
+          "label": "Flashcard",
+          "description": "Interactive flashcard"
+        },
+        {
+          "id": "character",
+          "group": "interactive",
+          "label": "Character",
+          "description": "Guide character with tip bubble"
+        },
+        {
+          "id": "input",
+          "group": "question",
+          "label": "Input field",
+          "description": "Best for short answers"
+        },
+        {
+          "id": "multipleChoice",
+          "group": "question",
+          "label": "Multiple choice",
+          "description": "Interactive multiple choice block"
+        },
+        {
+          "id": "cloze",
+          "group": "question",
+          "label": "Cloze text",
+          "description": "Fill gaps from a word bank"
+        },
+        {
+          "id": "dragDrop",
+          "group": "question",
+          "label": "Drag & Drop",
+          "description": "Interactive drag and drop block"
+        },
+        {
+          "id": "freeForm",
+          "group": "question",
+          "label": "Free form input",
+          "description": "Open ended text area for free answers"
+        },
+        {
+          "id": "matching",
+          "group": "question",
+          "label": "Matching pairs",
+          "description": "Match left and right tiles by tapping"
+        }
+      ],
+      "mcLabel": "Multiple Choice",
+      "optOne": "“You always drop the ball on launches”",
+      "optTwo": "“In Tuesday’s launch, the checklist wasn’t shared”",
+      "optThree": "“You’re just not detail oriented”",
+      "addOption": "Add option",
+      "tabScene": "Scene",
+      "tabDesign": "Design",
+      "tabPreview": "Preview",
+      "livePreview": "Live preview",
+      "replay": "Replay",
+      "checkAnswer": "Check",
+      "deviceLabel": "iPhone 15"
+    },
+    "gamification": {
+      "courseTitle": "Cyber safety at work",
+      "comboChip": "3× Combo",
+      "streakChip": "7",
+      "nextUp": "Up next",
+      "pathStops": [
+        "Spot suspicious emails",
+        "Protect your login",
+        "Share files safely",
+        "Report incidents"
+      ],
+      "lockedLabel": "Locked",
+      "lessonProgress": "Lesson 1 of 2",
+      "sceneProgress": "2 of 6 scenes",
+      "guideTip": "IT never asks for your password in chat. When it feels urgent, pause.",
+      "question": "A Slack DM asks for your password “to fix SSO.” What do you do?",
+      "optWrong": "Send the password so work isn’t blocked",
+      "optCorrect": "Refuse and report it to IT",
+      "spValue": "+18",
+      "earnedLabel": "Earned",
+      "feedback": "Awesome!",
+      "backLabel": "Back",
+      "finishLabel": "Continue",
+      "sceneTypeQuiz": "Quiz",
+      "sceneTypeCloze": "Cloze",
+      "sceneTypeSort": "Sort",
+      "clozePrompt": "Complete the sentence. Both gaps count.",
+      "clozeBefore": "If someone emails for your password, you should",
+      "clozeMid": "and then",
+      "clozeAfter": "via ticket or phone.",
+      "clozeGapOne": "refuse",
+      "clozeGapTwo": "report it",
+      "clozeBankLabel": "Word bank",
+      "clozeReset": "Reset",
+      "clozeBank": ["send it", "ignore it"],
+      "dndPrompt": "Sort each inbox situation into the right response.",
+      "dndAvailableLabel": "Available elements",
+      "dndItems": [
+        "Email says reset your password in 15 minutes via a new link",
+        "Random message offers a free phone if you open an attachment"
+      ],
+      "dndZones": ["Report to IT", "Delete or ignore", "Safe to open"],
+      "dndPlacedItem": "Your manager sends a calendar invite you already discussed"
+    }
+  }
+}

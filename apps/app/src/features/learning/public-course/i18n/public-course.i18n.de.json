@@ -1,0 +1,34 @@
+{
+  "publicCourse": {
+    "metadata": {
+      "title": "Kurs",
+      "description": "Schließe diesen Kurs auf Scibly ab"
+    },
+    "unavailable": {
+      "title": "Dieser Kurs ist gerade nicht verfügbar",
+      "description": "Der Link, dem du gefolgt bist, ist vorübergehend für neue Besucher geschlossen. Schau später noch einmal vorbei oder frag die Person, die ihn geteilt hat, nach einem anderen Zugang."
+    },
+    "progress": {
+      "ephemeral": "Dein Browser lässt diese Seite nichts speichern. Dein Fortschritt bleibt nur, bis du den Tab schließt."
+    },
+    "header": {
+      "offer": "Dein erster Kurs geht auf uns",
+      "cta": "Kostenlosen Kurs erstellen"
+    },
+    "footer": {
+      "message": "Mach aus deinem Wissen einen interaktiven Kurs mit Scibly.",
+      "cta": "Kostenlosen Kurs erstellen"
+    },
+    "pitch": {
+      "filename": "dein-material.pdf",
+      "demo": {
+        "question": "Wie bleibt Wissen wirklich hängen?",
+        "optionA": "Mit interaktiven Kursen",
+        "optionB": "Mit 80-Seiten-PDFs"
+      },
+      "title": "Dieser Kurs war mal ein Dokument",
+      "message": "Stell dir dein eigenes Material so vor – interaktiv statt abgeheftet. Dein erster Kurs geht auf uns.",
+      "cta": "Ersten Kurs kostenlos erstellen"
+    }
+  }
+}

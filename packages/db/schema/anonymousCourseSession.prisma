@@ -1,0 +1,33 @@
+model AnonymousCourseSession {
+  id              String           @id @default(cuid())
+  /// Cookie-based identifier for the anonymous visitor.
+  anonymousId     String
+  courseId        String
+  course          Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseVersionId String
+  courseVersion   CourseVersion    @relation(fields: [courseVersionId], references: [id], onDelete: Cascade)
+  status          EnrollmentStatus @default(NOT_STARTED)
+  totalSpEarned   Int              @default(0)
+  /// Final score percentage after course completion.
+  scorePct        Int?
+  triesUsed       Int              @default(0)
+  startedAt       DateTime         @default(now())
+  completedAt     DateTime?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  sceneAnalytics  SceneAnalytics[]
+
+  /// Where this session was opened from. Null means the row predates source
+  /// tracking — deliberately not defaulted to DIRECT, which would retroactively
+  /// relabel every existing anonymous session as share-link traffic.
+  sessionSource AnonymousSessionSource?
+  /// Normalized origin of the embedding site (scheme + host [+ port]), read
+  /// from the embed document request's referrer. Client-supplied and therefore
+  /// spoofable: this is reporting, never an authorization input.
+  embedOrigin   String?
+
+  @@unique([anonymousId, courseVersionId])
+  @@index([courseId])
+  @@index([courseVersionId])
+  @@map("anonymous_course_session")
+}

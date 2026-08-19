@@ -1,0 +1,90 @@
+/* src/editor/styles/nodes/flashcard.css */
+
+/* 1. 3D Rotation Container */
+.flashcard-container > div {
+  width: 100%;
+  transition: transform 500ms cubic-bezier(0.23, 1, 0.32, 1);
+  transform-style: preserve-3d;
+}
+
+.flashcard-container.is-flipped > div {
+  transform: rotateY(180deg);
+}
+
+/* 2. Grid Wrapper */
+.flashcard-container div:has(> .flashcard-face) {
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  grid-template-rows: 1fr !important;
+  width: 100%;
+}
+
+/* 3. Flashcard Face Layout */
+.flashcard-container .flashcard-face {
+  grid-column: 1 / -1 !important;
+  grid-row: 1 / -1 !important;
+  transition: opacity 500ms;
+
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  /* The same key as every other resting surface: 2px edge on a flat lip. */
+  border-radius: 20px;
+  border-width: 2px;
+  border-style: solid;
+  padding: 2rem;
+  box-shadow: 0 4px 0 0 var(--color-lip);
+  min-height: 200px;
+}
+
+/* 4. Front Face Visibility */
+.flashcard-container .flashcard-face:nth-of-type(1) {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 10;
+}
+.flashcard-container.is-flipped .flashcard-face:nth-of-type(1) {
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 5. Back Face Visibility */
+.flashcard-container .flashcard-face:nth-of-type(2) {
+  opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+  transform: rotateY(180deg);
+}
+.flashcard-container.is-flipped .flashcard-face:nth-of-type(2) {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 10;
+}
+
+/* 6. Front / Back Indicators */
+.flashcard-container .flashcard-face {
+  position: relative;
+}
+.flashcard-container .flashcard-face::before {
+  content: attr(data-position);
+  position: absolute;
+  bottom: 12px;
+  right: 16px;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-ink-faint);
+  pointer-events: none;
+}
+.dark .flashcard-container .flashcard-face::before {
+  color: rgba(115, 115, 115, 0.6);
+}
+
+@media screen and (max-width: 768px) {
+  .flashcard-container .flashcard-face {
+    padding: 1.25rem;
+    min-height: 150px;
+  }
+}

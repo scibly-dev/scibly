@@ -1,0 +1,41 @@
+{
+  "notebook": {
+    "studio": {
+      "imageEditor": {
+        "back": "Zurück",
+        "promptPlaceholder": "Bild beschreiben oder verfeinern…",
+        "send": "Senden",
+        "selectImage": "Bildversion {index} auswählen",
+        "aspectRatio": {
+          "trigger": "Seitenverhältnis",
+          "menuTitle": "Dieses Bild mit einem anderen Seitenverhältnis erstellen",
+          "prompt": "Dieses Bild im Format {label} ({ratio}) neu erstellen. Motiv, Inhalt und Stil beibehalten.",
+          "options": {
+            "square": "Quadratisch",
+            "portrait": "Hochformat",
+            "story": "Story",
+            "landscape": "Querformat",
+            "widescreen": "Breitbild"
+          }
+        },
+        "comments": {
+          "commentButton": "Kommentieren",
+          "clickHint": "Klicke auf eine Stelle oder ziehe, um den zu ändernden Bereich festzulegen",
+          "markerLabel": "Kommentar {index}",
+          "addPlaceholder": "Beschreibe, was hier geändert werden soll…",
+          "additionalPlaceholder": "(Optional) Weitere Änderungen hinzufügen",
+          "saveComment": "Kommentar speichern",
+          "dismissComment": "Kommentar verwerfen",
+          "deleteComment": "Kommentar löschen",
+          "clearAll": "Alle Kommentare löschen",
+          "send": "Senden",
+          "countSingular": "{count} Kommentar",
+          "countPlural": "{count} Kommentare",
+          "promptIntro": "Verfeinere dieses Bild mit diesen lokalen Änderungen:",
+          "promptItem": "{index}. Bei {x}% von links, {y}% von oben: {text}",
+          "promptAdditional": "Weitere Änderungen: {text}"
+        }
+      }
+    }
+  }
+}

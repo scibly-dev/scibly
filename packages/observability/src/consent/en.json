@@ -1,0 +1,14 @@
+{
+  "title": "This website uses cookies",
+  "message": "We use necessary cookies to run the site and optional analytics cookies to understand how Scibly is used — no ads, no selling of your data. You can accept all cookies, keep only necessary ones, or choose below.",
+  "privacyPolicy": "Privacy Policy",
+  "acceptAll": "Accept all",
+  "necessaryOnly": "Only necessary cookies",
+  "showDetails": "Show details",
+  "hideDetails": "Hide details",
+  "savePreferences": "Save preferences",
+  "necessaryTitle": "Necessary",
+  "necessaryDescription": "Required for security, login, language, and remembering your cookie choice.",
+  "analyticsTitle": "Analytics",
+  "analyticsDescription": "Helps us measure usage and improve Scibly. First-party analytics hosted in the EU."
+}

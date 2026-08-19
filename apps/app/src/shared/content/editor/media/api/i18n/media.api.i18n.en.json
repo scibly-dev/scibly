@@ -1,0 +1,4 @@
+{
+  "mediaNoUploadPermission": "The user is not allowed to upload media",
+  "mediaNoUploadPermissionForTypes": "The user is not allowed to upload media of type {{types}}"
+}

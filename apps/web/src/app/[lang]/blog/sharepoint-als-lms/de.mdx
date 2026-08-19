@@ -1,0 +1,65 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "SharePoint als LMS nutzen: Was funktioniert und was fehlt",
+  description:
+    "SharePoint lässt sich mit Ordnerstrukturen, Seiten und Microsoft-Listen als provisorische Ablage für Schulungsunterlagen nutzen, ist aber kein Lernmanagementsystem.",
+  date: "26. Mai 2026",
+  readTime: 4,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1553484771-371a605b060b?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "sharepoint als lms",
+    "sharepoint schulungsplattform",
+    "sharepoint mitarbeiterschulung",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+SharePoint lässt sich mit Ordnerstrukturen, Seiten und Microsoft-Listen als provisorische Ablage für Schulungsunterlagen nutzen, ist aber kein Lernmanagementsystem. Es fehlen zentrale LMS-Grundfunktionen: Es gibt kein automatisches Tracking, wer welchen Inhalt abgeschlossen hat, keine Lernpfade mit Reihenfolge, und keine Erinnerungsfunktion bei überfälligen Pflichtschulungen.
+
+## Was SharePoint für Schulungen leisten kann
+
+| Funktion                           | Über SharePoint umsetzbar                         |
+| ---------------------------------- | ------------------------------------------------- |
+| Dokumente und Videos ablegen       | Ja, gut geeignet                                  |
+| Grundlegende Zugriffsrechte        | Ja, über bestehende Microsoft-365-Berechtigungen  |
+| Automatisches Abschluss-Tracking   | Nein, nur mit Zusatz-Tools oder manuellem Aufwand |
+| Erinnerungen bei Pflichtschulungen | Nein, nicht ohne zusätzliche Power-Automate-Flows |
+| Interaktive Übungen oder Quizze    | Nur eingeschränkt, meist über externe Einbettung  |
+
+## Warum viele Teams trotzdem mit SharePoint starten
+
+Der Reiz liegt in der Verfügbarkeit: Wer bereits Microsoft 365 nutzt, hat SharePoint ohne zusätzliche Lizenzkosten zur Verfügung, und Dokumente lassen sich schnell ablegen. Für eine kleine Anzahl an Unterlagen und ein kleines Team funktioniert das eine Zeit lang. Sobald die Zahl der Schulungen wächst oder Nachweispflicht wichtig wird, etwa bei Pflichtschulungen, wird der manuelle Aufwand für Tracking und Erinnerung schnell unpraktikabel.
+
+## Wann sich der Umstieg auf ein echtes LMS lohnt
+
+Der Wechsel lohnt sich meist, sobald eine der folgenden Fragen mit Ja beantwortet wird: Muss nachgewiesen werden, wer eine Pflichtschulung abgeschlossen hat? Gibt es mehr als eine Handvoll Schulungsinhalte, die in einer bestimmten Reihenfolge durchlaufen werden sollen? Verbringt jemand im Team bereits regelmäßig Zeit damit, manuell nachzuhalten, wer welchen Ordner schon geöffnet hat? Sobald eine dieser Fragen zutrifft, kostet die improvisierte SharePoint-Lösung mehr Zeit, als ein dediziertes LMS einzuführen würde.
+
+## Häufige Fragen
+
+### Kann man SharePoint mit einem echten LMS kombinieren?
+
+Ja, viele Teams behalten SharePoint als allgemeine Dokumentenablage und nutzen ein separates LMS für die eigentliche Schulung mit Tracking und Lernpfaden. Beides schließt sich nicht aus.
+
+### Gibt es eine Nachweispflicht-Lösung direkt in SharePoint?
+
+Nicht direkt, nur über zusätzliche Automatisierung mit Power Automate oder externe Erweiterungen, was zusätzlichen technischen Aufwand bedeutet, den ein dediziertes LMS von Haus aus mitbringt.
+
+### Ist SharePoint für kleine Teams trotzdem eine sinnvolle Übergangslösung?
+
+Für sehr wenige, unstrukturierte Schulungsinhalte ohne Nachweispflicht kann es als Übergangslösung funktionieren. Sobald Pflichtschulungen oder mehrere zusammenhängende Kurse dazukommen, wird die fehlende Tracking-Funktion schnell zum Problem.
+
+### Was unterscheidet SharePoint als LMS von Microsoft Teams als LMS?
+
+Beide Microsoft-Werkzeuge haben dieselbe strukturelle Lücke: gute Ablage- und Kommunikationsfunktionen, aber kein echtes Lernmanagement mit automatischem Tracking. Ein Vergleich findet sich in [Microsoft Teams als LMS](/blog/microsoft-teams-als-lms).
+
+</PostLayout>

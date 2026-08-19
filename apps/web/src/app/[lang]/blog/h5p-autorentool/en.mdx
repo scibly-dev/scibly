@@ -1,0 +1,65 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "H5P as an Authoring Tool: What It Can Do and Where Its Limits Are",
+  description:
+    "H5P is a free, open-source authoring tool for interactive e-learning content that runs directly in the browser and integrates into many existing systems like Moodle or WordPress.",
+  date: "June 25, 2026",
+  readTime: 4,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1555255707-c07966088b7b?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "h5p authoring tool",
+    "h5p e-learning",
+    "h5p free",
+    "h5p interactive content",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+H5P is a free, open-source authoring tool for interactive e-learning content that runs directly in the browser and integrates into many existing systems like Moodle or WordPress. It's well suited to individual interactive building blocks, such as drag-and-drop exercises or interactive video, but it's not a full course authoring tool with its own learning path management.
+
+## What H5P can do
+
+| Feature                   | Description                                                                                       |
+| ------------------------- | ------------------------------------------------------------------------------------------------- |
+| Interactive content types | Over 40 ready-made templates: quizzes, drag-and-drop, interactive video, timelines, presentations |
+| Free and open source      | No license costs, source code freely available                                                    |
+| Embeddable                | Runs as a plugin in Moodle, WordPress, Drupal, or as a standalone website                         |
+| Browser-based             | No download needed, edit directly in the browser                                                  |
+
+## Where H5P hits its limits
+
+H5P creates individual interactive building blocks, not complete courses with a learning path, progress tracking across multiple modules, or centralized user management. Those features need to come from the platform H5P is embedded in, such as an LMS. If you use H5P on its own, you need an additional system to connect the individual blocks into a coherent course and track learner progress.
+
+## Who H5P is a good fit for
+
+H5P fits well with teams that have technical know-how and already run an LMS like Moodle and want to make individual course sections more interactive without additional license costs. For teams without their own IT infrastructure or without time to learn an additional tool, going with a standalone, document-generatable course format is often the faster path to a finished, interactive course.
+
+## Frequently asked questions
+
+### Is H5P really completely free?
+
+Yes, H5P itself is open source and free. Costs can arise indirectly, for example for hosting the platform H5P is embedded in, or for technical support if there's no in-house IT team.
+
+### Do you need coding skills for H5P?
+
+Not for the standard content types, which can be filled in through a graphical interface. For deeper customization or your own content types, development skills are helpful.
+
+### Can H5P replace a full LMS?
+
+No, H5P creates individual interactive content, not standalone learning management with user administration and cross-course progress tracking. That requires an additional LMS or comparable platform.
+
+### What's a good alternative to H5P for teams without their own IT?
+
+Tools that combine course creation and a learning platform in one from the start, without separately embedding into an existing system, significantly lower the technical entry barrier.
+
+</PostLayout>

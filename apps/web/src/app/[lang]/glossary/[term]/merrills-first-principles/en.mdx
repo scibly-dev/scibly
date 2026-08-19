@@ -1,0 +1,107 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Merrill's First Principles of Instruction",
+  definition:
+    "M. David Merrill's five evidence-based principles for effective instruction: problem-centred learning, activation of prior knowledge, demonstration of new knowledge, application with feedback, and integration into real-world context.",
+  keywords: [
+    "Merrill's first principles",
+    "first principles of instruction",
+    "instructional design",
+    "M. David Merrill",
+    "learning principles",
+  ],
+  relatedTerms: ["instructional-design", "addie", "gagnes-nine-events"],
+  relatedPost: "accidental-instructional-designer",
+};
+
+<GlossaryLayout metadata={metadata} lang="en">
+
+M. David Merrill published his First Principles of Instruction in 2002 after conducting a comprehensive review of major instructional design theories and models — including Gagné, van Merriënboer, Jonassen, and others — to identify the principles they all agreed on. His conclusion: despite surface-level differences, effective instructional theories converge on five core principles. A course that violates any one of them will be less effective; a course that violates the first is fundamentally broken regardless of how well it implements the rest.
+
+The principles are simultaneously a design framework and a diagnostic tool — they can be used to build courses from scratch or to audit and repair existing ones.
+
+## The five principles
+
+### Principle 1: Problem-centred
+
+**Effective instruction is organized around solving real-world problems.**
+
+This is the foundational principle, and violating it makes the other four largely irrelevant. A course that presents information without anchoring it to a task or problem the learner actually faces cannot produce transfer, because there is no performance context to transfer into. The learner may remember facts; they will not develop capability.
+
+In practice, this means the learning experience should be organized around a whole task — a realistic, complete problem that represents the kind of challenge the learner will face in their job. Not individual topic chunks sequenced by subject area, but a problem scenario that integrates multiple knowledge and skill elements in the way the real job integrates them.
+
+Before/after example: A new manager compliance course organized by topic ("Module 1: Employment Law Basics, Module 2: Discrimination Definitions, Module 3: Reporting Procedures") violates Principle 1. The same content organized around "You've just been told by a team member that a colleague has been making offensive comments. Here's how to handle it — and why each decision matters" aligns with it. Same regulatory content; entirely different learning architecture.
+
+### Principle 2: Activation
+
+**Learning builds on existing knowledge and experience.**
+
+New knowledge attaches to existing knowledge structures. When learners are not asked to activate relevant prior knowledge before new content is introduced, they process new information without the cognitive scaffolding that helps encode it. Activation is not about confirming that learners already know the content — it is about priming the mental structures that will receive and retain the new material.
+
+Tactics: Opening questions ("What do you already do when...?"), short reflection prompts, explicit acknowledgment of relevant experience ("You've probably dealt with X before — this module extends that to Y"), or a brief diagnostic assessment that surfaces existing mental models.
+
+### Principle 3: Demonstration
+
+**Instruction shows, not just tells.**
+
+Demonstration goes beyond presenting information — it shows learners what correct performance looks like, in context. This means worked examples, not just abstract descriptions. It means showing the process of expert decision-making, not just its output. It means annotated models that explain why the demonstrated approach works, not just what it is.
+
+The cognitive basis: learners form mental models by observing examples. A textual description of a skill activates the same memory systems as the eventual performance; an observed example creates a richer, more contextualized encoding. Multiple examples from varied contexts — not just one worked example — accelerate the formation of generalizable mental models.
+
+### Principle 4: Application
+
+**Learners must practice solving the problem — with feedback.**
+
+Application in Merrill's framework means more than recognizing a correct answer — it means performing the task. This is practice at the level of the whole task that Principle 1 established as the organizing structure. Feedback at this stage must be intrinsic to the task where possible: consequential, informative, and tied to the specific decision the learner made.
+
+The feedback quality distinction matters: "That's incorrect" is not instructional feedback. "That's incorrect — selecting that option would trigger a mandatory report to HR under the policy, which in this scenario would create a paper trail that disadvantages the employee before the informal resolution process has been tried" is. The quality of application feedback is directly proportional to the quality of learning it produces.
+
+### Principle 5: Integration
+
+**Learning connects back to the real world — and learners are given opportunity to reflect and apply.**
+
+Integration is the transfer principle: it asks what happens after the training closes. Merrill's vision of integration includes opportunities for learners to try out new skills in real contexts, reflect on their performance, and receive support for ongoing application. A learning experience that ends at a scored assessment and never returns to the learner's real work has no integration.
+
+In corporate eLearning, integration tactics include job aids that extend into the workflow, manager follow-up protocols, post-training application scenarios, and structured peer discussion of how the learning applies to real situations. These are the elements most commonly cut in course development timelines — and their absence is the most predictable cause of poor transfer.
+
+<Callout type="info">
+  The principles function as a hierarchy. A course that lacks Principle 1
+  (problem-centred structure) is fundamentally broken — adding excellent
+  demonstration or application to a topically organized information dump will
+  not rescue it. A course that has Principle 1 but lacks Application (Principle
+  4) will produce knowledge but not performance. Each principle is necessary;
+  none is sufficient alone; Principle 1 is the foundation.
+</Callout>
+
+## Merrill's principles vs. ADDIE
+
+ADDIE (Analyze, Design, Develop, Implement, Evaluate) is a process model — it describes the workflow for creating instruction. Merrill's principles are a content model — they describe what effective instruction contains. The two operate at different levels of abstraction and are entirely complementary.
+
+An instructional designer can follow ADDIE rigorously — conducting thorough needs analysis, careful design documentation, systematic development and evaluation — while producing a course that violates all five of Merrill's principles. The process can be correct while the product is ineffective. Conversely, a skilled designer can produce a course that embodies all five principles through a less formal process.
+
+The practical relationship: use ADDIE (or SAM, or any systematic process) to manage the work; use Merrill's principles to evaluate whether the product will produce learning.
+
+## Using the principles as a course redesign tool
+
+When auditing an existing course for effectiveness, Merrill's five principles provide a structured checklist:
+
+1. Is the course organized around a real task or problem, or around topics?
+2. Does anything activate learners' prior relevant knowledge before new content begins?
+3. Are worked examples and annotated demonstrations provided, or just abstract descriptions?
+4. Are learners required to perform the task (with consequential feedback), or just recognize correct answers?
+5. Is there anything after the course ends that supports real-world application?
+
+A course that fails checks 2–5 but passes check 1 has a foundation to build on. A course that fails check 1 requires a structural redesign before the other elements can help.
+
+<Callout type="tip">
+  When pitching a course redesign to a stakeholder who believes the existing
+  course is "fine," run it against Principle 4: what does the learner actually
+  have to do in the course? If the answer is "watch slides and answer
+  multiple-choice questions," the course is not producing performance — it is
+  producing familiarity with content. The distinction between content
+  familiarity and job performance is usually compelling to a business
+  stakeholder in a way that abstract learning theory is not.
+</Callout>
+
+</GlossaryLayout>

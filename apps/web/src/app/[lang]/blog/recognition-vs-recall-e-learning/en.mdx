@@ -1,0 +1,73 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title: "Recognition vs. Recall: Why Most E-Learning Quizzes Are Too Easy",
+  description:
+    "Most e-learning quizzes stay stuck at the recognition stage: a question with four answer options, one of which is obviously correct as soon as you read it.",
+  date: "June 1, 2026",
+  readTime: 4,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "e-learning quiz too easy",
+    "multiple choice vs free response learning",
+    "recognition vs recall learning",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+Most e-learning quizzes stay stuck at the recognition stage: a question with four answer options, one of which is obviously correct as soon as you read it. That feels like a knowledge check, but it only tests whether a piece of information is recognized as familiar, not whether it can actually be retrieved from memory or produced in your own words. Course design that deliberately progresses from recognition to genuine recall and to production is a well-documented pattern for deeper learning.
+
+## The difference between recognition, recall, and production
+
+Three stages, each increasingly demanding:
+
+| Stage       | What's required                                                 | Example                                               |
+| ----------- | --------------------------------------------------------------- | ----------------------------------------------------- |
+| Recognition | Identify the correct option among several given ones            | Multiple-choice question with four answer options     |
+| Recall      | Retrieve the answer yourself from memory, with no options given | Free-text question with no answer options             |
+| Production  | Apply what was learned in a new, self-formulated situation      | Correctly answer a customer inquiry in your own words |
+
+Recognition is the easiest stage, because the correct answer is already present and only needs to be identified. In day-to-day work, though, a multiple-choice selection is rarely available; knowledge usually has to be retrieved and applied with no options given. A quiz that only tests recognition therefore systematically overestimates how well someone actually knows a topic.
+
+## Why multiple choice is still so widespread anyway
+
+Multiple-choice questions are easy to create and automatically graded, which explains their popularity. The downside only shows up in the real-world test: someone who correctly answers a four-option question often can't reproduce the same information without prompts when a customer asks an open question on the phone. The gap between "can recognize the correct answer" and "can produce the answer themselves" is underestimated in many training programs.
+
+## How to evolve course design from recognition to recall
+
+A practical progression within a course section:
+
+1. **Start with recognition**, to reduce initial uncertainty and create an early sense of success.
+2. **Move to recall questions** with no answer options given, once the content has been seen once.
+3. **Finish with an application task** that requires a new, slightly different situation, not just repeating the example from the course.
+
+This progression can also be implemented within a single micro-check pair, as used in Scibly's own course format: a recall question first, then a transfer question that requires genuine, independent application instead of a second recognition question.
+
+## Frequently asked questions
+
+### Are multiple-choice questions fundamentally bad?
+
+No, they're a sensible starting point, especially right after new content, to reduce uncertainty. It becomes a problem when a course stays exclusively at this stage and never moves on to recall or application.
+
+### How do you tell if a question only tests recognition?
+
+If the answer options are phrased so the correct one jumps out immediately on reading, with no need to actively recall it beforehand, the question is mainly testing recognition.
+
+### What's the difference from retrieval practice?
+
+Retrieval practice describes the general principle of actively recalling instead of passively reading. The progression from recognition to recall and production is a concrete implementation of that principle in course design, see also [Retrieval Practice: The Simplest Way to Make Training Content Stick Long-Term](/blog/retrieval-practice-mitarbeiterschulung).
+
+### Is free-text questioning worth the extra grading effort?
+
+Yes, especially for topics with direct practical relevance, because the gap between recognition and actual application in day-to-day work is often bigger than a passed multiple-choice test would suggest. Automated grading through AI-assisted tools now significantly reduces that effort.
+
+</PostLayout>

@@ -1,0 +1,195 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "Creating Training Videos with AI: Synthesia, HeyGen & Co. in Practice",
+  description:
+    "AI avatar tools like Synthesia and HeyGen let you produce training videos without a camera or studio. What works, what doesn't, and which tool fits your use case.",
+  date: "June 12, 2026",
+  readTime: 9,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "create training videos with AI",
+    "Synthesia vs HeyGen",
+    "AI avatar video training",
+    "e-learning video AI",
+    "AI training video tool",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="en">
+
+Producing training videos traditionally costs a lot: camera, editing software, a presenter willing to be filmed, and then redoing everything when the content changes.
+
+AI video tools have dramatically lowered that cost. You write a script, choose an avatar, click "Create" — and have a professional-looking video in 10–30 minutes. What you get isn't the same as a filmed video. But for most training purposes, it's good enough.
+
+## What Tools Exist?
+
+The "AI-generated training video" category breaks into three types:
+
+**Type 1: AI avatar tools** (Synthesia, HeyGen, D-ID)
+You input text, select an avatar character, and the tool generates a video with a speaking avatar face against a background. No camera, no presenter needed. Output: a presenter-style video.
+
+**Type 2: Voice cloning and voiceover tools** (ElevenLabs, Descript, LOVO)
+These tools create or clone voices. Use case: voiceovers for slide presentations, learning videos, or screen recordings. No avatar — just voice.
+
+**Type 3: All-in-one video editing with AI** (Descript, Runway)
+Descript is the best-known: you record a real video — screen recording, camera, webinar — upload it, and the tool transcribes and makes it editable like a Word document. Delete a sentence in the transcript, it disappears in the video. Type something new, and Descript's AI voice clone fills the gap. Not for "videos without a camera" — for fast editing of real footage.
+
+## Synthesia in Practice
+
+Synthesia is the market leader for avatar-based training videos. 160+ avatars, 140+ languages, decent lip synchronisation.
+
+**What works well:**
+
+- Standard compliance training videos (GDPR, IT security, onboarding) are fast to produce
+- Content updates: change the script, regenerate the video — no re-filming
+- Multilingual output is solid; pronunciation of technical terms occasionally awkward
+- Templates available for various course formats
+- SCORM export for LMS integration available on higher tiers
+
+**What doesn't work as well:**
+
+- Avatars are visibly artificial — if you expect a "real" face, you'll be disappointed
+- Emotional nuance in delivery is limited
+- Custom avatars (your own face) cost extra and take longer
+- Price climbs quickly at high video volume
+
+**Pricing:** Personal from ≈€22/month (limited minutes), Starter ≈€67/month, Corporate custom.
+
+## HeyGen in Practice
+
+HeyGen is Synthesia's closest competitor — similar positioning with some differences.
+
+**Differences from Synthesia:**
+
+- HeyGen's video translation feature is strong: upload a video in one language, automatically translate and re-sync lips in 40+ languages. Useful for international teams.
+- Custom avatar creation is faster and cheaper than Synthesia
+- Interface is considered more intuitive for beginners
+- Voice quality comparable to Synthesia
+
+**Pricing:** Free (limited), Creator ≈$24/month, Team ≈$69/month.
+
+## Descript: When You Have Real Footage
+
+Descript works differently. You record a video — screen recording, camera, webinar — upload it to Descript, and the tool automatically transcribes it, making the video editable like a text document.
+
+Delete a sentence in the transcript and it disappears from the video. Type something new and Descript can speak it back using a cloned version of your voice.
+
+**Training video applications:**
+
+- A manager records a short intro for onboarding — Descript makes editing take minutes
+- Record a screen capture of a software tool with live commentary and clean it up afterward
+- Cut existing webinar recordings into compact learning modules
+
+Descript isn't a replacement for Synthesia/HeyGen if you have no source material. It's an editing tool for existing footage.
+
+**Pricing:** Free (limited), Creator ≈$12/month, Business ≈$24/month.
+
+## ElevenLabs: When You Just Need a Voice
+
+ElevenLabs is the strongest pure voice generation tool. No avatar, no video — just high-quality AI voices and voice cloning.
+
+**Training video applications:**
+
+- Add voiceover to a PowerPoint-based learning module
+- Narrate screen recordings without recording yourself
+- Maintain a consistent voice across all courses without re-recording
+- Update content without new recording sessions
+
+**Pricing:** Free (limited), Starter ≈$5/month, Creator ≈$22/month.
+
+## Tool Comparison at a Glance
+
+<Table>
+  <thead>
+    <tr>
+      <Th>Tool</Th>
+      <Th>Best use case</Th>
+      <Th>Voice quality</Th>
+      <Th>Entry price</Th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <Td>Synthesia</Td>
+      <Td>Presenter videos without camera, scaling across many courses</Td>
+      <Td>Good (technical terms occasionally awkward)</Td>
+      <Td>≈€22/month</Td>
+    </tr>
+    <tr>
+      <Td>HeyGen</Td>
+      <Td>Multilingual videos, fast custom avatar creation</Td>
+      <Td>Good</Td>
+      <Td>≈$24/month</Td>
+    </tr>
+    <tr>
+      <Td>Descript</Td>
+      <Td>Fast editing of existing video material</Td>
+      <Td>Good (voice clone)</Td>
+      <Td>≈$12/month</Td>
+    </tr>
+    <tr>
+      <Td>ElevenLabs</Td>
+      <Td>Voiceover for slides and screen recordings</Td>
+      <Td>Very good</Td>
+      <Td>≈$5/month</Td>
+    </tr>
+  </tbody>
+</Table>
+
+## The Production Process in Practice
+
+A training video with Synthesia or HeyGen is a five-step process:
+
+**1. Write the script**
+The script determines video quality — not the avatar. 150 words equals approximately one minute of video. For a 3-minute module, plan 400–450 words. Write as you would speak — short sentences, no complex clause structures.
+
+**2. Select avatar and background**
+Most tools offer 50–160+ pre-built avatars. Choose one that fits the audience and topic. For compliance topics, professional attire makes sense. For technical teams, it can be more casual.
+
+**3. Generate and review**
+After generating, check: lip sync correct? Pronunciation of technical terms accurate? For specific languages, it's worth adjusting the script phonetically beforehand (e.g., spelling out how acronyms should be pronounced).
+
+**4. Embed in LMS**
+Via SCORM export (Synthesia higher tiers) or as an MP4 embedded directly into a module. If you're using an integrated platform like Scibly, video upload and tracking work without a separate SCORM step.
+
+**5. Update when content changes**
+This is where the real value lies: when a regulation, a number, or a process changes, you update the script and regenerate. No re-filming.
+
+<Callout type="tip">
+  Don't start with the most technically complex video. Take a compliance module
+  you already have — an IT security PowerPoint, for instance — and convert it to
+  an avatar video. You'll immediately see whether the tool fits your workflow,
+  and you'll have a working output within two hours.
+</Callout>
+
+## What AI Videos Can't Do
+
+**Replace emotional authenticity**
+
+For culture-change messages, CEO communications, or emotionally resonant onboarding moments, a real video with real people is more effective. AI avatars are impersonal — that's fine for factual training, less so for motivational moments.
+
+**Complex demos and simulations**
+
+AI videos are lean-back formats. Interactive software simulations, branching scenarios, or click-through training still require an authoring tool like Storyline.
+
+**Take over quality assurance**
+
+AI-generated content must be reviewed before rollout. This is especially true for regulatory or legal topics. The error rate on factual detail is low — but not zero.
+
+## Conclusion
+
+AI video tools have a genuine place in the L&D toolkit. For standard training modules that need to be produced quickly and updated regularly, Synthesia and HeyGen aren't a compromise solution — they are, for this specific purpose, better than traditional video production.
+
+For training videos that need to be embedded in an LMS, [Scibly](/en) handles direct video upload and tracking without SCORM overhead.
+
+</PostLayout>

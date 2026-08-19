@@ -1,0 +1,16 @@
+{
+  "editorUi": {
+    "steps": {
+      "addStep": "Schritt hinzufügen",
+      "removeStep": "Schritt entfernen",
+      "labelPlaceholder": "Titel des Schritts",
+      "stepFallback": "Schritt",
+      "expandStep": "Schritt öffnen",
+      "collapseStep": "Schritt schließen",
+      "lockedStep": "Öffne zuerst den vorherigen Schritt",
+      "progressLabel": "{opened} von {total} Schritten geöffnet",
+      "allDone": "Alle Schritte geschafft",
+      "optionalLabel": "Optional"
+    }
+  }
+}

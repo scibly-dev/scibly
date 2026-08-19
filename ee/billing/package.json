@@ -1,0 +1,45 @@
+{
+  "name": "@scibly/ee-billing",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@better-auth/stripe": "^1.6.25",
+    "@scibly/db": "workspace:*",
+    "@scibly/lib": "workspace:*",
+    "@scibly/routes": "workspace:*",
+    "better-auth": "^1.6.9",
+    "server-only": "^0.0.1",
+    "stripe": "^20.4.1"
+  },
+  "devDependencies": {
+    "@scibly/eslint-config": "workspace:*",
+    "@types/node": "^20.17.29",
+    "dotenv": "^17.3.1",
+    "eslint": "^9.39.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.8.2",
+    "vitest": "^4.1.6"
+  },
+  "peerDependencies": {
+    "better-auth": "^1.2.8"
+  },
+  "exports": {
+    "./stripe-plugin": "./src/stripe-plugin.ts",
+    "./stripe-client": "./src/stripe-client.ts",
+    "./stripe-events": "./src/stripe-events.ts",
+    "./sync-subscription": "./src/sync-subscription.ts",
+    "./seats": "./src/seats.ts",
+    "./topup": "./src/topup.ts",
+    "./plan-catalogue": "./src/plan-catalogue.ts",
+    "./topup-catalogue": "./src/topup-catalogue.ts",
+    "./plan-mapping": "./src/plan-mapping.ts",
+    "./authorize-reference": "./src/authorize-reference.ts",
+    "./stripe-portal": "./src/stripe-portal.ts"
+  }
+}

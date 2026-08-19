@@ -1,0 +1,92 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Formative vs. Summative Assessment",
+  definition:
+    "The distinction between assessment during learning (formative — used to guide and redirect) and assessment after learning (summative — used to measure whether objectives were achieved), each serving a different purpose in instructional design.",
+  keywords: [
+    "formative assessment",
+    "summative assessment",
+    "learning assessment",
+    "knowledge check",
+    "quiz design",
+  ],
+  relatedTerms: ["kirkpatrick-model", "blooms-taxonomy", "retrieval-practice"],
+  relatedPost: "lernerfolg-messen",
+};
+
+<GlossaryLayout metadata={metadata} lang="en">
+
+Assessment in training has two distinct purposes — and confusing them produces poor instructional design. Formative assessment happens during learning, with the goal of adjusting the learning process. Summative assessment happens after learning, with the goal of determining whether objectives were met. The difference is not just timing; it's function, design, feedback approach, and what you do with the results.
+
+In practice, most corporate eLearning conflates the two or defaults entirely to summative assessment — a quiz at the end, scored to produce a completion record. This is a missed design opportunity and a measurement gap.
+
+## Formative assessment: guiding the learning process
+
+Formative assessment gives learners and designers information during the learning experience. Its purpose is correction, not certification. When a learner gets a formative question wrong and receives instructional feedback explaining why, that's not a failure — it's the mechanism.
+
+Good formative assessment shares several characteristics:
+
+**It targets the specific misconceptions and errors the learner is likely to make.** A formative check that asks "which of the following is a type of phishing attack?" and only offers one plausible wrong answer isn't testing for the errors that matter. Formative items should be built around the mistakes your learners actually make, not around what the correct answer is.
+
+**It delivers feedback that teaches, not just corrects.** "Incorrect — the right answer is B" is not instructional feedback. Instructional feedback explains why B is correct, what was wrong about the learner's thinking, and what they should do differently. The feedback is doing the instruction — it's not a gate.
+
+**It occurs at the point of likely confusion.** Placing formative checks at chapter breaks or after every screen doesn't mean they're happening when learners need them. The placement should reflect where the learning architecture expects difficulty — right after a counterintuitive concept, before learners move from theory to application.
+
+### Formative assessment and Bloom's taxonomy
+
+The cognitive level of a formative question should match the cognitive level of the objective it supports. If the objective requires learners to analyze or evaluate, formative checks that only test recall are measuring the wrong thing and giving learners false confidence.
+
+- **Remember/Understand objectives**: recognition questions, definitions, simple identification
+- **Apply objectives**: short scenarios requiring the learner to use a concept in context
+- **Analyze/Evaluate objectives**: case-based items requiring comparison, diagnosis, or judgment
+- **Create objectives**: draft reviews, peer feedback, structured reflection
+
+## Summative assessment: measuring achievement
+
+Summative assessment measures whether learners have achieved the learning objectives at the end of a unit, module, or program. It answers the question: did this person develop the capability the training was designed to build?
+
+Summative assessments should:
+
+- **Align directly to terminal learning objectives** — every item should map to at least one objective, and every objective should be represented by at least one item
+- **Use the appropriate format for the level** — multiple-choice is efficient but only tests recognition at lower Bloom levels; performance tasks, scenario simulations, and structured demonstrations are needed for higher-level objectives
+- **Establish a passing threshold based on acceptable performance**, not on statistical distribution — a 70% pass score is not inherently defensible; it should reflect a considered decision about what constitutes minimally acceptable competence
+
+<Callout type="info">
+  The end-of-course quiz is simultaneously the most common summative assessment
+  and the most common missed formative opportunity. Because learners take it
+  only once and see the results only once, any learning from corrective feedback
+  never gets consolidated. A redesign that allows learners to review missed
+  items, revisit the relevant instruction, and attempt similar questions again
+  transforms a pure summative instrument into one that also supports learning.
+</Callout>
+
+## Retrieval practice: when formative assessment becomes a learning tool
+
+There is an important connection between formative assessment and retrieval practice. Research on the testing effect — the finding that retrieving information from memory strengthens memory more than re-reading does — means that well-designed formative questions aren't just checking learning; they're creating it.
+
+This has practical implications. Frequent, low-stakes retrieval practice embedded throughout a course is more effective at building retention than reducing questions and delivering more content. The question that asks a learner to recall or apply a concept they learned earlier in the module is doing double duty: measuring where they are (formative) and strengthening their memory of the concept (learning intervention).
+
+The practical ceiling: this only works when the retrieval attempt is effortful. Recognition questions where the answer is implied by the stem don't create retrieval effort. Scenario-based questions that require the learner to reason to an answer do.
+
+<Callout type="tip">
+  Design your formative assessment bank before you design your content. If you
+  can specify the questions you need learners to be able to answer — and what
+  common wrong answers reveal about their thinking — you've effectively
+  specified what the instruction needs to accomplish. This is a useful
+  discipline against scope creep and ensures content serves the learning
+  objectives rather than the other way around.
+</Callout>
+
+## A practical framework for using both types
+
+Most training programs benefit from a layered assessment strategy:
+
+1. **Pre-assessment** (optional but often revealing): identifies what learners already know, allows personalization, and sets a baseline for measuring gain
+2. **Formative checks embedded throughout**: 2–4 items per section, targeting specific misconceptions, delivering instructional feedback
+3. **Summative assessment at the end**: aligned to terminal objectives, with a defensible passing threshold, using format appropriate for the cognitive level
+4. **Post-training application measurement** (Kirkpatrick Level 3): 30–60 days out, assessing actual behavior change on the job rather than in-course performance
+
+The final layer is what transforms assessment from a completion mechanism into evidence of training value.
+
+</GlossaryLayout>

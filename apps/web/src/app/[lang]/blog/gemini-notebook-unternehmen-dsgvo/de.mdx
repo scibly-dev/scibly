@@ -1,0 +1,70 @@
+import { PostLayout } from "../components/post-layout";
+
+export const metadata = {
+  title:
+    "Gemini Notebook (NotebookLM) im Unternehmen: Wo die DSGVO-Grenze liegt",
+  description:
+    "Gemini Notebook, bis Juli 2026 als NotebookLM bekannt, ist Googles KI-Tool, das aus hochgeladenen Dokumenten Zusammenfassungen, Antworten und sogar Audio-Übersichten erstellt, aber die Dokumente werden auf US-Servern von Google verarbeitet.",
+  date: "27. Juni 2026",
+  readTime: 4,
+  category: "education",
+  author: {
+    name: "Felix",
+    role: "Co-Founder, Scibly",
+    avatar:
+      "https://scibly-assets.s3.eu-central-1.amazonaws.com/Blog-Authors/felix_linkedin.jpeg",
+  },
+  thumbnail:
+    "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1200&h=630&q=80",
+  keywords: [
+    "gemini notebook dsgvo",
+    "gemini notebook unternehmen datenschutz",
+    "notebooklm dsgvo",
+    "notebooklm unternehmen datenschutz",
+    "notebooklm alternative",
+  ],
+};
+
+<PostLayout metadata={metadata} lang="de">
+
+Gemini Notebook, bis Juli 2026 als NotebookLM bekannt, ist Googles KI-Tool, das aus hochgeladenen Dokumenten Zusammenfassungen, Antworten und sogar Audio-Übersichten erstellt, aber die Dokumente werden auf US-Servern von Google verarbeitet. Für Unternehmen mit sensiblen oder personenbezogenen Inhalten ist das ein reales Datenschutzproblem, kein theoretisches: Standardvertragsklauseln und ein Auftragsverarbeitungsvertrag sind bei US-Anbietern zwar möglich, aber viele Rechtsabteilungen lehnen den Upload proprietärer Firmendokumente in ein US-gehostetes KI-Tool trotzdem ab.
+
+## Warum Gemini Notebook im Unternehmen zum Datenschutzproblem wird
+
+Gemini Notebook funktioniert nach einem einfachen Prinzip, das schon unter dem alten Namen NotebookLM galt und sich durch die Umbenennung nicht geändert hat: Dokumente hochladen, das Tool synthetisiert Antworten ausschließlich aus diesen Quellen. Genau das macht es für interne Nutzung attraktiv, HR-Richtlinien, Onboarding-Unterlagen oder Prozessdokumentation lassen sich schnell durchsuchbar machen. Das Problem beginnt, sobald diese Dokumente personenbezogene Daten enthalten oder als Geschäftsgeheimnis gelten. Verarbeitung durch einen US-Anbieter bedeutet zusätzliche vertragliche und technische Anforderungen, die viele Teams nicht im Detail geprüft haben, bevor sie das Tool produktiv einsetzen.
+
+## Worauf Unternehmen bei einem Gemini-Notebook-Ersatz achten sollten
+
+Wer eine Alternative sucht, sollte konkret prüfen, nicht nur nach Marketing-Aussagen gehen:
+
+| Kriterium                                    | Warum es zählt                                                                                                                                                         |
+| -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Serverstandort der Verarbeitung              | Bestimmt, welches Datenschutzrecht greift und ob eine Übermittlung in Drittländer stattfindet                                                                          |
+| Auftragsverarbeitungsvertrag (AVV) verfügbar | Gesetzliche Voraussetzung für die Verarbeitung personenbezogener Daten durch einen Dienstleister                                                                       |
+| Kein Training auf Kundendaten                | Verhindert, dass hochgeladene Firmeninhalte in ein allgemeines Modell einfließen                                                                                       |
+| Löschkonzept für hochgeladene Dokumente      | Wichtig für das Recht auf Löschung und für Geschäftsgeheimnisse                                                                                                        |
+| Was passiert mit dem Ergebnis                | Gemini Notebook liefert ein Chatfenster, das nach der Sitzung wieder verschwindet — für L&D-Zwecke fehlt der Schritt zu einem wiederverwendbaren, teilbaren Kursformat |
+
+## Von Dokument zu Kurs statt Dokument zu Chatfenster
+
+Der eigentliche Unterschied zwischen einem reinen Dokumenten-Chat und einem L&D-Werkzeug liegt nicht nur im Datenschutz, sondern im Ergebnis. Ein Chatfenster beantwortet eine Frage, aber jede Kollegin und jeder Kollege muss sie erneut stellen. Ein Kurs, der aus demselben Dokument entsteht, wird einmal gebaut und kann von allen im Team durchlaufen werden, mit Fortschrittsanzeige und Wissens-Check statt nur einer Antwort im Chatverlauf. Scibly verfolgt genau dieses Prinzip: Quelldokument hochladen, daraus entsteht kein Chat, sondern ein fertiger interaktiver Kurs. Datenschutzanforderungen wie EU-Hosting und ein AVV sind für Unternehmenskunden dabei Kriterien, die vor dem Einsatz konkret geprüft werden sollten, nicht nur eine Marketingaussage.
+
+## Häufige Fragen
+
+### Ist Gemini Notebook (NotebookLM) DSGVO-konform?
+
+Google bietet für Geschäftskunden vertragliche Grundlagen wie Standardvertragsklauseln an, die eine DSGVO-konforme Nutzung grundsätzlich ermöglichen können. Ob das für den eigenen Anwendungsfall ausreicht, hängt von der Art der hochgeladenen Daten und der internen Risikobewertung ab. Bei personenbezogenen oder besonders sensiblen Unternehmensdaten empfiehlt sich eine Prüfung durch die eigene Rechts- oder Datenschutzabteilung vor dem produktiven Einsatz. An dieser Einschätzung ändert die Umbenennung von NotebookLM zu Gemini Notebook im Juli 2026 nichts, es handelt sich technisch um dasselbe Produkt.
+
+### Was ist eine gute Alternative zu Gemini Notebook (NotebookLM) für Unternehmen?
+
+Entscheidend sind die Kriterien aus der Tabelle oben: Serverstandort, AVV, kein Training auf Kundendaten, klares Löschkonzept. Für L&D-Anwendungsfälle zusätzlich relevant: Entsteht am Ende nur eine Chat-Antwort oder ein wiederverwendbarer Kurs, den mehrere Personen durchlaufen können?
+
+### Kann man Gemini Notebook trotzdem für interne Recherche nutzen, nur nicht für sensible Dokumente?
+
+Das ist ein üblicher Kompromiss in der Praxis: unkritische, öffentliche oder bereits freigegebene Dokumente über NotebookLM laufen lassen, alles mit personenbezogenen Daten oder Geschäftsgeheimnissen über ein Tool mit geprüften Datenschutzgarantien.
+
+### Warum reicht ein Chat-Tool nicht für Mitarbeiterschulungen?
+
+Ein Chat beantwortet eine einzelne Frage einer einzelnen Person zu einem einzelnen Zeitpunkt. Für Schulungszwecke fehlen Struktur, Wiederholbarkeit für neue Mitarbeitende und die Möglichkeit, Lernfortschritt nachzuvollziehen, alles Dinge, die ein fertiger Kurs von Haus aus mitbringt.
+
+</PostLayout>

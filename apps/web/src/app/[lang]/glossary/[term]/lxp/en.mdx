@@ -1,0 +1,80 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Learning Experience Platform (LXP)",
+  definition:
+    "A learner-driven platform that aggregates content from multiple sources and uses AI to surface personalized recommendations — contrasted with an LMS, which is primarily admin-driven and compliance-focused.",
+  keywords: [
+    "LXP",
+    "learning experience platform",
+    "LXP vs LMS",
+    "personalized learning",
+    "content aggregation",
+  ],
+  relatedTerms: ["lms", "microlearning", "social-learning"],
+  relatedPost: "lxp-vs-lms",
+};
+
+<GlossaryLayout metadata={metadata} lang="en">
+
+A Learning Experience Platform is a relatively recent category — the term was coined by analyst Josh Bersin around 2017 to describe a generation of learning platforms designed around the learner's experience rather than the administrator's control panel. Where an LMS asks "who needs to complete what by when?", an LXP asks "what does this learner need to grow, and where can we find it?"
+
+## How an LXP differs from an LMS
+
+The differences are structural, not cosmetic.
+
+**Content aggregation**: An LMS typically hosts content that an L&D team creates or licenses and uploads to that system. An LXP can pull from LinkedIn Learning, Coursera, YouTube, internal documents, podcasts, articles, and proprietary courses — surfacing all of it in a single interface. The learning librarian model gives way to a content aggregation model.
+
+**Learner control**: In an LMS, learners are assigned content; completion is tracked. In an LXP, learners browse, search, save, and follow topics or subject-matter experts. The initiative is theirs. Completion is still trackable, but it is not the primary organizing principle.
+
+**AI-driven recommendations**: LXPs use machine learning to recommend content based on a learner's role, past behavior, stated interests, and peer activity. The goal is to surface relevant content without requiring the learner to know exactly what to search for.
+
+**Social and collaborative features**: Most LXPs include mechanisms for learners to share content with peers, comment, follow colleagues, and contribute their own knowledge. The platform functions partly as a professional learning network, not just a content library.
+
+<Callout type="info">
+  The LXP category emerged in part as a response to the Netflix and Spotify user
+  experience — employees accustomed to algorithmically curated personal
+  entertainment increasingly expected the same from workplace learning. The
+  LMS's course catalogue model felt dated by comparison.
+</Callout>
+
+## When an LXP is appropriate
+
+An LXP fits situations where the organization wants to support voluntary, self-directed skill development — particularly for knowledge workers who need to stay current in fast-moving domains (technology, marketing, product development). It is well-suited to:
+
+- Organizations with a strong learning culture where employees proactively seek development
+- Companies operating in rapidly changing industries where content needs to be updated frequently and informally
+- Teams distributed across locations who benefit from shared social learning spaces
+- Organizations where the L&D function wants to move from content delivery to learning curation
+
+## When an LMS is the better choice
+
+An LXP is not a replacement for an LMS in contexts that require assignment, mandatory completion, and auditability. Compliance training, regulatory certification, and structured onboarding programs depend on the admin-driven model precisely because the goal is ensuring that specific people have completed specific content. An LXP's learner-driven architecture makes that guarantee hard to enforce.
+
+Organizations that need both — compliance infrastructure and voluntary skill development — often run an LMS and LXP in parallel, using each for what it does well. Others find that modern LMSs have added enough learner-experience features, or that LXPs have added enough compliance tracking, that the distinction is collapsing in practice.
+
+## The case for neither
+
+Some organizations, particularly smaller ones, find that neither category serves them well in isolation. A knowledge base with good search, a well-organized course catalogue in a basic LMS, and active communities of practice inside existing communication tools (Slack, Teams) can collectively do what an corporate LXP promises — without the implementation burden and licensing cost.
+
+<Callout type="tip">
+  Before investing in an LXP, audit your current LMS usage data. If voluntary
+  course completion is low and learners are not returning after mandatory
+  training, the problem may be content quality or learning culture — neither of
+  which a new platform will fix. Platforms amplify behavior that already exists;
+  they rarely create it.
+</Callout>
+
+## Key questions when evaluating an LXP
+
+The practical evaluation questions for LXPs differ from those for LMSs:
+
+- **What content sources does it integrate with natively?** (LinkedIn Learning, Coursera, internal repositories, wikis)
+- **How does the recommendation engine work, and can you inspect it?** Opaque algorithms that you cannot tune to your context reduce your ability to ensure quality
+- **What social features exist, and do your learners actually want them?** Social features have high adoption in some cultures and near-zero adoption in others
+- **How does it handle mandatory training?** If you need to run compliance programs through the same platform, verify that the tracking and reporting meet your requirements
+- **What does administration actually look like at scale?** Demo the admin interface, not just the learner-facing one
+
+The LXP market has matured significantly since 2017. Several platforms that began as LXPs have added substantial administrative and compliance features, blurring the LMS/LXP boundary — which may make your evaluation simpler, or more complicated, depending on what you are trying to accomplish.
+
+</GlossaryLayout>

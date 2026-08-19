@@ -1,0 +1,80 @@
+import { GlossaryLayout } from "../../components/glossary-layout";
+
+export const metadata = {
+  title: "Vergessenskurve",
+  definition:
+    "Hermann Ebbinghaus' Befund von 1885, dass neue Informationen ohne Wiederholung exponentiell vergessen werden – typischerweise gehen innerhalb einer Woche 50–80 % verloren.",
+  keywords: [
+    "Vergessenskurve",
+    "Ebbinghaus",
+    "Wissensretention",
+    "Gedächtnis",
+    "Lernwissenschaft",
+  ],
+  relatedTerms: ["spaced-repetition", "retrieval-practice", "microlearning"],
+  relatedPost: "die-vergessenskurve",
+};
+
+<GlossaryLayout metadata={metadata} lang="de">
+
+Die Vergessenskurve beschreibt den exponentiellen Rückgang der Gedächtnisleistung, der eintritt, wenn neu erlernte Informationen nicht erneut abgerufen oder angewendet werden. Erstmals beschrieben wurde sie von Hermann Ebbinghaus, einem deutschen Psychologen, der seine Befunde 1885 auf der Grundlage akribischer Selbstexperimente veröffentlichte, die er über mehrere Jahre hinweg durchgeführt hatte. Seine Arbeit ist bis heute grundlegend für die Lernwissenschaften und hat unmittelbare Konsequenzen für die Gestaltung und zeitliche Strukturierung von Trainingsprogrammen.
+
+## Die Experimente von 1885
+
+Ebbinghaus memorierte und testete sich selbst mit Tausenden von sinnlosen Silben — erfundene Zeichenketten wie „DAX", „BUP" oder „ZOL" —, die bewusst gewählt wurden, weil sie keine Vorassoziationen hatten, die das Erinnern erleichtern könnten. Indem er den Einfluss von Bedeutung und Kontext eliminierte, wollte er das Gedächtnis in seiner grundlegendsten Form untersuchen.
+
+Sein zentraler Befund: Nach einer einzigen Lernsitzung fiel die Abrufleistung stark ab. Etwa die Hälfte des Materials war innerhalb einer Stunde vergessen, mit anhaltendem Rückgang in den folgenden Tagen, bis ein kleiner stabiler Rest blieb. Die Vergessensrate war unmittelbar nach dem Lernen am höchsten und verlangsamte sich allmählich — das ergibt die charakteristische exponentielle Abfallkurve.
+
+Ebbinghaus entdeckte auch, was er den „Spareffekt" nannte: Beim erneuten Lernen zuvor vergessener Inhalte war die benötigte Anzahl an Wiederholungen deutlich geringer als beim ursprünglichen Lernen. Selbst wenn Inhalte nicht mehr bewusst erinnert werden konnten, hatte das Gehirn eine Repräsentation davon behalten, die das Wiederlernen beschleunigte. Dieser Befund deutet darauf hin, dass „vergessenes" Material nicht vollständig verloren ist — es ist unzugänglich geworden, nicht gelöscht.
+
+## Was die Kurve tatsächlich misst
+
+Eine wichtige Klarstellung, die in L&D-Diskussionen häufig fehlt: Die Ebbinghaus'sche Vergessenskurve bezog sich spezifisch auf das auswendige Lernen bedeutungsloser Inhalte ohne Vorwissen, ohne Anwendung und ohne persönliche Relevanz. Echtes Lernen am Arbeitsplatz unterscheidet sich in all diesen Punkten — Wissen, das bedeutsam, kontextuell verankert, emotional relevant oder unmittelbar anwendbar ist, wird typischerweise besser behalten und langsamer vergessen.
+
+Die genauen Prozentzahlen (50 % vergessen nach einer Stunde, 70 % nach einem Tag usw.) werden häufig zitiert, als ob sie universell gelten würden. Das tun sie nicht. Sie beschreiben eine spezifische Versuchsbedingung. Die allgemeine Form der Kurve — rascher anfänglicher Abfall, der sich abflacht — ist gut belegt und breit anwendbar; die genaue Rate hängt jedoch von der Bedeutsamkeit des Materials, dem Vorwissen der Lernenden und der Intensität der Informationsverarbeitung ab.
+
+<Callout type="info">
+  Die Vergessenskurve sollte als eine Familie von Kurven verstanden werden,
+  nicht als eine einheitliche universelle Rate. Inhalte, die bedeutsam, in der
+  Praxis angewendet und emotional ansprechend sind, werden weit langsamer
+  vergessen als sinnlose Silben. Die praktische Konsequenz lautet nicht „70 %
+  werden innerhalb von 24 Stunden vergessen" — sondern: „Nicht wiederholtes
+  Lernen verblasst, und der Verfall ist in der Zeit unmittelbar nach dem
+  Lernereignis am stärksten."
+</Callout>
+
+## Der Spacing-Effekt: das wichtigste Gegenmittel
+
+Die am besten belegte Maßnahme gegen die Vergessenskurve ist die Verteilung von Übung und Wiederholung über die Zeit — statt alles in einer einzigen Sitzung zu konzentrieren. Ebbinghaus selbst erkannte dies: Wiederholung, bevor das Vergessen abgeschlossen ist, erfordert weniger Wiederholungen als Neulernen nach vollständigem Vergessen.
+
+Nachfolgende Forschung hat dies konsistent bestätigt: Verteiltes Üben führt zu besserer Langzeitretention als massiertes Üben (Pauken kurz vor dem Termin), selbst wenn die Gesamtlernzeit identisch ist. Der Spacing-Effekt ist einer der robustesten Befunde der Kognitionspsychologie, repliziert über Materialien, Altersgruppen und Kontexte hinweg.
+
+## Retrieval Practice als Verstärkungsmechanismus
+
+Eine zweite gut belegte Strategie ist Retrieval Practice — das aktive Abrufen von Informationen aus dem Gedächtnis statt passivem Wiederlesen. Tests und Selbstabfragen zwingen Lernende, die Information zu rekonstruieren, was die Gedächtnisspur stärker festigt als reines Wiederholen. Forschung von Roediger, Karpicke und anderen zeigt konsistent, dass Retrieval Practice die Lernzeit bei der Langzeitretention übertrifft.
+
+Retrieval Practice und Spacing wirken gut zusammen: Periodische, niedrigschwellige Tests im Abstand von Wochen oder Monaten nach dem initialen Lernen sind eine praktisch umsetzbare und hochwirksame Strategie zur Vertiefung.
+
+## Konsequenzen für die Trainingsgestaltung
+
+Die Vergessenskurve stellt eine klare Designanforderung auf: Training kann kein einmaliges Ereignis sein. Ein eintägiger Workshop oder ein abgeschlossener E-Learning-Kurs repräsentiert nur das erste Enkodierungsereignis. Ohne Verstärkung — durch Übung, Anwendung, verteilte Wiederholung oder Abrufaktivitäten — verfällt der Großteil der Lerninvestition innerhalb weniger Tage.
+
+Praktische Antworten umfassen:
+
+- **Zeitlich verteilte Module**, die Kerninhalte Tage oder Wochen nach der initialen Vermittlung wieder aufgreifen
+- **Quizzes oder Szenarien nach dem Training**, die über LMS oder E-Mail in Abständen nach dem Hauptkurs ausgespielt werden
+- **Nachbereitende Gespräche mit Führungskräften**, die Anwendung erfordern und eine Erinnerungsgelegenheit schaffen
+- **Performance-Support-Ressourcen**, die Abruf im Arbeitsfluss auslösen
+
+<Callout type="tip">
+  Die kostenwirksamste Umsetzung der Vergessenskurvenforschung ist das
+  Hinzufügen eines Follow-up-Elements zu bestehendem Training statt die
+  Verlängerung des Trainings selbst. Ein kurzes Quiz mit fünf Fragen, das eine
+  Woche und erneut einen Monat nach einem Kurs versandt wird und aktiven Abruf
+  der Kernpunkte erfordert, kann die Langzeitretention bei minimalem
+  zusätzlichen Designaufwand deutlich verbessern.
+</Callout>
+
+Die Vergessenskurve ist kein Grund zur Resignation — sie ist eine Designspezifikation. Sie sagt Lernfachleuten nicht nur, dass Vergessen passiert, sondern wann es passiert und was es verlangsamt. Dieses Wissen lässt sich direkt in dauerhaftere Trainingsprogramme übersetzen.
+
+</GlossaryLayout>
