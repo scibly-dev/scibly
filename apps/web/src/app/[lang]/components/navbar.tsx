@@ -6,7 +6,7 @@ import Icon from "@scibly/ui/components/icon";
 import LanguageSwitcher from "@scibly/ui/components/language-switcher";
 import { actionClass, primaryActionClass } from "@scibly/ui/design-language";
 import { cn } from "@scibly/ui/utils";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Github } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
@@ -267,7 +267,17 @@ export function Navbar({ t }: NavbarProps) {
             </a>
           </div>
 
-          <div className="hidden min-w-0 flex-1 items-center justify-end md:flex">
+          <div className="hidden min-w-0 flex-1 items-center justify-end gap-0.5 md:flex">
+            <a
+              href={routes.external.github.repo}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={t.github}
+              title={t.github}
+              className="hover:bg-ink/5 flex items-center rounded-[10px] px-2.5 py-[9px] text-[#1d1d1f] opacity-75 transition-[background-color,opacity] hover:opacity-100"
+            >
+              <Github className="h-[15px] w-[15px]" strokeWidth={2.5} />
+            </a>
             <div className="hover:bg-ink/5 rounded-[10px] px-2.5 py-[9px] transition-colors">
               <LanguageSwitcher />
             </div>
@@ -351,7 +361,16 @@ export function Navbar({ t }: NavbarProps) {
             </Fragment>
           ))}
           <div className="mx-3.5 my-2 h-px bg-[#e6eaf5]" />
-          <div className="px-3.5 py-2">
+          <div className="flex items-center gap-4 px-3.5 py-2">
+            <a
+              href={routes.external.github.repo}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={t.github}
+              className="flex items-center text-[#1d1d1f] opacity-75 transition-opacity hover:opacity-100"
+            >
+              <Github className="h-[15px] w-[15px]" strokeWidth={2.5} />
+            </a>
             <LanguageSwitcher />
           </div>
         </div>

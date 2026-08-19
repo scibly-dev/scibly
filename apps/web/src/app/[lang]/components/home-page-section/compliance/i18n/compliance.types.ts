@@ -3,7 +3,6 @@ export type ComplianceDictionary = {
   title: string;
   titleEmphasis: string;
   subtitle: string;
-  cta: string;
   registry: {
     summary: string;
   };

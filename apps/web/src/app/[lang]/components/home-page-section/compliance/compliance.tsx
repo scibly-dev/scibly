@@ -1,7 +1,3 @@
-import { actionClass, primaryActionClass } from "@scibly/ui/design-language";
-import { cn } from "@scibly/ui/utils";
-import { ArrowRight } from "lucide-react";
-
 import {
   MarketingSection,
   MarketingSectionHeader,
@@ -29,19 +25,6 @@ export function ComplianceSection({ t }: ComplianceSectionProps) {
         eyebrow={t.eyebrow}
         title={`${t.title} ${t.titleEmphasis}`}
         description={t.subtitle}
-        action={
-          <a
-            href="#cta-section"
-            className={cn(actionClass, primaryActionClass, "group")}
-          >
-            {t.cta}
-            <ArrowRight
-              size={15}
-              className="transition-transform group-hover:translate-x-0.5"
-              aria-hidden
-            />
-          </a>
-        }
       />
 
       <ul

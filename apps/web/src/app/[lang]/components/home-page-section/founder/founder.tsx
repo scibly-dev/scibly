@@ -1,4 +1,6 @@
-import { Quote } from "lucide-react";
+import { actionClass, primaryActionClass } from "@scibly/ui/design-language";
+import { cn } from "@scibly/ui/utils";
+import { ArrowRight, Quote } from "lucide-react";
 import Image from "next/image";
 
 import { MarketingSection } from "@/app/[lang]/components/marketing-section-content";
@@ -73,6 +75,18 @@ export function FounderSection({ t }: FounderSectionProps) {
           <p className="text-ink-muted m-0 text-[16.5px] leading-[1.65] text-pretty">
             {t.body}
           </p>
+
+          <a
+            href="#cta-section"
+            className={cn(actionClass, primaryActionClass, "group self-start")}
+          >
+            {t.cta}
+            <ArrowRight
+              size={15}
+              className="transition-transform group-hover:translate-x-0.5"
+              aria-hidden
+            />
+          </a>
         </div>
       </div>
     </MarketingSection>
