@@ -1,0 +1,36 @@
+{
+  "openSource": {
+    "eyebrow": "Open Source",
+    "title": "Offener Code. Deine Wahl. Deine Kontrolle.",
+    "subtitle": "Der Code von Scibly ist Open Source auf GitHub. Klone das Repository, starte den Stack und sieh selbst, wie Scibly funktioniert.",
+    "actions": {
+      "repo": "Code auf GitHub ansehen",
+      "selfHost": "Selbst hosten"
+    },
+    "licenseLabel": "AGPLv3",
+    "terminal": {
+      "transcriptLabel": "Terminal-Ausgabe",
+      "stepsLabel": "Terminal-Schritte"
+    },
+    "steps": [
+      {
+        "kind": "clone",
+        "label": "Repository klonen",
+        "caption": "Der komplette Code. Kein abgespecktes Template.",
+        "note": "AGPLv3. Forke es und liefere deinen eigenen Build aus."
+      },
+      {
+        "kind": "boot",
+        "label": "Stack starten",
+        "caption": "Ein Befehl. Datenbank und Apps laufen.",
+        "note": "Ein Befehl, und der komplette Stack läuft auf deiner eigenen Infrastruktur."
+      },
+      {
+        "kind": "issue",
+        "label": "Bringe deine Ideen ein",
+        "caption": "Bugs melden, Ideen teilen und neue Features vorschlagen.",
+        "note": "Landet im selben Tracker, aus dem wir planen."
+      }
+    ]
+  }
+}

@@ -1,6 +1,7 @@
 import { type ReactNode } from "react";
 
 import { HeroGlassFrame } from "./hero-glass-frame";
+import { HeroOpenSourceChip } from "./hero-open-source-chip";
 import { type HeroDictionary } from "./i18n/hero.types";
 
 interface HeroProps {
@@ -34,6 +35,10 @@ export function Hero({ t, children }: HeroProps) {
       <div
         className={`relative z-[2] flex min-h-0 flex-1 flex-col items-center justify-center px-5 pt-24 pb-9 text-center md:absolute md:px-[clamp(40px,6vw,96px)] md:py-[clamp(24px,4vh,60px)] ${CONTENT_INSET}`}
       >
+        <div className="mb-[clamp(16px,2.6vh,26px)]">
+          <HeroOpenSourceChip t={t.openSource} />
+        </div>
+
         {/* Measured in characters so the line length holds at every size. German
             compounds need the wider measure to keep the headline off a fourth
             line; phones stay tighter so it never runs edge to edge. */}

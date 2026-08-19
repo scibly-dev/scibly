@@ -32,6 +32,10 @@ export type HeroDictionary = {
   titleHighlight: string;
   titleSuffix: string;
   subtitle: string;
+  openSource: {
+    label: string;
+    license: string;
+  };
   complianceBadges: Array<{
     kind: string;
     label: string;

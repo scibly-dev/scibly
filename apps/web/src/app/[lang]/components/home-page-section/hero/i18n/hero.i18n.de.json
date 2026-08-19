@@ -5,6 +5,10 @@
     "titleHighlight": "moderne",
     "titleSuffix": " Teams",
     "subtitle": "Wir verwandeln vorhandenes Unternehmenswissen in interaktive Kurse.",
+    "openSource": {
+      "label": "Scibly ist Open Source",
+      "license": "AGPLv3"
+    },
     "complianceBadges": [
       {
         "kind": "euServer",
