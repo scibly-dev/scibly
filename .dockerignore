@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Local build outputs
+.next/
+**/dist/
+.turbo/
+.vercel/
+out/
+build/
+**/playwright-report/
+**/test-results/
+**/coverage/
+
+# pnpm's local content-addressable store — never needed to install from the
+# lockfile, and can be several GB.
+.pnpm-store/
+
+# Version control, IDEs, and local agent state
+.git/
+.gitignore
+.idea/
+.vscode/
+.claude/
+.cursor/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Log files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*

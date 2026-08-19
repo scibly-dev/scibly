@@ -1,0 +1,65 @@
+name: Deploy collab to Hostinger VPS
+
+on:
+  push:
+    branches: [main] # modify this to trigger on other branches or tags as needed
+    paths:
+      - "apps/collab/**"
+      - "packages/db/**"
+      - "packages/lib/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - "tsconfig.base.json"
+      - "turbo.json"
+      - ".github/workflows/deploy-collab.yml"
+
+env:
+  IMAGE: scibly/scibly-collab:latest
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: apps/collab/Dockerfile
+          push: true
+          tags: ${{ env.IMAGE }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+            cat > /docker/scibly/.env << 'EOF'
+            COLLAB_TOKEN_SECRET=${{ secrets.COLLAB_TOKEN_SECRET }}
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
+            COLLAB_TRUST_PROXY=true
+            NODE_ENV=production
+            COLLAB_IMAGE=${{ env.IMAGE }}
+            EOF
+            cd /docker/scibly
+            docker compose pull
+            docker compose up -d

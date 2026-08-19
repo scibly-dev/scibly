@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  # Needed by packages/db's prisma.config.ts to generate the client — never
+  # connected to (see docs/setup.md's Optional integrations / prisma generate).
+  DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+  # Tests stub every third-party credential themselves (apps/app/vitest.setup.ts);
+  # this only covers typecheck/lint, which don't run app code that needs real ones.
+  SKIP_ENV_VALIDATION: "true"
+  # packages/lib's getBaseUrl() (used in both apps' layout.tsx metadata) falls
+  # back to a placeholder URL under SKIP_ENV_VALIDATION (see loadPackageEnv in
+  # packages/lib/src/internal/index.ts) — set for a cleaner build log, not
+  # because it's required.
+  NEXT_PUBLIC_BASE_URL: "https://example.com"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.33.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # apps/app's i18n dictionaries and editor html-schema are generated,
+      # gitignored, and normally only produced by its predev/prebuild hooks —
+      # typecheck/lint need them too (ee/organizations-billing type-checks
+      # against apps/app/src directly via a path alias).
+      - run: pnpm --filter @scibly/app run i18n:merge
+      - run: pnpm --filter @scibly/app run schema:generate
+      - run: pnpm --filter @scibly/web run i18n:merge
+
+      - run: pnpm check
+      - run: pnpm test:unit
+      - run: pnpm build

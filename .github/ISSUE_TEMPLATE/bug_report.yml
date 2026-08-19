@@ -1,0 +1,41 @@
+name: Bug report
+description: Something isn't working as expected
+labels: ["needs-triage"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug, and what you expected instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: How can we see this ourselves?
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. See error
+    validations:
+      required: true
+
+  - type: input
+    id: app
+    attributes:
+      label: Where
+      description: Which app, and (if self-hosting) how you're running it
+      placeholder: "apps/app, self-hosted via `pnpm dev`"
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs / screenshots
+      description: Paste any error output or screenshots. This will be rendered as code automatically.
+      render: shell
+    validations:
+      required: false

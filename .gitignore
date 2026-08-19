@@ -1,0 +1,42 @@
+.turbo
+dist
+node_modules
+.claude/launch.json
+.next
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+packages/db/seeds/constants/prod-seed-data.local.json
+.pnpm-store
+.vercel
+**/generated/**
+
+.vscode
+.DS_Store
+**/.DS_Store
+
+# Test & report output
+**/playwright-report/**
+**/test-results/**
+**/coverage/**
+
+**/packages/db/schema/generated/**
+
+**/scibly-lms-claude-design-reference/**
+
+# Claude Code local/runtime state — previously only excluded via
+# .git/info/exclude and the user's global gitignore, neither of which
+# travels with the repo.
+**/.claude/worktrees/
+**/.claude/settings.local.json
+**/.claude/scheduled_tasks.lock
+**/.claude/scheduled_tasks.json
+**/.claude/routines/.state/
+**/.claude/checkpoints/
+**/.claude/mailbox/
+**/.claude/agent-registry.json
+**/.claude/agent-memory-local
+**/.claude/first-run
+**/.claude/assistant-daemon-state.json

@@ -1,0 +1,19 @@
+name: Feature request
+description: Suggest an idea or improvement
+labels: ["needs-triage"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: What are you trying to do that you can't do today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: What would you like to happen? Alternatives you've considered?
+    validations:
+      required: false
