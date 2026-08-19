@@ -5,30 +5,27 @@
 <h1 align="center">Scibly</h1>
 
 <p align="center">
-  The open-source, AI-native learning management system.
+  Scibly is an open-source, AI-native learning platform.
 </p>
 
 <p align="center">
   <a href="#introduction"><strong>Introduction</strong></a> ·
   <a href="#tech-stack"><strong>Tech Stack</strong></a> ·
   <a href="#self-hosting"><strong>Self-hosting</strong></a> ·
-  <a href="#contributing"><strong>Contributing</strong></a>
+  <a href="#contributing"><strong>Contributing</strong></a> ·
+  <a href="#license"><strong>License</strong></a>
 </p>
 
 <p align="center">
   <a href="https://github.com/scibly-dev/scibly/actions/workflows/ci.yml">
     <img src="https://github.com/scibly-dev/scibly/actions/workflows/ci.yml/badge.svg" alt="CI" />
   </a>
-  <a href="https://github.com/scibly-dev/scibly/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/scibly-dev/scibly?label=license&logo=github&color=f80&logoColor=fff" alt="License" />
-  </a>
 </p>
 
 ## Introduction
 
-Scibly is an AI-native LMS: an author feeds it existing material and an AI
-learning-designer agent turns it into a structured, takeable course — one
-that stays in sync with the sources it was built from.
+Turn your existing knowledge into interactive learning experiences.
+Scibly is an open-source, AI-native learning platform that transforms documents and internal knowledge into structured, interactive courses in minutes.
 
 ## Tech stack
 
