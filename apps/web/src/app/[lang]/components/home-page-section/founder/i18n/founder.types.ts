@@ -3,6 +3,7 @@ export type FounderDictionary = {
   body: string;
   attribution: string;
   role: string;
+  cta: string;
   imageSrcFelix: string;
   imageSrcNiclas: string;
   imageAltFelix: string;

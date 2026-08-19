@@ -17,6 +17,7 @@ export type HomePage = {
     aiSkills: string;
     signIn: string;
     createAccount: string;
+    github: string;
     skipToContent: string;
     openMenu: string;
     closeMenu: string;
