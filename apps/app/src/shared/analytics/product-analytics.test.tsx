@@ -69,22 +69,6 @@ describe("ProductAnalytics", () => {
     );
   });
 
-  it("carries the organization the action happened in", async () => {
-    renderWithClient(
-      <RunMutation
-        path="organization.inviteMembers"
-        variables={{ orgSlug: "acme" }}
-      />,
-    );
-
-    await waitFor(() =>
-      expect(capture).toHaveBeenCalledWith("members_invited", {
-        kind: undefined,
-        orgSlug: "acme",
-      }),
-    );
-  });
-
   it("resolves procedures nested under a sub-router", async () => {
     renderWithClient(<RunMutation path="notebook.source.addText" />);
 
@@ -106,12 +90,12 @@ describe("ProductAnalytics", () => {
     await waitFor(() =>
       expect(capture).toHaveBeenCalledWith("checkout_started", {
         kind: "topup",
-        orgSlug: "acme",
         pack: "large",
       }),
     );
   });
 
+  // orgSlug is deliberately not expected back out: AnalyticsArea already reports the organization.
   it("leaves out mutation input that is not worth reporting", async () => {
     renderWithClient(
       <RunMutation
@@ -123,7 +107,6 @@ describe("ProductAnalytics", () => {
     await waitFor(() =>
       expect(capture).toHaveBeenCalledWith("course_created", {
         kind: undefined,
-        orgSlug: "acme",
       }),
     );
   });
@@ -153,8 +136,7 @@ describe("ProductAnalytics", () => {
     expect(capture).toHaveBeenCalledTimes(1);
   });
 
-  // Both negatives run a tracked mutation alongside the one under test and wait for *its*
-  // event, so the cache has drained before we conclude nothing was reported.
+  // Runs a tracked mutation alongside the untracked one and waits for *its* event, so the cache has drained before concluding nothing else was reported.
   it("stays silent for mutations that are not on the allowlist", async () => {
     renderWithClient(
       <>

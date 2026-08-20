@@ -9,10 +9,11 @@ import { type ComponentPropsWithoutRef, type ReactNode, type Ref } from "react";
 import { MarketingGridField } from "./marketing-grid-field";
 import { MarketingSectionFrame } from "./marketing-section-frame";
 
+// `clip` and not `hidden`: `overflow-hidden` makes the section a scroll container, which breaks `position: sticky` descendants and rebinds `animation-timeline: view()` to a scroller that never moves.
 export const marketingPageSectionClass =
-  "font-display relative z-10 overflow-hidden bg-white";
+  "font-display relative z-10 overflow-clip bg-white";
 
-// `overflow-hidden` would make the section a scroll container, which silently stops `position: sticky` descendants from sticking, so this only clips the horizontal axis.
+// Same reasoning, clipped on the inline axis only so a sticky child can still travel past the section's own block-axis box.
 export const marketingPageSectionStickyClass =
   "font-display relative z-10 overflow-x-clip bg-white";
 

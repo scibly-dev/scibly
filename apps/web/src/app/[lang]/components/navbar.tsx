@@ -283,7 +283,6 @@ export function Navbar({ t }: NavbarProps) {
             </div>
           </div>
 
-          {/* Mobile: sign in + primary action + menu toggle */}
           <div className="flex items-center gap-2.5 md:hidden">
             <a
               href={routes.app.auth.signIn}
@@ -318,7 +317,6 @@ export function Navbar({ t }: NavbarProps) {
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <div
           id="navbar-mobile-menu"
