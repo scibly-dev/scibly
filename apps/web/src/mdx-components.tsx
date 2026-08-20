@@ -5,6 +5,7 @@ import * as React from "react";
 
 import { Callout } from "@/app/[lang]/blog/components/callout";
 import { CodeBlock } from "@/app/[lang]/blog/components/code-block";
+import { CourseEmbed } from "@/app/[lang]/blog/components/course-embed";
 import { lipShadow } from "@/app/[lang]/components/marketing-tokens";
 
 function getHeadingText(node: React.ReactNode): string {
@@ -337,6 +338,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       return <input type={type} {...props} />;
     },
     Callout,
+    CourseEmbed,
     ...components,
   };
 }
