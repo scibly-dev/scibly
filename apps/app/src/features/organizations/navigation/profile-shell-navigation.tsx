@@ -5,6 +5,7 @@ import type { ProfileShellController } from "./profile-shell";
 
 import { signOut } from "@scibly/auth/client";
 import { getInitials } from "@scibly/lib";
+import { usePostHog } from "@scibly/observability/client";
 import { routes } from "@scibly/routes";
 import {
   Avatar,
@@ -102,6 +103,8 @@ export function ProfileTopBar({
   displayAvatar: string | null;
   openMobileNavigation: () => void;
 }) {
+  const posthog = usePostHog();
+
   return (
     <div className="border-hairline flex h-14 shrink-0 items-center justify-between border-b bg-white px-4 md:px-8">
       <div className="flex items-center gap-2">
@@ -133,6 +136,8 @@ export function ProfileTopBar({
         <button
           onClick={async () => {
             await signOut();
+            // PostHog does not infer identity from the session ending, and reset() also wipes its own consent record — restored below from our consent cookie.
+            posthog.reset();
             window.location.href = routes.app.auth.default;
           }}
           className="text-ink-faint hover:bg-ink/[0.05] hover:text-ink rounded-xl p-1.5 transition-colors"

@@ -93,15 +93,7 @@ export function ProductPreviewSection({
       className="scroll-mt-16"
       atmosphere={<ProductPreviewAtmosphere />}
     >
-      <div
-        className={cn(
-          "transition-[opacity,translate] duration-700",
-          REVEAL_EASING,
-          hasSeen
-            ? "translate-y-0 opacity-100"
-            : "sc-reveal-hidden translate-y-4",
-        )}
-      >
+      <div className="sc-reveal">
         <MarketingSectionHeader
           titleId="product-preview-heading"
           eyebrow={t.previewSection.eyebrow}
@@ -163,17 +155,13 @@ export function ProductPreviewSection({
             chapters use */}
         <div
           className={cn(
-            "min-w-0 rounded-[28px] border p-3 duration-700 md:p-[18px]",
-            "transition-[opacity,translate,background-color,border-color,box-shadow]",
+            "sc-reveal min-w-0 rounded-[28px] border p-3 duration-700 md:p-[18px]",
+            // The wash still transitions, because switching tabs recolours the
+            // stage in place. Only the entrance moved to the scroll timeline.
+            "transition-[background-color,border-color,box-shadow]",
             REVEAL_EASING,
-            hasSeen
-              ? "translate-y-0 opacity-100"
-              : "sc-reveal-hidden translate-y-6",
           )}
-          style={{
-            ...washStyle(pillar),
-            transitionDelay: hasSeen ? "140ms" : "0ms",
-          }}
+          style={washStyle(pillar)}
         >
           <div id="product-preview-stage" role="tabpanel">
             <div key={tab} className="product-preview-swap">

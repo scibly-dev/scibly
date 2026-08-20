@@ -41,7 +41,8 @@ const TRACKED_BY_PATH = new Map<string, TrackedMutation>(
   Object.entries(TRACKED_MUTATIONS),
 );
 
-const TRACKED_INPUTS = ["orgSlug", "pack", "quantity"];
+// orgSlug is not here: AnalyticsArea puts the organization on every event already.
+const TRACKED_INPUTS = ["pack", "quantity"];
 
 function trackedInputsOf(variables: unknown) {
   const properties: Record<string, string | number> = {};

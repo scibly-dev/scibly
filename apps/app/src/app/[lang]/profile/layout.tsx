@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 
 import { ProfileShell } from "@/features/organizations/client";
 import { getFullDictionary } from "@/i18n/dictionaries";
+import { AnalyticsArea } from "@/shared/analytics/analytics-area";
 import { ProductAnalytics } from "@/shared/analytics/product-analytics";
 import { api, HydrateClient } from "@/shared/api/trpc/server";
 
@@ -36,9 +37,11 @@ export default async function RootLayout({
   const dict = await getFullDictionary(lang);
 
   return (
-    <SciblyPostHogProvider surface="app">
-      <ProductAnalytics />
+    <SciblyPostHogProvider surface="app" identity={{ userId: session.user.id }}>
       <HydrateClient>
+        {/* Inside the boundary so AnalyticsArea's organization query reads the cache prefetched above. */}
+        <ProductAnalytics />
+        <AnalyticsArea />
         <ErrorBoundaryWrapper>
           <ProfileShell
             user={{

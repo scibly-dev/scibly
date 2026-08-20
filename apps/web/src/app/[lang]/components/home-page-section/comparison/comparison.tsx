@@ -14,7 +14,6 @@ import {
   toPillarId,
 } from "@/app/[lang]/components/marketing-tokens";
 import { SciblyMark } from "@/components/brand-logo";
-import { useInViewOnce } from "@/components/in-view-reveal";
 
 import { type ComparisonDictionary } from "./i18n/comparison.types";
 
@@ -38,15 +37,10 @@ const boardKeyClass =
   "mt-[1px] inline-flex shrink-0 items-center gap-[7px] rounded-[11px] bg-[#0066FF] px-[11px] py-[7px] text-[11.5px] leading-none font-bold text-white shadow-[0_2px_0_0_#0046ad] transition-transform duration-150 ease-press group-hover:-translate-y-[2px] sm:mt-0 sm:size-[26px] sm:justify-center sm:gap-0 sm:rounded-[8px] sm:p-0";
 
 export function ComparisonSection({ t }: ComparisonSectionProps) {
-  const { ref, inView } = useInViewOnce<HTMLElement>(0.16);
   const lastIndex = t.table.rows.length - 1;
 
   return (
-    <MarketingSection
-      ref={ref}
-      id="comparison"
-      aria-labelledby="comparison-heading"
-    >
+    <MarketingSection id="comparison" aria-labelledby="comparison-heading">
       <h2 id="comparison-heading" className={cn(titleClass, "max-w-[680px]")}>
         {t.title1} {t.title2}
       </h2>
@@ -98,15 +92,13 @@ export function ComparisonSection({ t }: ComparisonSectionProps) {
               <li
                 key={row.label}
                 className={cn(
-                  "group grid transition-opacity duration-500 ease-out motion-reduce:transition-none",
+                  "sc-reveal group grid",
                   "max-sm:border-hairline max-sm:overflow-hidden max-sm:rounded-[20px] max-sm:border-2 max-sm:bg-white max-sm:shadow-[0_4px_0_0_var(--color-lip)]",
                   columnsClass,
-                  inView ? "opacity-100" : "sc-reveal-hidden",
                 )}
-                style={{
-                  "--row-wash": tint(pillar.softColor, 26),
-                  transitionDelay: inView ? `${70 + index * 55}ms` : "0ms",
-                }}
+                // Each row runs its own scroll timeline, so they stagger by how
+                // far apart they sit rather than by a delay we have to pick.
+                style={{ "--row-wash": tint(pillar.softColor, 26) }}
               >
                 <div className="border-ground flex items-center gap-3 border-b-2 px-4 py-3.5 sm:border-0 sm:px-0 sm:pt-[clamp(14px,1.8vw,19px)] sm:pr-[clamp(12px,2vw,24px)] sm:pb-[clamp(14px,1.8vw,19px)]">
                   <ChapterKey id={kind} />

@@ -3,121 +3,66 @@
 import type { Locale } from "@scibly/i18n/constants";
 import type {
   AnalyticsEnv,
+  AnalyticsIdentity,
   AnalyticsSurface,
-  ConsentLabels,
 } from "../config/types";
 
 import { usePostHog } from "@posthog/next";
 import { PostHogProvider } from "@posthog/react";
 import { getLocale, localeFromPathname } from "@scibly/i18n";
+import { localizedUrl, routes } from "@scibly/routes";
 import { usePathname } from "next/navigation";
-import { type ReactNode, useCallback, useEffect, useState } from "react";
+import { type ReactNode, useCallback, useSyncExternalStore } from "react";
 
 import { POSTHOG_AUTOCAPTURE_CONFIG } from "../config/autocapture";
 import { INGEST_PATH } from "../config/env";
+import { withAnalyticsContext } from "../config/event-context";
 import { getConsentLabels } from "../config/labels";
 import { ConsentBanner } from "../consent/consent-banner";
 import {
-  type ConsentStatus,
   getAnalyticsConsent,
   setAnalyticsConsent,
+  subscribeToAnalyticsConsent,
 } from "../consent/cookie";
+import { applyConsentAndIdentity } from "./apply-consent-and-identity";
 
-// The server can't read the consent cookie without forcing per-request
-// dynamic rendering, so PostHog always inits opted-out and this corrects
-// it client-side on mount for returning users.
-function ConsentSync({
-  setStatus,
-}: {
-  setStatus: (status: ConsentStatus) => void;
-}) {
+// The server cannot read the consent cookie without forcing the route into
+// per-request dynamic rendering, so it renders no banner and the client decides
+// after hydration.
+const noConsentOnTheServer = () => undefined;
+
+function ConsentControls({ userId }: { userId: string | undefined }) {
   const posthog = usePostHog();
+  const pathname = usePathname();
+  const status = useSyncExternalStore(
+    subscribeToAnalyticsConsent,
+    getAnalyticsConsent,
+    noConsentOnTheServer,
+  );
 
-  useEffect(() => {
-    const resolved = getAnalyticsConsent();
-    if (resolved === "granted") {
-      posthog.opt_in_capturing();
-    } else if (resolved === "declined") {
-      posthog.opt_out_capturing();
-    }
-    setStatus(resolved);
-  }, [posthog, setStatus]);
-
-  return null;
-}
-
-// Registered globally, not passed per capture call, so autocaptured events carry these properties too.
-function SuperProperties({
-  surface,
-  env,
-}: {
-  surface: AnalyticsSurface;
-  env: AnalyticsEnv;
-}) {
-  const posthog = usePostHog();
-
-  useEffect(() => {
-    posthog.register({ surface, env });
-  }, [env, posthog, surface]);
-
-  return null;
-}
-
-function ConsentControls({
-  status,
-  setStatus,
-  labels,
-  locale,
-  surface,
-}: {
-  status: ConsentStatus | undefined;
-  setStatus: (status: ConsentStatus) => void;
-  labels: ConsentLabels;
-  locale: Locale;
-  surface: AnalyticsSurface;
-}) {
-  const posthog = usePostHog();
-
-  const acceptConsent = useCallback(() => {
-    setAnalyticsConsent(true);
-    posthog.opt_in_capturing();
-    setStatus("granted");
-  }, [posthog, setStatus]);
-
-  const rejectConsent = useCallback(() => {
-    setAnalyticsConsent(false);
-    posthog.opt_out_capturing();
-    setStatus("declined");
-  }, [posthog, setStatus]);
-
-  const savePreferences = useCallback(
+  // A click is the one moment a component can be sure posthog has initialised.
+  const answer = useCallback(
     (analyticsEnabled: boolean) => {
-      if (analyticsEnabled) {
-        acceptConsent();
-        return;
-      }
-      rejectConsent();
+      setAnalyticsConsent(analyticsEnabled);
+      applyConsentAndIdentity(posthog, userId);
     },
-    [acceptConsent, rejectConsent],
+    [posthog, userId],
   );
 
   if (status !== "pending") {
     return null;
   }
 
-  const webOrigin = process.env.NEXT_PUBLIC_WEB_URL?.replace(/\/$/, "");
-  const privacyPolicyHref =
-    surface === "app" && webOrigin
-      ? `${webOrigin}/${locale}/datenschutz`
-      : `/${locale}/datenschutz`;
+  const locale: Locale = getLocale(localeFromPathname(pathname), true);
 
   return (
     <ConsentBanner
-      labels={labels}
-      privacyPolicyHref={privacyPolicyHref}
-      onAcceptAll={acceptConsent}
-      onNecessaryOnly={rejectConsent}
-      onSavePreferences={savePreferences}
+      labels={getConsentLabels(locale)}
+      // The policy lives on the marketing site, so both surfaces link out to it.
+      privacyPolicyHref={localizedUrl(locale, routes.web.legal.datenschutz)}
+      onAcceptAll={() => answer(true)}
+      onNecessaryOnly={() => answer(false)}
+      onSavePreferences={answer}
     />
   );
 }
@@ -127,6 +72,7 @@ export type PostHogRootProps = {
   env: AnalyticsEnv;
   apiKey: string;
   uiHost: string;
+  identity?: AnalyticsIdentity;
   children?: ReactNode;
 };
 
@@ -135,15 +81,10 @@ export function PostHogRoot({
   env,
   apiKey,
   uiHost,
+  identity,
   children,
 }: PostHogRootProps) {
-  // Undefined until ConsentSync reads the cookie. Starting at "pending" would
-  // render the banner server-side and flash it at everyone who already
-  // answered, since the server cannot see the cookie.
-  const [status, setStatus] = useState<ConsentStatus>();
-  const pathname = usePathname();
-  const locale: Locale = getLocale(localeFromPathname(pathname), true);
-  const labels = getConsentLabels(locale);
+  const userId = identity?.userId;
 
   return (
     <PostHogProvider
@@ -162,18 +103,17 @@ export function PostHogRoot({
         },
         persistence: "cookie",
         opt_out_capturing_by_default: true,
+
+        before_send: withAnalyticsContext({ surface, env }),
+
+        // The one callback guaranteed to run after persistence exists and before
+        // the first pageview. See `applyConsentAndIdentity` for why a component
+        // effect cannot stand in for it.
+        loaded: (posthog) => applyConsentAndIdentity(posthog, userId),
       }}
     >
-      <ConsentSync setStatus={setStatus} />
-      <SuperProperties surface={surface} env={env} />
       {children}
-      <ConsentControls
-        status={status}
-        setStatus={setStatus}
-        labels={labels}
-        locale={locale}
-        surface={surface}
-      />
+      <ConsentControls userId={userId} />
     </PostHogProvider>
   );
 }

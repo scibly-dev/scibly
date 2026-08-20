@@ -21,6 +21,13 @@ at once. Says nothing on its own about what they may do — that is the
 membership's to say.
 _Avoid_: account, profile
 
+**Area**:
+Where a user currently is: their own space, or one organization. Never a synonym
+for Organization — an area may be personal, an organization never is, and only
+an organization area has a role attached to it.
+_Avoid_: workspace (an integration's word for the provider's own container),
+tenant, scope, section
+
 ### Who belongs to it
 
 **Member**:
