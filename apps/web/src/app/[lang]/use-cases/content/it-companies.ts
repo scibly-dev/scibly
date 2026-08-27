@@ -18,7 +18,6 @@ export const useCase: UseCasePage = {
       ],
     },
     hero: {
-      eyebrow: "Für IT-Teams",
       headline: "Compliance. Onboarding. KI. Alles in einem System.",
       subheadline:
         "Wenn der Auditor anruft, hast du die Nachweise. Wenn jemand neu anfängt, weiß er vom ersten Tag an, was zu tun ist. Und wenn jemand nach KI-Kenntnissen fragt, kannst du zeigen, wer was gelernt hat.",
@@ -104,7 +103,6 @@ export const useCase: UseCasePage = {
       ],
     },
     hero: {
-      eyebrow: "For IT teams",
       headline: "Compliance. Onboarding. AI. One system for all three.",
       subheadline:
         "When the auditor calls, you have the records. When someone joins, they know what to do from day one. And when leadership asks about AI skills, you have the answer.",

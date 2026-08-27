@@ -17,7 +17,6 @@ export const useCase: UseCasePage = {
       ],
     },
     hero: {
-      eyebrow: "Für Logistikunternehmen",
       headline:
         "ADR. Gabelstapler. DGUV 308-001. Einmal erstellt, für jeden einsatzbereit.",
       subheadline:
@@ -104,7 +103,6 @@ export const useCase: UseCasePage = {
       ],
     },
     hero: {
-      eyebrow: "For logistics and transport companies",
       headline:
         "ADR. Forklift. Workplace inductions. Built once, ready for everyone.",
       subheadline:

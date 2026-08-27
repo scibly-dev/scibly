@@ -17,7 +17,6 @@ export const useCase: UseCasePage = {
       ],
     },
     hero: {
-      eyebrow: "KI-Enablement",
       headline: "Wer in deinem Unternehmen wirklich mit KI arbeitet.",
       subheadline:
         "KI-Tools sind im Einsatz. Aber wer sie tatsächlich nutzt, wer nur so tut als ob, und wer noch nie geschult wurde, das weiß fast niemand. Scibly macht den Trainingsstand für jeden sichtbar.",
@@ -103,7 +102,6 @@ export const useCase: UseCasePage = {
       ],
     },
     hero: {
-      eyebrow: "AI enablement",
       headline: "Who in your company actually works with AI.",
       subheadline:
         "AI tools are in use. But who really works with them, who just says they do, and who has never been trained — almost nobody knows. Scibly makes training status visible for every person.",

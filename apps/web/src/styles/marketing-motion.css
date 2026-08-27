@@ -243,6 +243,27 @@
   }
 }
 
+/* The digit wheels are script-driven, so the plain value stands in until the counter runs, and takes over entirely when scripting is off. */
+.sc-roll {
+  opacity: 0;
+}
+
+.sc-roll-ready {
+  opacity: 1;
+}
+
+@media (scripting: enabled) {
+  .sc-roll-plain {
+    display: none;
+  }
+}
+
+@media not (scripting: enabled) {
+  .sc-roll {
+    display: none;
+  }
+}
+
 .sc-bento [data-bento-visual] {
   -webkit-font-smoothing: antialiased;
   text-rendering: geometricPrecision;

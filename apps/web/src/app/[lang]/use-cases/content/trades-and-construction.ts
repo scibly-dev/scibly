@@ -17,7 +17,6 @@ export const useCase: UseCasePage = {
       ],
     },
     hero: {
-      eyebrow: "Für Handwerksbetriebe",
       headline: "DGUV-Unterweisungen. Digital. Nachweisbar.",
       subheadline:
         "Wenn die BG-Kontrolle kommt, hast du den Nachweis. Zeitstempel, exportierbar in zwei Minuten. Und neue Mitarbeitende werden eingewiesen, bevor sie anfangen.",
@@ -104,7 +103,6 @@ export const useCase: UseCasePage = {
       ],
     },
     hero: {
-      eyebrow: "For trades and construction",
       headline: "Health and safety inductions. Digital. Documented.",
       subheadline:
         "When an inspector arrives, you have the evidence. Timestamped, exportable in two minutes. And new starters are inducted before their first shift begins.",

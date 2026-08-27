@@ -1,7 +1,7 @@
 "use client";
 
 import type { Locale } from "@scibly/i18n/constants";
-import type { FaqItem } from "@/components/faq/faq-list";
+import type { FaqContext, FaqItem } from "@/components/faq/faq-list";
 
 import {
   MarketingSection,
@@ -14,6 +14,7 @@ interface UseCaseFaqProps {
   questions: FaqItem[];
   useCaseKey: string;
   locale: Locale;
+  context?: FaqContext;
 }
 
 export function UseCaseFaq({
@@ -21,6 +22,7 @@ export function UseCaseFaq({
   questions,
   useCaseKey,
   locale,
+  context = "use-case",
 }: UseCaseFaqProps) {
   return (
     <MarketingSection
@@ -36,7 +38,7 @@ export function UseCaseFaq({
       <FaqList
         questions={questions}
         locale={locale}
-        context="use-case"
+        context={context}
         useCaseKey={useCaseKey}
       />
     </MarketingSection>

@@ -4,7 +4,7 @@ import { ArrowDown, Github } from "lucide-react";
 
 import { PILLARS, tint } from "@/app/[lang]/components/marketing-tokens";
 
-import { type HeroDictionary } from "./i18n/hero.types";
+import { type HeroDictionary } from "../home-page-section/hero/i18n/hero.types";
 
 export function HeroOpenSourceChip({ t }: { t: HeroDictionary["openSource"] }) {
   return (
