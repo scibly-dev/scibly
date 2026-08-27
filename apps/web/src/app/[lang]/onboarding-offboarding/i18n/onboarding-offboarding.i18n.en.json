@@ -1,0 +1,250 @@
+{
+  "onboardingOffboarding": {
+    "meta": {
+      "title": "Onboarding & Offboarding Software | Scibly",
+      "description": "Build onboarding once, assign it to every new hire in one click. Capture a departing expert's knowledge as a course, not a lost handover. Scibly for onboarding & offboarding.",
+      "keywords": [
+        "onboarding software",
+        "offboarding software",
+        "employee onboarding LMS",
+        "knowledge transfer software",
+        "exit knowledge capture"
+      ]
+    },
+    "hero": {
+      "headline": "Better Knowledge Transfer",
+      "subheadline": "Preserve your team’s most valuable knowledge by capturing, transferring, and retaining it with Scibly.",
+      "ctaLabel": "Request demo"
+    },
+    "featureShowcaseHeader": {
+      "eyebrow": "Built for the full employee lifecycle",
+      "title": "The same platform, from first day to last.",
+      "subtitle": "One place to build onboarding, capture outgoing knowledge, and keep both audit-ready."
+    },
+    "comparisonRows": [
+      {
+        "kind": "learner",
+        "label": "Onboarding",
+        "legacy": "Checklist in a spreadsheet or PDF",
+        "scibly": "Guided onboarding with progress and questions that improves with every team member."
+      },
+      {
+        "kind": "import",
+        "label": "Knowledge Transfer",
+        "legacy": "Knowledge leaves with the employee",
+        "scibly": "Knowledge is captured continuously"
+      }
+    ],
+    "knowledgeSources": {
+      "eyebrow": "Knowledge transfer with Scibly",
+      "title": "Undocumented expertise gets captured and made accessible and learnable for everyone.",
+      "subtitle": "The most valuable knowledge is written down nowhere. It sits in your experts' heads and leaves with them. Scibly captures it before it is lost.",
+      "capturedLabel": "Captured",
+      "interview": {
+        "title": "Interviews",
+        "description": "Documentation records how something works. Scibly asks about the rest: the exceptions, the rules of thumb, the reasons behind decisions.",
+        "timer": "14:32",
+        "aiName": "Scibly AI",
+        "listeningLabel": "Listening…",
+        "question": "You mentioned payment retries. What happens on a timeout?"
+      },
+      "artifacts": {
+        "title": "Everyday work supplies the evidence",
+        "description": "Scibly extracts knowledge from Slack messages, code reviews, tickets, and docs, and stores every insight with its source.",
+        "slackChannel": "#it-support",
+        "slackTime": "09:41",
+        "slackAuthor": "Mia",
+        "slackText": "Never retry twice, the gateway already does.",
+        "codeFile": "payments/client.ts",
+        "codeReview": "Review",
+        "codeRemoved": "await retry(book, 3)",
+        "codeAdded": "await book()",
+        "codeComment": "The gateway already retries server-side.",
+        "ticketId": "INFRA-482",
+        "ticketStatus": "Resolved",
+        "ticketTitle": "Duplicate booking after timeout",
+        "ticketCause": "Cause: client retry after timeout"
+      },
+      "lesson": {
+        "title": "More than knowledge extraction",
+        "description": "The extracted knowledge is not just stored centrally, it can be turned into interactive learning units automatically, at the push of a button.",
+        "lessonEyebrow": "Lesson 4 of 9",
+        "lessonTitle": "Handling payment retries",
+        "quizQuestion": "A request hits a timeout. Now what?",
+        "quizOptionWrong": "Book again right away",
+        "quizOptionRight": "Check the booking status, don't retry",
+        "derivedLabel": "Generated from it"
+      },
+      "knowledge": {
+        "eyebrow": "Knowledge base",
+        "title": "Payment retries",
+        "fact1": "Retries are handled by the gateway only.",
+        "fact2": "A timeout doesn't mean cancelled.",
+        "verifiedLabel": "3 sources · verified"
+      }
+    },
+    "problemNumbers": {
+      "eyebrow": "The problem in numbers",
+      "title": "When an employee leaves the company, their knowledge leaves with them.",
+      "problemLabel": "The problem",
+      "problemBody": "Every employee who leaves takes undocumented knowledge with them: the exceptions, the rules of thumb, the reasons behind decisions. What stays behind is longer ramp-up, repeated mistakes, and questions nobody can answer any more.",
+      "stats": [
+        {
+          "value": "$31B",
+          "label": "annual cost of knowledge loss"
+        },
+        {
+          "value": "92%",
+          "label": "of organizations do not consistently capture knowledge from departing employees"
+        },
+        {
+          "value": "3–6 months",
+          "label": "until new hires reach the productivity of their peers"
+        },
+        {
+          "value": "50–200%",
+          "label": "of annual salary is the cost of replacing a single employee"
+        }
+      ]
+    },
+    "onboardingFlow": {
+      "eyebrow": "Onboarding with Scibly",
+      "title": "The fastest path to productivity",
+      "subtitle": "Structure, progress, questions and context in one place. From day-one access to understanding how things work in the company and why they are done that way.",
+      "checklist": {
+        "title": "A structured onboarding list",
+        "description": "Every step is defined, with an owner, a deadline and all the information that belongs to it. Nobody has to guess what comes next.",
+        "windowTitle": "Onboarding · Sales",
+        "stepCount": "12 steps",
+        "groups": [
+          {
+            "label": "Before day one",
+            "items": [
+              {
+                "label": "Laptop and accounts ordered",
+                "meta": "IT",
+                "done": true
+              },
+              {
+                "label": "Desk set up",
+                "meta": "Office",
+                "done": true
+              }
+            ]
+          },
+          {
+            "label": "Day 1",
+            "items": [
+              {
+                "label": "Welcome to the team",
+                "meta": "Mia",
+                "done": true
+              },
+              {
+                "label": "Set up VPN and SSO",
+                "meta": "IT · by 5pm",
+                "done": false
+              }
+            ]
+          },
+          {
+            "label": "Week 1",
+            "items": [
+              {
+                "label": "Course: security policy",
+                "meta": "8 lessons",
+                "done": false
+              }
+            ]
+          }
+        ]
+      },
+      "progress": {
+        "title": "Progress is tracked",
+        "description": "Team leads and admins have a complete view of onboarding progress at any time, and see immediately when someone needs support.",
+        "windowTitle": "Team overview · Sales",
+        "assignedLabel": "3 onboarding",
+        "people": [
+          {
+            "name": "Lena M.",
+            "initials": "LM",
+            "status": "12 of 12 steps",
+            "progress": 100
+          },
+          {
+            "name": "Jonas B.",
+            "initials": "JB",
+            "status": "5 of 12 steps",
+            "progress": 42
+          },
+          {
+            "name": "Aylin K.",
+            "initials": "AK",
+            "status": "0 of 12 steps",
+            "progress": 0
+          }
+        ]
+      },
+      "questions": {
+        "title": "Questions and feedback",
+        "description": "New hires can ask questions about individual steps right inside the onboarding flow, or note down what is still unclear. That way onboarding improves with every new team member.",
+        "windowTitle": "Step 4 · Set up VPN",
+        "learnerName": "Jonas",
+        "learnerInitials": "JB",
+        "question": "Where do I find the macOS VPN profile?",
+        "aiName": "Scibly AI",
+        "answer": "In the self-service portal under Devices. IT approves the request automatically.",
+        "feedbackLabel": "Feedback",
+        "feedbackText": "The step doesn't say where the profile lives.",
+        "improvedLabel": "Step updated"
+      },
+      "course": {
+        "title": "Courses, not a step-by-step manual",
+        "description": "Scibly explains not just what to do but why. New hires understand the company's tools and decisions instead of working through a checklist blind.",
+        "lessonEyebrow": "Lesson 2 of 8",
+        "lessonTitle": "Why deals go into the CRM first",
+        "whyLabel": "Why",
+        "whyText": "Without a CRM entry the forecast is wrong, and the team cannot see which deals are actually live.",
+        "quizQuestion": "A customer says yes on the phone. What first?",
+        "quizOptionWrong": "Send the contract right away",
+        "quizOptionRight": "Create the deal in the CRM, then the contract"
+      }
+    },
+    "cta": {
+      "eyebrow": "Ready to rethink knowledge transfer?",
+      "title": "Ready to share knowledge better and onboard new hires faster?",
+      "button": "Request demo",
+      "hint": "No commitment · We'll reach out personally"
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "questions": [
+        {
+          "id": "what-is-scibly",
+          "q": "What is Scibly?",
+          "a": "Scibly makes the knowledge inside your experts' heads accessible to the entire company. Existing knowledge automatically becomes up-to-date documentation and courses as well as role-based onboarding programs. Knowledge spreads further and new hires get up to speed faster."
+        },
+        {
+          "id": "how-does-scibly-work",
+          "q": "How does Scibly work?",
+          "a": "Scibly runs guided interviews with your experts and taps knowledge from sources like Slack, code reviews, tickets and documents. That builds a knowledge base with cited sources, from which courses and role-based onboardings are created. New team members can also ask questions and give feedback right inside the onboarding, so it keeps improving automatically."
+        },
+        {
+          "id": "data-security",
+          "q": "How secure is my data?",
+          "a": "Scibly is GDPR compliant and uses only models hosted in the EU. Your data is never used to train AI models nor passed on to third parties, and it is encrypted both in transit and at rest. For maximum control you can also self-host Scibly, because Scibly is open source."
+        },
+        {
+          "id": "getting-started",
+          "q": "How quickly can we get started?",
+          "a": "Once Scibly is connected to your existing tools like Slack, GitHub or Notion, knowledge extraction starts automatically. From the knowledge gathered, our AI agent additionally creates interactive courses and onboardings within minutes."
+        },
+        {
+          "id": "open-source",
+          "q": "Is Scibly open source?",
+          "a": "Scibly is open core: most of the code is on GitHub under AGPLv3, with only a few enterprise features excluded. You can clone the repository, boot the stack on your own infrastructure and self-host Scibly."
+        }
+      ]
+    }
+  }
+}

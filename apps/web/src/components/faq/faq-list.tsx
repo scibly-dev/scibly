@@ -29,7 +29,7 @@ export type FaqItem = {
   a: string;
 };
 
-export type FaqContext = "homepage" | "use-case";
+export type FaqContext = "homepage" | "use-case" | "landing-page";
 
 const CHAPTER_CYCLE: PillarId[] = [
   "import",

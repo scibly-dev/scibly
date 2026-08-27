@@ -17,7 +17,6 @@ export const useCase: UseCasePage = {
       ],
     },
     hero: {
-      eyebrow: "Für Gastronomie und Hotellerie",
       headline: "HACCP-Schulungen. Revisionssicher. Kein Papier mehr.",
       subheadline:
         "Das Gesundheitsamt fragt nach Nachweisen. Scibly hat sie. Kurs einmal erstellen, mit einem Klick jedem neuen Mitarbeitenden zuweisen, Nachweis mit Zeitstempel und Abschlussbestätigung.",
@@ -103,7 +102,6 @@ export const useCase: UseCasePage = {
       ],
     },
     hero: {
-      eyebrow: "For hospitality and catering",
       headline: "Food safety training. Audit-ready. No paper.",
       subheadline:
         "When the inspector asks for records, you have them. Create the course once, assign it to every new hire in one click, and get a timestamped completion record for every person.",

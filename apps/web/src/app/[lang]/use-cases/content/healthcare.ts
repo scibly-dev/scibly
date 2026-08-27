@@ -17,7 +17,6 @@ export const useCase: UseCasePage = {
       ],
     },
     hero: {
-      eyebrow: "Für Pflegeeinrichtungen",
       headline: "Keine Aktensuche vor der nächsten MDK-Prüfung.",
       subheadline:
         "Hygieneschulung, Erste-Hilfe-Auffrischung, Brandschutzunterweisung: Kurs einmal erstellen, allen Mitarbeitenden zuweisen und den Nachweis für den MDK jederzeit ohne Suchen exportieren.",
@@ -104,7 +103,6 @@ export const useCase: UseCasePage = {
       ],
     },
     hero: {
-      eyebrow: "For care homes and nursing facilities",
       headline: "No folder search before the next inspection.",
       subheadline:
         "Hygiene training, first aid refreshers, fire safety: build the course once, assign it to every staff member, and export the compliance report whenever an inspector asks.",

@@ -17,7 +17,6 @@ export const useCase: UseCasePage = {
       ],
     },
     hero: {
-      eyebrow: "Für den Einzelhandel",
       headline: "Ob Stammkraft oder Aushilfe: Jeder startet richtig.",
       subheadline:
         "Hohe Fluktuation, Saisonspitzen, viele Filialen: Scibly erstellt den Onboarding-Kurs einmal, danach weist du ihn mit einem Klick jeder neuen Person zu. Auf dem Handy, vor dem ersten Tag.",
@@ -104,7 +103,6 @@ export const useCase: UseCasePage = {
       ],
     },
     hero: {
-      eyebrow: "For retail",
       headline: "Whether full-time or seasonal: everyone starts right.",
       subheadline:
         "High turnover, seasonal peaks, many stores: Scibly builds your onboarding course once — then you assign it to every new hire with one click. On their phone, before their first day.",

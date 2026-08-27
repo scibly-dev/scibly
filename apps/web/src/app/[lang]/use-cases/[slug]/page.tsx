@@ -6,6 +6,7 @@ import { constructMetadata } from "@scibly/lib";
 import { routes } from "@scibly/routes";
 import { notFound } from "next/navigation";
 
+import { FaqJsonLd } from "@/components/faq/faq-json-ld";
 import { getFullDictionary } from "@/i18n/dictionaries";
 
 import { CtaSection } from "../../components/home-page-section/cta/cta";
@@ -64,30 +65,15 @@ export default async function UseCasePage(props: {
   const content = useCase[lang];
   const dict = await getFullDictionary(lang);
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: content.faq.questions.map((q) => ({
-      "@type": "Question",
-      name: q.q,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: q.a,
-      },
-    })),
-  };
-
   return (
     <main className="flex flex-col bg-white">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-      />
+      <FaqJsonLd questions={content.faq.questions} />
       <UseCaseHero
-        eyebrow={content.hero.eyebrow}
         headline={content.hero.headline}
         subheadline={content.hero.subheadline}
         ctaLabel={content.hero.ctaLabel}
+        imageAlt={dict.hero.productAlt}
+        openSource={dict.hero.openSource}
       />
       <UseCasePain
         eyebrow={content.pain.eyebrow}

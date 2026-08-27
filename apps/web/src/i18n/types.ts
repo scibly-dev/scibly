@@ -12,6 +12,7 @@ import { type AppRoutesPage } from "@/app/[lang]/i18n/app-routes.types";
 import { type BlogPage } from "@/app/[lang]/i18n/blog.types";
 import { type HomePage } from "@/app/[lang]/i18n/home.types";
 import { type LegalPage } from "@/app/[lang]/i18n/legal.types";
+import { type OnboardingOffboardingPage } from "@/app/[lang]/onboarding-offboarding/i18n/onboarding-offboarding.types";
 
 export type Dictionary = {
   page: {
@@ -29,6 +30,7 @@ export type Dictionary = {
     demoTour: DemoTourDictionary;
     founder: FounderDictionary;
     openSource: OpenSourceDictionary;
+    onboardingOffboarding: OnboardingOffboardingPage;
   };
 };
 

@@ -3,7 +3,6 @@ import type { FaqItem } from "@/components/faq/faq-list";
 export type UseCaseContent = {
   meta: { title: string; description: string; keywords: string[] };
   hero: {
-    eyebrow: string;
     headline: string;
     subheadline: string;
     ctaLabel: string;
