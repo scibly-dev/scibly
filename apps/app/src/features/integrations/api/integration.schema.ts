@@ -1,3 +1,4 @@
+import { httpsUrl } from "@scibly/schemas/common";
 import { orgSlugInput } from "@scibly/schemas/organization";
 import { z } from "zod";
 
@@ -41,7 +42,7 @@ export const linkPageSchema = z.object({
   provider: pageProviderInput,
   pageId: z.string(),
   pageTitle: z.string(),
-  pageUrl: z.string().url(),
+  pageUrl: httpsUrl(),
 });
 
 export const linkPagesSchema = z.object({
@@ -53,7 +54,7 @@ export const linkPagesSchema = z.object({
       z.object({
         id: z.string(),
         title: z.string(),
-        url: z.string().url(),
+        url: httpsUrl(),
       }),
     )
     .min(1)
