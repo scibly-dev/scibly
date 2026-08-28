@@ -44,7 +44,11 @@ function lastRequest() {
   if (!call) throw new Error("nothing was fetched");
   return {
     url: String(call[0]),
-    init: call[1] as { method: string; headers: Record<string, string> },
+    init: call[1] as {
+      method: string;
+      headers: Record<string, string>;
+      signal?: AbortSignal;
+    },
   };
 }
 
@@ -188,6 +192,14 @@ describe("GH5 the minted token", () => {
       "https://api.github.com/app/installations/42/access_tokens",
     );
     expect(init.method).toBe("POST");
+  });
+
+  it("GH5 gives up on a request that hangs rather than eating a whole sync hop", async () => {
+    fetchMock.mockResolvedValue(ok({ token: "ghs_minted" }));
+
+    await new GitHubProvider().mintAccessToken("42");
+
+    expect(lastRequest().init.signal).toBeInstanceOf(AbortSignal);
   });
 
   it("GH5 keeps the private key out of every request it makes", async () => {

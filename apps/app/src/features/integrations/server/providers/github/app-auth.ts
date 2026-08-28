@@ -76,6 +76,8 @@ export class GitHubRequestError extends Error {
   }
 }
 
+const GITHUB_TIMEOUT_MS = 30_000;
+
 async function githubRequest<T>(
   path: string,
   init: { method: "GET" | "POST"; authorization: string },
@@ -88,6 +90,10 @@ async function githubRequest<T>(
       "x-github-api-version": "2022-11-28",
     },
     cache: "no-store",
+    // `fetch` waits forever by default. A sync hop polls up to ten connections
+    // inside a four-minute deadline, so one hung request must not be able to
+    // spend the whole hop and strand the rest of the batch unpolled.
+    signal: AbortSignal.timeout(GITHUB_TIMEOUT_MS),
   });
 
   if (!response.ok) {
