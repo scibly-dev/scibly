@@ -557,14 +557,31 @@ describe("KC1/KC5/KC6: how a chain ends", () => {
     });
   });
 
-  it("does not lose the remaining connections when the handoff cannot be delivered", async () => {
-    owedPastTheLimit(connection({ id: "conn-later" }));
-    sources({ id: "src-a", externalId: "page-a" });
-    fetchMock.mockRejectedValue(new Error("ECONNREFUSED"));
+  it.each([
+    {
+      case: "the request never lands",
+      arrange: () => fetchMock.mockRejectedValue(new Error("ECONNREFUSED")),
+    },
+    {
+      case: "the next hop refuses it",
+      arrange: () => fetchMock.mockResolvedValue({ ok: false, status: 401 }),
+    },
+  ])(
+    "gives the lease back when the handoff fails because $case",
+    async ({ arrange }) => {
+      owedPastTheLimit(connection({ id: "conn-later" }));
+      sources({ id: "src-a", externalId: "page-a" });
+      arrange();
 
-    const { continued } = await runSyncHop(LEASE);
+      const { continued } = await runSyncHop(LEASE);
 
-    expect(continued).toBe(true);
-    expect(writtenTo("conn-later")).toBeUndefined();
-  });
+      // No hop is coming, so the next scheduled run must be free to start one.
+      expect(continued).toBe(false);
+      expect(db.integrationSyncLease.updateMany).toHaveBeenCalledWith({
+        where: { id: "singleton", token: LEASE.token },
+        data: { heartbeatAt: new Date(0) },
+      });
+      expect(writtenTo("conn-later")).toBeUndefined();
+    },
+  );
 });

@@ -79,7 +79,13 @@ export async function runSyncHop(lease: SyncLease): Promise<SyncHopResult> {
       return { totals, continued: false };
     }
 
-    await handOffChain({ token: lease.token });
+    if (!(await handOffChain({ token: lease.token }))) {
+      // The chain stops here either way; releasing says so, so the next
+      // scheduled run starts a fresh one instead of waiting out a lease no
+      // hop is holding any more.
+      await releaseSyncLease(lease);
+      return { totals, continued: false };
+    }
     return { totals, continued: true };
   } catch (error) {
     console.error("[IntegrationFreshness] Hop failed:", error);
@@ -88,15 +94,19 @@ export async function runSyncHop(lease: SyncLease): Promise<SyncHopResult> {
   }
 }
 
-async function handOffChain(body: { token: string }): Promise<void> {
+// Whether the next hop actually picked the chain up. A 401 from a rotated
+// `CRON_SECRET` answers with a response, not an exception, so an unread status
+// is the same silence as a refused connection: the chain is gone and the lease
+// it left behind says otherwise.
+async function handOffChain(body: { token: string }): Promise<boolean> {
   if (!env.CRON_SECRET) {
     console.error(
       "[IntegrationFreshness] CRON_SECRET is not configured; chain not continued",
     );
-    return;
+    return false;
   }
   try {
-    await fetch(routes.app.api.cron.syncIntegrations, {
+    const response = await fetch(routes.app.api.cron.syncIntegrations, {
       method: "POST",
       headers: {
         authorization: `Bearer ${env.CRON_SECRET}`,
@@ -104,10 +114,17 @@ async function handOffChain(body: { token: string }): Promise<void> {
       },
       body: JSON.stringify(body),
     });
+    if (!response.ok) {
+      console.error(
+        `[IntegrationFreshness] Handoff refused with ${response.status}; chain not continued`,
+      );
+    }
+    return response.ok;
   } catch (error) {
     console.error(
       "[IntegrationFreshness] Failed to continue the chain:",
       error,
     );
+    return false;
   }
 }
