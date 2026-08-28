@@ -57,7 +57,7 @@ const t = {
   grantsError: "Could not load repositories.",
   grantsMore: "{count} more",
   grantsShown: "Showing {shown} of {total}.",
-  revokedNotice: "The connection was removed on the provider's side.",
+  revokedNotice: "Disconnected on {provider}'s side.",
   noProvidersAvailable: "Nothing to connect to.",
   providers: { NOTION: "Notion", GITHUB: "GitHub" },
 } as OrgSettingsPage["integrations"];
@@ -300,7 +300,7 @@ describe("the grants strip", () => {
     expect(card().textContent).toContain("No repositories.");
   });
 
-  it("tells the reader and refetches the list when the grant was revoked", () => {
+  it("names the provider that went away, and refetches the list", () => {
     lists([GITHUB], [{ provider: "GITHUB", workspaceName: "acme-inc" }]);
     useGrants.mockReturnValue({
       data: undefined,
@@ -311,7 +311,7 @@ describe("the grants strip", () => {
 
     card();
 
-    expect(toastError).toHaveBeenCalledWith(t.revokedNotice, {
+    expect(toastError).toHaveBeenCalledWith("Disconnected on GitHub's side.", {
       id: "integration-revoked-GITHUB",
     });
     expect(invalidate).toHaveBeenCalledWith({ orgSlug: "acme" });

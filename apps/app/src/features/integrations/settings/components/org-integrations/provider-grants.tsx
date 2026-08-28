@@ -38,11 +38,17 @@ export const ProviderGrants = ({
   // dropped the connection by the time the error arrives; refetching the list
   // is what takes the row off the page.
   const wasRevoked = error?.data?.applicationCode === "integration.revoked";
+  // Named, because a reader with two connections cannot tell from "this
+  // integration" which of them just went away.
+  const revokedNotice = t.revokedNotice.replace(
+    "{provider}",
+    t.providers[provider],
+  );
   useEffect(() => {
     if (!wasRevoked) return;
-    toast.error(t.revokedNotice, { id: `integration-revoked-${provider}` });
+    toast.error(revokedNotice, { id: `integration-revoked-${provider}` });
     void utils.integration.list.invalidate({ orgSlug });
-  }, [wasRevoked, provider, orgSlug, t.revokedNotice, utils]);
+  }, [wasRevoked, provider, orgSlug, revokedNotice, utils]);
 
   if (isPending) {
     return <p className="text-[11px] text-neutral-400">{t.grantsLoading}</p>;

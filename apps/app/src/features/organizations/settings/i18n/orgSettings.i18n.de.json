@@ -143,7 +143,7 @@
         "forbidden": "Du musst Administrator oder Inhaber sein, um eine Integration zu verbinden.",
         "token_exchange_failed": "Die Verbindung ist fehlgeschlagen. Der Anbieter hat die von Scibly gesendeten Zugangsdaten abgelehnt."
       },
-      "revokedNotice": "Diese Integration wurde auf Anbieterseite entfernt, daher wurde die Verbindung auch hier entfernt. Verbinde erneut, um fortzufahren.",
+      "revokedNotice": "Auf {provider}-Seite getrennt. Verbinde erneut, um fortzufahren.",
       "providers": {
         "NOTION": "Notion",
         "GITHUB": "GitHub"

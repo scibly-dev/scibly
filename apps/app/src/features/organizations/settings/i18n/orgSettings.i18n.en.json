@@ -143,7 +143,7 @@
         "forbidden": "You need to be an admin or owner to connect an integration.",
         "token_exchange_failed": "Connection failed. The provider rejected the credentials scibly sent."
       },
-      "revokedNotice": "This integration was removed on the provider's side, so the connection has been removed here too. Connect again to resume.",
+      "revokedNotice": "Disconnected on {provider}'s side. Connect again to resume.",
       "providers": {
         "NOTION": "Notion",
         "GITHUB": "GitHub"
