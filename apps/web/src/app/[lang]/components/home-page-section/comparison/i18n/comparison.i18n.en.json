@@ -9,6 +9,18 @@
       },
       "rows": [
         {
+          "kind": "learner",
+          "label": "Onboarding",
+          "legacy": "Checklist in a spreadsheet or PDF",
+          "scibly": "Guided onboarding with progress and questions that improves with every team member."
+        },
+        {
+          "kind": "import",
+          "label": "Knowledge Transfer",
+          "legacy": "Knowledge leaves with the employee",
+          "scibly": "Knowledge is captured continuously"
+        },
+        {
           "kind": "import",
           "label": "Content Creation",
           "legacy": "Manual course building",

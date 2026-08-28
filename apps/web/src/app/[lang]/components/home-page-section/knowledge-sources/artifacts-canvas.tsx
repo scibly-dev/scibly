@@ -3,19 +3,19 @@ import { GitPullRequest, Ticket } from "lucide-react";
 import { CORRECT_KEY } from "@/app/[lang]/components/marketing-tokens";
 import { BrandLogo } from "@/components/brand-logo";
 
-import { type ArtifactsCopy } from "../../i18n/onboarding-offboarding.types";
 import { enter, FAINT, HAIRLINE, MUTED } from "../mock/mock-theme";
 import { MockWindow } from "../mock/mock-window";
 import { MockWindowBar } from "../mock/mock-window-bar";
 import { CapturedChip } from "./captured-chip";
 import { CardCanvas } from "./card-canvas";
+import { type ArtifactsDictionary } from "./i18n/knowledge-sources.types";
 import { SLACK_TONE, WORK_TONE } from "./knowledge-sources-tones";
 
 export function ArtifactsCanvas({
   t,
   capturedLabel,
 }: {
-  t: ArtifactsCopy;
+  t: ArtifactsDictionary;
   capturedLabel: string;
 }) {
   return (

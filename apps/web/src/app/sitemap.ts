@@ -187,24 +187,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   });
 
-  // Unlinked from the rest of the site, so the sitemap is a crawler's only way in.
-  locales.forEach((locale) => {
-    sitemapEntries.push({
-      url: withLocale(routes.web.base.home + "onboarding-offboarding", locale),
-      alternates: {
-        languages: Object.fromEntries(
-          locales.map((l) => [
-            l,
-            withLocale(routes.web.base.home + "onboarding-offboarding", l),
-          ]),
-        ),
-      },
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.75,
-    });
-  });
-
   locales.forEach((locale) => {
     sitemapEntries.push({
       url: withLocale(routes.web.legal.impressum, locale),

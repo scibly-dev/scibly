@@ -5,13 +5,23 @@
  */
 
 html {
-  scroll-behavior: smooth;
   /* Anchor targets clear the floating navbar instead of sliding under it. */
   scroll-padding-top: 100px;
 }
 
+/*
+ * Smooth scrolling only for in-page anchor navigation. Applying it to <html>
+ * unconditionally makes WebKit animate scroll *restoration* on reload, so the
+ * viewport glides across tiles that have not been rasterised yet and the page
+ * looks cut off for a second on phones. `:focus-within` is true after an
+ * anchor click (the link has focus) and false during load/restore.
+ */
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  html {
+  html:focus-within {
     scroll-behavior: auto;
   }
 }

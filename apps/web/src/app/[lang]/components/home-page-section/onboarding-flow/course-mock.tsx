@@ -2,14 +2,14 @@ import { GraduationCap } from "lucide-react";
 
 import { tint } from "@/app/[lang]/components/marketing-tokens";
 
-import { type CourseCopy } from "../../i18n/onboarding-offboarding.types";
 import { MockQuizCard } from "../mock/mock-quiz-card";
 import { enter, MUTED } from "../mock/mock-theme";
 import { MockWindow } from "../mock/mock-window";
 import { FlowMockBar } from "./flow-mock-bar";
+import { type CourseDictionary } from "./i18n/onboarding-flow.types";
 import { FLOW_TONE } from "./onboarding-flow-tone";
 
-export function CourseMock({ t }: { t: CourseCopy }) {
+export function CourseMock({ t }: { t: CourseDictionary }) {
   return (
     <MockWindow>
       <FlowMockBar

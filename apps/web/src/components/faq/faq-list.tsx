@@ -13,7 +13,6 @@ import { cn } from "@scibly/ui/utils";
 import { MessageCircleQuestion, Plus } from "lucide-react";
 import { useState } from "react";
 
-import { CHAPTER_ICONS } from "@/app/[lang]/components/marketing-chapter-icons";
 import {
   lipShadow,
   type PillarId,
@@ -29,7 +28,7 @@ export type FaqItem = {
   a: string;
 };
 
-export type FaqContext = "homepage" | "use-case" | "landing-page";
+export type FaqContext = "homepage" | "use-case";
 
 const CHAPTER_CYCLE: PillarId[] = [
   "import",
@@ -64,8 +63,6 @@ type FaqListProps = {
   questions: FaqItem[];
   locale: Locale;
   context: FaqContext;
-
-  chapters?: Map<string, PillarId>;
   useCaseKey?: string;
   className?: string;
 };
@@ -74,7 +71,6 @@ export function FaqList({
   questions,
   locale,
   context,
-  chapters,
   useCaseKey,
   className,
 }: FaqListProps) {
@@ -96,10 +92,8 @@ export function FaqList({
       }}
     >
       {questions.map((item, index) => {
-        const chapter = chapters?.get(item.id);
         const { softColor, lipColor, accentColor } =
-          PILLARS[chapter ?? CHAPTER_CYCLE[index % CHAPTER_CYCLE.length]];
-        const Icon = chapter ? CHAPTER_ICONS[chapter] : MessageCircleQuestion;
+          PILLARS[CHAPTER_CYCLE[index % CHAPTER_CYCLE.length]];
         const isOpen = openId === item.id;
 
         return (
@@ -175,7 +169,7 @@ export function FaqList({
                   }}
                   aria-hidden
                 >
-                  <Icon size={17} strokeWidth={2.2} />
+                  <MessageCircleQuestion size={17} strokeWidth={2.2} />
                 </span>
                 {item.q}
               </span>

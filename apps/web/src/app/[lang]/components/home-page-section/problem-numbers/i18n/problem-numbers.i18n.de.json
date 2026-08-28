@@ -1,0 +1,26 @@
+{
+  "problemNumbers": {
+    "eyebrow": "Das Problem in Zahlen",
+    "title": "Verlässt ein Mitarbeiter das Unternehmen, geht sein Wissen mit ihm.",
+    "problemLabel": "Das Problem",
+    "problemBody": "Jeder Mitarbeiter, der geht, nimmt undokumentiertes Wissen mit: die Ausnahmen, die Faustregeln, die Gründe hinter Entscheidungen. Was bleibt, sind längere Einarbeitung, wiederholte Fehler und Fragen, die niemand mehr beantworten kann.",
+    "stats": [
+      {
+        "value": "31 Mrd. $",
+        "label": "Kosten durch Wissensverlust pro Jahr"
+      },
+      {
+        "value": "92 %",
+        "label": "der Unternehmen sichern das Wissen ausscheidender Mitarbeiter nicht systematisch"
+      },
+      {
+        "value": "3–6 Monate",
+        "label": "bis neue Mitarbeiter auf dem Produktivitätsniveau ihrer Kollegen arbeiten"
+      },
+      {
+        "value": "50–200 %",
+        "label": "eines Jahresgehalts kostet es, eine Stelle neu zu besetzen"
+      }
+    ]
+  }
+}

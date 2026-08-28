@@ -10,13 +10,13 @@ import {
 import { PILLARS, PRODUCT_INK } from "@/app/[lang]/components/marketing-tokens";
 import { useInViewOnce } from "@/components/in-view-reveal";
 
-import { type ProblemNumbersCopy } from "../../i18n/onboarding-offboarding.types";
 import { MUTED } from "../mock/mock-theme";
+import { type ProblemNumbersDictionary } from "./i18n/problem-numbers.types";
 import { SlidingNumber } from "./sliding-number";
 
 const TONE = PILLARS.byoai;
 
-export function ProblemNumbersSection({ t }: { t: ProblemNumbersCopy }) {
+export function ProblemNumbersSection({ t }: { t: ProblemNumbersDictionary }) {
   const { ref, inView } = useInViewOnce<HTMLElement>(0.25);
   // The section is in view long before the stats are, so the counters get their own later threshold.
   const { ref: statsRef, inView: statsInView } =
@@ -36,8 +36,9 @@ export function ProblemNumbersSection({ t }: { t: ProblemNumbersCopy }) {
         title={t.title}
       />
 
-      <div className="mt-[clamp(48px,7vh,80px)] grid gap-[clamp(32px,5vw,72px)] md:grid-cols-2">
-        <div className="flex max-w-[52ch] items-start gap-4">
+      <div className="mt-[clamp(32px,7vh,80px)] grid gap-[clamp(32px,5vw,72px)] md:grid-cols-2">
+        {/* Mobile drops the hanging indent so the body shares the stats' left edge. */}
+        <div className="grid max-w-[52ch] grid-cols-[auto_1fr] content-start items-start gap-x-4 gap-y-3 sm:gap-y-2.5">
           <span
             className="flex size-9 shrink-0 items-center justify-center rounded-[10px]"
             style={{
@@ -48,34 +49,35 @@ export function ProblemNumbersSection({ t }: { t: ProblemNumbersCopy }) {
           >
             <UserMinus size={18} strokeWidth={2.4} />
           </span>
-          <div className="flex flex-col gap-2.5">
-            <h3 className="text-ink m-0 text-[21px] font-bold tracking-[-0.015em]">
-              {t.problemLabel}
-            </h3>
-            <p
-              className="m-0 text-[15px] leading-[1.6]"
-              style={{ color: MUTED }}
-            >
-              {t.problemBody}
-            </p>
-          </div>
+          <h3 className="text-ink m-0 self-center text-[21px] font-bold tracking-[-0.015em]">
+            {t.problemLabel}
+          </h3>
+          <p
+            className="col-span-2 m-0 text-[15px] leading-[1.6] sm:col-span-1 sm:col-start-2"
+            style={{ color: MUTED }}
+          >
+            {t.problemBody}
+          </p>
         </div>
 
         <dl
           ref={statsRef}
-          className="m-0 grid gap-x-[clamp(24px,4vw,48px)] gap-y-[clamp(28px,4vh,44px)] sm:grid-cols-2"
+          className="m-0 grid grid-cols-2 gap-x-5 gap-y-5 sm:gap-x-[clamp(24px,4vw,48px)] sm:gap-y-[clamp(28px,4vh,44px)]"
         >
           {t.stats.map((stat) => (
-            <div key={stat.value} className="flex flex-col gap-2">
+            <div
+              key={stat.value}
+              className="border-hairline flex flex-col gap-1.5 border-t pt-3.5 sm:gap-2 sm:border-0 sm:pt-0"
+            >
               <dt style={{ color: PRODUCT_INK }}>
                 <SlidingNumber
                   value={stat.value}
                   active={statsInView}
-                  className="text-[clamp(30px,3.4vw,40px)] leading-none font-bold tracking-[-0.03em]"
+                  className="text-[22px] leading-none font-bold tracking-[-0.03em] sm:text-[clamp(30px,3.4vw,40px)]"
                 />
               </dt>
               <dd
-                className="m-0 max-w-[30ch] text-[13.5px] leading-[1.5]"
+                className="m-0 max-w-[30ch] text-[13px] leading-[1.45] sm:text-[13.5px] sm:leading-[1.5]"
                 style={{ color: MUTED }}
               >
                 {stat.label}

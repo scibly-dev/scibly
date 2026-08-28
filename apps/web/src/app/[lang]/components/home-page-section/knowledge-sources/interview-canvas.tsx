@@ -3,13 +3,13 @@ import { Mic, X } from "lucide-react";
 import { PRODUCT_INK } from "@/app/[lang]/components/marketing-tokens";
 import { SciblyMark } from "@/components/brand-logo";
 
-import { type InterviewCopy } from "../../i18n/onboarding-offboarding.types";
 import { enter } from "../mock/mock-theme";
+import { type InterviewDictionary } from "./i18n/knowledge-sources.types";
 import { INTERVIEW_TONE } from "./knowledge-sources-tones";
 
 const WAVEFORM_HEIGHTS = [5, 10, 14, 8, 12, 6, 9];
 
-export function InterviewCanvas({ t }: { t: InterviewCopy }) {
+export function InterviewCanvas({ t }: { t: InterviewDictionary }) {
   return (
     <div
       className="relative flex h-[328px] flex-col items-center justify-center gap-3 overflow-hidden rounded-[14px] px-6 text-center"

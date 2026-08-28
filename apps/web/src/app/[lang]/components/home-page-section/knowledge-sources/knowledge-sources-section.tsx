@@ -9,8 +9,8 @@ import {
 } from "@/app/[lang]/components/marketing-section-content";
 import { useInViewOnce } from "@/components/in-view-reveal";
 
-import { type KnowledgeSourcesCopy } from "../../i18n/onboarding-offboarding.types";
 import { ArtifactsCanvas } from "./artifacts-canvas";
+import { type KnowledgeSourcesDictionary } from "./i18n/knowledge-sources.types";
 import { InterviewCanvas } from "./interview-canvas";
 import { KnowledgeSourceCard } from "./knowledge-source-card";
 import {
@@ -20,7 +20,11 @@ import {
 } from "./knowledge-sources-tones";
 import { LessonCanvas } from "./lesson-canvas";
 
-export function KnowledgeSourcesSection({ t }: { t: KnowledgeSourcesCopy }) {
+export function KnowledgeSourcesSection({
+  t,
+}: {
+  t: KnowledgeSourcesDictionary;
+}) {
   const { ref, inView } = useInViewOnce<HTMLElement>(0.15);
 
   const cards = [

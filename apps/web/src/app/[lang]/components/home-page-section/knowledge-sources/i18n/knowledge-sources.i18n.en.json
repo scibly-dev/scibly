@@ -1,0 +1,50 @@
+{
+  "knowledgeSources": {
+    "eyebrow": "Knowledge transfer with Scibly",
+    "title": "Undocumented expertise gets captured and made accessible and learnable for everyone.",
+    "subtitle": "The most valuable knowledge is written down nowhere. It sits in your experts' heads and leaves with them. Scibly captures it before it is lost.",
+    "capturedLabel": "Captured",
+    "interview": {
+      "title": "Interviews",
+      "description": "Documentation records how something works. Scibly asks about the rest: the exceptions, the rules of thumb, the reasons behind decisions.",
+      "timer": "14:32",
+      "aiName": "Scibly AI",
+      "listeningLabel": "Listening…",
+      "question": "You mentioned payment retries. What happens on a timeout?"
+    },
+    "artifacts": {
+      "title": "Everyday work supplies the evidence",
+      "description": "Scibly extracts knowledge from Slack messages, code reviews, tickets, and docs, and stores every insight with its source.",
+      "slackChannel": "#it-support",
+      "slackTime": "09:41",
+      "slackAuthor": "Mia",
+      "slackText": "Never retry twice, the gateway already does.",
+      "codeFile": "payments/client.ts",
+      "codeReview": "Review",
+      "codeRemoved": "await retry(book, 3)",
+      "codeAdded": "await book()",
+      "codeComment": "The gateway already retries server-side.",
+      "ticketId": "INFRA-482",
+      "ticketStatus": "Resolved",
+      "ticketTitle": "Duplicate booking after timeout",
+      "ticketCause": "Cause: client retry after timeout"
+    },
+    "lesson": {
+      "title": "More than knowledge extraction",
+      "description": "The extracted knowledge is not just stored centrally, it can be turned into interactive learning units automatically, at the push of a button.",
+      "lessonEyebrow": "Lesson 4 of 9",
+      "lessonTitle": "Handling payment retries",
+      "quizQuestion": "A request hits a timeout. Now what?",
+      "quizOptionWrong": "Book again right away",
+      "quizOptionRight": "Check the booking status, don't retry",
+      "derivedLabel": "Generated from it"
+    },
+    "knowledge": {
+      "eyebrow": "Knowledge base",
+      "title": "Payment retries",
+      "fact1": "Retries are handled by the gateway only.",
+      "fact2": "A timeout doesn't mean cancelled.",
+      "verifiedLabel": "3 sources · verified"
+    }
+  }
+}
