@@ -20,18 +20,24 @@ import {
 // Real tRPC caller over the real router, so input validation runs for real.
 // `db` and `resolveOrg` are mocked; `detachSourcesFromConnection` is not.
 
-const db = vi.hoisted(() => ({
-  integrationConnection: {
-    findUnique: vi.fn(),
-    findMany: vi.fn(),
-    delete: vi.fn(),
-    create: vi.fn(),
-    upsert: vi.fn(),
-  },
-  notebookSource: { updateMany: vi.fn(), deleteMany: vi.fn() },
-  notebookSourceChunk: { deleteMany: vi.fn() },
-  scene: { deleteMany: vi.fn() },
-}));
+const db = vi.hoisted(() => {
+  const client = {
+    integrationConnection: {
+      findUnique: vi.fn(),
+      findMany: vi.fn(),
+      delete: vi.fn(),
+      create: vi.fn(),
+      upsert: vi.fn(),
+    },
+    notebookSource: { updateMany: vi.fn(), deleteMany: vi.fn() },
+    notebookSourceChunk: { deleteMany: vi.fn() },
+    scene: { deleteMany: vi.fn() },
+    // The doubled client is handed straight back, so a write made through the
+    // transaction is still observed on the same spy.
+    $transaction: vi.fn((run: (tx: unknown) => unknown) => run(client)),
+  };
+  return client;
+});
 const resolveOrg = vi.hoisted(() => vi.fn());
 
 vi.mock("@scibly/db", () => ({ db }));
@@ -40,7 +46,8 @@ vi.mock("@/features/organizations/server", () => ({
   resolveOrg,
 }));
 vi.mock("@/features/notebook/server", () => ({
-  ingestOrRefreshSource: vi.fn(),
+  boundedIngest: vi.fn(),
+  boundedLink: vi.fn((_userId: string, link: () => unknown) => link()),
   linkNotebookPages: vi.fn(),
   resolveNotebook: vi.fn(),
   resolveOwnedNotebookSource: vi.fn(),

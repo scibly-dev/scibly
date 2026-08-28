@@ -134,13 +134,21 @@ export const integrationConnectionProcedures = {
         select: { id: true },
       });
 
+      // One transaction: a detach that committed without its delete would
+      // leave the connection listed as live with none of its sources attached,
+      // and the next disconnect would have nothing left to warn on.
       if (connection) {
-        await detachSourcesFromConnection(
-          connection.id,
-          input.provider,
-          "disconnected",
-        );
-        await db.integrationConnection.delete({ where: { id: connection.id } });
+        await db.$transaction(async (tx) => {
+          await detachSourcesFromConnection(
+            connection.id,
+            input.provider,
+            "disconnected",
+            tx,
+          );
+          await tx.integrationConnection.delete({
+            where: { id: connection.id },
+          });
+        });
       }
       return { success: true };
     }),
