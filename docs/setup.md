@@ -40,7 +40,8 @@ cp packages/db/.env.example packages/db/.env
   `SKIP_ENV_VALIDATION=true` and leave those blank — the app boots, but
   features that depend on a missing credential (media uploads, billing,
   Notion import, ...) won't work until it's supplied.
-- `GITHUB_APP_SLUG`, `GITHUB_APP_ID`, and `GITHUB_APP_PRIVATE_KEY` are
+- `GITHUB_APP_SLUG`, `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY`,
+  `GITHUB_APP_CLIENT_ID` and `GITHUB_APP_CLIENT_SECRET` are
   required by that schema, like Notion's credentials. They come from a GitHub
   App you register once per environment — see
   [runbooks/github-app.md](runbooks/github-app.md), which covers the dev and
