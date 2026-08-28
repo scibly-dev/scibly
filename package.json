@@ -4,6 +4,7 @@
   },
   "scripts": {
     "dev": "node scripts/dev.mjs",
+    "dev:inngest": "inngest-cli dev --no-discovery -u http://localhost:3001/api/inngest",
     "start": "turbo run start --filter=./apps/*",
     "start:app": "turbo run start --filter=./apps/app",
     "start:web": "turbo run start --filter=./apps/web",
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "agent-browser": "^0.33.2",
+    "inngest-cli": "^1.44.0",
     "turbo": "^2.9.10"
   },
   "packageManager": "pnpm@10.33.0",
@@ -52,6 +54,7 @@
       "unrs-resolver"
     ],
     "onlyBuiltDependencies": [
+      "inngest-cli",
       "sharp"
     ]
   }

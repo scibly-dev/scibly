@@ -61,13 +61,14 @@ ee/           # enterprise-only code, separately licensed — see ee/README.md
 Fastest path — Docker:
 
 ```bash
-cp .env.example .env   # fill in COLLAB_TOKEN_SECRET, BETTER_AUTH_SECRET
+cp .env.example .env   # fill in COLLAB_TOKEN_SECRET, BETTER_AUTH_SECRET,
+                       # INNGEST_EVENT_KEY, INNGEST_SIGNING_KEY
 docker compose up -d --build
 ```
 
-Spins up Postgres and all three apps in one go. Full walkthrough, including
-deploying to a real domain and optional third-party integrations, is in
-[docs/docker.md](docs/docker.md).
+Spins up Postgres, the Inngest background-work engine, and all three apps in
+one go. Full walkthrough, including deploying to a real domain and optional
+third-party integrations, is in [docs/docker.md](docs/docker.md).
 
 From source instead — Node ≥22, pnpm 10.33, a Postgres database:
 
@@ -80,9 +81,10 @@ pnpm dev
 ```
 
 `pnpm dev` starts every app together (`apps/app` on :3001, `apps/web` on
-:3000, `apps/collab` on :4000). Full walkthrough, including what each
-environment variable is for and how to run a single app on its own, is in
-[docs/setup.md](docs/setup.md).
+:3000, `apps/collab` on :4000); `pnpm dev:inngest` alongside it starts the
+Inngest dev server on :8288, which is what runs background work. Full
+walkthrough, including what each environment variable is for and how to run a
+single app on its own, is in [docs/setup.md](docs/setup.md).
 
 ## Contributing
 
