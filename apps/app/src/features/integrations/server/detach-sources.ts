@@ -1,15 +1,19 @@
 import type { IntegrationProviderId } from "../contracts";
 
-import { db } from "@scibly/db";
+import { db, type Prisma } from "@scibly/db";
 
 type DetachReason = "disconnected" | "workspace_changed";
 
+// Every caller detaches as one half of a pair — the other half deletes or
+// replaces the connection row — so the transaction client is a parameter and
+// the two halves commit together.
 export async function detachSourcesFromConnection(
   connectionId: string,
   provider: IntegrationProviderId,
   reason: DetachReason,
+  tx: Prisma.TransactionClient | typeof db = db,
 ) {
-  await db.notebookSource.updateMany({
+  await tx.notebookSource.updateMany({
     where: { integrationId: connectionId },
     data: {
       integrationId: null,
