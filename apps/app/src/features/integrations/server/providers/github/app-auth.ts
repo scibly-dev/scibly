@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import { z } from "zod";
 
 import { env } from "@/env";
 
@@ -78,9 +79,14 @@ export class GitHubRequestError extends Error {
 
 const GITHUB_TIMEOUT_MS = 30_000;
 
+// The schema is a parameter rather than a type argument: a cast would describe
+// the body GitHub is documented to send, which is not the same claim as the
+// body it did send — an unexpected shape belongs in a thrown error here, not in
+// an undefined three call frames away.
 async function githubRequest<T>(
   path: string,
   init: { method: "GET" | "POST"; authorization: string },
+  schema: z.ZodType<T>,
 ): Promise<T> {
   const response = await fetch(`${GITHUB_API}${path}`, {
     method: init.method,
@@ -109,24 +115,37 @@ async function githubRequest<T>(
       response.status,
     );
   }
-  // SAFETY: the body is GitHub's documented response for the path the caller
-  // asked for, and every field GitHub may omit is checked before it is used.
-  return (await response.json()) as T;
+  return schema.parse(await response.json());
 }
 
-interface InstallationResponse {
-  id: number;
-  account: { id: number; login: string } | null;
-}
+const installationResponse = z.object({
+  id: z.number(),
+  account: z.object({ id: z.number(), login: z.string() }).nullable(),
+});
+
+const mintedTokenResponse = z.object({ token: z.string() });
+
+const repositoriesResponse = z.object({
+  repositories: z
+    .array(
+      z.object({
+        id: z.number(),
+        full_name: z.string(),
+        html_url: z.string(),
+      }),
+    )
+    .optional(),
+});
 
 /** Who the app was installed on, asked as the app itself. */
 export async function fetchInstallation(
   config: GitHubAppConfig,
   installationId: string,
 ): Promise<GitHubInstallation> {
-  const installation = await githubRequest<InstallationResponse>(
+  const installation = await githubRequest(
     `/app/installations/${encodeURIComponent(installationId)}`,
     { method: "GET", authorization: `Bearer ${signAppJwt(config)}` },
+    installationResponse,
   );
   if (!installation.account) {
     throw new Error(
@@ -145,9 +164,10 @@ export async function mintInstallationToken(
   config: GitHubAppConfig,
   installationId: string,
 ): Promise<string> {
-  const minted = await githubRequest<{ token: string }>(
+  const minted = await githubRequest(
     `/app/installations/${encodeURIComponent(installationId)}/access_tokens`,
     { method: "POST", authorization: `Bearer ${signAppJwt(config)}` },
+    mintedTokenResponse,
   );
   return minted.token;
 }
@@ -156,11 +176,10 @@ export async function mintInstallationToken(
 export async function fetchInstallationRepositories(
   token: string,
 ): Promise<GitHubRepository[]> {
-  const { repositories } = await githubRequest<{
-    repositories?: GitHubRepository[];
-  }>("/installation/repositories?per_page=100", {
-    method: "GET",
-    authorization: `Bearer ${token}`,
-  });
+  const { repositories } = await githubRequest(
+    "/installation/repositories?per_page=100",
+    { method: "GET", authorization: `Bearer ${token}` },
+    repositoriesResponse,
+  );
   return repositories ?? [];
 }

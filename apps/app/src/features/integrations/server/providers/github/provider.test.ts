@@ -202,6 +202,14 @@ describe("GH5 the minted token", () => {
     expect(lastRequest().init.signal).toBeInstanceOf(AbortSignal);
   });
 
+  it("GH5 refuses a body that is not the shape it asked for", async () => {
+    fetchMock.mockResolvedValue(ok({ token: 12345 }));
+
+    // A cast would have handed a number down as the access token and failed
+    // somewhere with no GitHub in the stack trace.
+    await expect(new GitHubProvider().mintAccessToken("42")).rejects.toThrow();
+  });
+
   it("GH5 keeps the private key out of every request it makes", async () => {
     fetchMock.mockResolvedValue(ok({ token: "ghs_minted" }));
 
