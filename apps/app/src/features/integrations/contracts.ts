@@ -55,7 +55,6 @@ export interface IntegrationPage {
 export interface IntegrationPageContent {
   text: string;
   title: string;
-  pageCount?: number;
   lastEdited: Date;
 }
 
