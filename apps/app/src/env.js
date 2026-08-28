@@ -67,19 +67,19 @@ export const env = createEnv({
       .min(1)
       .default("google/gemini-3.1-flash-lite-image"),
 
-    CRON_SECRET: z
-      .string()
-      .min(1)
-      .optional()
-      .refine(
-        (val) => process.env.NODE_ENV !== "production" || val !== undefined,
-        {
-          message:
-            "CRON_SECRET is required in production — without it, cron sync silently never runs (fails closed at request time, but deploys succeed).",
-        },
-      ),
     /** HMAC key shared only by the app token issuer and collab verifier. */
     COLLAB_TOKEN_SECRET: z.string().min(32),
+
+    INNGEST_BASE_URL: z.string().url(),
+    INNGEST_EVENT_KEY: z.string().min(1),
+    INNGEST_SIGNING_KEY: z
+      .string()
+      .regex(
+        /^(?:[0-9a-f]{2})+$/i,
+        "INNGEST_SIGNING_KEY must be bare hex with an even number of characters and no `signkey-` prefix",
+      ),
+    /** `z.enum`, not `z.coerce.boolean()`, which reads the string `"false"` as true. */
+    INNGEST_DEV: z.enum(["true", "false"]).optional(),
   },
 
   client: {
@@ -135,9 +135,13 @@ export const env = createEnv({
     AI_GATEWAY_API_KEY: process.env.AI_GATEWAY_API_KEY,
     SCIBLY_DEFAULT_CHAT_MODEL: process.env.SCIBLY_DEFAULT_CHAT_MODEL,
     SCIBLY_DEFAULT_IMAGE_MODEL: process.env.SCIBLY_DEFAULT_IMAGE_MODEL,
-    CRON_SECRET: process.env.CRON_SECRET,
     COLLAB_TOKEN_SECRET:
       process.env.COLLAB_TOKEN_SECRET ?? process.env.BETTER_AUTH_SECRET,
+
+    INNGEST_BASE_URL: process.env.INNGEST_BASE_URL,
+    INNGEST_EVENT_KEY: process.env.INNGEST_EVENT_KEY,
+    INNGEST_SIGNING_KEY: process.env.INNGEST_SIGNING_KEY,
+    INNGEST_DEV: process.env.INNGEST_DEV,
 
     // client side variables
     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,

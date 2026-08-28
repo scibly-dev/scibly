@@ -192,9 +192,6 @@ export const routes = {
     },
 
     api: {
-      cron: {
-        syncIntegrations: toAppUrl(`${BASE_API_PATH}/cron/sync-integrations`),
-      },
       oembed: toAppUrl(`${BASE_API_PATH}/oembed`),
       integrations: {
         // A provider validates this byte for byte between the authorize call

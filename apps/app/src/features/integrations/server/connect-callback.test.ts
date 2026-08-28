@@ -50,7 +50,6 @@ const { PROVIDERS } = await import("./registry");
 const TOKENS: IntegrationCredential = {
   kind: "oauth_tokens",
   accessToken: "secret-access-token",
-  refreshToken: "secret-refresh-token",
   workspaceId: "workspace-1",
   workspaceName: "Acme HQ",
 };
@@ -278,7 +277,7 @@ describe("LA the door", () => {
 });
 
 describe("LS what is stored", () => {
-  it("LS1 encrypts both tokens, and what is stored decrypts back", async () => {
+  it("LS1 encrypts the access token, and what is stored decrypts back", async () => {
     await callback({ code: "auth-code", state: state() });
     const { create } = upserted();
 
@@ -286,20 +285,6 @@ describe("LS what is stored", () => {
     expect(decryptApiKey(String(create.accessTokenEncrypted))).toBe(
       TOKENS.accessToken,
     );
-    expect(decryptApiKey(String(create.refreshTokenEncrypted))).toBe(
-      TOKENS.refreshToken,
-    );
-  });
-
-  it("LS1 stores no refresh token when the provider issues none", async () => {
-    completeConnect.mockResolvedValue({
-      kind: "oauth_tokens",
-      accessToken: "only-access",
-    });
-
-    await callback({ code: "auth-code", state: state() });
-
-    expect(upserted().create).toMatchObject({ refreshTokenEncrypted: null });
   });
 
   it("LS3 keys the row on the org and the provider, so a second authorisation refreshes it", async () => {
@@ -490,8 +475,6 @@ describe("LS what an installation stores", () => {
       provider: "GITHUB",
       installationId: "42",
       accessTokenEncrypted: null,
-      refreshTokenEncrypted: null,
-      tokenExpiresAt: null,
       workspaceName: "acme-inc",
     });
   });

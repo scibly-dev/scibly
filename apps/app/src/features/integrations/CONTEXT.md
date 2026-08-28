@@ -99,17 +99,14 @@ act — what a stale source then does to a course is the notebook's.
 
 ### Running the sync
 
-**Chain**:
-The sequence of hops that carries one sync through, handing off rather than
-running past the time it is allowed.
-_Avoid_: batch, queue
+**Due**:
+What a connection is when its backoff has passed and its organization still
+pays. The sync's whole decision is which connections are due; each one then gets
+a poll of its own.
+_Avoid_: owed, pending, queued
 
-**Hop**:
-One slice of a chain: a fixed number of connections, or as many as fit before
-the deadline, whichever comes first.
-_Avoid_: run, iteration, tick
-
-**Lease**:
-The single permit that lets one chain run at a time. Two chains would ask the
-provider twice for the same thing and race each other's watermarks.
-_Avoid_: lock, mutex, semaphore
+**Attempt**:
+One try at a poll. Several may be spent on one poll — a provider that times out
+is tried again — and only the last one that fails counts against the backoff.
+The watermark moves for the one that succeeds; nothing moves for the rest.
+_Avoid_: retry (the platform's word for what it does between attempts)

@@ -18,10 +18,9 @@ model Lesson {
   design                         Json?
   createdAt                      DateTime         @default(now())
   updatedAt                      DateTime         @updatedAt
-  // Set when this is a published copy belonging to a version; null for draft lessons
+  // Set on a published copy; null on a draft lesson.
   courseVersionId                String?
   courseVersion                  CourseVersion?   @relation(fields: [courseVersionId], references: [id], onDelete: Cascade)
-  // Original draft lesson this was copied from; null for draft lessons
   sourceLessonId                 String?
   sourceLesson                   Lesson?          @relation("LessonSource", fields: [sourceLessonId], references: [id], onDelete: SetNull)
   publishedCopies                Lesson[]         @relation("LessonSource")

@@ -10,69 +10,33 @@ model IntegrationConnection {
   organizationId        String
   organization          Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   provider              IntegrationProvider
-  /// AES-256-GCM encrypted access token. Null for providers whose credential
-  /// is an installation rather than a token — see `installationId`.
+  /// AES-256-GCM encrypted access token. Null for providers whose credential is
+  /// an installation rather than a token — see `installationId`.
   accessTokenEncrypted  String?
-  /// Encrypted refresh token (if applicable)
-  refreshTokenEncrypted String?
-  /// Token expiry (for providers with expiring tokens)
-  tokenExpiresAt        DateTime?
   /// The app installation this connection is, for providers connected by
   /// installing an app rather than by an OAuth grant (GitHub). It is the whole
-  /// credential: the short-lived token it stands for is minted per call from
-  /// the app's private key and never written here. Exclusive with the token
-  /// columns above — a connection is one credential shape or the other.
+  /// credential: the token it stands for is minted per call and never written
+  /// here. Exclusive with the token columns above.
   installationId        String?
-  /// Provider workspace/site ID (e.g. Notion workspace ID)
   workspaceId           String?
-  /// Human-readable workspace name for display
   workspaceName         String?
-  /// User who connected the integration
   connectedByUserId     String
   connectedBy           User                @relation(fields: [connectedByUserId], references: [id])
-  /// KW1/KW2: the scheduled refresh's watermark. Advances only when a poll
-  /// actually succeeded, so a failed or skipped run costs delay, not the
-  /// interval's changes — the next success covers the whole gap.
+  /// Advances only on a successful poll, so a failed run costs delay, not changes.
   lastPolledAt          DateTime?
-  /// KF2/KC4: advances on every attempt, successful or not. Drives selection
-  /// and is what lets a chain terminate: an integration that can never succeed
-  /// would otherwise stay owed forever.
+  /// Advances on every attempt, successful or not.
   lastAttemptedAt       DateTime?
-  /// KF3/KF4: consecutive failed polls. Backs the connection off on an
-  /// escalating schedule; any success resets it to zero.
   consecutiveFailures   Int                 @default(0)
-  /// KF3: when this connection may next be polled, written at failure time
-  /// from `consecutiveFailures`. A column rather than a computed predicate
-  /// because the delay is per-row, and a backed-off connection has to be
-  /// excluded by the query — a chain that merely skips it in memory would
-  /// keep re-selecting it and never terminate.
+  /// When this connection may next be polled, written at failure time from
+  /// `consecutiveFailures`. A column rather than a computed predicate because a
+  /// backed-off connection has to be excluded by the query that selects it.
   nextPollAfter         DateTime?
   createdAt             DateTime            @default(now())
   updatedAt             DateTime            @updatedAt
 
-  // One connection per provider per org
   @@unique([organizationId, provider])
   @@index([organizationId])
-  // KS2: least-recently-attempted first. Nulls sort first under
-  // `nullsFirst`, so a connection never polled is always at the front.
+  // Serves the sync's least-recently-attempted-first ordering.
   @@index([lastAttemptedAt])
   @@map("integration_connection")
-}
-
-/// KC2: singleton lease guarding the scheduled integration refresh. One row,
-/// id `singleton`. Two chains polling the same connection would double the
-/// provider quota and race the same watermark.
-model IntegrationSyncLease {
-  id             String   @id
-  token          String
-  heartbeatAt    DateTime
-  /// KC4: when the chain this lease belongs to started. A connection attempted
-  /// at or after this instant has had its turn in this chain, which is both the
-  /// waste bound and the termination condition.
-  chainStartedAt DateTime
-  /// KC5: hops taken. A runaway backstop only — a chain that reaches the limit
-  /// has a broken termination condition, and that has to be visible.
-  hops           Int      @default(0)
-
-  @@map("integration_sync_lease")
 }

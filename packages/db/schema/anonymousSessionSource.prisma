@@ -1,5 +1,3 @@
-/// How an anonymous learner reached the course: the public share link, or a
-/// course embedded in a customer's own website.
 enum AnonymousSessionSource {
   DIRECT
   EMBED

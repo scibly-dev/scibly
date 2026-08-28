@@ -1,6 +1,3 @@
-import type { IntegrationProviderId } from "@/features/integrations/contracts";
-import type { SyncLease } from "./sync-lease";
-
 import { notLapsedSubscription } from "@scibly/api/entitlement";
 import { TimeHelpers } from "@scibly/api/rate-limit";
 import { db, type Prisma } from "@scibly/db";
@@ -10,13 +7,11 @@ import { resolveConnectionToken } from "@/features/integrations/server/connectio
 import { getPageProvider } from "@/features/integrations/server/registry";
 import { SOURCE_STATUS } from "@/shared/content/sources/constants";
 
-// No webhook exists for any integration, so this scheduled poll is the only way a changed page is noticed; `lastPolledAt` is the per-connection watermark.
+// No integration provider offers a webhook, so this scheduled poll is the only way a changed page is noticed.
 
 export const SYNC_CLOCK_SKEW_MS = TimeHelpers.IN_MS.MINUTE;
 
 export const SYNC_WINDOW_FLOOR_MS = TimeHelpers.IN_MS.DAY * 7;
-
-export const SYNC_HOP_CONNECTION_LIMIT = 10;
 
 const SYNC_BACKOFF_MS: readonly number[] = [
   0,
@@ -32,74 +27,34 @@ const SYNC_BACKOFF_MS: readonly number[] = [
 // a window that starts after the changes it was backed off through.
 const SYNC_BACKOFF_CAP_MS = TimeHelpers.IN_MS.DAY * 3;
 
-export interface SyncRunTotals {
-  polled: number;
-
-  connectionsFailed: number;
-
-  connectionsEmpty: number;
-
-  marked: number;
-
-  unchanged: number;
-}
-
 export function backoffMs(consecutiveFailures: number): number {
   return SYNC_BACKOFF_MS[consecutiveFailures] ?? SYNC_BACKOFF_CAP_MS;
 }
 
-export type SyncConnection = {
-  id: string;
-  provider: IntegrationProviderId;
-  accessTokenEncrypted: string | null;
-  installationId: string | null;
-  lastPolledAt: Date | null;
-  consecutiveFailures: number;
-};
-
-const subscribedOrganization = (now: Date): Prisma.OrganizationWhereInput => ({
-  subscription: notLapsedSubscription(now),
-});
-
-export async function loadOwedConnections(
-  lease: SyncLease,
+export async function loadDueConnections(
   now: Date,
-  take: number = SYNC_HOP_CONNECTION_LIMIT,
-): Promise<SyncConnection[]> {
+): Promise<{ id: string; provider: string }[]> {
   return db.integrationConnection.findMany({
     where: {
-      organization: subscribedOrganization(now),
+      organization: { subscription: notLapsedSubscription(now) },
       // A connection to a provider without pages has nothing that could go
       // stale, so a poll would only spend a call to learn that.
       provider: { in: [...PAGE_INTEGRATION_PROVIDERS] },
-      OR: [
-        { lastAttemptedAt: null },
-        { lastAttemptedAt: { lt: lease.chainStartedAt } },
-      ],
-      AND: [{ OR: [{ nextPollAfter: null }, { nextPollAfter: { lte: now } }] }],
+      OR: [{ nextPollAfter: null }, { nextPollAfter: { lte: now } }],
     },
-    select: {
-      id: true,
-      provider: true,
-      accessTokenEncrypted: true,
-      installationId: true,
-      lastPolledAt: true,
-      consecutiveFailures: true,
-    },
+    select: { id: true, provider: true },
     orderBy: { lastAttemptedAt: { sort: "asc", nulls: "first" } },
-    take,
   });
 }
 
 type SyncableSource = { id: string; externalId: string | null };
 
 async function loadSyncableSources(
-  connectionId: string,
+  integrationId: string,
 ): Promise<SyncableSource[]> {
   return db.notebookSource.findMany({
     where: {
-      // The column keeps the old name; renaming it needs a migration.
-      integrationId: connectionId,
+      integrationId,
       status: SOURCE_STATUS.READY,
       externalId: { not: null },
     },
@@ -115,8 +70,8 @@ export function getPollingStart(lastPolledAt: Date | null, now: Date): Date {
 
 // `updateMany`, not `update`: a poll can outlive the connection it is polling —
 // resolving the token is itself what deletes a connection the provider says is
-// gone — and a row that is no longer there is nothing left to record, not an
-// error that should take the hop down with it.
+// gone — and a row that is no longer there is nothing left to record, not a
+// failure worth retrying the whole poll for.
 async function recordAttempt(
   connectionId: string,
   data: Prisma.IntegrationConnectionUpdateManyMutationInput,
@@ -124,19 +79,6 @@ async function recordAttempt(
   await db.integrationConnection.updateMany({
     where: { id: connectionId },
     data,
-  });
-}
-
-async function recordPollFailure(
-  connection: SyncConnection,
-  now: Date,
-): Promise<void> {
-  const failures = connection.consecutiveFailures + 1;
-  const delay = backoffMs(failures);
-  await recordAttempt(connection.id, {
-    lastAttemptedAt: now,
-    consecutiveFailures: failures,
-    nextPollAfter: delay > 0 ? new Date(now.getTime() + delay) : null,
   });
 }
 
@@ -149,17 +91,18 @@ async function commitPollSuccess(
   pollStartedAt: Date,
   sources: SyncableSource[],
   modifiedIds: Set<string>,
-  totals: SyncRunTotals,
-): Promise<void> {
+): Promise<{ marked: number; unchanged: number }> {
   const changedIds = sources
     .filter(
       (source) =>
         source.externalId !== null && modifiedIds.has(source.externalId),
     )
     .map((source) => source.id);
-  totals.unchanged += sources.length - changedIds.length;
+  const unchanged = sources.length - changedIds.length;
 
   const succeeded = {
+    // The watermark takes the instant the poll started, so an edit made while
+    // it ran is covered by the next poll rather than missed.
     lastPolledAt: pollStartedAt,
     lastAttemptedAt: new Date(),
     consecutiveFailures: 0,
@@ -167,7 +110,7 @@ async function commitPollSuccess(
   };
   if (changedIds.length === 0) {
     await recordAttempt(connectionId, succeeded);
-    return;
+    return { marked: 0, unchanged };
   }
 
   const [marked] = await db.$transaction([
@@ -180,39 +123,70 @@ async function commitPollSuccess(
       data: succeeded,
     }),
   ]);
-  totals.marked += marked.count;
+  return { marked: marked.count, unchanged };
 }
 
+export type PollOutcome =
+  | { status: "gone" }
+  | { status: "empty" }
+  | { status: "polled"; marked: number; unchanged: number };
+
+// Throws on purpose: the throw is what Inngest retries.
 export async function pollConnection(
-  connection: SyncConnection,
-  totals: SyncRunTotals,
-): Promise<void> {
+  connectionId: string,
+): Promise<PollOutcome> {
   const now = new Date();
+  const connection = await db.integrationConnection.findUnique({
+    where: { id: connectionId },
+    select: {
+      id: true,
+      provider: true,
+      accessTokenEncrypted: true,
+      installationId: true,
+      lastPolledAt: true,
+    },
+  });
+  if (!connection) return { status: "gone" };
+
   const sources = await loadSyncableSources(connection.id);
-
   if (sources.length === 0) {
-    totals.connectionsEmpty += 1;
     await recordAttempt(connection.id, { lastAttemptedAt: now });
-    return;
+    return { status: "empty" };
   }
 
-  const pollFrom = getPollingStart(connection.lastPolledAt, now);
-  let modifiedIds: Set<string>;
-  try {
-    const provider = getPageProvider(connection.provider);
-    const token = await resolveConnectionToken(connection);
-    const pages = await provider.pollModifiedPages(token, pollFrom);
-    modifiedIds = new Set(pages.map((page) => page.id));
-  } catch (error) {
-    console.error(
-      `[IntegrationFreshness] Poll failed for connection ${connection.id} (${connection.provider}):`,
-      error,
-    );
-    totals.connectionsFailed += 1;
-    await recordPollFailure(connection, now);
-    return;
-  }
+  const provider = getPageProvider(connection.provider);
+  // Not the stored token: an app installation stores only its id and mints the
+  // token it stands for here, per poll.
+  const token = await resolveConnectionToken(connection);
+  const pages = await provider.pollModifiedPages(
+    token,
+    getPollingStart(connection.lastPolledAt, now),
+  );
 
-  totals.polled += 1;
-  await commitPollSuccess(connection.id, now, sources, modifiedIds, totals);
+  const counts = await commitPollSuccess(
+    connection.id,
+    now,
+    sources,
+    new Set(pages.map((page) => page.id)),
+  );
+  return { status: "polled", ...counts };
+}
+
+export async function recordPollFailure(
+  connectionId: string,
+  now: Date,
+): Promise<void> {
+  const connection = await db.integrationConnection.findUnique({
+    where: { id: connectionId },
+    select: { consecutiveFailures: true },
+  });
+  if (!connection) return;
+
+  const failures = connection.consecutiveFailures + 1;
+  const delay = backoffMs(failures);
+  await recordAttempt(connectionId, {
+    lastAttemptedAt: now,
+    consecutiveFailures: failures,
+    nextPollAfter: delay > 0 ? new Date(now.getTime() + delay) : null,
+  });
 }

@@ -171,17 +171,11 @@ function credentialColumns(credential: IntegrationCredential) {
   if (credential.kind === "app_installation") {
     return {
       accessTokenEncrypted: null,
-      refreshTokenEncrypted: null,
-      tokenExpiresAt: null,
       installationId: credential.installationId,
     };
   }
   return {
     accessTokenEncrypted: encryptApiKey(credential.accessToken),
-    refreshTokenEncrypted: credential.refreshToken
-      ? encryptApiKey(credential.refreshToken)
-      : null,
-    tokenExpiresAt: credential.expiresAt ?? null,
     installationId: null,
   };
 }
