@@ -76,6 +76,14 @@ export interface IntegrationGrant {
   url: string;
 }
 
+// The count is what the provider says it granted, which a listing that stopped
+// at its page budget does not have all of. Fewer grants than `totalCount` is
+// how the settings page knows it is showing a prefix, not the whole of it.
+export interface IntegrationGrantList {
+  grants: IntegrationGrant[];
+  totalCount: number;
+}
+
 export interface OAuthTokens {
   accessToken: string;
   refreshToken?: string;

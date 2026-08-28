@@ -4,10 +4,15 @@ import type { IntegrationProviderId } from "@/features/integrations/contracts";
 import type { OrgSettingsPage } from "@/features/organizations/contracts";
 
 import { ExternalLink } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { api } from "@/shared/api/trpc/client";
+
+import { ProviderGrantsDialog } from "./provider-grants-dialog";
+
+// Enough to recognise the connection at a glance; the rest is a click away.
+const VISIBLE_GRANTS = 4;
 
 // Its own query, so the card renders at once and only this strip waits on the
 // provider.
@@ -20,6 +25,7 @@ export const ProviderGrants = ({
   provider: IntegrationProviderId;
   t: OrgSettingsPage["integrations"];
 }) => {
+  const [showAll, setShowAll] = useState(false);
   const utils = api.useUtils();
   const { data, isPending, isError, error } =
     api.integration.listGrants.useQuery({
@@ -47,13 +53,15 @@ export const ProviderGrants = ({
   if (data.grants.length === 0) {
     return <p className="text-[11px] text-neutral-400">{t.grantsEmpty}</p>;
   }
+  const hidden = data.totalCount - VISIBLE_GRANTS;
+
   return (
     <div className="flex flex-col gap-1">
       <p className="text-[11px] font-medium text-neutral-500 dark:text-neutral-400">
         {t.grantsTitle}
       </p>
       <ul className="flex flex-wrap gap-1.5">
-        {data.grants.map((grant) => (
+        {data.grants.slice(0, VISIBLE_GRANTS).map((grant) => (
           <li key={grant.id}>
             <a
               href={grant.url}
@@ -66,7 +74,25 @@ export const ProviderGrants = ({
             </a>
           </li>
         ))}
+        {hidden > 0 ? (
+          <li>
+            <button
+              type="button"
+              onClick={() => setShowAll(true)}
+              className="inline-flex items-center rounded-md border border-neutral-200 px-2 py-0.5 text-[11px] text-neutral-600 hover:bg-neutral-50 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800"
+            >
+              {t.grantsMore.replace("{count}", String(hidden))}
+            </button>
+          </li>
+        ) : null}
       </ul>
+      <ProviderGrantsDialog
+        open={showAll}
+        onOpenChange={setShowAll}
+        grants={data.grants}
+        totalCount={data.totalCount}
+        t={t}
+      />
     </div>
   );
 };

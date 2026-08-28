@@ -1,6 +1,6 @@
 import type {
   IntegrationCredential,
-  IntegrationGrant,
+  IntegrationGrantList,
 } from "../../../contracts";
 import type { ConnectCallbackParams } from "../../base-provider";
 import type { GitHubAppConfig } from "./app-auth";
@@ -89,12 +89,16 @@ export class GitHubProvider extends IntegrationProvider {
     }
   }
 
-  async listGrants(token: string): Promise<IntegrationGrant[]> {
-    const repositories = await fetchInstallationRepositories(token);
-    return repositories.map((repository) => ({
-      id: String(repository.id),
-      name: repository.full_name,
-      url: repository.html_url,
-    }));
+  async listGrants(token: string): Promise<IntegrationGrantList> {
+    const { repositories, totalCount } =
+      await fetchInstallationRepositories(token);
+    return {
+      grants: repositories.map((repository) => ({
+        id: String(repository.id),
+        name: repository.full_name,
+        url: repository.html_url,
+      })),
+      totalCount,
+    };
   }
 }

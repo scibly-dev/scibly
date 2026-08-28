@@ -1,7 +1,7 @@
 import type {
   IntegrationCredential,
   IntegrationCredentialKind,
-  IntegrationGrant,
+  IntegrationGrantList,
   IntegrationPage,
   IntegrationPageContent,
   IntegrationPageRevision,
@@ -54,7 +54,7 @@ export abstract class IntegrationProvider {
   mintAccessToken?(installationId: string): Promise<string>;
 
   /** Present only on a provider that hands its workspace out piece by piece. */
-  listGrants?(token: string): Promise<IntegrationGrant[]>;
+  listGrants?(token: string): Promise<IntegrationGrantList>;
 }
 
 /**

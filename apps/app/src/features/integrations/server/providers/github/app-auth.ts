@@ -126,6 +126,7 @@ const installationResponse = z.object({
 const mintedTokenResponse = z.object({ token: z.string() });
 
 const repositoriesResponse = z.object({
+  total_count: z.number(),
   repositories: z
     .array(
       z.object({
@@ -172,14 +173,43 @@ export async function mintInstallationToken(
   return minted.token;
 }
 
+const REPOS_PER_PAGE = 100;
+
+// An installation on a large organisation can reach thousands of repositories.
+// Listing them is a settings-page nicety, so it walks a bounded number of pages
+// and says when it stopped early rather than spending a request per hundred
+// until GitHub runs out.
+const MAX_REPOSITORY_PAGES = 10;
+
+export interface GitHubRepositoryList {
+  repositories: GitHubRepository[];
+  /** What GitHub says the installation reaches, listed or not. */
+  totalCount: number;
+}
+
 /** The repositories the installation was given. */
 export async function fetchInstallationRepositories(
   token: string,
-): Promise<GitHubRepository[]> {
-  const { repositories } = await githubRequest(
-    "/installation/repositories?per_page=100",
-    { method: "GET", authorization: `Bearer ${token}` },
-    repositoriesResponse,
-  );
-  return repositories ?? [];
+): Promise<GitHubRepositoryList> {
+  const repositories: GitHubRepository[] = [];
+  let totalCount = 0;
+
+  for (let page = 1; page <= MAX_REPOSITORY_PAGES; page += 1) {
+    const body = await githubRequest(
+      `/installation/repositories?per_page=${REPOS_PER_PAGE}&page=${page}`,
+      { method: "GET", authorization: `Bearer ${token}` },
+      repositoriesResponse,
+    );
+    totalCount = body.total_count;
+    const returned = body.repositories ?? [];
+    repositories.push(...returned);
+    // A short page is the last page, whatever the count claims.
+    if (returned.length < REPOS_PER_PAGE) break;
+    if (repositories.length >= totalCount) break;
+  }
+
+  return {
+    repositories,
+    totalCount: Math.max(totalCount, repositories.length),
+  };
 }

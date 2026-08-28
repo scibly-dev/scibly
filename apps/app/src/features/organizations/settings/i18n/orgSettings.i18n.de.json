@@ -127,6 +127,8 @@
       "grantsLoading": "Zugriffe werden geladen …",
       "grantsEmpty": "Diese Verbindung hat noch auf nichts Zugriff erhalten.",
       "grantsError": "Die Zugriffe dieser Verbindung konnten nicht geladen werden.",
+      "grantsMore": "{count} weitere",
+      "grantsShown": "{shown} von {total} werden angezeigt.",
       "noProvidersAvailable": "Keine Integrationen verfügbar.",
       "callbackErrorFallback": "Die Verbindung ist fehlgeschlagen. Bitte versuche es erneut.",
       "callbackErrors": {

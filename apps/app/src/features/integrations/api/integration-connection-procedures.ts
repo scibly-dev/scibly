@@ -167,7 +167,9 @@ export const integrationConnectionProcedures = {
         organization.id,
         input.provider,
       );
-      return { grants: (await provider.listGrants?.(token)) ?? [] };
+      return (
+        (await provider.listGrants?.(token)) ?? { grants: [], totalCount: 0 }
+      );
     }),
 
   searchPages: protectedProcedure

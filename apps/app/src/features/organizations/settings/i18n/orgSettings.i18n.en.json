@@ -127,6 +127,8 @@
       "grantsLoading": "Loading access…",
       "grantsEmpty": "This connection has not been given access to anything yet.",
       "grantsError": "Couldn't load what this connection can reach.",
+      "grantsMore": "{count} more",
+      "grantsShown": "Showing {shown} of {total}.",
       "noProvidersAvailable": "No integrations available.",
       "callbackErrorFallback": "Connection failed. Please try again.",
       "callbackErrors": {

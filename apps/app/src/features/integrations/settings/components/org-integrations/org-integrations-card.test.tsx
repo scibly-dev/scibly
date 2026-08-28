@@ -55,6 +55,8 @@ const t = {
   grantsLoading: "Loading repositories…",
   grantsEmpty: "No repositories.",
   grantsError: "Could not load repositories.",
+  grantsMore: "{count} more",
+  grantsShown: "Showing {shown} of {total}.",
   revokedNotice: "The connection was removed on the provider's side.",
   noProvidersAvailable: "Nothing to connect to.",
   providers: { NOTION: "Notion", GITHUB: "GitHub" },
@@ -72,6 +74,12 @@ function lists(allProviders: unknown[], connections: unknown[] = []): void {
 }
 
 function grants(...names: string[]): void {
+  grantsOf(names.length, ...names);
+}
+
+// The count the provider reported can exceed what it listed: a listing that
+// stopped at its page budget is what the strip has to summarise.
+function grantsOf(totalCount: number, ...names: string[]): void {
   useGrants.mockReturnValue({
     data: {
       grants: names.map((name, index) => ({
@@ -79,6 +87,7 @@ function grants(...names: string[]): void {
         name,
         url: `https://github.com/${name}`,
       })),
+      totalCount,
     },
     isPending: false,
     isError: false,
@@ -263,6 +272,25 @@ describe("the grants strip", () => {
 
     expect(container.querySelectorAll("li")).toHaveLength(3);
     expect(container.textContent).toContain("acme-inc/docs");
+  });
+
+  it("keeps the strip short and puts the rest behind a count", () => {
+    lists([GITHUB], [{ provider: "GITHUB", workspaceName: "acme-inc" }]);
+    grants(...Array.from({ length: 9 }, (_, i) => `acme-inc/repo-${i}`));
+
+    const container = card();
+
+    // Four repositories and the button standing for the other five.
+    expect(container.querySelectorAll("li")).toHaveLength(5);
+    expect(container.textContent).toContain("5 more");
+    expect(container.textContent).not.toContain("acme-inc/repo-8");
+  });
+
+  it("counts what the provider reported, not what it managed to list", () => {
+    lists([GITHUB], [{ provider: "GITHUB", workspaceName: "acme-inc" }]);
+    grantsOf(1500, ...Array.from({ length: 10 }, (_, i) => `acme-inc/r-${i}`));
+
+    expect(card().textContent).toContain("1496 more");
   });
 
   it("says the connection reaches nothing rather than showing an empty list", () => {

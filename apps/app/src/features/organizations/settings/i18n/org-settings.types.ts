@@ -127,6 +127,8 @@ export type OrgSettingsPage = {
     grantsLoading: string;
     grantsEmpty: string;
     grantsError: string;
+    grantsMore: string;
+    grantsShown: string;
     revokedNotice: string;
     noProvidersAvailable: string;
     callbackErrorFallback: string;

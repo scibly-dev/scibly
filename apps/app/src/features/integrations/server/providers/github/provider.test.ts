@@ -282,13 +282,39 @@ describe("GH6 what the installation reaches", () => {
       }),
     );
 
-    const grants = await new GitHubProvider().listGrants("ghs_minted");
+    const { grants, totalCount } = await new GitHubProvider().listGrants(
+      "ghs_minted",
+    );
 
     expect(grants).toEqual([
       { id: "1", name: "acme-inc/api", url: "https://github.com/acme-inc/api" },
       { id: "2", name: "acme-inc/web", url: "https://github.com/acme-inc/web" },
     ]);
+    expect(totalCount).toBe(2);
     expect(lastRequest().init.headers.authorization).toBe("Bearer ghs_minted");
+    // A page that came back short is the last page; no second request for it.
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it("GH6 walks past the first hundred, and says so when it stops early", async () => {
+    const page = Array.from({ length: 100 }, (_, index) => ({
+      id: index,
+      full_name: `acme-inc/repo-${index}`,
+      html_url: `https://github.com/acme-inc/repo-${index}`,
+    }));
+    fetchMock.mockResolvedValue(ok({ total_count: 1500, repositories: page }));
+
+    const { grants, totalCount } = await new GitHubProvider().listGrants(
+      "ghs_minted",
+    );
+
+    // Ten pages is the budget: the settings strip stops there and admits it
+    // rather than spending fifteen requests to render a list nobody reads.
+    expect(fetchMock).toHaveBeenCalledTimes(10);
+    // Fewer than the count: the settings page reads that as "showing a prefix".
+    expect(grants).toHaveLength(1000);
+    expect(totalCount).toBe(1500);
+    expect(lastRequest().url).toContain("page=10");
   });
 
   it("GH6 says the connection reaches nothing rather than failing", async () => {
@@ -296,7 +322,7 @@ describe("GH6 what the installation reaches", () => {
 
     await expect(
       new GitHubProvider().listGrants("ghs_minted"),
-    ).resolves.toEqual([]);
+    ).resolves.toEqual({ grants: [], totalCount: 0 });
   });
 });
 
