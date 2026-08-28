@@ -195,6 +195,14 @@ export const routes = {
         syncIntegrations: toAppUrl(`${BASE_API_PATH}/cron/sync-integrations`),
       },
       oembed: toAppUrl(`${BASE_API_PATH}/oembed`),
+      integrations: {
+        // A provider validates this byte for byte between the authorize call
+        // and the token exchange, so both sides must build it from here.
+        callback: (provider: string) =>
+          toAppUrl(
+            `${BASE_API_PATH}/integrations/${provider.toLowerCase()}/callback`,
+          ),
+      },
     },
   },
 

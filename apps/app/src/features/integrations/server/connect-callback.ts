@@ -19,7 +19,6 @@ import {
 } from "@scibly/routes";
 import { type NextRequest, NextResponse } from "next/server";
 
-import { env } from "@/env";
 import {
   getProvider,
   isIntegrationProvider,
@@ -191,7 +190,7 @@ async function completeAndPersistConnection(
   callback: ValidCallback,
   organizationId: string,
 ) {
-  const redirectUri = `${env.NEXT_PUBLIC_APP_URL}/api/integrations/${callback.provider.toLowerCase()}/callback`;
+  const redirectUri = routes.app.api.integrations.callback(callback.provider);
 
   const existing = await db.integrationConnection.findUnique({
     where: {

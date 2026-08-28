@@ -6,6 +6,7 @@ import type {
 import { AppError } from "@scibly/api/application-error";
 import { protectedProcedure } from "@scibly/api/trpc";
 import { db } from "@scibly/db";
+import { routes } from "@scibly/routes";
 
 import { resolveOrg } from "@/features/organizations/server";
 import { signOAuthState } from "@/lib/crypto/oauth-state";
@@ -109,7 +110,7 @@ export const integrationConnectionProcedures = {
         userId: ctx.session.user.id,
         lang: input.lang,
       });
-      const redirectUri = `${process.env.NEXT_PUBLIC_APP_URL}/api/integrations/${input.provider.toLowerCase()}/callback`;
+      const redirectUri = routes.app.api.integrations.callback(input.provider);
       return { authUrl: provider.getAuthUrl(state, redirectUri) };
     }),
 
