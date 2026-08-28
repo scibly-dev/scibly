@@ -1,5 +1,8 @@
 import { z } from "zod/v4";
 
+/** The org a procedure acts on, addressed the way the URL addresses it. */
+export const orgSlugInput = z.object({ orgSlug: z.string() });
+
 export const createOrganizationSchema = z.object({
   name: z.string().min(2).max(100),
   slug: z

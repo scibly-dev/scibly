@@ -1,3 +1,4 @@
+import { orgSlugInput } from "@scibly/schemas/organization";
 import { z } from "zod";
 
 import {
@@ -5,7 +6,8 @@ import {
   PAGE_INTEGRATION_PROVIDERS,
 } from "../contracts";
 
-export const orgSlugInput = z.object({ orgSlug: z.string() });
+// Re-exported so call sites keep importing their own feature's schema module.
+export { orgSlugInput };
 
 // An unrecognised provider is a bad request here, before any org is resolved or any row is read.
 export const providerInput = z.enum(INTEGRATION_PROVIDERS);
@@ -14,24 +16,20 @@ export const providerInput = z.enum(INTEGRATION_PROVIDERS);
 // to search, browse, or link.
 export const pageProviderInput = z.enum(PAGE_INTEGRATION_PROVIDERS);
 
-export const getAuthUrlSchema = z.object({
-  orgSlug: z.string(),
+export const getAuthUrlSchema = orgSlugInput.extend({
   provider: providerInput,
   lang: z.string().default("en"),
 });
 
-export const disconnectIntegrationSchema = z.object({
-  orgSlug: z.string(),
+export const disconnectIntegrationSchema = orgSlugInput.extend({
   provider: providerInput,
 });
 
-export const listGrantsSchema = z.object({
-  orgSlug: z.string(),
+export const listGrantsSchema = orgSlugInput.extend({
   provider: providerInput,
 });
 
-export const searchPagesSchema = z.object({
-  orgSlug: z.string(),
+export const searchPagesSchema = orgSlugInput.extend({
   provider: pageProviderInput,
   query: z.string().default(""),
 });
@@ -66,8 +64,7 @@ export const resyncSourceSchema = z.object({
   orgSlug: z.string(),
 });
 
-export const listPageChildrenSchema = z.object({
-  orgSlug: z.string(),
+export const listPageChildrenSchema = orgSlugInput.extend({
   provider: pageProviderInput,
   pageId: z.string(),
   nodeType: z.enum(["page", "database"]).default("page"),

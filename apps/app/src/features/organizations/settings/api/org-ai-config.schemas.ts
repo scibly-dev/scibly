@@ -1,3 +1,4 @@
+import { orgSlugInput } from "@scibly/schemas/organization";
 import { z } from "zod";
 
 import { BYOAI_MODEL_TYPES } from "@/shared/ai/byoai/types";
@@ -6,11 +7,11 @@ import {
   byoaiModelDescriptionSchema,
 } from "@/shared/ai/byoai-model-schema";
 
-export const orgSlugInput = z.object({ orgSlug: z.string() });
+// Re-exported so call sites keep importing their own feature's schema module.
+export { orgSlugInput };
 
-export const addModelSchema = z
-  .object({
-    orgSlug: z.string(),
+export const addModelSchema = orgSlugInput
+  .extend({
     name: z.string().min(1, "Name is required"),
     baseUrl: z.string().url("Must be a valid URL"),
     apiKey: z.string().optional(),
@@ -25,8 +26,7 @@ export const addModelSchema = z
     { message: "API key is required", path: ["apiKey"] },
   );
 
-export const updateModelSchema = z.object({
-  orgSlug: z.string(),
+export const updateModelSchema = orgSlugInput.extend({
   id: z.string(),
   name: z.string().min(1).optional(),
   baseUrl: z.string().url().optional(),
@@ -36,13 +36,11 @@ export const updateModelSchema = z.object({
   contextWindow: byoaiContextWindowSchema.nullish(),
 });
 
-export const deleteModelSchema = z.object({
-  orgSlug: z.string(),
+export const deleteModelSchema = orgSlugInput.extend({
   id: z.string(),
 });
 
-export const connectionInputSchema = z.object({
-  orgSlug: z.string(),
+export const connectionInputSchema = orgSlugInput.extend({
   baseUrl: z.string().url(),
   apiKey: z.string().optional(),
   modelId: z.string().min(1),
