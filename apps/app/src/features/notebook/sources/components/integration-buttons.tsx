@@ -12,10 +12,7 @@ import { ExternalLink } from "lucide-react";
 
 import { PAGE_INTEGRATION_PROVIDERS } from "@/features/integrations/contracts";
 
-import {
-  PROVIDER_DISPLAY,
-  PROVIDER_DISPLAY_FALLBACK,
-} from "../../chat/provider-display";
+import { PROVIDER_DISPLAY } from "../provider-display";
 
 interface ConnectedProvider {
   provider: string;
@@ -31,7 +28,8 @@ interface IntegrationButtonsProps {
 // Buttons come from PAGE_INTEGRATION_PROVIDERS, the connectable providers that
 // actually offer pages to import — a provider connected for something else has
 // nothing to show a page picker. PROVIDER_DISPLAY is cosmetic only and never
-// gates which providers render.
+// gates which providers render — it is keyed by the same union, so every
+// provider iterated here has an entry.
 export function IntegrationButtons({
   connectedProviders,
   t,
@@ -41,8 +39,7 @@ export function IntegrationButtons({
   return (
     <>
       {PAGE_INTEGRATION_PROVIDERS.map((providerKey) => {
-        const meta =
-          PROVIDER_DISPLAY.get(providerKey) ?? PROVIDER_DISPLAY_FALLBACK;
+        const meta = PROVIDER_DISPLAY[providerKey];
         const isConnected = connectedProviders.some(
           (cp) => cp.provider === providerKey,
         );

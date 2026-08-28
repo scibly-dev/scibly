@@ -1,5 +1,3 @@
-import type React from "react";
-
 import {
   BookOpen,
   FileQuestion,
@@ -14,16 +12,6 @@ import {
   Video,
   Volume2,
 } from "lucide-react";
-
-// Interface only — the actual map + logos live in provider-display.tsx (JSX cannot be in a .ts file).
-
-export interface ProviderDisplayConfig {
-  readonly name: string;
-
-  readonly subtitle: string;
-
-  readonly Logo: React.ComponentType<{ className?: string }>;
-}
 
 interface StudioToolConfig {
   readonly id: string;

@@ -9,18 +9,14 @@ import {
   DialogTitle,
 } from "@scibly/ui/components/dialog";
 
-import {
-  PROVIDER_DISPLAY,
-  PROVIDER_DISPLAY_FALLBACK,
-} from "../chat/provider-display";
 import { PagePickerContent } from "./page-picker/page-picker-content";
+import { PROVIDER_DISPLAY } from "./provider-display";
 
 export function IntegrationPagePicker({
   open,
   ...content
 }: PagePickerContentProps & { open: boolean }) {
-  const meta =
-    PROVIDER_DISPLAY.get(content.provider) ?? PROVIDER_DISPLAY_FALLBACK;
+  const meta = PROVIDER_DISPLAY[content.provider];
 
   return (
     <Dialog open={open} onOpenChange={content.onOpenChange}>
