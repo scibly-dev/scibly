@@ -2,14 +2,11 @@ import type {
   IntegrationCredential,
   IntegrationGrant,
 } from "../../../contracts";
-import type {
-  AppInstallationProvider,
-  ConnectCallbackParams,
-} from "../../base-provider";
+import type { ConnectCallbackParams } from "../../base-provider";
 
 import {
+  IntegrationProvider,
   IntegrationRevokedError,
-  ReadOnlyIntegrationProvider,
 } from "../../base-provider";
 import {
   fetchInstallation,
@@ -23,14 +20,10 @@ import {
 // grant, so what comes back is an installation id. The workspace behind it is
 // the account id — not the installation id, which a reinstall replaces — so
 // that is what tells a reconnect from a move to a different organization.
-export class GitHubProvider
-  extends ReadOnlyIntegrationProvider
-  implements AppInstallationProvider
-{
+export class GitHubProvider extends IntegrationProvider {
   readonly providerId = "GITHUB";
   readonly displayName = "GitHub";
   readonly credential = "app_installation";
-  readonly listsGrants = true;
 
   // The redirect back is the app's registered setup URL, so unlike OAuth there
   // is nothing to pass here; only the state rides along and comes back.

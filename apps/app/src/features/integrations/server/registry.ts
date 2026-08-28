@@ -1,5 +1,5 @@
 import type { IntegrationProviderId } from "../contracts";
-import type { BaseIntegrationProvider } from "./base-provider";
+import type { IntegrationProvider } from "./base-provider";
 
 import { AppError } from "@scibly/api/application-error";
 
@@ -11,7 +11,7 @@ import { NotionProvider } from "./providers/notion";
 export const PROVIDERS = {
   NOTION: new NotionProvider(),
   GITHUB: new GitHubProvider(),
-} satisfies Record<IntegrationProviderId, BaseIntegrationProvider>;
+} satisfies Record<IntegrationProviderId, IntegrationProvider>;
 
 export function isIntegrationProvider(
   providerId: string,
@@ -19,7 +19,7 @@ export function isIntegrationProvider(
   return INTEGRATION_PROVIDERS.some((known) => known === providerId);
 }
 
-export function getProvider(providerId: string): BaseIntegrationProvider {
+export function getProvider(providerId: string): IntegrationProvider {
   if (!isIntegrationProvider(providerId)) {
     throw new AppError({
       code: "NOT_FOUND",
@@ -44,6 +44,6 @@ export function getPageProvider(providerId: string): PageIntegrationProvider {
   return provider;
 }
 
-export function listProviders(): BaseIntegrationProvider[] {
+export function listProviders(): IntegrationProvider[] {
   return Object.values(PROVIDERS);
 }

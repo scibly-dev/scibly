@@ -18,7 +18,7 @@ export const INTEGRATION_PROVIDERS = [
 export type IntegrationProviderId = IntegrationProvider;
 
 // The only providers a notebook is offered as a source. A provider is worth
-// connecting before it has pages — see `ReadOnlyIntegrationProvider`.
+// connecting before it has pages — see `PageIntegrationProvider`.
 export const PAGE_INTEGRATION_PROVIDERS = [
   "NOTION",
 ] as const satisfies readonly IntegrationProviderId[];

@@ -5,10 +5,7 @@ import { db } from "@scibly/db";
 
 import { decryptApiKey } from "@/lib/crypto/api-key";
 
-import {
-  IntegrationRevokedError,
-  mintsInstallationTokens,
-} from "./base-provider";
+import { IntegrationRevokedError } from "./base-provider";
 import { detachSourcesFromConnection } from "./detach-sources";
 import { getProvider } from "./registry";
 
@@ -56,7 +53,7 @@ export async function resolveConnectionToken(
 ): Promise<string> {
   const provider = getProvider(connection.provider);
 
-  if (mintsInstallationTokens(provider)) {
+  if (provider.mintAccessToken) {
     if (!connection.installationId) throw unusable(provider.providerId);
     try {
       return await provider.mintAccessToken(connection.installationId);

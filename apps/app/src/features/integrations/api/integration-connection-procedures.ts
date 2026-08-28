@@ -94,7 +94,9 @@ export const integrationConnectionProcedures = {
     const allProviders = listProviders().map((provider) => ({
       providerId: provider.providerId,
       displayName: provider.displayName,
-      listsGrants: provider.listsGrants,
+      // The browser cannot check a server method for itself, so the one place
+      // that can says whether the provider has one.
+      listsGrants: Boolean(provider.listGrants),
     }));
     return { connections, allProviders };
   }),
@@ -157,7 +159,7 @@ export const integrationConnectionProcedures = {
         organization.id,
         input.provider,
       );
-      return { grants: await provider.listGrants(token) };
+      return { grants: (await provider.listGrants?.(token)) ?? [] };
     }),
 
   searchPages: protectedProcedure

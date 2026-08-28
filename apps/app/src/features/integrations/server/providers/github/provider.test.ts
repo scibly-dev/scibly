@@ -24,11 +24,8 @@ const CONFIGURED = {
 
 const { GitHubProvider } = await import("./provider");
 const { readGitHubAppConfig, signAppJwt } = await import("./app-auth");
-const {
-  IntegrationRevokedError,
-  PageIntegrationProvider,
-  ReadOnlyIntegrationProvider,
-} = await import("../../base-provider");
+const { IntegrationRevokedError, PageIntegrationProvider } =
+  await import("../../base-provider");
 
 const NOW = new Date("2026-08-28T12:00:00.000Z");
 
@@ -271,14 +268,6 @@ describe("GH7 what GitHub is not asked for", () => {
   it("GH7 is not a provider a notebook can import pages from", () => {
     const provider = new GitHubProvider();
 
-    expect(provider).toBeInstanceOf(ReadOnlyIntegrationProvider);
     expect(provider).not.toBeInstanceOf(PageIntegrationProvider);
-    expect(provider.listsGrants).toBe(true);
-  });
-
-  it("GH7 has no refresh: a stored token is not what it holds", async () => {
-    await expect(new GitHubProvider().refreshToken("nope")).rejects.toThrow(
-      /does not support token refresh/,
-    );
   });
 });

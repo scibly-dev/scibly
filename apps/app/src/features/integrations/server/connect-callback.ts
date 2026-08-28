@@ -4,8 +4,8 @@ import type {
   IntegrationProviderId,
 } from "../contracts";
 import type {
-  BaseIntegrationProvider,
   ConnectCallbackParams,
+  IntegrationProvider,
 } from "./base-provider";
 
 import { getSession } from "@scibly/auth/session";
@@ -57,7 +57,7 @@ function providerError(oauthError: string): IntegrationCallbackError {
 // the installation just made. Only the one the provider deals in is looked at.
 function readCallbackParams(
   searchParams: URLSearchParams,
-  provider: BaseIntegrationProvider,
+  provider: IntegrationProvider,
 ): ConnectCallbackParams | null {
   const params: ConnectCallbackParams = {
     code: searchParams.get("code"),
