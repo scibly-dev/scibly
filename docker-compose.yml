@@ -1,4 +1,5 @@
-# Self-hosted Scibly: Postgres + all three apps. See docs/docker.md.
+# Self-hosted Scibly: Postgres, the Inngest background-work engine, and all
+# three apps. See docs/docker.md.
 services:
   postgres:
     # pgvector, not plain postgres: an old migration (embeddings, since
@@ -34,6 +35,41 @@ services:
       postgres:
         condition: service_healthy
 
+  # A postgres init script only runs on a fresh volume, which would skip every
+  # already-running install — so this one-shot creates the database on every `up`.
+  inngest-db:
+    image: pgvector/pgvector:pg16
+    environment:
+      PGPASSWORD: ${POSTGRES_PASSWORD:-scibly}
+    entrypoint:
+      - sh
+      - -c
+      - >
+        psql -h postgres -U ${POSTGRES_USER:-scibly} -d ${POSTGRES_DB:-scibly}
+        -tc "SELECT 1 FROM pg_database WHERE datname = 'inngest'" | grep -q 1
+        || psql -h postgres -U ${POSTGRES_USER:-scibly} -d ${POSTGRES_DB:-scibly}
+        -c "CREATE DATABASE inngest"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # See docs/adr/0004-inngest-self-hosted-orchestration.md.
+  inngest:
+    # Matches the inngest-cli devDependency, so dev and production run one version.
+    image: inngest/inngest:v1.44.0
+    restart: unless-stopped
+    # `-u` is polled, not called once, so neither service has to wait for the other.
+    command: inngest start -u http://app:3001/api/inngest
+    environment:
+      INNGEST_POSTGRES_URI: postgresql://${POSTGRES_USER:-scibly}:${POSTGRES_PASSWORD:-scibly}@postgres:5432/inngest
+      INNGEST_EVENT_KEY: ${INNGEST_EVENT_KEY:?INNGEST_EVENT_KEY is required - see .env.example}
+      INNGEST_SIGNING_KEY: ${INNGEST_SIGNING_KEY:?INNGEST_SIGNING_KEY is required - see .env.example}
+    ports:
+      - "${INNGEST_PORT:-8288}:8288"
+    depends_on:
+      inngest-db:
+        condition: service_completed_successfully
+
   collab:
     build:
       context: .
@@ -63,6 +99,7 @@ services:
     env_file: .env
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-scibly}:${POSTGRES_PASSWORD:-scibly}@postgres:5432/${POSTGRES_DB:-scibly}
+      INNGEST_BASE_URL: http://inngest:8288
     ports:
       - "3001:3001"
     depends_on:
