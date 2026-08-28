@@ -23,14 +23,20 @@ type UpsertArgs = Pick<
   "where" | "create" | "update"
 >;
 
-const db = vi.hoisted(() => ({
-  organization: { findUnique: vi.fn() },
-  integrationConnection: {
-    findUnique: vi.fn(),
-    upsert: vi.fn<(args: UpsertArgs) => Promise<unknown>>(),
-  },
-  notebookSource: { updateMany: vi.fn() },
-}));
+const db = vi.hoisted(() => {
+  const client = {
+    organization: { findUnique: vi.fn() },
+    integrationConnection: {
+      findUnique: vi.fn(),
+      upsert: vi.fn<(args: UpsertArgs) => Promise<unknown>>(),
+    },
+    notebookSource: { updateMany: vi.fn() },
+    // The doubled client is handed straight back, so the reads and writes the
+    // callback makes inside the transaction land on the same spies.
+    $transaction: vi.fn((run: (tx: unknown) => unknown) => run(client)),
+  };
+  return client;
+});
 const getSession = vi.hoisted(() => vi.fn());
 const requireOrgMember = vi.hoisted(() => vi.fn());
 
@@ -112,6 +118,9 @@ beforeEach(() => {
   getSession.mockResolvedValue({ user: { id: "admin-1" } });
   requireOrgMember.mockResolvedValue({ role: "admin" });
   db.organization.findUnique.mockResolvedValue({ id: "org-1" });
+  db.$transaction.mockImplementation((run: (tx: unknown) => unknown) =>
+    run(db),
+  );
   db.integrationConnection.findUnique.mockResolvedValue(null);
   db.integrationConnection.upsert.mockResolvedValue({});
   db.notebookSource.updateMany.mockResolvedValue({ count: 0 });
@@ -367,6 +376,62 @@ describe("LS what is stored", () => {
     await callback({ code: "auth-code", state: state() });
 
     expect(db.notebookSource.updateMany).not.toHaveBeenCalled();
+  });
+
+  it("LS4 clears the backoff the failing polls built up", async () => {
+    db.integrationConnection.findUnique.mockResolvedValue({
+      id: "conn-1",
+      workspaceId: "workspace-1",
+    });
+
+    await callback({ code: "auth-code", state: state() });
+    const { create, update } = upserted();
+
+    expect(update).toMatchObject({
+      consecutiveFailures: 0,
+      nextPollAfter: null,
+    });
+    expect(create).toMatchObject({
+      consecutiveFailures: 0,
+      nextPollAfter: null,
+    });
+  });
+
+  it("LS4 drops the watermark when the workspace changed, and keeps it when it did not", async () => {
+    db.integrationConnection.findUnique.mockResolvedValue({
+      id: "conn-1",
+      workspaceId: "workspace-old",
+    });
+    await callback({ code: "auth-code", state: state() });
+    expect(upserted().update).toMatchObject({ lastPolledAt: null });
+
+    vi.clearAllMocks();
+    db.$transaction.mockImplementation((run: (tx: unknown) => unknown) =>
+      run(db),
+    );
+    db.integrationConnection.upsert.mockResolvedValue({});
+    db.integrationConnection.findUnique.mockResolvedValue({
+      id: "conn-1",
+      workspaceId: "workspace-1",
+    });
+    await callback({ code: "auth-code", state: state() });
+    expect(upserted().update).not.toHaveProperty("lastPolledAt");
+  });
+
+  it("LS4 reads what it is replacing inside the transaction that replaces it", async () => {
+    db.integrationConnection.findUnique.mockResolvedValue({
+      id: "conn-1",
+      workspaceId: "workspace-old",
+    });
+
+    await callback({ code: "auth-code", state: state() });
+
+    expect(db.$transaction).toHaveBeenCalledTimes(1);
+    const opened = db.$transaction.mock.invocationCallOrder[0] ?? 0;
+    expect(
+      db.integrationConnection.findUnique.mock.invocationCallOrder[0],
+    ).toBeGreaterThan(opened);
+    expect(completeConnect.mock.invocationCallOrder[0]).toBeLessThan(opened);
   });
 
   it("LS5 credits whoever authorised it, on a first connect and on a refresh", async () => {

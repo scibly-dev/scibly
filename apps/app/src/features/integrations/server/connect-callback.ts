@@ -192,32 +192,17 @@ async function completeAndPersistConnection(
 ) {
   const redirectUri = routes.app.api.integrations.callback(callback.provider);
 
-  const existing = await db.integrationConnection.findUnique({
-    where: {
-      organizationId_provider: {
-        organizationId,
-        provider: callback.provider,
-      },
-    },
-    select: { id: true, workspaceId: true },
-  });
-
+  // The provider round trip stays outside the transaction: it is a network
+  // call, and holding a row lock across it would be a lock held for as long as
+  // the provider feels like taking.
   const credential = await getProvider(callback.provider).completeConnect(
     callback.params,
     redirectUri,
   );
 
-  if (
-    existing?.workspaceId &&
-    credential.workspaceId &&
-    existing.workspaceId !== credential.workspaceId
-  ) {
-    await detachSourcesFromConnection(
-      existing.id,
-      callback.provider,
-      "workspace_changed",
-    );
-  }
+  const where = {
+    organizationId_provider: { organizationId, provider: callback.provider },
+  };
 
   const connectionData = {
     ...credentialColumns(credential),
@@ -225,17 +210,50 @@ async function completeAndPersistConnection(
     workspaceName: credential.workspaceName ?? null,
 
     connectedByUserId: callback.connectedByUserId,
+
+    // A reconnect is the answer to whatever the polls were failing on, so the
+    // backoff the failures built up does not outlive it: the connection is
+    // eligible again on the next chain rather than hours from now.
+    consecutiveFailures: 0,
+    nextPollAfter: null,
   };
 
-  await db.integrationConnection.upsert({
-    where: {
-      organizationId_provider: {
+  await db.$transaction(async (tx) => {
+    // Read inside the transaction, not before the provider call: two callbacks
+    // landing together would otherwise both see the pre-connect workspace and
+    // decide independently whether to detach.
+    const existing = await tx.integrationConnection.findUnique({
+      where,
+      select: { id: true, workspaceId: true },
+    });
+
+    const movedWorkspace =
+      existing?.workspaceId &&
+      credential.workspaceId &&
+      existing.workspaceId !== credential.workspaceId;
+
+    if (movedWorkspace) {
+      await detachSourcesFromConnection(
+        existing.id,
+        callback.provider,
+        "workspace_changed",
+        tx,
+      );
+    }
+
+    await tx.integrationConnection.upsert({
+      where,
+      create: {
         organizationId,
         provider: callback.provider,
+        ...connectionData,
       },
-    },
-    create: { organizationId, provider: callback.provider, ...connectionData },
-    update: connectionData,
+      // A different workspace shares none of the old one's history, so the
+      // watermark that decided what had already been seen goes with it.
+      update: movedWorkspace
+        ? { ...connectionData, lastPolledAt: null }
+        : connectionData,
+    });
   });
 }
 
