@@ -366,9 +366,10 @@ describe("KW2/KF2/KF3/KF4: what an attempt writes down", () => {
     { failures: 3, case: "24h for the fourth", expected: DAY },
     { failures: 4, case: "72h for the fifth", expected: 3 * DAY },
     {
+      // The plateau stays inside the window a returning poll can still cover.
       failures: 8,
-      case: "capped at 7 days however long it stays broken",
-      expected: 7 * DAY,
+      case: "capped at 3 days however long it stays broken",
+      expected: 3 * DAY,
     },
   ])(
     "KF3: backs a failing connection off — $case",

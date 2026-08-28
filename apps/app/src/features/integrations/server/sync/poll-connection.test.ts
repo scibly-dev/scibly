@@ -166,7 +166,11 @@ describe("KF3: the backoff ladder", () => {
     expect(backoffMs(0)).toBe(0);
     expect(backoffMs(3)).toBe(6 * HOUR);
 
-    expect(backoffMs(99)).toBe(7 * DAY);
+    expect(backoffMs(99)).toBe(3 * DAY);
+  });
+
+  it("KF3: never backs a connection off past the window it could return to", () => {
+    expect(backoffMs(99)).toBeLessThan(SYNC_WINDOW_FLOOR_MS);
   });
 });
 

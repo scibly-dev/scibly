@@ -26,7 +26,11 @@ const SYNC_BACKOFF_MS: readonly number[] = [
   TimeHelpers.IN_MS.DAY,
   TimeHelpers.IN_MS.DAY * 3,
 ];
-const SYNC_BACKOFF_CAP_MS = TimeHelpers.IN_MS.DAY * 7;
+// The ladder plateaus at its last rung rather than at the window floor: a gap
+// as long as `SYNC_WINDOW_FLOOR_MS` is exactly the gap `getPollingStart` can no
+// longer reach back across, so a connection backed off that far would return to
+// a window that starts after the changes it was backed off through.
+const SYNC_BACKOFF_CAP_MS = TimeHelpers.IN_MS.DAY * 3;
 
 export interface SyncRunTotals {
   polled: number;
