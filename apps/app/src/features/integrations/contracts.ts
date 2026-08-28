@@ -1,7 +1,21 @@
 // Kept dependency-free so the client bundle (input schemas, settings card) never pulls in a provider SDK.
-export const INTEGRATION_PROVIDERS = ["NOTION", "GITHUB"] as const;
+// `IntegrationProvider` is a type-only import of a generated const object, so it
+// is erased at build time and pulls nothing in.
+import type { IntegrationProvider } from "@scibly/db/enums";
 
-export type IntegrationProviderId = (typeof INTEGRATION_PROVIDERS)[number];
+// The runtime list: `z.enum` and the picker need a value, and `satisfies`
+// exhaustiveness checks need a tuple. `satisfies` ties it to the schema, so a
+// member that the schema does not have is a compile error here.
+export const INTEGRATION_PROVIDERS = [
+  "NOTION",
+  "GITHUB",
+] as const satisfies readonly IntegrationProvider[];
+
+// The union comes from the schema rather than from the array above, so the two
+// cannot drift: a provider added to the Prisma enum and not to this file fails
+// the `satisfies Record<IntegrationProviderId, ...>` in `server/registry.ts`,
+// which is the file that would have to build it anyway.
+export type IntegrationProviderId = IntegrationProvider;
 
 // The only providers a notebook is offered as a source. A provider is worth
 // connecting before it has pages — see `ReadOnlyIntegrationProvider`.

@@ -1,3 +1,5 @@
+import type { ConnectionCredential } from "./connection-token";
+
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const db = vi.hoisted(() => ({
@@ -14,7 +16,7 @@ vi.mock("@/lib/crypto/api-key", () => crypto);
 const { resolveConnectionToken } = await import("./connection-token");
 const { IntegrationRevokedError } = await import("./base-provider");
 
-const INSTALLED = {
+const INSTALLED: ConnectionCredential = {
   id: "conn_1",
   provider: "GITHUB",
   accessTokenEncrypted: null,

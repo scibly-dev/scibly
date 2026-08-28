@@ -17,7 +17,7 @@ import { getProvider } from "./registry";
 // installation keeps only its id and mints a fresh token here for each use.
 export interface ConnectionCredential {
   id: string;
-  provider: IntegrationProviderId | string;
+  provider: IntegrationProviderId;
   accessTokenEncrypted: string | null;
   installationId: string | null;
 }

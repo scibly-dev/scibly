@@ -1,3 +1,5 @@
+import type { IntegrationProviderId } from "@/features/integrations/contracts";
+
 import { notLapsedSubscription } from "@scibly/api/entitlement";
 import { TimeHelpers } from "@scibly/api/rate-limit";
 import { db, Prisma } from "@scibly/db";
@@ -117,7 +119,7 @@ export async function releaseSyncLease(lease: SyncLease): Promise<void> {
 
 type SyncConnection = {
   id: string;
-  provider: string;
+  provider: IntegrationProviderId;
   accessTokenEncrypted: string | null;
   installationId: string | null;
   lastPolledAt: Date | null;
