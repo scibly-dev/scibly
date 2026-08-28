@@ -2,7 +2,6 @@
 
 import type { inferRouterOutputs } from "@trpc/server";
 import type { z } from "zod";
-import type { IntegrationCallbackError } from "@/features/integrations/contracts";
 import type { DictionaryPages } from "@/i18n/types";
 import type { AppRouter } from "@/server/api/root";
 
@@ -14,7 +13,7 @@ import {
 } from "@scibly/routes";
 import { updateOrganizationSchema } from "@scibly/schemas/organization";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm, type UseFormReturn, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -37,20 +36,28 @@ export type OrgSettingsTranslations = DictionaryPages["orgSettings"];
 export type OrgForm = UseFormReturn<UpdateOrgFormValues>;
 
 function useOAuthResultNotifications(
+  t: OrgSettingsTranslations["integrations"],
   integrationConnected?: string,
   integrationError?: string,
 ) {
   const router = useRouter();
   const trpcUtils = api.useUtils();
+  // What the callback left in the query string is read once and then taken out
+  // of the url, so re-running this on any later render would be reading a
+  // result that has already been reported. React also runs the effect twice in
+  // development, and the ref is what makes the second run a no-op.
+  const reported = useRef(false);
   useEffect(() => {
+    if (reported.current) return;
+    reported.current = true;
+
     const url = new URL(window.location.href);
     if (integrationConnected) {
-      // React runs this effect twice in development, and the callback lands on
-      // a fresh mount either way — a stable id keeps one toast on screen.
-      toast.success(
-        `${integrationConnected.toUpperCase()} connected successfully.`,
-        { id: `integration-connected-${integrationConnected}` },
-      );
+      // The callback lands on a fresh mount either way — a stable id keeps one
+      // toast on screen.
+      toast.success(t.connectedSuccessfully, {
+        id: `integration-connected-${integrationConnected}`,
+      });
       void trpcUtils.integration.list.invalidate();
       url.searchParams.delete(INTEGRATION_CONNECTED_QUERY_PARAM);
       router.replace(url.pathname + url.search);
@@ -58,34 +65,21 @@ function useOAuthResultNotifications(
     }
     if (!integrationError) return;
 
-    const messages = {
-      provider_denied: "Access denied. You cancelled the authorization.",
-      provider_error: "The provider rejected the connection. Please try again.",
-      missing_params: "The connection link was incomplete. Please try again.",
-      invalid_state: "Invalid OAuth state. Please try again.",
-      expired_state: "The connection link expired. Please try again.",
-      state_mismatch: "OAuth state mismatch. Please try again.",
-      session_mismatch:
-        "You are signed in as a different user than the one who started the connection.",
-      org_not_found: "Organization not found.",
-      forbidden: "You need to be an admin or owner to connect an integration.",
-      token_exchange_failed:
-        "Connection failed. The provider rejected the credentials scibly sent.",
-    } satisfies Record<IntegrationCallbackError, string>;
     const known = INTEGRATION_CALLBACK_ERRORS.find(
       (code) => code === integrationError,
     );
-    toast.error(
-      known ? messages[known] : "Connection failed. Please try again.",
-      {
-        id: `integration-error-${integrationError}`,
-      },
-    );
+    toast.error(known ? t.callbackErrors[known] : t.callbackErrorFallback, {
+      id: `integration-error-${integrationError}`,
+    });
     url.searchParams.delete(INTEGRATION_ERROR_QUERY_PARAM);
     router.replace(url.pathname + url.search);
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [
+    t,
+    integrationConnected,
+    integrationError,
+    router,
+    trpcUtils.integration.list,
+  ]);
 }
 
 function useOrganizationMutations(
@@ -177,7 +171,11 @@ export function OrgSettingsForm({
   integrationConnected?: string;
   integrationError?: string;
 }) {
-  useOAuthResultNotifications(integrationConnected, integrationError);
+  useOAuthResultNotifications(
+    t.integrations,
+    integrationConnected,
+    integrationError,
+  );
   const controller = useOrgSettingsController(t, org);
   const { dirtyFields } = controller.form.formState;
   return (

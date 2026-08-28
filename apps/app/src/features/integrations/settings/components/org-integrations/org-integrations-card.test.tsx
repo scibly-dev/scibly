@@ -56,6 +56,7 @@ const t = {
   grantsEmpty: "No repositories.",
   grantsError: "Could not load repositories.",
   revokedNotice: "The connection was removed on the provider's side.",
+  noProvidersAvailable: "Nothing to connect to.",
   providers: { NOTION: "Notion", GITHUB: "GitHub" },
 } as OrgSettingsPage["integrations"];
 
@@ -152,10 +153,10 @@ describe("which mark stands for which provider", () => {
 });
 
 describe("a card with no providers to offer", () => {
-  it("says so in a string that was never translated", () => {
+  it("says so", () => {
     lists([]);
 
-    expect(card().textContent).toContain("No integrations available.");
+    expect(card().textContent).toContain("Nothing to connect to.");
   });
 });
 

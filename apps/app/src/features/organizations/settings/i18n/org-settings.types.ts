@@ -119,8 +119,6 @@ export type OrgSettingsPage = {
     cancelButton: string;
     connectedStatus: string;
     notConnectedStatus: string;
-    workspaceLabel: string;
-    connectedBy: string;
     confirmDisconnectTitle: string;
     confirmDisconnectDescription: string;
     disconnectedSuccessfully: string;
@@ -130,6 +128,22 @@ export type OrgSettingsPage = {
     grantsEmpty: string;
     grantsError: string;
     revokedNotice: string;
+    noProvidersAvailable: string;
+    callbackErrorFallback: string;
+    // Keyed by `IntegrationCallbackError`, spelled out rather than imported:
+    // this file is the shape of a dictionary, not of the integrations feature.
+    callbackErrors: {
+      provider_denied: string;
+      provider_error: string;
+      missing_params: string;
+      invalid_state: string;
+      expired_state: string;
+      state_mismatch: string;
+      session_mismatch: string;
+      org_not_found: string;
+      forbidden: string;
+      token_exchange_failed: string;
+    };
     providers: {
       NOTION: string;
       GITHUB: string;

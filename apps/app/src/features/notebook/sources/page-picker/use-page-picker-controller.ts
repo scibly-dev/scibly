@@ -162,13 +162,14 @@ export function useLinkSelectedPages(
       if (count > 0) {
         toast.success(
           result.skipped > 0
-            ? `${count} page${count !== 1 ? "s" : ""} added (${result.skipped} already linked)`
-            : `${count} page${count !== 1 ? "s" : ""} added successfully`,
+            ? props.t.pagesAddedWithSkipped
+                .replace("{count}", String(count))
+                .replace("{skipped}", String(result.skipped))
+            : props.t.pagesAdded.replace("{count}", String(count)),
         );
         props.onLinked();
         props.onOpenChange(false);
-      } else
-        toast.info("All selected pages are already linked to this notebook.");
+      } else toast.info(props.t.allAlreadyLinked);
     },
     onError: (error) => toast.error(error.message ?? props.t.failedToLink),
   });
