@@ -44,8 +44,8 @@ const {
   loadOwedConnections,
   MAX_SYNC_HOPS,
   releaseSyncLease,
-  runSyncStep,
-  SYNC_BATCH_SIZE,
+  runSyncHop,
+  SYNC_HOP_CONNECTION_LIMIT,
   SYNC_CLOCK_SKEW_MS,
   SYNC_HOP_DEADLINE_MS,
   SYNC_WINDOW_FLOOR_MS,
@@ -184,7 +184,7 @@ describe("KW1/KW4/KW5: the interval a poll covers", () => {
     owed([connection({ lastPolledAt })]);
     sources({ id: "src-a", externalId: "page-a" });
 
-    await runSyncStep(LEASE);
+    await runSyncHop(LEASE);
 
     expect(provider.pollModifiedPages).toHaveBeenCalledWith(
       "plain-token",
@@ -196,7 +196,7 @@ describe("KW1/KW4/KW5: the interval a poll covers", () => {
     owed([connection({ lastPolledAt: new Date(NOW.getTime() - HOUR) })]);
     sources({ id: "src-a", externalId: "page-a" });
 
-    await runSyncStep(LEASE);
+    await runSyncHop(LEASE);
 
     const [args] = db.notebookSource.findMany.mock.calls[0];
     expect(args.select).toEqual({ id: true, externalId: true });
@@ -212,7 +212,7 @@ describe("KS1/KS2/KC1/KC4: which connections a hop is accountable for", () => {
     expect(args.orderBy).toEqual({
       lastAttemptedAt: { sort: "asc", nulls: "first" },
     });
-    expect(args.take).toBe(SYNC_BATCH_SIZE);
+    expect(args.take).toBe(SYNC_HOP_CONNECTION_LIMIT);
   });
 
   it("KC4: owes only connections not yet attempted in this chain", async () => {
@@ -270,7 +270,7 @@ describe("KB1/KB2/KB3/KB4: organizations that can pay for what a poll leads to",
     sources({ id: "src-a", externalId: "page-a" });
     modified("page-a");
 
-    const { totals } = await runSyncStep(LEASE);
+    const { totals } = await runSyncHop(LEASE);
 
     expect(totals).toMatchObject({ marked: 1 });
     expect(db.notebookSource.updateMany).toHaveBeenCalledWith({
@@ -282,7 +282,7 @@ describe("KB1/KB2/KB3/KB4: organizations that can pay for what a poll leads to",
   it("KB1: a hop whose only connections lapsed polls nothing and ends the chain", async () => {
     owed([]);
 
-    const { totals, continued } = await runSyncStep(LEASE);
+    const { totals, continued } = await runSyncHop(LEASE);
 
     expect(provider.pollModifiedPages).not.toHaveBeenCalled();
     expect(totals).toMatchObject({ polled: 0, connectionsFailed: 0 });
@@ -295,7 +295,7 @@ describe("KB1/KB2/KB3/KB4: organizations that can pay for what a poll leads to",
     sources({ id: "src-a", externalId: "page-a" });
     modified("page-a");
 
-    await runSyncStep(LEASE);
+    await runSyncHop(LEASE);
 
     expect(provider.pollModifiedPages).toHaveBeenCalledWith(
       "plain-token",
@@ -314,7 +314,7 @@ describe("KS3/KS4: which sources a connection contributes", () => {
     owed([connection({ id: "conn-7" })]);
     sources({ id: "src-a", externalId: "page-a" });
 
-    await runSyncStep(LEASE);
+    await runSyncHop(LEASE);
 
     const [args] = db.notebookSource.findMany.mock.calls[0];
     expect(args.where).toEqual({
@@ -328,7 +328,7 @@ describe("KS3/KS4: which sources a connection contributes", () => {
     owed([connection()]);
     sources();
 
-    const { totals } = await runSyncStep(LEASE);
+    const { totals } = await runSyncHop(LEASE);
 
     expect(provider.pollModifiedPages).not.toHaveBeenCalled();
     expect(totals.connectionsEmpty).toBe(1);
@@ -339,7 +339,7 @@ describe("KS3/KS4: which sources a connection contributes", () => {
     owed([connection()]);
     sources();
 
-    await runSyncStep(LEASE);
+    await runSyncHop(LEASE);
 
     expect(writtenTo("conn-1")).toEqual({ lastAttemptedAt: NOW });
   });
@@ -395,7 +395,7 @@ describe("KF1: one broken integration", () => {
 
     scenario.break();
 
-    const { totals } = await runSyncStep(LEASE);
+    const { totals } = await runSyncHop(LEASE);
 
     expect(totals.connectionsFailed).toBe(1);
     expect(totals.polled).toBe(1);
@@ -410,7 +410,7 @@ describe("KF1: one broken integration", () => {
     owed([connection({ id: "conn-broken", provider: "notion" })]);
     sources({ id: "src-a", externalId: "page-a" });
 
-    await runSyncStep(LEASE);
+    await runSyncHop(LEASE);
 
     expect(console.error).toHaveBeenCalledWith(
       expect.stringContaining("conn-broken"),
@@ -429,7 +429,7 @@ describe("KF1: one broken integration", () => {
     owed([broken]);
     sources({ id: "src-a", externalId: "page-a" });
 
-    const { totals } = await runSyncStep(LEASE);
+    const { totals } = await runSyncHop(LEASE);
 
     expect(db.notebookSource.updateMany).not.toHaveBeenCalled();
     expect(totals).toMatchObject({ marked: 0, unchanged: 0 });
@@ -442,7 +442,7 @@ describe("KW2/KF2/KF3/KF4: what an attempt writes down", () => {
     owed([connection({ lastPolledAt: new Date(NOW.getTime() - 3 * DAY) })]);
     sources({ id: "src-a", externalId: "page-a" });
 
-    await runSyncStep(LEASE);
+    await runSyncHop(LEASE);
 
     expect(writtenTo("conn-1")).not.toHaveProperty("lastPolledAt");
   });
@@ -452,7 +452,7 @@ describe("KW2/KF2/KF3/KF4: what an attempt writes down", () => {
     owed([connection()]);
     sources({ id: "src-a", externalId: "page-a" });
 
-    await runSyncStep(LEASE);
+    await runSyncHop(LEASE);
 
     expect(writtenTo("conn-1")).toMatchObject({
       lastAttemptedAt: NOW,
@@ -478,7 +478,7 @@ describe("KW2/KF2/KF3/KF4: what an attempt writes down", () => {
       owed([connection({ consecutiveFailures: failures })]);
       sources({ id: "src-a", externalId: "page-a" });
 
-      await runSyncStep(LEASE);
+      await runSyncHop(LEASE);
 
       expect(writtenTo("conn-1")).toMatchObject({
         consecutiveFailures: failures + 1,
@@ -499,7 +499,7 @@ describe("KW2/KF2/KF3/KF4: what an attempt writes down", () => {
     owed([connection({ consecutiveFailures: 4 })]);
     sources({ id: "src-a", externalId: "page-a" });
 
-    await runSyncStep(LEASE);
+    await runSyncHop(LEASE);
 
     expect(writtenTo("conn-1")).toEqual({
       lastPolledAt: NOW,
@@ -514,7 +514,7 @@ describe("KW2/KF2/KF3/KF4: what an attempt writes down", () => {
     owed([connection()], [unreached]);
     sources({ id: "src-a", externalId: "page-a" });
 
-    await runSyncStep(LEASE);
+    await runSyncHop(LEASE);
 
     expect(writtenTo("conn-later")).toBeUndefined();
   });
@@ -533,7 +533,7 @@ describe("KR1/KR3: what the run marks and what it reports", () => {
   it("KR1: marks only the sources the provider reported as modified", async () => {
     modified("page-b");
 
-    const { totals } = await runSyncStep(LEASE);
+    const { totals } = await runSyncHop(LEASE);
 
     expect(markedStale()).toEqual(["src-b"]);
     expect(totals).toMatchObject({ marked: 1, unchanged: 2 });
@@ -542,7 +542,7 @@ describe("KR1/KR3: what the run marks and what it reports", () => {
   it("KR1: marks nothing when the provider reports no changes", async () => {
     modified();
 
-    const { totals } = await runSyncStep(LEASE);
+    const { totals } = await runSyncHop(LEASE);
 
     expect(db.notebookSource.updateMany).not.toHaveBeenCalled();
     expect(totals).toMatchObject({ polled: 1, marked: 0, unchanged: 3 });
@@ -551,7 +551,7 @@ describe("KR1/KR3: what the run marks and what it reports", () => {
   it("KR3: marks a connection's whole changed set in one write", async () => {
     modified("page-a", "page-b", "page-c");
 
-    const { totals } = await runSyncStep(LEASE);
+    const { totals } = await runSyncHop(LEASE);
 
     expect(db.notebookSource.updateMany).toHaveBeenCalledTimes(1);
     expect(markedStale()).toEqual(["src-a", "src-b", "src-c"]);
@@ -561,7 +561,7 @@ describe("KR1/KR3: what the run marks and what it reports", () => {
   it("KR3: leaves the mark for the ingest to clear, changing nothing else", async () => {
     modified("page-a");
 
-    await runSyncStep(LEASE);
+    await runSyncHop(LEASE);
 
     const [args] = db.notebookSource.updateMany.mock.calls[0];
     expect(args.data).toEqual({ staleAt: NOW });
@@ -654,7 +654,7 @@ describe("KC1/KC5/KC6: how a chain ends", () => {
     owed([connection()], [connection({ id: "conn-later" })]);
     sources({ id: "src-a", externalId: "page-a" });
 
-    const { continued } = await runSyncStep(LEASE);
+    const { continued } = await runSyncHop(LEASE);
 
     expect(continued).toBe(true);
     expect(fetchMock).toHaveBeenCalledWith(
@@ -673,7 +673,7 @@ describe("KC1/KC5/KC6: how a chain ends", () => {
     owed(batch, []);
     sources({ id: "src-a", externalId: "page-a" });
 
-    const { continued } = await runSyncStep(LEASE);
+    const { continued } = await runSyncHop(LEASE);
 
     expect(continued).toBe(false);
     expect(fetchMock).not.toHaveBeenCalled();
@@ -691,7 +691,7 @@ describe("KC1/KC5/KC6: how a chain ends", () => {
       return [];
     });
 
-    const { continued } = await runSyncStep(LEASE);
+    const { continued } = await runSyncHop(LEASE);
 
     expect(continued).toBe(true);
     expect(writtenTo("conn-next")).toBeUndefined();
@@ -700,7 +700,7 @@ describe("KC1/KC5/KC6: how a chain ends", () => {
   });
 
   it("KC5: stops loudly at the runaway backstop rather than chaining forever", async () => {
-    const { totals, continued } = await runSyncStep({
+    const { totals, continued } = await runSyncHop({
       ...LEASE,
       hops: MAX_SYNC_HOPS,
     });
@@ -716,7 +716,7 @@ describe("KC1/KC5/KC6: how a chain ends", () => {
   it("drops the lease when the hop itself fails, rather than letting it expire", async () => {
     db.integrationConnection.findMany.mockRejectedValue(new Error("db gone"));
 
-    const { continued } = await runSyncStep(LEASE);
+    const { continued } = await runSyncHop(LEASE);
 
     expect(continued).toBe(false);
     expect(db.integrationSyncLease.updateMany).toHaveBeenCalledWith({
@@ -730,7 +730,7 @@ describe("KC1/KC5/KC6: how a chain ends", () => {
     sources({ id: "src-a", externalId: "page-a" });
     fetchMock.mockRejectedValue(new Error("ECONNREFUSED"));
 
-    const { continued } = await runSyncStep(LEASE);
+    const { continued } = await runSyncHop(LEASE);
 
     expect(continued).toBe(true);
     expect(writtenTo("conn-later")).toBeUndefined();

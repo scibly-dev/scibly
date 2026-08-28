@@ -17,7 +17,7 @@ export const SYNC_CLOCK_SKEW_MS = TimeHelpers.IN_MS.MINUTE;
 
 export const SYNC_WINDOW_FLOOR_MS = TimeHelpers.IN_MS.DAY * 7;
 
-export const SYNC_BATCH_SIZE = 10;
+export const SYNC_HOP_CONNECTION_LIMIT = 10;
 
 export const SYNC_HOP_DEADLINE_MS = TimeHelpers.IN_MS.MINUTE * 4;
 
@@ -155,18 +155,19 @@ export async function loadOwedConnections(
       consecutiveFailures: true,
     },
     orderBy: { lastAttemptedAt: { sort: "asc", nulls: "first" } },
-    take: SYNC_BATCH_SIZE,
+    take: SYNC_HOP_CONNECTION_LIMIT,
   });
 }
 
 type SyncableSource = { id: string; externalId: string | null };
 
 async function loadSyncableSources(
-  integrationId: string,
+  connectionId: string,
 ): Promise<SyncableSource[]> {
   return db.notebookSource.findMany({
     where: {
-      integrationId,
+      // The column keeps the old name; renaming it needs a migration.
+      integrationId: connectionId,
       status: SOURCE_STATUS.READY,
       externalId: { not: null },
     },
@@ -181,20 +182,20 @@ export function getPollingStart(lastPolledAt: Date | null, now: Date): Date {
 }
 
 async function recordAttempt(
-  integrationId: string,
+  connectionId: string,
   data: Prisma.IntegrationConnectionUpdateInput,
 ): Promise<void> {
   await db.integrationConnection.update({
-    where: { id: integrationId },
+    where: { id: connectionId },
     data,
   });
 }
 
 async function recordPollSuccess(
-  integrationId: string,
+  connectionId: string,
   pollStartedAt: Date,
 ): Promise<void> {
-  await recordAttempt(integrationId, {
+  await recordAttempt(connectionId, {
     lastPolledAt: pollStartedAt,
     lastAttemptedAt: new Date(),
     consecutiveFailures: 0,
@@ -234,7 +235,7 @@ async function markChangedSourcesStale(
   totals.marked += marked.count;
 }
 
-async function syncConnection(
+async function pollConnection(
   connection: SyncConnection,
   totals: SyncRunTotals,
 ): Promise<void> {
@@ -269,12 +270,12 @@ async function syncConnection(
   await recordPollSuccess(connection.id, now);
 }
 
-interface SyncStepResult {
+interface SyncHopResult {
   totals: SyncRunTotals;
   continued: boolean;
 }
 
-export async function runSyncStep(lease: SyncLease): Promise<SyncStepResult> {
+export async function runSyncHop(lease: SyncLease): Promise<SyncHopResult> {
   const totals: SyncRunTotals = {
     polled: 0,
     connectionsFailed: 0,
@@ -296,7 +297,7 @@ export async function runSyncStep(lease: SyncLease): Promise<SyncStepResult> {
     const connections = await loadOwedConnections(lease, new Date());
     let deadlineReached = false;
     for (const connection of connections) {
-      await syncConnection(connection, totals);
+      await pollConnection(connection, totals);
       if (Date.now() - hopStartedAt >= SYNC_HOP_DEADLINE_MS) {
         deadlineReached = true;
         break;
@@ -311,7 +312,7 @@ export async function runSyncStep(lease: SyncLease): Promise<SyncStepResult> {
       return { totals, continued: false };
     }
 
-    await postToSyncRoute({ token: lease.token });
+    await handOffChain({ token: lease.token });
     return { totals, continued: true };
   } catch (error) {
     console.error("[IntegrationFreshness] Hop failed:", error);
@@ -320,7 +321,7 @@ export async function runSyncStep(lease: SyncLease): Promise<SyncStepResult> {
   }
 }
 
-async function postToSyncRoute(body: { token: string }): Promise<void> {
+async function handOffChain(body: { token: string }): Promise<void> {
   if (!env.CRON_SECRET) {
     console.error(
       "[IntegrationFreshness] CRON_SECRET is not configured; chain not continued",

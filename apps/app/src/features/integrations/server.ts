@@ -8,6 +8,6 @@ export { getPageProvider, getProvider, listProviders } from "./server/registry";
 export {
   acquireSyncLease,
   continueSyncLease,
-  runSyncStep,
+  runSyncHop,
   type SyncLease,
 } from "./server/sync-source-freshness";

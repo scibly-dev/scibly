@@ -11,7 +11,7 @@ import { cronRequest, runDeferredWork } from "../testing";
 const sync = vi.hoisted(() => ({
   acquireSyncLease: vi.fn(),
   continueSyncLease: vi.fn(),
-  runSyncStep: vi.fn(),
+  runSyncHop: vi.fn(),
 }));
 
 const env = vi.hoisted(() => ({ CRON_SECRET: "test-cron-secret" }));
@@ -36,7 +36,7 @@ beforeEach(() => {
   env.CRON_SECRET = SECRET;
   sync.acquireSyncLease.mockResolvedValue(LEASE);
   sync.continueSyncLease.mockResolvedValue(LEASE);
-  sync.runSyncStep.mockResolvedValue({ totals: {}, continued: false });
+  sync.runSyncHop.mockResolvedValue({ totals: {}, continued: false });
 });
 
 describe("KD4: the route is behind the shared door", () => {
@@ -112,7 +112,7 @@ describe("KC2: exactly one chain at a time", () => {
 
       expect(await response.json()).toEqual({ ok: true, joined: true });
       expect(afterMock).not.toHaveBeenCalled();
-      expect(sync.runSyncStep).not.toHaveBeenCalled();
+      expect(sync.runSyncHop).not.toHaveBeenCalled();
     },
   );
 
@@ -160,9 +160,9 @@ describe("the chain's hops", () => {
     );
 
     expect(await response.json()).toEqual({ ok: true, started: true });
-    expect(sync.runSyncStep).not.toHaveBeenCalled();
+    expect(sync.runSyncHop).not.toHaveBeenCalled();
 
     await runDeferredWork(afterMock);
-    expect(sync.runSyncStep).toHaveBeenCalledWith(LEASE);
+    expect(sync.runSyncHop).toHaveBeenCalledWith(LEASE);
   });
 });

@@ -7,7 +7,7 @@ import {
   resolveConnectionToken,
 } from "@/features/integrations/server";
 
-async function resolveIntegration(source: ExtractableSource) {
+async function resolveSourceConnection(source: ExtractableSource) {
   if (!source.integrationId || !source.externalId) {
     throw new Error(
       `Integration source ${source.type} missing integrationId or externalId.`,
@@ -45,12 +45,14 @@ export const notionPageExtractor: SourceExtractor = {
   isIntegration: true,
 
   async getRevision(source) {
-    const { provider, token, externalId } = await resolveIntegration(source);
+    const { provider, token, externalId } =
+      await resolveSourceConnection(source);
     return provider.getPageRevision(token, externalId);
   },
 
   async extract(source) {
-    const { provider, token, externalId } = await resolveIntegration(source);
+    const { provider, token, externalId } =
+      await resolveSourceConnection(source);
     const content = await provider.fetchPageContent(token, externalId);
 
     return {

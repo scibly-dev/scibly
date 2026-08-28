@@ -4,7 +4,7 @@ import { z } from "zod";
 import {
   acquireSyncLease,
   continueSyncLease,
-  runSyncStep,
+  runSyncHop,
   type SyncLease,
 } from "@/features/integrations/server";
 import { refuseUnauthorizedCron } from "@/shared/api/cron/cron-route-guard";
@@ -20,7 +20,7 @@ const ROUTE_NAME = "sync-integrations";
 // waiting out the whole chain.
 function startHop(lease: SyncLease): NextResponse {
   after(async () => {
-    await runSyncStep(lease);
+    await runSyncHop(lease);
   });
   return NextResponse.json({ ok: true, started: true });
 }
