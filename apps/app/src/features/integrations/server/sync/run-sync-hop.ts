@@ -53,7 +53,19 @@ export async function runSyncHop(lease: SyncLease): Promise<SyncHopResult> {
     const connections = owed.slice(0, SYNC_HOP_CONNECTION_LIMIT);
     let deadlineReached = false;
     for (const connection of connections) {
-      await pollConnection(connection, totals);
+      // A connection the hop cannot even record an attempt for — its database
+      // writes failing, not its provider, which `pollConnection` handles — must
+      // not take the other nine down with it. The chain moves on; `nextPollAfter`
+      // is untouched, so the connection is simply owed again next hop.
+      try {
+        await pollConnection(connection, totals);
+      } catch (error) {
+        totals.connectionsFailed += 1;
+        console.error(
+          `[IntegrationFreshness] Connection ${connection.id} aborted the poll:`,
+          error,
+        );
+      }
       if (Date.now() - hopStartedAt >= SYNC_HOP_DEADLINE_MS) {
         deadlineReached = true;
         break;

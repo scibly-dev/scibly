@@ -109,25 +109,17 @@ export function getPollingStart(lastPolledAt: Date | null, now: Date): Date {
   return new Date(Math.max(lastPolledAt.getTime() - SYNC_CLOCK_SKEW_MS, floor));
 }
 
+// `updateMany`, not `update`: a poll can outlive the connection it is polling —
+// resolving the token is itself what deletes a connection the provider says is
+// gone — and a row that is no longer there is nothing left to record, not an
+// error that should take the hop down with it.
 async function recordAttempt(
   connectionId: string,
-  data: Prisma.IntegrationConnectionUpdateInput,
+  data: Prisma.IntegrationConnectionUpdateManyMutationInput,
 ): Promise<void> {
-  await db.integrationConnection.update({
+  await db.integrationConnection.updateMany({
     where: { id: connectionId },
     data,
-  });
-}
-
-async function recordPollSuccess(
-  connectionId: string,
-  pollStartedAt: Date,
-): Promise<void> {
-  await recordAttempt(connectionId, {
-    lastPolledAt: pollStartedAt,
-    lastAttemptedAt: new Date(),
-    consecutiveFailures: 0,
-    nextPollAfter: null,
   });
 }
 
@@ -144,22 +136,46 @@ async function recordPollFailure(
   });
 }
 
-async function markChangedSourcesStale(
+// One batch, because the watermark is a claim about the marks: it says
+// everything up to `pollStartedAt` has been accounted for, which is only true
+// if the sources this poll found changed were actually marked stale. Advancing
+// it on its own would put those changes permanently behind the window.
+async function commitPollSuccess(
+  connectionId: string,
+  pollStartedAt: Date,
   sources: SyncableSource[],
   modifiedIds: Set<string>,
   totals: SyncRunTotals,
 ): Promise<void> {
-  const changed = sources.filter(
-    (source) =>
-      source.externalId !== null && modifiedIds.has(source.externalId),
-  );
-  totals.unchanged += sources.length - changed.length;
-  if (changed.length === 0) return;
+  const changedIds = sources
+    .filter(
+      (source) =>
+        source.externalId !== null && modifiedIds.has(source.externalId),
+    )
+    .map((source) => source.id);
+  totals.unchanged += sources.length - changedIds.length;
 
-  const marked = await db.notebookSource.updateMany({
-    where: { id: { in: changed.map((source) => source.id) } },
-    data: { staleAt: new Date() },
-  });
+  const succeeded = {
+    lastPolledAt: pollStartedAt,
+    lastAttemptedAt: new Date(),
+    consecutiveFailures: 0,
+    nextPollAfter: null,
+  };
+  if (changedIds.length === 0) {
+    await recordAttempt(connectionId, succeeded);
+    return;
+  }
+
+  const [marked] = await db.$transaction([
+    db.notebookSource.updateMany({
+      where: { id: { in: changedIds } },
+      data: { staleAt: new Date() },
+    }),
+    db.integrationConnection.updateMany({
+      where: { id: connectionId },
+      data: succeeded,
+    }),
+  ]);
   totals.marked += marked.count;
 }
 
@@ -194,6 +210,5 @@ export async function pollConnection(
   }
 
   totals.polled += 1;
-  await markChangedSourcesStale(sources, modifiedIds, totals);
-  await recordPollSuccess(connection.id, now);
+  await commitPollSuccess(connection.id, now, sources, modifiedIds, totals);
 }

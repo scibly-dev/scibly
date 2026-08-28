@@ -4,7 +4,9 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { PAGE_INTEGRATION_PROVIDERS } from "@/features/integrations/contracts";
 
 const db = vi.hoisted(() => ({
-  integrationConnection: { findMany: vi.fn() },
+  integrationConnection: { findMany: vi.fn(), updateMany: vi.fn() },
+  notebookSource: { findMany: vi.fn(), updateMany: vi.fn() },
+  $transaction: vi.fn(),
 }));
 
 vi.mock("@scibly/db", async () => {
@@ -12,10 +14,21 @@ vi.mock("@scibly/db", async () => {
   return { db, Prisma: client.Prisma };
 });
 
+const provider = vi.hoisted(() => ({ pollModifiedPages: vi.fn() }));
+
+vi.mock("@/features/integrations/server/registry", () => ({
+  getPageProvider: () => provider,
+}));
+
+vi.mock("@/features/integrations/server/connection-token", () => ({
+  resolveConnectionToken: vi.fn(async () => "token"),
+}));
+
 const {
   backoffMs,
   getPollingStart,
   loadOwedConnections,
+  pollConnection,
   SYNC_CLOCK_SKEW_MS,
   SYNC_HOP_CONNECTION_LIMIT,
   SYNC_WINDOW_FLOOR_MS,
@@ -36,6 +49,24 @@ beforeEach(() => {
   vi.resetAllMocks();
 
   db.integrationConnection.findMany.mockResolvedValue([]);
+  db.$transaction.mockResolvedValue([{ count: 0 }, { count: 1 }]);
+});
+
+const CONNECTION = {
+  id: "conn-1",
+  provider: "NOTION" as const,
+  accessTokenEncrypted: "cipher",
+  installationId: null,
+  lastPolledAt: new Date(NOW.getTime() - DAY),
+  consecutiveFailures: 0,
+};
+
+const emptyTotals = () => ({
+  polled: 0,
+  connectionsFailed: 0,
+  connectionsEmpty: 0,
+  marked: 0,
+  unchanged: 0,
 });
 
 describe("KW1/KW4/KW5: the interval a poll covers", () => {
@@ -136,5 +167,45 @@ describe("KF3: the backoff ladder", () => {
     expect(backoffMs(3)).toBe(6 * HOUR);
 
     expect(backoffMs(99)).toBe(7 * DAY);
+  });
+});
+
+describe("KP1/KP2: what a poll commits", () => {
+  it("KP1: marks the changed sources and advances the watermark in one batch", async () => {
+    db.notebookSource.findMany.mockResolvedValue([
+      { id: "src-changed", externalId: "page-a" },
+      { id: "src-same", externalId: "page-b" },
+    ]);
+    provider.pollModifiedPages.mockResolvedValue([{ id: "page-a" }]);
+    db.$transaction.mockResolvedValue([{ count: 1 }, { count: 1 }]);
+    const totals = emptyTotals();
+
+    await pollConnection(CONNECTION, totals);
+
+    // One `$transaction` call, and both writes were handed to it rather than
+    // awaited on their own.
+    expect(db.$transaction).toHaveBeenCalledTimes(1);
+    expect(db.$transaction.mock.calls[0][0]).toHaveLength(2);
+    expect(db.notebookSource.updateMany.mock.calls[0][0].where).toEqual({
+      id: { in: ["src-changed"] },
+    });
+    expect(
+      db.integrationConnection.updateMany.mock.calls[0][0].data,
+    ).toMatchObject({ consecutiveFailures: 0, nextPollAfter: null });
+    expect(totals).toMatchObject({ polled: 1, marked: 1, unchanged: 1 });
+  });
+
+  it("KP2: records an attempt on a connection that may already be gone", async () => {
+    db.notebookSource.findMany.mockResolvedValue([]);
+    const totals = emptyTotals();
+
+    await pollConnection(CONNECTION, totals);
+
+    // `updateMany`, so a connection deleted mid-poll is a no-op, not a P2025.
+    expect(db.integrationConnection.updateMany).toHaveBeenCalledWith({
+      where: { id: CONNECTION.id },
+      data: { lastAttemptedAt: expect.any(Date) },
+    });
+    expect(totals.connectionsEmpty).toBe(1);
   });
 });

@@ -4,9 +4,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { SOURCE_STATUS } from "@/shared/content/sources/constants";
 
 const db = vi.hoisted(() => ({
-  integrationConnection: { findMany: vi.fn(), update: vi.fn() },
+  integrationConnection: { findMany: vi.fn(), updateMany: vi.fn() },
   notebookSource: { findMany: vi.fn(), updateMany: vi.fn() },
   integrationSyncLease: { updateMany: vi.fn() },
+  $transaction: vi.fn(),
 }));
 
 const provider = vi.hoisted(() => ({ pollModifiedPages: vi.fn() }));
@@ -100,7 +101,7 @@ function markedStale(): string[] {
 }
 
 function writtenTo(connectionId: string) {
-  const call = db.integrationConnection.update.mock.calls.find(
+  const call = db.integrationConnection.updateMany.mock.calls.find(
     ([args]) => args.where.id === connectionId,
   );
   return call?.[0].data;
@@ -114,7 +115,12 @@ beforeEach(() => {
 
   fetchMock.mockResolvedValue({ ok: true });
   db.integrationConnection.findMany.mockResolvedValue([]);
-  db.integrationConnection.update.mockResolvedValue({});
+  db.integrationConnection.updateMany.mockResolvedValue({ count: 1 });
+  // The batched writes are handed over as promises the caller already started,
+  // so the doubled transaction is just the settle.
+  db.$transaction.mockImplementation(async (ops: Promise<unknown>[]) =>
+    Promise.all(ops),
+  );
   db.notebookSource.findMany.mockResolvedValue([]);
   db.notebookSource.updateMany.mockImplementation(
     async ({ where }: { where: { id: { in: string[] } } }) => ({
