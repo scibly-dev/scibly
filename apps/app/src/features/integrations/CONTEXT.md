@@ -11,7 +11,7 @@ only supplies and re-checks what a source was made from.
 ### The connection
 
 **Provider**:
-An outside system an organization connects to — Notion, GitHub, Confluence.
+An outside system an organization connects to — Notion, GitHub.
 Either its material is pages a notebook can import, or it is only read from
 elsewhere; a provider is worth connecting either way, and only the first kind is
 ever shown to a notebook. Adding one is adding a provider, not an integration.
@@ -39,7 +39,7 @@ _Avoid_: repository (GitHub's word for one), scope, permission, resource
 
 **Workspace**:
 The container on the provider's side that a connection can reach — a Notion
-workspace, a Confluence site, the GitHub account an app was installed on.
+workspace, the GitHub account an app was installed on.
 Reconnecting to a different one does not carry the old one's pages across.
 _Avoid_: site, tenant, organization (ours, and never theirs)
 

@@ -201,7 +201,7 @@ describe("LA the door", () => {
   it("LA8 refuses when the path segment names a different provider than the state", async () => {
     const response = await callback(
       { code: "auth-code", state: state() },
-      "confluence",
+      "github",
     );
 
     expect(refusal(response)).toBe("state_mismatch");
@@ -219,8 +219,8 @@ describe("LA the door", () => {
 
   it("LP2 refuses a state naming a provider the registry cannot build", async () => {
     const response = await callback(
-      { code: "auth-code", state: state({ provider: "SHAREPOINT" }) },
-      "sharepoint",
+      { code: "auth-code", state: state({ provider: "NOT_A_PROVIDER" }) },
+      "not_a_provider",
     );
 
     expect(refusal(response)).toBe("invalid_state");

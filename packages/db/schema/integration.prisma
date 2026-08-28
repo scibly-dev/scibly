@@ -1,8 +1,6 @@
 enum IntegrationProvider {
   NOTION
   GITHUB
-  CONFLUENCE
-  SHAREPOINT
 
   @@map("integration_provider")
 }
