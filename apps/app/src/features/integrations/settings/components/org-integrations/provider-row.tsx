@@ -13,9 +13,9 @@ export type ProviderRowProps = {
     listsGrants?: boolean;
   };
   connection?: { workspaceName: string | null };
-  isDisconnecting: boolean;
+  /** Whether this row's disconnect is out of reach for the moment. */
+  isBusy: boolean;
   isConnectPending: boolean;
-  isDisconnectPending: boolean;
   t: OrgSettingsPage["integrations"];
   orgSlug: string;
   onConnect: () => void;

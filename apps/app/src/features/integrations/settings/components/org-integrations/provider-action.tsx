@@ -6,9 +6,8 @@ import { ExternalLink, Unplug } from "lucide-react";
 export const ProviderAction = ({
   provider,
   connection,
-  isDisconnecting,
+  isBusy,
   isConnectPending,
-  isDisconnectPending,
   t,
   onConnect,
   onDisconnect,
@@ -20,7 +19,7 @@ export const ProviderAction = ({
         variant="ghost"
         size="sm"
         onClick={onDisconnect}
-        disabled={isDisconnecting || isDisconnectPending}
+        disabled={isBusy}
         className="gap-1.5 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30 dark:hover:text-red-400"
         aria-label={`${t.disconnectButton} ${provider.displayName}`}
       >

@@ -43,9 +43,12 @@ export function useOrgIntegrations({
   return {
     connections: data?.connections ?? [],
     allProviders: data?.allProviders ?? [],
-    disconnectingId,
     isConnectPending: getAuthUrlMutation.isPending,
-    isDisconnectPending: disconnectMutation.isPending,
+    // A row's disconnect is out of reach while it is the one being
+    // disconnected, and while any disconnect is in flight. The two windows
+    // overlap but neither contains the other, so both are asked.
+    isBusy: (provider: IntegrationProviderId) =>
+      disconnectingId === provider || disconnectMutation.isPending,
     connect: (provider: IntegrationProviderId) =>
       getAuthUrlMutation.mutate({ orgSlug, provider, lang }),
     disconnect: (provider: IntegrationProviderId) => {

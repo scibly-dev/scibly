@@ -21,9 +21,8 @@ export function OrgIntegrationsCard({
   const {
     connections,
     allProviders,
-    disconnectingId,
     isConnectPending,
-    isDisconnectPending,
+    isBusy,
     connect,
     disconnect,
   } = useOrgIntegrations({ orgSlug, lang, t });
@@ -41,8 +40,7 @@ export function OrgIntegrationsCard({
               provider={p}
               orgSlug={orgSlug}
               connection={connection}
-              isDisconnecting={disconnectingId === p.providerId}
-              isDisconnectPending={isDisconnectPending}
+              isBusy={isBusy(p.providerId)}
               isConnectPending={isConnectPending}
               t={t}
               onDisconnect={() => disconnect(p.providerId)}
