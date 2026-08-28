@@ -2,10 +2,24 @@ import type { ConnectionCredential } from "./connection-token";
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const db = vi.hoisted(() => ({
-  integrationConnection: { deleteMany: vi.fn() },
-  notebookSource: { updateMany: vi.fn() },
-}));
+// `$transaction` hands the same doubled client back, so the two writes are
+// still observed individually — what is under test is that both happen, and
+// that they happen through the transaction.
+const db: {
+  integrationConnection: { deleteMany: ReturnType<typeof vi.fn> };
+  notebookSource: { updateMany: ReturnType<typeof vi.fn> };
+  $transaction: ReturnType<typeof vi.fn>;
+} = vi.hoisted(() => {
+  const client = {
+    integrationConnection: { deleteMany: vi.fn() },
+    notebookSource: { updateMany: vi.fn() },
+    $transaction: vi.fn(),
+  };
+  client.$transaction.mockImplementation((run: (tx: unknown) => unknown) =>
+    run(client),
+  );
+  return client;
+});
 const registry = vi.hoisted(() => ({ getProvider: vi.fn() }));
 const crypto = vi.hoisted(() => ({ decryptApiKey: vi.fn() }));
 
@@ -33,6 +47,9 @@ function installationProvider(mintAccessToken: () => Promise<string>) {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  db.$transaction.mockImplementation((run: (tx: unknown) => unknown) =>
+    run(db),
+  );
 });
 
 describe("K1 the credential a connection turns into", () => {
@@ -88,6 +105,14 @@ describe("K2 a connection revoked on the provider's side", () => {
     ];
     expect(args.where.integrationId).toBe("conn_1");
     expect(args.data.warning).toMatch(/GITHUB integration was disconnected/);
+  });
+
+  it("K2 gives up both halves together if either fails", async () => {
+    db.$transaction.mockRejectedValue(new Error("deadlock"));
+
+    await expect(resolveConnectionToken(INSTALLED)).rejects.toThrow("deadlock");
+    expect(db.notebookSource.updateMany).not.toHaveBeenCalled();
+    expect(db.integrationConnection.deleteMany).not.toHaveBeenCalled();
   });
 
   it("K2 says so in its own application code, so the client can explain", async () => {

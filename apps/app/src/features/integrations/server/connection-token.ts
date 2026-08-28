@@ -44,8 +44,15 @@ async function forgetRevokedConnection(
   connection: ConnectionCredential,
   providerId: IntegrationProviderId,
 ): Promise<void> {
-  await detachSourcesFromConnection(connection.id, providerId, "disconnected");
-  await db.integrationConnection.deleteMany({ where: { id: connection.id } });
+  await db.$transaction(async (tx) => {
+    await detachSourcesFromConnection(
+      connection.id,
+      providerId,
+      "disconnected",
+      tx,
+    );
+    await tx.integrationConnection.deleteMany({ where: { id: connection.id } });
+  });
 }
 
 export async function resolveConnectionToken(

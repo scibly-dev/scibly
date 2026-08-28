@@ -217,6 +217,22 @@ describe("GH5 the minted token", () => {
     ).rejects.toBeInstanceOf(IntegrationRevokedError);
   });
 
+  it("GH5 asks the app whether the installation is really gone before saying so", async () => {
+    // Acting on "revoked" deletes the connection and detaches every source
+    // hanging off it, so a mint that 404s while the installation is still
+    // listed stays an ordinary failure.
+    fetchMock
+      .mockResolvedValueOnce(failed(404, { message: "Not Found" }))
+      .mockResolvedValueOnce(ok({ id: 42, account: { id: 7, login: "acme" } }));
+
+    await expect(
+      new GitHubProvider().mintAccessToken("42"),
+    ).rejects.not.toBeInstanceOf(IntegrationRevokedError);
+    expect(lastRequest().url).toBe(
+      "https://api.github.com/app/installations/42",
+    );
+  });
+
   it("GH5 leaves every other refusal to the caller as an ordinary failure", async () => {
     fetchMock.mockResolvedValue(failed(403, { message: "Forbidden" }));
 
