@@ -2,13 +2,13 @@ import { ChartNoAxesColumn } from "lucide-react";
 
 import { CORRECT_KEY } from "@/app/[lang]/components/marketing-tokens";
 
-import { type ProgressCopy } from "../../i18n/onboarding-offboarding.types";
 import { enter, HAIRLINE, MUTED } from "../mock/mock-theme";
 import { MockWindow } from "../mock/mock-window";
 import { FlowMockBar } from "./flow-mock-bar";
+import { type ProgressDictionary } from "./i18n/onboarding-flow.types";
 import { FLOW_TONE } from "./onboarding-flow-tone";
 
-export function ProgressMock({ t }: { t: ProgressCopy }) {
+export function ProgressMock({ t }: { t: ProgressDictionary }) {
   return (
     <MockWindow>
       <FlowMockBar

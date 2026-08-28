@@ -139,7 +139,7 @@ export function Navbar({ t }: NavbarProps) {
               ),
           )}
         >
-          <div className="flex min-w-0 items-center md:flex-1">
+          <div className="flex shrink-0 items-center md:min-w-0 md:flex-1">
             <Link
               href={`/${locale}`}
               className="text-ink text-[clamp(20px,5vw,23px)] font-medium tracking-[-0.02em] no-underline"
@@ -286,7 +286,7 @@ export function Navbar({ t }: NavbarProps) {
           <div className="flex items-center gap-2.5 md:hidden">
             <a
               href={routes.app.auth.signIn}
-              className="text-ink-muted hover:text-ink px-1 text-[14.5px] font-medium whitespace-nowrap no-underline transition-colors"
+              className="text-ink-muted hover:text-ink hidden px-1 text-[14.5px] font-medium whitespace-nowrap no-underline transition-colors sm:inline"
             >
               {t.signIn}
             </a>
@@ -358,6 +358,12 @@ export function Navbar({ t }: NavbarProps) {
               ) : null}
             </Fragment>
           ))}
+          <a
+            href={routes.app.auth.signIn}
+            className={cn(mobileItemClass(false), "sm:hidden")}
+          >
+            {t.signIn}
+          </a>
           <div className="mx-3.5 my-2 h-px bg-[#e6eaf5]" />
           <div className="flex items-center gap-4 px-3.5 py-2">
             <a

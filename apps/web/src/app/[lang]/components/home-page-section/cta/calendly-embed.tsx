@@ -5,7 +5,7 @@ import { useCallback, useState } from "react";
 
 const CALENDLY_CSS = "https://assets.calendly.com/assets/external/widget.css";
 const CALENDLY_JS = "https://assets.calendly.com/assets/external/widget.js";
-const DEFAULT_DEMO_URL = "https://calendly.com/felix-kuennecke/scibly-demo";
+const CALENDLY_DEMO_URL = "https://calendly.com/felix-kuennecke/scibly-demo";
 
 declare global {
   interface Window {
@@ -24,13 +24,13 @@ function ensureCalendlyStylesheet() {
   document.head.appendChild(link);
 }
 
-export function useCalendlyPopup(url: string = DEFAULT_DEMO_URL) {
+export function useCalendlyPopup() {
   const [scriptReady, setScriptReady] = useState(false);
 
   const openCalendly = useCallback(() => {
     if (!window.Calendly) return;
-    window.Calendly.initPopupWidget({ url });
-  }, [url]);
+    window.Calendly.initPopupWidget({ url: CALENDLY_DEMO_URL });
+  }, []);
 
   // Stylesheet is injected when the lazyOnload script arrives: after the
   // landing page's own bytes, but before any human can click — injecting at

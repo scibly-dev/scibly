@@ -2,12 +2,12 @@ import { Check, ListChecks } from "lucide-react";
 
 import { CORRECT_KEY } from "@/app/[lang]/components/marketing-tokens";
 
-import { type ChecklistCopy } from "../../i18n/onboarding-offboarding.types";
 import { enter, FAINT, HAIRLINE, MUTED } from "../mock/mock-theme";
 import { MockWindow } from "../mock/mock-window";
 import { FlowMockBar } from "./flow-mock-bar";
+import { type ChecklistDictionary } from "./i18n/onboarding-flow.types";
 
-function numberStepsAcrossGroups(groups: ChecklistCopy["groups"]) {
+function numberStepsAcrossGroups(groups: ChecklistDictionary["groups"]) {
   let stepsBefore = 0;
   return groups.map((group) => {
     const items = group.items.map((item, index) => ({
@@ -19,7 +19,7 @@ function numberStepsAcrossGroups(groups: ChecklistCopy["groups"]) {
   });
 }
 
-export function ChecklistMock({ t }: { t: ChecklistCopy }) {
+export function ChecklistMock({ t }: { t: ChecklistDictionary }) {
   const groups = numberStepsAcrossGroups(t.groups);
 
   return (

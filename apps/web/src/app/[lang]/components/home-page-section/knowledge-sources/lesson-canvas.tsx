@@ -10,15 +10,15 @@ import {
 import { CORRECT_KEY, tint } from "@/app/[lang]/components/marketing-tokens";
 import { BrandLogo } from "@/components/brand-logo";
 
-import {
-  type KnowledgeCopy,
-  type LessonCopy,
-} from "../../i18n/onboarding-offboarding.types";
 import { MockQuizCard } from "../mock/mock-quiz-card";
 import { enter, FAINT, MUTED } from "../mock/mock-theme";
 import { MockWindow } from "../mock/mock-window";
 import { MockWindowBar } from "../mock/mock-window-bar";
 import { CardCanvas } from "./card-canvas";
+import {
+  type KnowledgeDictionary,
+  type LessonDictionary,
+} from "./i18n/knowledge-sources.types";
 import {
   INTERVIEW_TONE,
   LESSON_TONE,
@@ -30,8 +30,8 @@ export function LessonCanvas({
   knowledge,
   t,
 }: {
-  knowledge: KnowledgeCopy;
-  t: LessonCopy;
+  knowledge: KnowledgeDictionary;
+  t: LessonDictionary;
 }) {
   const facts = [
     {

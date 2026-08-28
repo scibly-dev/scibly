@@ -1,0 +1,105 @@
+{
+  "onboardingFlow": {
+    "eyebrow": "Onboarding mit Scibly",
+    "title": "Der schnellste Weg zur Produktivität",
+    "subtitle": "Struktur, Fortschritt, Rückfragen und Kontext an einem Ort. Vom Zugang am ersten Tag bis zum Verständnis dafür, wie Dinge im Unternehmen funktionieren und warum sie so gehandhabt werden.",
+    "checklist": {
+      "title": "Strukturierte Onboarding-Liste",
+      "description": "Jeder Schritt steht fest, mit Ansprechpartner, Frist und allen Informationen, die dazugehören. Niemand muss raten, was als Nächstes kommt.",
+      "windowTitle": "Onboarding · Vertrieb",
+      "stepCount": "12 Schritte",
+      "groups": [
+        {
+          "label": "Vor dem ersten Tag",
+          "items": [
+            {
+              "label": "Laptop und Zugänge bestellt",
+              "meta": "IT",
+              "done": true
+            },
+            {
+              "label": "Arbeitsplatz eingerichtet",
+              "meta": "Office",
+              "done": true
+            }
+          ]
+        },
+        {
+          "label": "Tag 1",
+          "items": [
+            {
+              "label": "Willkommen im Team",
+              "meta": "Mia",
+              "done": true
+            },
+            {
+              "label": "VPN und SSO einrichten",
+              "meta": "IT · bis 17:00",
+              "done": false
+            }
+          ]
+        },
+        {
+          "label": "Woche 1",
+          "items": [
+            {
+              "label": "Kurs: Sicherheitsrichtlinie",
+              "meta": "8 Lektionen",
+              "done": false
+            }
+          ]
+        }
+      ]
+    },
+    "progress": {
+      "title": "Fortschritt wird getrackt",
+      "description": "Team Leads und Admins haben jederzeit den Überblick über den Stand des Onboardings und erkennen direkt, wenn jemand Unterstützung benötigt.",
+      "windowTitle": "Team-Übersicht · Vertrieb",
+      "assignedLabel": "3 im Onboarding",
+      "people": [
+        {
+          "name": "Lena M.",
+          "initials": "LM",
+          "status": "12 von 12 Schritten",
+          "progress": 100
+        },
+        {
+          "name": "Jonas B.",
+          "initials": "JB",
+          "status": "5 von 12 Schritten",
+          "progress": 42
+        },
+        {
+          "name": "Aylin K.",
+          "initials": "AK",
+          "status": "0 von 12 Schritten",
+          "progress": 0
+        }
+      ]
+    },
+    "questions": {
+      "title": "Rückfragen und Feedback",
+      "description": "Neue Mitarbeiter können direkt im Onboarding Flow Fragen zu einzelnen Schritten stellen oder festhalten, was noch unklar ist. So verbessert sich das Onboarding mit jedem neuen Teammitglied.",
+      "windowTitle": "Schritt 4 · VPN einrichten",
+      "learnerName": "Jonas",
+      "learnerInitials": "JB",
+      "question": "Wo finde ich den VPN-Zugang für macOS?",
+      "aiName": "Scibly KI",
+      "answer": "Im Self-Service-Portal unter Geräte. Die IT gibt den Antrag automatisch frei.",
+      "feedbackLabel": "Feedback",
+      "feedbackText": "Der Schritt sagt nicht, wo der Zugang liegt.",
+      "improvedLabel": "Schritt ergänzt"
+    },
+    "course": {
+      "title": "Kurse statt Schritt-für-Schritt-Anleitung",
+      "description": "Scibly erklärt nicht nur, was zu tun ist, sondern warum. Neue Mitarbeiter verstehen die Werkzeuge und Entscheidungen des Unternehmens, statt eine Anleitung abzuarbeiten.",
+      "lessonEyebrow": "Lektion 2 von 8",
+      "lessonTitle": "Warum Angebote zuerst ins CRM gehen",
+      "whyLabel": "Warum",
+      "whyText": "Ohne CRM-Eintrag fehlt der Forecast, und das Team sieht nicht, welche Deals wirklich laufen.",
+      "quizQuestion": "Ein Kunde sagt am Telefon zu. Was zuerst?",
+      "quizOptionWrong": "Vertrag direkt rausschicken",
+      "quizOptionRight": "Deal im CRM anlegen, dann Vertrag"
+    }
+  }
+}

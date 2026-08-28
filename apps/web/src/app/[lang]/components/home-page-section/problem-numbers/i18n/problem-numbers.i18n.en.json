@@ -1,0 +1,26 @@
+{
+  "problemNumbers": {
+    "eyebrow": "The problem in numbers",
+    "title": "When an employee leaves the company, their knowledge leaves with them.",
+    "problemLabel": "The problem",
+    "problemBody": "Every employee who leaves takes undocumented knowledge with them: the exceptions, the rules of thumb, the reasons behind decisions. What stays behind is longer ramp-up, repeated mistakes, and questions nobody can answer any more.",
+    "stats": [
+      {
+        "value": "$31B",
+        "label": "annual cost of knowledge loss"
+      },
+      {
+        "value": "92%",
+        "label": "of organizations do not consistently capture knowledge from departing employees"
+      },
+      {
+        "value": "3–6 months",
+        "label": "until new hires reach the productivity of their peers"
+      },
+      {
+        "value": "50–200%",
+        "label": "of annual salary is the cost of replacing a single employee"
+      }
+    ]
+  }
+}

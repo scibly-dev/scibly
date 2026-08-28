@@ -8,15 +8,15 @@ import {
 } from "@/app/[lang]/components/marketing-section-content";
 import { useInViewOnce } from "@/components/in-view-reveal";
 
-import { type OnboardingFlowCopy } from "../../i18n/onboarding-offboarding.types";
 import { ChecklistMock } from "./checklist-mock";
 import { CourseMock } from "./course-mock";
 import { FlowWell } from "./flow-well";
+import { type OnboardingFlowDictionary } from "./i18n/onboarding-flow.types";
 import { OnboardingFlowBlurb } from "./onboarding-flow-blurb";
 import { ProgressMock } from "./progress-mock";
 import { QuestionsMock } from "./questions-mock";
 
-export function OnboardingFlowSection({ t }: { t: OnboardingFlowCopy }) {
+export function OnboardingFlowSection({ t }: { t: OnboardingFlowDictionary }) {
   const { ref, inView } = useInViewOnce<HTMLElement>(0.12);
 
   return (

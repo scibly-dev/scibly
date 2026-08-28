@@ -37,6 +37,8 @@ export default async function RootLayout(
   return (
     <html
       className={`${GeistSans.variable} ${hankenGrotesk.variable} ${instrumentSerif.variable} relative`}
+      /* Browser extensions (e.g. remote-desktop tooling) inject attributes on <html> before hydration. */
+      suppressHydrationWarning
     >
       <body suppressHydrationWarning>
         <DeferredSciblyPostHogProvider surface="web">

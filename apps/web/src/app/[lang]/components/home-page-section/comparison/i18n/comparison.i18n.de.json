@@ -9,6 +9,18 @@
       },
       "rows": [
         {
+          "kind": "learner",
+          "label": "Onboarding",
+          "legacy": "Checkliste in Tabelle oder PDF",
+          "scibly": "Geführtes Onboarding mit Fortschritt und Rückfragen, das mit jedem Teammitglied besser wird."
+        },
+        {
+          "kind": "import",
+          "label": "Wissenstransfer",
+          "legacy": "Wissen geht mit dem Mitarbeiter",
+          "scibly": "Wissen wird kontinuierlich gesichert"
+        },
+        {
           "kind": "import",
           "label": "Kurserstellung",
           "legacy": "Manueller Aufbau",

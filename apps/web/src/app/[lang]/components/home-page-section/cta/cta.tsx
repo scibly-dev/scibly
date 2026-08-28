@@ -21,7 +21,6 @@ import { type CtaDictionary } from "./i18n/cta.types";
 
 interface CtaSectionProps {
   t: CtaDictionary;
-  calendlyUrl?: string;
 }
 
 const FLOATING_CHAPTERS: Array<{
@@ -55,11 +54,10 @@ const FLOATING_CHAPTERS: Array<{
   },
 ];
 
-export function CtaSection({ t, calendlyUrl }: CtaSectionProps) {
+export function CtaSection({ t }: CtaSectionProps) {
   const params = useParams();
   const locale = typeof params.lang === "string" ? params.lang : "de";
-  const { openCalendly, scriptReady, calendlyScript } =
-    useCalendlyPopup(calendlyUrl);
+  const { openCalendly, scriptReady, calendlyScript } = useCalendlyPopup();
 
   useEffect(() => {
     if (window.location.hash !== "#cta-section") return;

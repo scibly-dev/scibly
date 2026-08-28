@@ -7,13 +7,13 @@ import {
 } from "@/app/[lang]/components/marketing-tokens";
 import { SciblyMark } from "@/components/brand-logo";
 
-import { type QuestionsCopy } from "../../i18n/onboarding-offboarding.types";
 import { enter, HAIRLINE, MUTED } from "../mock/mock-theme";
 import { MockWindow } from "../mock/mock-window";
 import { FlowMockBar } from "./flow-mock-bar";
+import { type QuestionsDictionary } from "./i18n/onboarding-flow.types";
 import { FLOW_TONE } from "./onboarding-flow-tone";
 
-export function QuestionsMock({ t }: { t: QuestionsCopy }) {
+export function QuestionsMock({ t }: { t: QuestionsDictionary }) {
   return (
     <MockWindow>
       <FlowMockBar

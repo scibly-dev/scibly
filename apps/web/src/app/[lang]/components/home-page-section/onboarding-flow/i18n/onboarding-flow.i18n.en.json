@@ -1,0 +1,105 @@
+{
+  "onboardingFlow": {
+    "eyebrow": "Onboarding with Scibly",
+    "title": "The fastest path to productivity",
+    "subtitle": "Structure, progress, questions and context in one place. From day-one access to understanding how things work in the company and why they are done that way.",
+    "checklist": {
+      "title": "A structured onboarding list",
+      "description": "Every step is defined, with an owner, a deadline and all the information that belongs to it. Nobody has to guess what comes next.",
+      "windowTitle": "Onboarding · Sales",
+      "stepCount": "12 steps",
+      "groups": [
+        {
+          "label": "Before day one",
+          "items": [
+            {
+              "label": "Laptop and accounts ordered",
+              "meta": "IT",
+              "done": true
+            },
+            {
+              "label": "Desk set up",
+              "meta": "Office",
+              "done": true
+            }
+          ]
+        },
+        {
+          "label": "Day 1",
+          "items": [
+            {
+              "label": "Welcome to the team",
+              "meta": "Mia",
+              "done": true
+            },
+            {
+              "label": "Set up VPN and SSO",
+              "meta": "IT · by 5pm",
+              "done": false
+            }
+          ]
+        },
+        {
+          "label": "Week 1",
+          "items": [
+            {
+              "label": "Course: security policy",
+              "meta": "8 lessons",
+              "done": false
+            }
+          ]
+        }
+      ]
+    },
+    "progress": {
+      "title": "Progress is tracked",
+      "description": "Team leads and admins have a complete view of onboarding progress at any time, and see immediately when someone needs support.",
+      "windowTitle": "Team overview · Sales",
+      "assignedLabel": "3 onboarding",
+      "people": [
+        {
+          "name": "Lena M.",
+          "initials": "LM",
+          "status": "12 of 12 steps",
+          "progress": 100
+        },
+        {
+          "name": "Jonas B.",
+          "initials": "JB",
+          "status": "5 of 12 steps",
+          "progress": 42
+        },
+        {
+          "name": "Aylin K.",
+          "initials": "AK",
+          "status": "0 of 12 steps",
+          "progress": 0
+        }
+      ]
+    },
+    "questions": {
+      "title": "Questions and feedback",
+      "description": "New hires can ask questions about individual steps right inside the onboarding flow, or note down what is still unclear. That way onboarding improves with every new team member.",
+      "windowTitle": "Step 4 · Set up VPN",
+      "learnerName": "Jonas",
+      "learnerInitials": "JB",
+      "question": "Where do I find the macOS VPN profile?",
+      "aiName": "Scibly AI",
+      "answer": "In the self-service portal under Devices. IT approves the request automatically.",
+      "feedbackLabel": "Feedback",
+      "feedbackText": "The step doesn't say where the profile lives.",
+      "improvedLabel": "Step updated"
+    },
+    "course": {
+      "title": "Courses, not a step-by-step manual",
+      "description": "Scibly explains not just what to do but why. New hires understand the company's tools and decisions instead of working through a checklist blind.",
+      "lessonEyebrow": "Lesson 2 of 8",
+      "lessonTitle": "Why deals go into the CRM first",
+      "whyLabel": "Why",
+      "whyText": "Without a CRM entry the forecast is wrong, and the team cannot see which deals are actually live.",
+      "quizQuestion": "A customer says yes on the phone. What first?",
+      "quizOptionWrong": "Send the contract right away",
+      "quizOptionRight": "Create the deal in the CRM, then the contract"
+    }
+  }
+}

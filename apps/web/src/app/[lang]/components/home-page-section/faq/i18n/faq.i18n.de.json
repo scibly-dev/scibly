@@ -5,39 +5,29 @@
     "subtitle": "Hier sind einige der am häufigsten gestellten Fragen. Falls du weitere Fragen hast, wende dich gerne an team@scibly.com.",
     "questions": [
       {
-        "id": "lms-migration",
-        "q": "Wie aufwendig ist der Wechsel von einem bestehenden LMS?",
-        "a": "Sehr gering. Du lädst deine bestehenden Inhalte einfach hoch und die KI erstellt daraus automatisch strukturierte, interaktive Mikrolektionen. Statt einer reinen Migration entsteht so mit minimalem Aufwand ein echtes Qualitätsupgrade deiner Lerninhalte."
+        "id": "what-is-scibly",
+        "q": "Was ist Scibly?",
+        "a": "Scibly macht Wissen aus den Köpfen eurer Experten für das ganze Unternehmen zugänglich. Aus bestehendem Wissen entstehen automatisch aktuelle Dokumentationen und Kurse sowie rollenbasierte Onboarding-Programme. So wird Wissen besser verteilt und neue Mitarbeitende schneller eingearbeitet."
       },
       {
-        "id": "ai-analytics",
-        "q": "Wie unterscheiden sich die KI Analysen von einem klassischen LMS?",
-        "a": "Neben dem Lernfortschritt siehst du, bei welchen Themen Wissenslücken entstehen. Du kannst Fragen in Alltagssprache stellen und erhältst konkrete Auswertungen auf Themenebene."
+        "id": "how-does-scibly-work",
+        "q": "Wie funktioniert Scibly?",
+        "a": "Scibly führt geführte Interviews mit euren Fachleuten und erschließt Wissen aus Quellen wie Slack, Code Reviews, Tickets und Dokumenten. Daraus entsteht eine Wissensbasis mit Quellenangaben, aus der sich Kurse und rollenbasierte Onboardings erstellen lassen. Zusätzlich können neue Teammitglieder direkt im Onboarding Fragen stellen und Feedback geben, wodurch sich das Onboarding automatisiert kontinuierlich verbessert."
       },
       {
         "id": "data-security",
-        "q": "Wie sicher sind meine Unternehmensdaten?",
-        "a": "Alle Daten werden DSGVO konform in der EU verarbeitet und verschlüsselt gespeichert. Deine Inhalte werden niemals für das Training von KI Modellen verwendet. Das ist für uns keine Option, keine Grauzone. Hast du spezifische Sicherheitsanforderungen? Meld dich einfach, wir gehen sie gerne mit dir durch."
+        "q": "Wie sicher sind meine Daten?",
+        "a": "Scibly ist DSGVO-konform und nutzt ausschließlich in der EU gehostete Modelle. Deine Daten werden weder für das Training von KI-Modellen verwendet noch an Dritte weitergegeben und sind sowohl bei der Übertragung als auch bei der Speicherung verschlüsselt. Für maximale Kontrolle kannst du Scibly außerdem selbst hosten, denn Scibly ist Open Source."
       },
       {
-        "id": "customize-ai-courses",
-        "q": "Kann ich KI generierte Kurse anpassen?",
-        "a": "Ja. Die KI erstellt einen fundierten Erstentwurf, den du im interaktiven Editor vollständig anpassen kannst, von Inhalten über Struktur bis hin zu eigenen Medien."
+        "id": "getting-started",
+        "q": "Wie schnell sind wir startklar?",
+        "a": "Nachdem Scibly mit bestehenden Tools wie Slack, GitHub oder Notion verbunden wurde, beginnt die Wissensextraktion automatisch. Aus dem gewonnenen Wissen lassen sich zusätzlich mit unserem KI-Agenten innerhalb weniger Minuten interaktive Kurse und Onboardings erstellen."
       },
       {
-        "id": "microlearning",
-        "q": "Was bedeutet Microlearning bei euch?",
-        "a": "Wir setzen auf kurze, interaktive Lerneinheiten von 2-3 Minuten. So kann dein Team Lernen leichter in den Arbeitsalltag integrieren und Inhalte regelmäßig auffrischen."
-      },
-      {
-        "id": "flow-of-work",
-        "q": "Wie unterstützt scibly Lernen im Arbeitsfluss?",
-        "a": "Neben klassischen Kursen bringt scibly Lernen dorthin, wo dein Team ohnehin arbeitet, zum Beispiel in Slack oder Microsoft Teams. Mikrolektionen und Quizfragen lassen sich dort ohne zusätzlichen Login absolvieren."
-      },
-      {
-        "id": "bring-your-own-ai",
-        "q": "Kann ich eigene KI Modelle nutzen?",
-        "a": "Ja. Du kannst neben den bereitgestellten Modellen auch freigegebene, unternehmensinterne KI Modelle in scibly integrieren."
+        "id": "open-source",
+        "q": "Ist Scibly Open Source?",
+        "a": "Scibly ist Open Core: Der Großteil des Codes steht unter AGPLv3 auf GitHub, nur einzelne Enterprise-Funktionen sind davon ausgenommen. Du kannst das Repository klonen, den Stack auf deiner eigenen Infrastruktur starten und Scibly selbst hosten."
       }
     ]
   }

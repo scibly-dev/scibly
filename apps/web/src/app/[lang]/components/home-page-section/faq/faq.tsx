@@ -9,19 +9,9 @@ import {
   MarketingSection,
   MarketingSectionHeader,
 } from "@/app/[lang]/components/marketing-section-content";
-import { type PillarId } from "@/app/[lang]/components/marketing-tokens";
 import { FaqList } from "@/components/faq/faq-list";
 
 import { type FaqDictionary } from "./i18n/faq.types";
-
-const FAQ_CHAPTERS = new Map<string, PillarId>([
-  ["lms-migration", "import"],
-  ["ai-analytics", "analytics"],
-  ["customize-ai-courses", "byoai"],
-  ["microlearning", "learner"],
-  ["flow-of-work", "channels"],
-  ["bring-your-own-ai", "byoai"],
-]);
 
 const FAQ_INDENTS = [
   "top-[16%] left-[4%] hidden xl:block",
@@ -68,12 +58,7 @@ export function FaqSection({ t, locale }: FaqSectionProps) {
         className="lg:sticky lg:top-[120px]"
       />
 
-      <FaqList
-        questions={t.questions}
-        locale={locale}
-        context="homepage"
-        chapters={FAQ_CHAPTERS}
-      />
+      <FaqList questions={t.questions} locale={locale} context="homepage" />
     </MarketingSection>
   );
 }

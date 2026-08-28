@@ -1,0 +1,50 @@
+{
+  "knowledgeSources": {
+    "eyebrow": "Wissenstransfer mit Scibly",
+    "title": "Undokumentiertes Expertenwissen wird erfasst und für alle zugänglich und lernbar gemacht.",
+    "subtitle": "Das wertvollste Wissen steht in keinem Dokument. Es steckt in den Köpfen der Experten und geht mit ihnen. Scibly hält es fest, bevor es verloren geht.",
+    "capturedLabel": "Erfasst",
+    "interview": {
+      "title": "Interviews",
+      "description": "Dokumentationen halten fest, wie etwas funktioniert. Scibly fragt nach dem Rest: Ausnahmen, Faustregeln, Gründe hinter Entscheidungen.",
+      "timer": "14:32",
+      "aiName": "Scibly KI",
+      "listeningLabel": "Hört zu …",
+      "question": "Du hast Payment-Retries erwähnt. Was passiert bei einem Timeout?"
+    },
+    "artifacts": {
+      "title": "Die tägliche Arbeit liefert den Beleg",
+      "description": "Scibly extrahiert Wissen aus Slack-Nachrichten, Code-Reviews, Tickets und Docs und speichert jede Erkenntnis mit ihrer Quelle.",
+      "slackChannel": "#it-support",
+      "slackTime": "09:41",
+      "slackAuthor": "Mia",
+      "slackText": "Nie doppelt retryen, das übernimmt das Gateway.",
+      "codeFile": "payments/client.ts",
+      "codeReview": "Review",
+      "codeRemoved": "await retry(book, 3)",
+      "codeAdded": "await book()",
+      "codeComment": "Das Gateway retryt schon serverseitig.",
+      "ticketId": "INFRA-482",
+      "ticketStatus": "Gelöst",
+      "ticketTitle": "Doppelte Buchung nach Timeout",
+      "ticketCause": "Ursache: Client-Retry nach Timeout"
+    },
+    "lesson": {
+      "title": "Mehr als nur Wissensextraktion",
+      "description": "Das extrahierte Wissen wird nicht nur zentral gespeichert, sondern kann mit nur einem Knopfdruck automatisch in interaktive Lerneinheiten verwandelt werden.",
+      "lessonEyebrow": "Lektion 4 von 9",
+      "lessonTitle": "Payment-Retries richtig behandeln",
+      "quizQuestion": "Ein Request läuft in einen Timeout. Was jetzt?",
+      "quizOptionWrong": "Sofort neu buchen",
+      "quizOptionRight": "Buchungsstatus prüfen, nicht retryen",
+      "derivedLabel": "Daraus generiert"
+    },
+    "knowledge": {
+      "eyebrow": "Wissensbasis",
+      "title": "Payment-Retries",
+      "fact1": "Retries übernimmt ausschließlich das Gateway.",
+      "fact2": "Ein Timeout heißt nicht abgebrochen.",
+      "verifiedLabel": "3 Quellen · verifiziert"
+    }
+  }
+}
