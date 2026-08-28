@@ -133,6 +133,7 @@ const subscribedOrganization = (now: Date): Prisma.OrganizationWhereInput => ({
 export async function loadOwedConnections(
   lease: SyncLease,
   now: Date,
+  take: number = SYNC_HOP_CONNECTION_LIMIT,
 ): Promise<SyncConnection[]> {
   return db.integrationConnection.findMany({
     where: {
@@ -155,7 +156,7 @@ export async function loadOwedConnections(
       consecutiveFailures: true,
     },
     orderBy: { lastAttemptedAt: { sort: "asc", nulls: "first" } },
-    take: SYNC_HOP_CONNECTION_LIMIT,
+    take,
   });
 }
 
@@ -294,7 +295,16 @@ export async function runSyncHop(lease: SyncLease): Promise<SyncHopResult> {
       return { totals, continued: false };
     }
 
-    const connections = await loadOwedConnections(lease, new Date());
+    // One row more than the hop can poll: a surplus row means the chain still
+    // owes work, which is otherwise only knowable by asking a second time.
+    // Sound because every connection this hop touches gets `lastAttemptedAt`
+    // set to now, which the query's `lt: chainStartedAt` filter then excludes.
+    const owed = await loadOwedConnections(
+      lease,
+      new Date(),
+      SYNC_HOP_CONNECTION_LIMIT + 1,
+    );
+    const connections = owed.slice(0, SYNC_HOP_CONNECTION_LIMIT);
     let deadlineReached = false;
     for (const connection of connections) {
       await pollConnection(connection, totals);
@@ -304,10 +314,9 @@ export async function runSyncHop(lease: SyncLease): Promise<SyncHopResult> {
       }
     }
 
-    const owed = deadlineReached
-      ? true
-      : (await loadOwedConnections(lease, new Date())).length > 0;
-    if (!owed) {
+    const stillOwed =
+      deadlineReached || owed.length > SYNC_HOP_CONNECTION_LIMIT;
+    if (!stillOwed) {
       await releaseSyncLease(lease);
       return { totals, continued: false };
     }

@@ -83,10 +83,21 @@ function connection(overrides: Partial<Connection> = {}): Connection {
   };
 }
 
-function owed(batch: Connection[], remaining: Connection[] = []): void {
-  db.integrationConnection.findMany
-    .mockResolvedValueOnce(batch)
-    .mockResolvedValueOnce(remaining);
+// A hop asks once, for one connection more than it can poll; anything past
+// that limit is the surplus that tells it the chain still owes work.
+function owed(batch: Connection[], surplus: Connection[] = []): void {
+  db.integrationConnection.findMany.mockResolvedValue([...batch, ...surplus]);
+}
+
+// The shape that makes a hop hand the chain on: as much work as it can take,
+// and one more connection it will not reach.
+function owedPastTheLimit(unreached: Connection): void {
+  owed(
+    Array.from({ length: SYNC_HOP_CONNECTION_LIMIT }, (_, index) =>
+      connection({ id: `conn-${index}` }),
+    ),
+    [unreached],
+  );
 }
 
 function sources(...rows: { id: string; externalId: string | null }[]): void {
@@ -510,8 +521,7 @@ describe("KW2/KF2/KF3/KF4: what an attempt writes down", () => {
   });
 
   it("KW3: a connection the hop never reached keeps its watermark", async () => {
-    const unreached = connection({ id: "conn-later" });
-    owed([connection()], [unreached]);
+    owedPastTheLimit(connection({ id: "conn-later" }));
     sources({ id: "src-a", externalId: "page-a" });
 
     await runSyncHop(LEASE);
@@ -651,7 +661,7 @@ describe("KC2/KC3: the singleton lease", () => {
 
 describe("KC1/KC5/KC6: how a chain ends", () => {
   it("hands the lease to a fresh invocation while a connection is still owed", async () => {
-    owed([connection()], [connection({ id: "conn-later" })]);
+    owedPastTheLimit(connection({ id: "conn-later" }));
     sources({ id: "src-a", externalId: "page-a" });
 
     const { continued } = await runSyncHop(LEASE);
@@ -699,6 +709,27 @@ describe("KC1/KC5/KC6: how a chain ends", () => {
     expect(db.integrationConnection.findMany).toHaveBeenCalledTimes(1);
   });
 
+  it("asks which connections are owed once per hop, not once per decision", async () => {
+    owedPastTheLimit(connection({ id: "conn-later" }));
+    sources({ id: "src-a", externalId: "page-a" });
+
+    const { continued } = await runSyncHop(LEASE);
+
+    expect(continued).toBe(true);
+    expect(db.integrationConnection.findMany).toHaveBeenCalledTimes(1);
+  });
+
+  it("polls no more than a hop's worth, however many the query returns", async () => {
+    owedPastTheLimit(connection({ id: "conn-later" }));
+    sources({ id: "src-a", externalId: "page-a" });
+
+    const { totals } = await runSyncHop(LEASE);
+
+    expect(totals.polled).toBe(SYNC_HOP_CONNECTION_LIMIT);
+    const [args] = db.integrationConnection.findMany.mock.calls[0];
+    expect(args.take).toBe(SYNC_HOP_CONNECTION_LIMIT + 1);
+  });
+
   it("KC5: stops loudly at the runaway backstop rather than chaining forever", async () => {
     const { totals, continued } = await runSyncHop({
       ...LEASE,
@@ -726,7 +757,7 @@ describe("KC1/KC5/KC6: how a chain ends", () => {
   });
 
   it("does not lose the remaining connections when the handoff cannot be delivered", async () => {
-    owed([connection()], [connection({ id: "conn-later" })]);
+    owedPastTheLimit(connection({ id: "conn-later" }));
     sources({ id: "src-a", externalId: "page-a" });
     fetchMock.mockRejectedValue(new Error("ECONNREFUSED"));
 
