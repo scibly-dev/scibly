@@ -4,6 +4,7 @@ import type { OrgSettingsPage } from "@/features/organizations/contracts";
 
 import { SettingsCard } from "@/shared/ui/settings-card";
 
+import { DisconnectIntegrationDialog } from "./disconnect-integration-dialog";
 import { ProviderRow } from "./provider-row";
 import { useOrgIntegrations } from "./use-org-integrations";
 
@@ -24,7 +25,11 @@ export function OrgIntegrationsCard({
     isConnectPending,
     isBusy,
     connect,
-    disconnect,
+    pendingDisconnect,
+    askToDisconnect,
+    cancelDisconnect,
+    confirmDisconnect,
+    isConfirmingDisconnect,
   } = useOrgIntegrations({ orgSlug, lang, t });
 
   return (
@@ -43,7 +48,7 @@ export function OrgIntegrationsCard({
               isBusy={isBusy(p.providerId)}
               isConnectPending={isConnectPending}
               t={t}
-              onDisconnect={() => disconnect(p.providerId)}
+              onDisconnect={() => askToDisconnect(p.providerId)}
               onConnect={() => connect(p.providerId)}
             />
           );
@@ -55,6 +60,13 @@ export function OrgIntegrationsCard({
           </p>
         )}
       </div>
+      <DisconnectIntegrationDialog
+        provider={pendingDisconnect}
+        isConfirming={isConfirmingDisconnect}
+        onConfirm={confirmDisconnect}
+        onClose={cancelDisconnect}
+        t={t}
+      />
     </SettingsCard>
   );
 }

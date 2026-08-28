@@ -116,6 +116,7 @@
       "description": "Verbinde externe Dienste mit deiner Organisation — Wissensdatenbanken, aus denen KI-Creator-Notebooks Seiten importieren, und Code-Hosts, die Scibly lesen kann.",
       "connectButton": "Verbinden",
       "disconnectButton": "Trennen",
+      "cancelButton": "Abbrechen",
       "connectedStatus": "Verbunden",
       "notConnectedStatus": "Nicht verbunden",
       "workspaceLabel": "Workspace",

@@ -116,6 +116,7 @@
       "description": "Connect external services to your organization — knowledge bases AI Creator notebooks can import pages from, and code hosts scibly can read.",
       "connectButton": "Connect",
       "disconnectButton": "Disconnect",
+      "cancelButton": "Cancel",
       "connectedStatus": "Connected",
       "notConnectedStatus": "Not connected",
       "workspaceLabel": "Workspace",

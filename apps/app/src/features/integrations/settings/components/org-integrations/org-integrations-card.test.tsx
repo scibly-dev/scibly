@@ -45,6 +45,9 @@ const t = {
   description: "Connect the systems your material lives in.",
   connectButton: "Connect",
   disconnectButton: "Disconnect",
+  cancelButton: "Keep it",
+  confirmDisconnectTitle: "Disconnect integration?",
+  confirmDisconnectDescription: "Sources stay; re-syncing stops.",
   connectedStatus: "Connected",
   notConnectedStatus: "Not connected",
   disconnectedSuccessfully: "Disconnected.",
@@ -87,6 +90,16 @@ const card = () =>
 
 const button = (container: HTMLElement, label: string) =>
   container.querySelector<HTMLButtonElement>(`button[aria-label="${label}"]`);
+
+// The confirmation is portalled out of the card, so it is found on the page
+// rather than inside it.
+const dialog = () =>
+  document.body.querySelector<HTMLElement>("[role='alertdialog']");
+
+const inDialog = (label: string) =>
+  Array.from(dialog()?.querySelectorAll("button") ?? []).find(
+    (candidate) => candidate.textContent === label,
+  );
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -156,13 +169,56 @@ describe("what a click asks for", () => {
     );
   });
 
-  it("asks to disconnect the provider whose row was clicked", () => {
+  it("asks before disconnecting rather than disconnecting", () => {
     lists([NOTION], [{ provider: "NOTION", workspaceName: "Acme HQ" }]);
 
     fireEvent.click(button(card(), "Disconnect Notion")!);
 
+    expect(dialog()?.textContent).toContain("Disconnect integration?");
+    expect(disconnectMutate).not.toHaveBeenCalled();
+  });
+
+  it("disconnects the provider the confirmation was opened for", () => {
+    lists([NOTION], [{ provider: "NOTION", workspaceName: "Acme HQ" }]);
+    fireEvent.click(button(card(), "Disconnect Notion")!);
+
+    fireEvent.click(inDialog("Disconnect")!);
+
     expect(disconnectMutate).toHaveBeenCalledWith(
       { orgSlug: "acme", provider: "NOTION" },
+      expect.anything(),
+    );
+  });
+
+  it("disconnects nothing when the confirmation is refused", () => {
+    lists([NOTION], [{ provider: "NOTION", workspaceName: "Acme HQ" }]);
+    fireEvent.click(button(card(), "Disconnect Notion")!);
+
+    fireEvent.click(inDialog("Keep it")!);
+
+    expect(dialog()).toBeNull();
+    expect(disconnectMutate).not.toHaveBeenCalled();
+  });
+
+  // One dialog serves every row, so the provider it is asking about has to be
+  // the one just clicked, not the one clicked before.
+  it("asks about the row just clicked, not the row refused before it", () => {
+    lists(
+      [NOTION, GITHUB],
+      [
+        { provider: "NOTION", workspaceName: "Acme HQ" },
+        { provider: "GITHUB", workspaceName: "acme-inc" },
+      ],
+    );
+    const container = card();
+    fireEvent.click(button(container, "Disconnect Notion")!);
+    fireEvent.click(inDialog("Keep it")!);
+
+    fireEvent.click(button(container, "Disconnect GitHub")!);
+    fireEvent.click(inDialog("Disconnect")!);
+
+    expect(disconnectMutate).toHaveBeenCalledWith(
+      { orgSlug: "acme", provider: "GITHUB" },
       expect.anything(),
     );
   });
@@ -182,6 +238,7 @@ describe("a disconnect that failed", () => {
     const container = card();
 
     fireEvent.click(button(container, "Disconnect Notion")!);
+    fireEvent.click(inDialog("Disconnect")!);
 
     expect(button(container, "Disconnect Notion")?.disabled).toBe(true);
     expect(toastError).toHaveBeenCalledWith("provider said no");

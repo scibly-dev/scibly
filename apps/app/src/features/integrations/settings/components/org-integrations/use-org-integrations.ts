@@ -21,6 +21,11 @@ export function useOrgIntegrations({
 }) {
   const utils = api.useUtils();
   const [disconnectingId, setDisconnectingId] = useState<string | null>(null);
+  // Which provider the confirmation is being asked about. One piece of state
+  // for the whole card, so a second Disconnect click cannot open the dialog
+  // still holding the last provider.
+  const [pendingDisconnect, setPendingDisconnect] =
+    useState<IntegrationProviderId | null>(null);
 
   const { data } = api.integration.list.useQuery({ orgSlug });
 
@@ -35,6 +40,7 @@ export function useOrgIntegrations({
     onSuccess: () => {
       toast.success(t.disconnectedSuccessfully);
       setDisconnectingId(null);
+      setPendingDisconnect(null);
       void utils.integration.list.invalidate({ orgSlug });
     },
     onError: (err) => toast.error(err.message),
@@ -51,9 +57,14 @@ export function useOrgIntegrations({
       disconnectingId === provider || disconnectMutation.isPending,
     connect: (provider: IntegrationProviderId) =>
       getAuthUrlMutation.mutate({ orgSlug, provider, lang }),
-    disconnect: (provider: IntegrationProviderId) => {
-      setDisconnectingId(provider);
-      disconnectMutation.mutate({ orgSlug, provider });
+    pendingDisconnect,
+    askToDisconnect: setPendingDisconnect,
+    cancelDisconnect: () => setPendingDisconnect(null),
+    isConfirmingDisconnect: disconnectMutation.isPending,
+    confirmDisconnect: () => {
+      if (!pendingDisconnect) return;
+      setDisconnectingId(pendingDisconnect);
+      disconnectMutation.mutate({ orgSlug, provider: pendingDisconnect });
     },
   };
 }

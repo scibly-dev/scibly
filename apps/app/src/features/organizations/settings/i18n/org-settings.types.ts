@@ -116,6 +116,7 @@ export type OrgSettingsPage = {
     description: string;
     connectButton: string;
     disconnectButton: string;
+    cancelButton: string;
     connectedStatus: string;
     notConnectedStatus: string;
     workspaceLabel: string;
