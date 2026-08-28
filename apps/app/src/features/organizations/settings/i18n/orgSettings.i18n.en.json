@@ -112,8 +112,8 @@
       "byoaiLockedRemovalNote": "Removing an endpoint or switching back to Scibly AI stays available."
     },
     "integrations": {
-      "title": "Knowledge Source Integrations",
-      "description": "Connect external knowledge bases so AI Creator notebooks can import pages as RAG sources.",
+      "title": "Integrations",
+      "description": "Connect external services to your organization — knowledge bases AI Creator notebooks can import pages from, and code hosts scibly can read.",
       "connectButton": "Connect",
       "disconnectButton": "Disconnect",
       "connectedStatus": "Connected",
@@ -124,8 +124,14 @@
       "confirmDisconnectDescription": "Existing sources will remain in your notebooks, but re-sync will no longer work until you reconnect.",
       "disconnectedSuccessfully": "Integration disconnected.",
       "connectedSuccessfully": "Integration connected successfully.",
+      "grantsTitle": "Has access to",
+      "grantsLoading": "Loading access…",
+      "grantsEmpty": "This connection has not been given access to anything yet.",
+      "grantsError": "Couldn't load what this connection can reach.",
+      "revokedNotice": "This integration was removed on the provider's side, so the connection has been removed here too. Connect again to resume.",
       "providers": {
-        "NOTION": "Notion"
+        "NOTION": "Notion",
+        "GITHUB": "GitHub"
       }
     }
   }

@@ -1,24 +1,34 @@
-import type { IntegrationProviderId } from "../contracts";
+import type {
+  IntegrationProviderId,
+  PageIntegrationProviderId,
+} from "../contracts";
 
 import { AppError } from "@scibly/api/application-error";
 import { protectedProcedure } from "@scibly/api/trpc";
 import { db } from "@scibly/db";
 
 import { resolveOrg } from "@/features/organizations/server";
-import { decryptApiKey } from "@/lib/crypto/api-key";
 import { signOAuthState } from "@/lib/crypto/oauth-state";
 
+import { resolveConnectionToken } from "../server/connection-token";
 import { detachSourcesFromConnection } from "../server/detach-sources";
-import { getProvider, listProviders } from "../server/registry";
+import {
+  getPageProvider,
+  getProvider,
+  listProviders,
+} from "../server/registry";
 import {
   disconnectIntegrationSchema,
   getAuthUrlSchema,
+  listGrantsSchema,
   listPageChildrenSchema,
   orgSlugInput,
   searchPagesSchema,
 } from "./integration.schema";
 
-export async function resolveConnection(
+// No credential is touched here — enough for anything that only needs to know
+// the connection exists.
+export async function resolveConnectionRow(
   organizationId: string,
   providerId: IntegrationProviderId,
 ) {
@@ -34,11 +44,31 @@ export async function resolveConnection(
       message: `No ${providerId} integration connected for this organization.`,
     });
   }
+  return { connection, provider: getProvider(providerId) };
+}
+
+export async function resolveConnection(
+  organizationId: string,
+  providerId: IntegrationProviderId,
+) {
+  const resolved = await resolveConnectionRow(organizationId, providerId);
   return {
-    connection,
-    provider: getProvider(providerId),
-    token: decryptApiKey(connection.accessTokenEncrypted),
+    ...resolved,
+    token: await resolveConnectionToken(resolved.connection),
   };
+}
+
+// Page-shaped work goes through here instead: the provider it hands back is
+// one that has pages.
+export async function resolvePageConnection(
+  organizationId: string,
+  providerId: PageIntegrationProviderId,
+) {
+  const { connection, token } = await resolveConnection(
+    organizationId,
+    providerId,
+  );
+  return { connection, token, provider: getPageProvider(providerId) };
 }
 
 export const integrationConnectionProcedures = {
@@ -63,6 +93,7 @@ export const integrationConnectionProcedures = {
     const allProviders = listProviders().map((provider) => ({
       providerId: provider.providerId,
       displayName: provider.displayName,
+      listsGrants: provider.listsGrants,
     }));
     return { connections, allProviders };
   }),
@@ -111,6 +142,23 @@ export const integrationConnectionProcedures = {
       return { success: true };
     }),
 
+  // Its own procedure rather than part of `list`, so the settings page never
+  // waits on a provider that is slow or down.
+  listGrants: protectedProcedure
+    .input(listGrantsSchema)
+    .query(async ({ input, ctx }) => {
+      const { organization } = await resolveOrg(
+        input.orgSlug,
+        ctx.session.user.id,
+        "admin_or_owner",
+      );
+      const { provider, token } = await resolveConnection(
+        organization.id,
+        input.provider,
+      );
+      return { grants: await provider.listGrants(token) };
+    }),
+
   searchPages: protectedProcedure
     .input(searchPagesSchema)
     .query(async ({ input, ctx }) => {
@@ -119,7 +167,7 @@ export const integrationConnectionProcedures = {
         ctx.session.user.id,
         "admin_or_owner",
       );
-      const { provider, token } = await resolveConnection(
+      const { provider, token } = await resolvePageConnection(
         organization.id,
         input.provider,
       );
@@ -134,7 +182,7 @@ export const integrationConnectionProcedures = {
         ctx.session.user.id,
         "admin_or_owner",
       );
-      const { provider, token } = await resolveConnection(
+      const { provider, token } = await resolvePageConnection(
         organization.id,
         input.provider,
       );

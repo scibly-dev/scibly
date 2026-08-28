@@ -36,10 +36,15 @@ cp packages/db/.env.example packages/db/.env
 - `DATABASE_URL` in all four should point at the same database.
 - `apps/app/.env`'s schema (`apps/app/src/env.js`) validates required
   variables at build/dev time. For a minimal local run without every
-  third-party integration (AWS S3, Stripe, Notion, PostHog, ...), set
+  third-party integration (AWS S3, Stripe, Notion, GitHub, PostHog, ...), set
   `SKIP_ENV_VALIDATION=true` and leave those blank — the app boots, but
   features that depend on a missing credential (media uploads, billing,
   Notion import, ...) won't work until it's supplied.
+- `GITHUB_APP_SLUG`, `GITHUB_APP_ID`, and `GITHUB_APP_PRIVATE_KEY` are
+  required by that schema, like Notion's credentials. They come from a GitHub
+  App you register once per environment — see
+  [runbooks/github-app.md](runbooks/github-app.md), which covers the dev and
+  prod registrations and where each credential comes from.
 - `COLLAB_TOKEN_SECRET` must be the **same value** in `apps/app/.env` and
   `apps/collab/.env` (min. 32 characters) — it signs the short-lived token
   each editor session uses to open a collab room. Generate one with

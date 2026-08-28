@@ -1,6 +1,6 @@
 "use client";
 
-import type { IntegrationProviderId } from "@/features/integrations/contracts";
+import type { PageIntegrationProviderId } from "@/features/integrations/contracts";
 import type { RouterOutputs } from "@/shared/api/trpc/client";
 import type { NotebookTranslations } from "../i18n/notebook.types";
 
@@ -43,7 +43,7 @@ function useIntegrationPicker(
   ensureNotebook: () => Promise<string>,
 ) {
   const [pickerState, setPickerState] = useState<{
-    provider: IntegrationProviderId;
+    provider: PageIntegrationProviderId;
     notebookId: string;
   } | null>(null);
   const { data } = api.integration.list.useQuery(
@@ -67,7 +67,7 @@ function useIntegrationPicker(
       ),
     );
   }, [pickerState, sources]);
-  const open = (provider: IntegrationProviderId) => {
+  const open = (provider: PageIntegrationProviderId) => {
     if (atLimit) return;
     void ensureNotebook().then((notebookId) =>
       setPickerState({ provider, notebookId }),

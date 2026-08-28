@@ -112,8 +112,8 @@
       "byoaiLockedRemovalNote": "Einen Endpunkt zu entfernen oder zurück zu Scibly AI zu wechseln, bleibt möglich."
     },
     "integrations": {
-      "title": "Wissensquellen-Integrationen",
-      "description": "Verbinde externe Wissensdatenbanken, damit KI-Creator-Notebooks Seiten als RAG-Quellen importieren können.",
+      "title": "Integrationen",
+      "description": "Verbinde externe Dienste mit deiner Organisation — Wissensdatenbanken, aus denen KI-Creator-Notebooks Seiten importieren, und Code-Hosts, die Scibly lesen kann.",
       "connectButton": "Verbinden",
       "disconnectButton": "Trennen",
       "connectedStatus": "Verbunden",
@@ -124,8 +124,14 @@
       "confirmDisconnectDescription": "Bestehende Quellen bleiben in deinen Notebooks, aber die erneute Synchronisierung funktioniert erst wieder nach erneuter Verbindung.",
       "disconnectedSuccessfully": "Integration getrennt.",
       "connectedSuccessfully": "Integration erfolgreich verbunden.",
+      "grantsTitle": "Hat Zugriff auf",
+      "grantsLoading": "Zugriffe werden geladen …",
+      "grantsEmpty": "Diese Verbindung hat noch auf nichts Zugriff erhalten.",
+      "grantsError": "Die Zugriffe dieser Verbindung konnten nicht geladen werden.",
+      "revokedNotice": "Diese Integration wurde auf Anbieterseite entfernt, daher wurde die Verbindung auch hier entfernt. Verbinde erneut, um fortzufahren.",
       "providers": {
-        "NOTION": "Notion"
+        "NOTION": "Notion",
+        "GITHUB": "GitHub"
       }
     }
   }

@@ -1,15 +1,16 @@
 import type {
+  IntegrationCredential,
   IntegrationPage,
   IntegrationPageContent,
   IntegrationPageRevision,
-  OAuthTokens,
 } from "../../contracts";
+import type { ConnectCallbackParams } from "../base-provider";
 
 import { Client, isFullPage } from "@notionhq/client";
 
 import { env } from "@/env";
 
-import { BaseIntegrationProvider } from "../base-provider";
+import { PageIntegrationProvider } from "../base-provider";
 import {
   collectNotionChildPages,
   extractNotionPageIcon,
@@ -17,9 +18,10 @@ import {
   listNotionDatabasePages,
 } from "./notion-pages";
 
-export class NotionProvider extends BaseIntegrationProvider {
+export class NotionProvider extends PageIntegrationProvider {
   readonly providerId = "NOTION";
   readonly displayName = "Notion";
+  readonly credential = "oauth_tokens";
 
   getAuthUrl(state: string, redirectUri: string): string {
     const url = new URL("https://api.notion.com/v1/oauth/authorize");
@@ -31,15 +33,22 @@ export class NotionProvider extends BaseIntegrationProvider {
     return url.toString();
   }
 
-  async exchangeCode(code: string, redirectUri: string): Promise<OAuthTokens> {
+  async completeConnect(
+    params: ConnectCallbackParams,
+    redirectUri: string,
+  ): Promise<IntegrationCredential> {
+    if (!params.code) {
+      throw new Error("Notion returned no authorisation code to exchange.");
+    }
     const response = await new Client().oauth.token({
       client_id: env.NOTION_CLIENT_ID,
       client_secret: env.NOTION_CLIENT_SECRET,
       grant_type: "authorization_code",
-      code,
+      code: params.code,
       redirect_uri: redirectUri,
     });
     return {
+      kind: "oauth_tokens",
       accessToken: response.access_token,
       workspaceId: response.workspace_id,
       workspaceName: response.workspace_name ?? undefined,

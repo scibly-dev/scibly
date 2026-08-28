@@ -1,7 +1,16 @@
 // Kept dependency-free so the client bundle (input schemas, settings card) never pulls in a provider SDK.
-export const INTEGRATION_PROVIDERS = ["NOTION"] as const;
+export const INTEGRATION_PROVIDERS = ["NOTION", "GITHUB"] as const;
 
 export type IntegrationProviderId = (typeof INTEGRATION_PROVIDERS)[number];
+
+// The only providers a notebook is offered as a source. A provider is worth
+// connecting before it has pages — see `ReadOnlyIntegrationProvider`.
+export const PAGE_INTEGRATION_PROVIDERS = [
+  "NOTION",
+] as const satisfies readonly IntegrationProviderId[];
+
+export type PageIntegrationProviderId =
+  (typeof PAGE_INTEGRATION_PROVIDERS)[number];
 
 // A provider's raw `?error=` is always mapped to `provider_denied` or `provider_error` first — it must never be echoed into the query string.
 export const INTEGRATION_CALLBACK_ERRORS = [
@@ -41,6 +50,14 @@ export interface IntegrationPageRevision {
   lastEdited: Date;
 }
 
+// A named part of a workspace a connection reaches — a repository an
+// installation was given. A workspace handed over whole grants nothing to list.
+export interface IntegrationGrant {
+  id: string;
+  name: string;
+  url: string;
+}
+
 export interface OAuthTokens {
   accessToken: string;
   refreshToken?: string;
@@ -48,3 +65,19 @@ export interface OAuthTokens {
   workspaceId?: string;
   workspaceName?: string;
 }
+
+// What an installed app leaves behind instead of tokens. The token it stands
+// for is minted per call and never stored.
+export interface AppInstallation {
+  installationId: string;
+  workspaceId?: string;
+  workspaceName?: string;
+}
+
+// Which shape a connection holds decides both the columns it is written to and
+// how its token is later got.
+export type IntegrationCredential =
+  | ({ kind: "oauth_tokens" } & OAuthTokens)
+  | ({ kind: "app_installation" } & AppInstallation);
+
+export type IntegrationCredentialKind = IntegrationCredential["kind"];

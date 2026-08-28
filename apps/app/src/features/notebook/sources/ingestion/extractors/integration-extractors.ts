@@ -2,8 +2,10 @@ import type { ExtractableSource, SourceExtractor } from "./types";
 
 import { db } from "@scibly/db";
 
-import { getProvider } from "@/features/integrations/server";
-import { decryptApiKey } from "@/lib/crypto/api-key";
+import {
+  getPageProvider,
+  resolveConnectionToken,
+} from "@/features/integrations/server";
 
 async function resolveIntegration(source: ExtractableSource) {
   if (!source.integrationId || !source.externalId) {
@@ -33,8 +35,8 @@ async function resolveIntegration(source: ExtractableSource) {
   }
 
   return {
-    provider: getProvider(connection.provider),
-    token: decryptApiKey(connection.accessTokenEncrypted),
+    provider: getPageProvider(connection.provider),
+    token: await resolveConnectionToken(connection),
     externalId: source.externalId,
   };
 }

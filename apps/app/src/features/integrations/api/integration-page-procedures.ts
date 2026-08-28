@@ -14,7 +14,7 @@ import {
   linkPagesSchema,
   resyncSourceSchema,
 } from "./integration.schema";
-import { resolveConnection } from "./integration-connection-procedures";
+import { resolveConnectionRow } from "./integration-connection-procedures";
 
 async function resolveLinkedNotebook(
   orgSlug: string,
@@ -45,7 +45,7 @@ export const integrationPageProcedures = {
         input.notebookId,
         userId,
       );
-      const { connection } = await resolveConnection(
+      const { connection } = await resolveConnectionRow(
         organization.id,
         input.provider,
       );
@@ -68,7 +68,7 @@ export const integrationPageProcedures = {
         input.notebookId,
         ctx.session.user.id,
       );
-      const { connection } = await resolveConnection(
+      const { connection } = await resolveConnectionRow(
         organization.id,
         input.provider,
       );

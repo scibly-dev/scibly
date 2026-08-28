@@ -1,6 +1,7 @@
 import type { Prisma } from "@scibly/db";
 import type { MockInstance } from "vitest";
-import type { OAuthTokens } from "../contracts";
+import type { IntegrationCredential } from "../contracts";
+import type { ConnectCallbackParams } from "./base-provider";
 
 import { defaultLocale } from "@scibly/i18n/constants";
 import { NextRequest } from "next/server";
@@ -10,7 +11,8 @@ import { decryptApiKey } from "@/lib/crypto/api-key";
 import { signOAuthState } from "@/lib/crypto/oauth-state";
 
 // Exercises the full route handler; only the database, session, membership
-// policy, and provider token exchange are mocked. The state signer is real.
+// policy, and what the provider makes of its own callback are mocked. The state
+// signer is real.
 
 const APP_URL = "http://localhost:3000";
 const SETTINGS = `${APP_URL}/de/profile/org/acme/settings`;
@@ -36,19 +38,32 @@ vi.mock("@scibly/db", () => ({ db }));
 vi.mock("@scibly/auth/session", () => ({ getSession }));
 vi.mock("@/features/organizations/server", () => ({ requireOrgMember }));
 
-const { handleIntegrationOAuthCallback } = await import("./oauth-callback");
+const { handleIntegrationConnectCallback } = await import("./connect-callback");
 const { PROVIDERS } = await import("./registry");
 
-const TOKENS: OAuthTokens = {
+const TOKENS: IntegrationCredential = {
+  kind: "oauth_tokens",
   accessToken: "secret-access-token",
   refreshToken: "secret-refresh-token",
   workspaceId: "workspace-1",
   workspaceName: "Acme HQ",
 };
 
-let exchangeCode: MockInstance<
-  (code: string, redirectUri: string) => Promise<OAuthTokens>
+const INSTALLATION: IntegrationCredential = {
+  kind: "app_installation",
+  installationId: "42",
+  workspaceId: "github-account-1",
+  workspaceName: "acme-inc",
+};
+
+type CompleteConnect = MockInstance<
+  (
+    params: ConnectCallbackParams,
+    redirectUri: string,
+  ) => Promise<IntegrationCredential>
 >;
+
+let completeConnect: CompleteConnect;
 
 function state(overrides: Partial<Parameters<typeof signOAuthState>[0]> = {}) {
   return signOAuthState({
@@ -68,7 +83,7 @@ async function callback(
   for (const [key, value] of Object.entries(query)) {
     if (value !== undefined) url.searchParams.set(key, value);
   }
-  return handleIntegrationOAuthCallback(new NextRequest(url), {
+  return handleIntegrationConnectCallback(new NextRequest(url), {
     params: Promise.resolve({ provider: providerParam }),
   });
 }
@@ -101,14 +116,14 @@ beforeEach(() => {
   db.integrationConnection.upsert.mockResolvedValue({});
   db.notebookSource.updateMany.mockResolvedValue({ count: 0 });
 
-  exchangeCode = vi
-    .spyOn(PROVIDERS.NOTION, "exchangeCode")
+  completeConnect = vi
+    .spyOn(PROVIDERS.NOTION, "completeConnect")
     .mockResolvedValue(TOKENS);
 });
 
 afterEach(() => {
   vi.useRealTimers();
-  exchangeCode.mockRestore();
+  completeConnect.mockRestore();
 });
 
 describe("LA the door", () => {
@@ -126,7 +141,7 @@ describe("LA the door", () => {
     const response = await callback({ code: "auth-code", state: state() });
 
     expect(refusal(response)).toBe("session_mismatch");
-    expect(exchangeCode).not.toHaveBeenCalled();
+    expect(completeConnect).not.toHaveBeenCalled();
     expect(db.integrationConnection.upsert).not.toHaveBeenCalled();
   });
 
@@ -136,7 +151,7 @@ describe("LA the door", () => {
     const response = await callback({ code: "auth-code", state: state() });
 
     expect(refusal(response)).toBe("session_mismatch");
-    expect(exchangeCode).not.toHaveBeenCalled();
+    expect(completeConnect).not.toHaveBeenCalled();
   });
 
   it("LA5 refuses somebody who is no longer an admin of the org", async () => {
@@ -145,7 +160,7 @@ describe("LA the door", () => {
     const response = await callback({ code: "auth-code", state: state() });
 
     expect(refusal(response)).toBe("forbidden");
-    expect(exchangeCode).not.toHaveBeenCalled();
+    expect(completeConnect).not.toHaveBeenCalled();
     expect(db.integrationConnection.upsert).not.toHaveBeenCalled();
   });
 
@@ -190,7 +205,7 @@ describe("LA the door", () => {
     );
 
     expect(refusal(response)).toBe("state_mismatch");
-    expect(exchangeCode).not.toHaveBeenCalled();
+    expect(completeConnect).not.toHaveBeenCalled();
   });
 
   it("LA8 accepts a path segment in any case, since the state decides", async () => {
@@ -223,7 +238,7 @@ describe("LA the door", () => {
       const response = await callback({ code: "auth-code", state: given });
 
       expect(refusal(response)).toBe(reason);
-      expect(exchangeCode).not.toHaveBeenCalled();
+      expect(completeConnect).not.toHaveBeenCalled();
       expect(db.integrationConnection.upsert).not.toHaveBeenCalled();
     },
   );
@@ -235,21 +250,21 @@ describe("LA the door", () => {
     const response = await callback({ code: "auth-code", state: stale });
 
     expect(refusal(response)).toBe("expired_state");
-    expect(exchangeCode).not.toHaveBeenCalled();
+    expect(completeConnect).not.toHaveBeenCalled();
   });
 
   it("LA7 refuses a callback carrying no code", async () => {
     const response = await callback({ state: state() });
 
     expect(refusal(response)).toBe("missing_params");
-    expect(exchangeCode).not.toHaveBeenCalled();
+    expect(completeConnect).not.toHaveBeenCalled();
   });
 
   it("LA7 refuses a callback the user declined", async () => {
     const response = await callback({ error: "access_denied", state: state() });
 
     expect(refusal(response)).toBe("provider_denied");
-    expect(exchangeCode).not.toHaveBeenCalled();
+    expect(completeConnect).not.toHaveBeenCalled();
   });
 });
 
@@ -268,7 +283,10 @@ describe("LS what is stored", () => {
   });
 
   it("LS1 stores no refresh token when the provider issues none", async () => {
-    exchangeCode.mockResolvedValue({ accessToken: "only-access" });
+    completeConnect.mockResolvedValue({
+      kind: "oauth_tokens",
+      accessToken: "only-access",
+    });
 
     await callback({ code: "auth-code", state: state() });
 
@@ -364,16 +382,99 @@ describe("LS what is stored", () => {
   it("LS3 exchanges the code against the redirect URI this app publishes", async () => {
     await callback({ code: "auth-code", state: state() }, "NoTiOn");
 
-    expect(exchangeCode).toHaveBeenCalledWith(
-      "auth-code",
+    expect(completeConnect).toHaveBeenCalledWith(
+      { code: "auth-code", installationId: null },
       `${APP_URL}/api/integrations/notion/callback`,
     );
   });
 });
 
+// GitHub comes back from an install, not from an OAuth grant: the callback
+// carries an installation id and no code, and what is stored is the
+// installation rather than a token.
+describe("LS what an installation stores", () => {
+  let install: CompleteConnect;
+
+  function githubState() {
+    return state({ provider: "GITHUB" });
+  }
+
+  async function githubCallback(query: Record<string, string | undefined>) {
+    return callback(query, "github");
+  }
+
+  beforeEach(() => {
+    install = vi
+      .spyOn(PROVIDERS.GITHUB, "completeConnect")
+      .mockResolvedValue(INSTALLATION);
+  });
+
+  afterEach(() => {
+    install.mockRestore();
+  });
+
+  it("LS1 stores the installation id and no token at all", async () => {
+    const response = await githubCallback({
+      installation_id: "42",
+      setup_action: "install",
+      state: githubState(),
+    });
+
+    expect(refusal(response)).toBeNull();
+    expect(upserted().create).toMatchObject({
+      provider: "GITHUB",
+      installationId: "42",
+      accessTokenEncrypted: null,
+      refreshTokenEncrypted: null,
+      tokenExpiresAt: null,
+      workspaceName: "acme-inc",
+    });
+  });
+
+  it("LA7 refuses an install callback carrying no installation, code or not", async () => {
+    const response = await githubCallback({
+      code: "auth-code",
+      state: githubState(),
+    });
+
+    expect(refusal(response)).toBe("missing_params");
+    expect(install).not.toHaveBeenCalled();
+  });
+
+  it("LS4 installing on a different GitHub account detaches the old one's sources", async () => {
+    db.integrationConnection.findUnique.mockResolvedValue({
+      id: "conn-gh",
+      workspaceId: "github-account-old",
+    });
+
+    await githubCallback({ installation_id: "42", state: githubState() });
+
+    expect(db.notebookSource.updateMany).toHaveBeenCalledWith({
+      where: { integrationId: "conn-gh" },
+      data: {
+        integrationId: null,
+        warning: expect.stringContaining("different workspace"),
+      },
+    });
+  });
+
+  it("LS3 reinstalling on the same account keeps its sources and takes the new id", async () => {
+    db.integrationConnection.findUnique.mockResolvedValue({
+      id: "conn-gh",
+      workspaceId: "github-account-1",
+    });
+    install.mockResolvedValue({ ...INSTALLATION, installationId: "99" });
+
+    await githubCallback({ installation_id: "99", state: githubState() });
+
+    expect(db.notebookSource.updateMany).not.toHaveBeenCalled();
+    expect(upserted().update).toMatchObject({ installationId: "99" });
+  });
+});
+
 describe("LF what a failure tells the admin", () => {
   it("LF1 sends a failed exchange back to the org's settings with a code", async () => {
-    exchangeCode.mockRejectedValue(new Error("notion said no"));
+    completeConnect.mockRejectedValue(new Error("notion said no"));
     const error = vi
       .spyOn(console, "error")
       .mockImplementation(() => undefined);

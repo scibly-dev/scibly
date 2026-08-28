@@ -1,7 +1,12 @@
 import type {
   IntegrationCallbackError,
+  IntegrationCredential,
   IntegrationProviderId,
 } from "../contracts";
+import type {
+  BaseIntegrationProvider,
+  ConnectCallbackParams,
+} from "./base-provider";
 
 import { getSession } from "@scibly/auth/session";
 import { db } from "@scibly/db";
@@ -31,7 +36,7 @@ type CallbackDestination = {
 
 type ValidCallback = CallbackDestination & {
   provider: IntegrationProviderId;
-  code: string;
+  params: ConnectCallbackParams;
   orgSlug: string;
   connectedByUserId: string;
 };
@@ -47,6 +52,23 @@ function errorRedirect(
 
 function providerError(oauthError: string): IntegrationCallbackError {
   return oauthError === "access_denied" ? "provider_denied" : "provider_error";
+}
+
+// An OAuth provider sends back a code to redeem, an app installation the id of
+// the installation just made. Only the one the provider deals in is looked at.
+function readCallbackParams(
+  searchParams: URLSearchParams,
+  provider: BaseIntegrationProvider,
+): ConnectCallbackParams | null {
+  const params: ConnectCallbackParams = {
+    code: searchParams.get("code"),
+    installationId: searchParams.get("installation_id"),
+  };
+  const required =
+    provider.credential === "app_installation"
+      ? params.installationId
+      : params.code;
+  return required ? params : null;
 }
 
 function validateCallback(
@@ -67,7 +89,6 @@ function validateCallback(
   };
 
   const oauthError = searchParams.get("error");
-  const code = searchParams.get("code");
   const state = searchParams.get("state");
 
   if (!state) {
@@ -98,9 +119,6 @@ function validateCallback(
   if (oauthError) {
     return { ok: false, destination, reason: providerError(oauthError) };
   }
-  if (!code) {
-    return { ok: false, destination, reason: "missing_params" };
-  }
   if (!orgSlug || !userId || !isIntegrationProvider(provider)) {
     return { ok: false, destination, reason: "invalid_state" };
   }
@@ -109,12 +127,17 @@ function validateCallback(
     return { ok: false, destination, reason: "state_mismatch" };
   }
 
+  const params = readCallbackParams(searchParams, getProvider(provider));
+  if (!params) {
+    return { ok: false, destination, reason: "missing_params" };
+  }
+
   return {
     ok: true,
     callback: {
       ...destination,
       provider,
-      code,
+      params,
       orgSlug,
       connectedByUserId: userId,
     },
@@ -144,7 +167,27 @@ async function authorizeCallback(
   }
 }
 
-async function exchangeAndPersistConnection(
+// The two shapes use disjoint columns, and each connect clears the other's.
+function credentialColumns(credential: IntegrationCredential) {
+  if (credential.kind === "app_installation") {
+    return {
+      accessTokenEncrypted: null,
+      refreshTokenEncrypted: null,
+      tokenExpiresAt: null,
+      installationId: credential.installationId,
+    };
+  }
+  return {
+    accessTokenEncrypted: encryptApiKey(credential.accessToken),
+    refreshTokenEncrypted: credential.refreshToken
+      ? encryptApiKey(credential.refreshToken)
+      : null,
+    tokenExpiresAt: credential.expiresAt ?? null,
+    installationId: null,
+  };
+}
+
+async function completeAndPersistConnection(
   callback: ValidCallback,
   organizationId: string,
 ) {
@@ -160,15 +203,15 @@ async function exchangeAndPersistConnection(
     select: { id: true, workspaceId: true },
   });
 
-  const tokens = await getProvider(callback.provider).exchangeCode(
-    callback.code,
+  const credential = await getProvider(callback.provider).completeConnect(
+    callback.params,
     redirectUri,
   );
 
   if (
     existing?.workspaceId &&
-    tokens.workspaceId &&
-    existing.workspaceId !== tokens.workspaceId
+    credential.workspaceId &&
+    existing.workspaceId !== credential.workspaceId
   ) {
     await detachSourcesFromConnection(
       existing.id,
@@ -178,13 +221,9 @@ async function exchangeAndPersistConnection(
   }
 
   const connectionData = {
-    accessTokenEncrypted: encryptApiKey(tokens.accessToken),
-    refreshTokenEncrypted: tokens.refreshToken
-      ? encryptApiKey(tokens.refreshToken)
-      : null,
-    tokenExpiresAt: tokens.expiresAt ?? null,
-    workspaceId: tokens.workspaceId ?? null,
-    workspaceName: tokens.workspaceName ?? null,
+    ...credentialColumns(credential),
+    workspaceId: credential.workspaceId ?? null,
+    workspaceName: credential.workspaceName ?? null,
 
     connectedByUserId: callback.connectedByUserId,
   };
@@ -201,7 +240,7 @@ async function exchangeAndPersistConnection(
   });
 }
 
-export async function handleIntegrationOAuthCallback(
+export async function handleIntegrationConnectCallback(
   req: NextRequest,
   { params }: { params: Promise<{ provider: string }> },
 ) {
@@ -218,13 +257,13 @@ export async function handleIntegrationOAuthCallback(
   }
 
   try {
-    await exchangeAndPersistConnection(callback, authorization.organizationId);
+    await completeAndPersistConnection(callback, authorization.organizationId);
     return NextResponse.redirect(
       `${callback.settingsUrl}?${INTEGRATION_CONNECTED_QUERY_PARAM}=${callback.provider.toLowerCase()}`,
     );
   } catch (err) {
     console.error(
-      `[IntegrationCallback] ${callback.provider} token exchange failed:`,
+      `[IntegrationCallback] ${callback.provider} connect failed:`,
       err,
     );
     return errorRedirect(callback, "token_exchange_failed");

@@ -1,0 +1,86 @@
+import type {
+  IntegrationCredential,
+  IntegrationGrant,
+} from "../../../contracts";
+import type {
+  AppInstallationProvider,
+  ConnectCallbackParams,
+} from "../../base-provider";
+
+import {
+  IntegrationRevokedError,
+  ReadOnlyIntegrationProvider,
+} from "../../base-provider";
+import {
+  fetchInstallation,
+  fetchInstallationRepositories,
+  GitHubRequestError,
+  mintInstallationToken,
+  readGitHubAppConfig,
+} from "./app-auth";
+
+// GitHub is connected by installing an app on an account, not by an OAuth
+// grant, so what comes back is an installation id. The workspace behind it is
+// the account id — not the installation id, which a reinstall replaces — so
+// that is what tells a reconnect from a move to a different organization.
+export class GitHubProvider
+  extends ReadOnlyIntegrationProvider
+  implements AppInstallationProvider
+{
+  readonly providerId = "GITHUB";
+  readonly displayName = "GitHub";
+  readonly credential = "app_installation";
+  readonly listsGrants = true;
+
+  // The redirect back is the app's registered setup URL, so unlike OAuth there
+  // is nothing to pass here; only the state rides along and comes back.
+  getAuthUrl(state: string, _redirectUri: string): string {
+    const { appSlug } = readGitHubAppConfig();
+    const url = new URL(
+      `https://github.com/apps/${encodeURIComponent(appSlug)}/installations/new`,
+    );
+    url.searchParams.set("state", state);
+    return url.toString();
+  }
+
+  async completeConnect(
+    params: ConnectCallbackParams,
+  ): Promise<IntegrationCredential> {
+    if (!params.installationId) {
+      throw new Error("GitHub returned no installation to connect to.");
+    }
+    const installation = await fetchInstallation(
+      readGitHubAppConfig(),
+      params.installationId,
+    );
+    return {
+      kind: "app_installation",
+      installationId: installation.installationId,
+      workspaceId: installation.accountId,
+      workspaceName: installation.accountLogin,
+    };
+  }
+
+  // GitHub answers 404 for an installation that no longer exists, which is
+  // what an uninstall on its side looks like from here — the id we hold is
+  // simply gone, and no token will ever be minted from it again.
+  async mintAccessToken(installationId: string): Promise<string> {
+    try {
+      return await mintInstallationToken(readGitHubAppConfig(), installationId);
+    } catch (error) {
+      if (error instanceof GitHubRequestError && error.status === 404) {
+        throw new IntegrationRevokedError(this.providerId);
+      }
+      throw error;
+    }
+  }
+
+  async listGrants(token: string): Promise<IntegrationGrant[]> {
+    const repositories = await fetchInstallationRepositories(token);
+    return repositories.map((repository) => ({
+      id: String(repository.id),
+      name: repository.full_name,
+      url: repository.html_url,
+    }));
+  }
+}

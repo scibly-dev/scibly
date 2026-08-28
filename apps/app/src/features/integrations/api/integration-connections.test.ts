@@ -112,6 +112,7 @@ describe("LA1 one door only", () => {
       "linkPage",
       "linkPages",
       "list",
+      "listGrants",
       "listPageChildren",
       "resyncSource",
       "searchPages",
@@ -208,6 +209,7 @@ describe("LR who may see, who may change", () => {
       INTEGRATION_PROVIDERS.map((providerId) => ({
         providerId,
         displayName: expect.any(String),
+        listsGrants: expect.any(Boolean),
       })),
     );
   });

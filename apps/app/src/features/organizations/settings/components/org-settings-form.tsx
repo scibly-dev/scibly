@@ -45,8 +45,11 @@ function useOAuthResultNotifications(
   useEffect(() => {
     const url = new URL(window.location.href);
     if (integrationConnected) {
+      // React runs this effect twice in development, and the callback lands on
+      // a fresh mount either way — a stable id keeps one toast on screen.
       toast.success(
         `${integrationConnected.toUpperCase()} connected successfully.`,
+        { id: `integration-connected-${integrationConnected}` },
       );
       void trpcUtils.integration.list.invalidate();
       url.searchParams.delete(INTEGRATION_CONNECTED_QUERY_PARAM);
@@ -67,13 +70,16 @@ function useOAuthResultNotifications(
       org_not_found: "Organization not found.",
       forbidden: "You need to be an admin or owner to connect an integration.",
       token_exchange_failed:
-        "Connection failed. Check that your redirect URI is registered in Notion.",
+        "Connection failed. The provider rejected the credentials scibly sent.",
     } satisfies Record<IntegrationCallbackError, string>;
     const known = INTEGRATION_CALLBACK_ERRORS.find(
       (code) => code === integrationError,
     );
     toast.error(
       known ? messages[known] : "Connection failed. Please try again.",
+      {
+        id: `integration-error-${integrationError}`,
+      },
     );
     url.searchParams.delete(INTEGRATION_ERROR_QUERY_PARAM);
     router.replace(url.pathname + url.search);

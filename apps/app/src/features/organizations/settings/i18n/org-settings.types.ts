@@ -124,8 +124,14 @@ export type OrgSettingsPage = {
     confirmDisconnectDescription: string;
     disconnectedSuccessfully: string;
     connectedSuccessfully: string;
+    grantsTitle: string;
+    grantsLoading: string;
+    grantsEmpty: string;
+    grantsError: string;
+    revokedNotice: string;
     providers: {
       NOTION: string;
+      GITHUB: string;
     };
   };
 };

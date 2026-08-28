@@ -4,8 +4,9 @@ import { db, Prisma } from "@scibly/db";
 import { routes } from "@scibly/routes";
 
 import { env } from "@/env";
-import { getProvider } from "@/features/integrations/server/registry";
-import { decryptApiKey } from "@/lib/crypto/api-key";
+import { PAGE_INTEGRATION_PROVIDERS } from "@/features/integrations/contracts";
+import { resolveConnectionToken } from "@/features/integrations/server/connection-token";
+import { getPageProvider } from "@/features/integrations/server/registry";
 import { SOURCE_STATUS } from "@/shared/content/sources/constants";
 
 // No webhook exists for any integration, so this scheduled poll is the only way a changed page is noticed; `lastPolledAt` is the per-connection watermark.
@@ -117,7 +118,8 @@ export async function releaseSyncLease(lease: SyncLease): Promise<void> {
 type SyncConnection = {
   id: string;
   provider: string;
-  accessTokenEncrypted: string;
+  accessTokenEncrypted: string | null;
+  installationId: string | null;
   lastPolledAt: Date | null;
   consecutiveFailures: number;
 };
@@ -133,6 +135,9 @@ export async function loadOwedConnections(
   return db.integrationConnection.findMany({
     where: {
       organization: subscribedOrganization(now),
+      // A connection to a provider without pages has nothing that could go
+      // stale, so a poll would only spend a call to learn that.
+      provider: { in: [...PAGE_INTEGRATION_PROVIDERS] },
       OR: [
         { lastAttemptedAt: null },
         { lastAttemptedAt: { lt: lease.chainStartedAt } },
@@ -143,6 +148,7 @@ export async function loadOwedConnections(
       id: true,
       provider: true,
       accessTokenEncrypted: true,
+      installationId: true,
       lastPolledAt: true,
       consecutiveFailures: true,
     },
@@ -242,8 +248,8 @@ async function syncConnection(
   const pollFrom = getPollingStart(connection.lastPolledAt, now);
   let modifiedIds: Set<string>;
   try {
-    const provider = getProvider(connection.provider);
-    const token = decryptApiKey(connection.accessTokenEncrypted);
+    const provider = getPageProvider(connection.provider);
+    const token = await resolveConnectionToken(connection);
     const pages = await provider.pollModifiedPages(token, pollFrom);
     modifiedIds = new Set(pages.map((page) => page.id));
   } catch (error) {

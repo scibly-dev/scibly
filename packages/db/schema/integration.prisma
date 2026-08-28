@@ -1,5 +1,6 @@
 enum IntegrationProvider {
   NOTION
+  GITHUB
   CONFLUENCE
   SHAREPOINT
 
@@ -11,12 +12,19 @@ model IntegrationConnection {
   organizationId        String
   organization          Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   provider              IntegrationProvider
-  /// AES-256-GCM encrypted access token
-  accessTokenEncrypted  String
+  /// AES-256-GCM encrypted access token. Null for providers whose credential
+  /// is an installation rather than a token — see `installationId`.
+  accessTokenEncrypted  String?
   /// Encrypted refresh token (if applicable)
   refreshTokenEncrypted String?
   /// Token expiry (for providers with expiring tokens)
   tokenExpiresAt        DateTime?
+  /// The app installation this connection is, for providers connected by
+  /// installing an app rather than by an OAuth grant (GitHub). It is the whole
+  /// credential: the short-lived token it stands for is minted per call from
+  /// the app's private key and never written here. Exclusive with the token
+  /// columns above — a connection is one credential shape or the other.
+  installationId        String?
   /// Provider workspace/site ID (e.g. Notion workspace ID)
   workspaceId           String?
   /// Human-readable workspace name for display

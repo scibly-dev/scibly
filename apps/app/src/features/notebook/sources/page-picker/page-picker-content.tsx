@@ -1,6 +1,6 @@
 "use client";
 
-import type { IntegrationProviderId } from "@/features/integrations/contracts";
+import type { PageIntegrationProviderId } from "@/features/integrations/contracts";
 import type { NotebookTranslations } from "../../i18n/notebook.types";
 
 import { useState } from "react";
@@ -27,7 +27,7 @@ export interface PagePickerContentProps {
   onOpenChange: (open: boolean) => void;
   notebookId: string;
   orgSlug: string;
-  provider: IntegrationProviderId;
+  provider: PageIntegrationProviderId;
   totalSourceCount: number;
 
   sourceLimit: number;

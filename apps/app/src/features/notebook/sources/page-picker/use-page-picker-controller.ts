@@ -1,6 +1,6 @@
 "use client";
 
-import type { IntegrationProviderId } from "@/features/integrations/contracts";
+import type { PageIntegrationProviderId } from "@/features/integrations/contracts";
 import type { RouterOutputs } from "@/shared/api/trpc/client";
 import type {
   BreadcrumbEntry,
@@ -58,7 +58,7 @@ export function usePagePickerNavigation(setQuery: (query: string) => void) {
 
 export function usePagePickerPages(
   orgSlug: string,
-  provider: IntegrationProviderId,
+  provider: PageIntegrationProviderId,
   query: string,
   navigation: ReturnType<typeof usePagePickerNavigation>,
 ) {

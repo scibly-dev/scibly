@@ -1,6 +1,6 @@
 "use client";
 
-import type { IntegrationProviderId } from "@/features/integrations/contracts";
+import type { PageIntegrationProviderId } from "@/features/integrations/contracts";
 import type { NotebookTranslations } from "../../i18n/notebook.types";
 
 import {
@@ -10,7 +10,7 @@ import {
 } from "@radix-ui/react-hover-card";
 import { ExternalLink } from "lucide-react";
 
-import { INTEGRATION_PROVIDERS } from "@/features/integrations/contracts";
+import { PAGE_INTEGRATION_PROVIDERS } from "@/features/integrations/contracts";
 
 import {
   PROVIDER_DISPLAY,
@@ -24,12 +24,14 @@ interface ConnectedProvider {
 interface IntegrationButtonsProps {
   connectedProviders: ConnectedProvider[];
   t: NotebookTranslations["sources"];
-  onPickerOpen: (providerKey: IntegrationProviderId) => void;
+  onPickerOpen: (providerKey: PageIntegrationProviderId) => void;
   disabled?: boolean;
 }
 
-// Buttons come from INTEGRATION_PROVIDERS, the set the API actually accepts —
-// PROVIDER_DISPLAY is cosmetic only and never gates which providers render.
+// Buttons come from PAGE_INTEGRATION_PROVIDERS, the connectable providers that
+// actually offer pages to import — a provider connected for something else has
+// nothing to show a page picker. PROVIDER_DISPLAY is cosmetic only and never
+// gates which providers render.
 export function IntegrationButtons({
   connectedProviders,
   t,
@@ -38,7 +40,7 @@ export function IntegrationButtons({
 }: IntegrationButtonsProps) {
   return (
     <>
-      {INTEGRATION_PROVIDERS.map((providerKey) => {
+      {PAGE_INTEGRATION_PROVIDERS.map((providerKey) => {
         const meta =
           PROVIDER_DISPLAY.get(providerKey) ?? PROVIDER_DISPLAY_FALLBACK;
         const isConnected = connectedProviders.some(

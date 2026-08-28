@@ -2,6 +2,7 @@ import { notLapsedSubscription } from "@scibly/api/entitlement";
 import { routes } from "@scibly/routes";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
+import { PAGE_INTEGRATION_PROVIDERS } from "@/features/integrations/contracts";
 import { SOURCE_STATUS } from "@/shared/content/sources/constants";
 
 const db = vi.hoisted(() => ({
@@ -15,7 +16,10 @@ const db = vi.hoisted(() => ({
 }));
 
 const provider = vi.hoisted(() => ({ pollModifiedPages: vi.fn() }));
-const registry = vi.hoisted(() => ({ getProvider: vi.fn() }));
+const registry = vi.hoisted(() => ({
+  getProvider: vi.fn(),
+  getPageProvider: vi.fn(),
+}));
 const crypto = vi.hoisted(() => ({ decryptApiKey: vi.fn() }));
 
 vi.mock("@scibly/db", async () => {
@@ -138,6 +142,7 @@ beforeEach(() => {
     hops: 1,
   });
   registry.getProvider.mockReturnValue(provider);
+  registry.getPageProvider.mockReturnValue(provider);
   crypto.decryptApiKey.mockReturnValue("plain-token");
   provider.pollModifiedPages.mockResolvedValue([]);
 });
@@ -218,6 +223,16 @@ describe("KS1/KS2/KC1/KC4: which connections a hop is accountable for", () => {
       { lastAttemptedAt: null },
       { lastAttemptedAt: { lt: CHAIN_STARTED_AT } },
     ]);
+  });
+
+  it("owes only connections to a provider that has pages to poll", async () => {
+    await loadOwedConnections(LEASE, NOW);
+
+    const [args] = db.integrationConnection.findMany.mock.calls[0];
+
+    expect(args.where.provider).toEqual({
+      in: [...PAGE_INTEGRATION_PROVIDERS],
+    });
   });
 
   it("KF3: excludes a connection still inside its backoff", async () => {
@@ -338,7 +353,7 @@ describe("KF1: one broken integration", () => {
     {
       case: "a provider the registry does not know",
       break: () =>
-        registry.getProvider.mockImplementation((name: string) => {
+        registry.getPageProvider.mockImplementation((name: string) => {
           if (name === "gone") throw new Error("Unknown provider: gone");
           return provider;
         }),
