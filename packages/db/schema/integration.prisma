@@ -7,25 +7,23 @@ enum IntegrationProvider {
 }
 
 model IntegrationConnection {
-  id                    String              @id @default(cuid())
-  organizationId        String
-  organization          Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  provider              IntegrationProvider
-  accessTokenEncrypted  String
-  refreshTokenEncrypted String?
-  tokenExpiresAt        DateTime?
-  workspaceId           String?
-  workspaceName         String?
-  connectedByUserId     String
-  connectedBy           User                @relation(fields: [connectedByUserId], references: [id])
+  id                   String              @id @default(cuid())
+  organizationId       String
+  organization         Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  provider             IntegrationProvider
+  accessTokenEncrypted String
+  workspaceId          String?
+  workspaceName        String?
+  connectedByUserId    String
+  connectedBy          User                @relation(fields: [connectedByUserId], references: [id])
   /// Advances only on a successful poll, so a failed run costs delay, not changes.
-  lastPolledAt          DateTime?
+  lastPolledAt         DateTime?
   /// Advances on every attempt, successful or not.
-  lastAttemptedAt       DateTime?
-  consecutiveFailures   Int                 @default(0)
-  nextPollAfter         DateTime?
-  createdAt             DateTime            @default(now())
-  updatedAt             DateTime            @updatedAt
+  lastAttemptedAt      DateTime?
+  consecutiveFailures  Int                 @default(0)
+  nextPollAfter        DateTime?
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime            @updatedAt
 
   @@unique([organizationId, provider])
   @@index([organizationId])
