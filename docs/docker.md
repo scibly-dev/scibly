@@ -54,9 +54,8 @@ service, starts the Inngest server, then starts every app:
 
 The Inngest server is where scheduled and background work actually runs —
 see [ADR 0004](adr/0004-inngest-self-hosted-orchestration.md). It calls back
-into `app` at `/api/inngest` to execute each step, and the `heartbeat`
-function beats every 15 minutes, so the dashboard has something in it within
-the first quarter hour of a fresh install. Publishing :8288 is convenient
+into `app` at `/api/inngest` to execute each step, and the dashboard is where
+you watch a run and its retries. Publishing :8288 is convenient
 rather than required — nothing else needs it, so drop the `ports:` mapping
 if the host is exposed.
 

@@ -191,9 +191,6 @@ export const routes = {
     },
 
     api: {
-      cron: {
-        syncIntegrations: toAppUrl(`${BASE_API_PATH}/cron/sync-integrations`),
-      },
       oembed: toAppUrl(`${BASE_API_PATH}/oembed`),
     },
   },

@@ -1,16 +1,19 @@
 # Background work runs on a self-hosted Inngest
 
 Anything that outlives a request, so scheduled syncs, long generations, and
-anything that has to retry, is an Inngest function. Functions live in
-`apps/app/src/lib/inngest/`, get listed in `functions/index.ts`, and are served
-from one route at `/api/inngest`. The engine driving them is the
-`inngest/inngest` container in `docker-compose.yml`, on its own database on the
-Postgres already there. Not Inngest Cloud, not a hosted queue.
+anything that has to retry, is an Inngest function. A function belongs to the
+feature it is about and lives with it; a generic one lives in
+`apps/app/src/lib/inngest/`. Either way it is collected in
+`apps/app/src/server/inngest.ts` — the composition root, the way
+`server/api/root.ts` is tRPC's — and served from one route at `/api/inngest`.
+The engine driving them is the `inngest/inngest` container in
+`docker-compose.yml`, on its own database on the Postgres already there. Not
+Inngest Cloud, not a hosted queue.
 
-This replaces hand-rolled cron chaining, where a route takes a lease row, runs
-one step, then calls itself through `after()` before the platform timeout.
-`apps/app/src/app/api/cron/sync-integrations/route.ts` is the last one. It stays
-until integration sync moves over.
+This replaced hand-rolled cron chaining, where a route took a lease row, ran one
+step, then called itself through `after()` before the platform timeout. Nothing
+does that any more: the integration sync was the last one, and with it went the
+lease table, the `CRON_SECRET` door, and the `crons` entry in `vercel.json`.
 
 ## Why
 
@@ -37,4 +40,7 @@ Queues and Workflows lose on the same point, since they exist only inside Vercel
 - `maxDuration` on `/api/inngest` bounds one step, not a run. A model call that
   might outlast it belongs in `step.ai.infer`, which parks the request on the
   server instead.
+- Fan-out is how a run per work item is got: a cron function lists what is due
+  and sends one event each, and a per-item function does the work under a
+  concurrency cap. The item's id travels in the event, never its credential.
 - Development needs `pnpm dev:inngest` running alongside `pnpm dev`.
