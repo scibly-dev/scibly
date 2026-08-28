@@ -26,6 +26,11 @@ export const PAGE_INTEGRATION_PROVIDERS = [
 export type PageIntegrationProviderId =
   (typeof PAGE_INTEGRATION_PROVIDERS)[number];
 
+// One request's worth of pages. `linkPagesSchema` caps the input with it and
+// the picker clamps its selection to it, so the two cannot drift into a batch
+// the server rejects wholesale.
+export const MAX_LINKED_PAGES_PER_REQUEST = 20;
+
 // A provider's raw `?error=` is always mapped to `provider_denied` or `provider_error` first — it must never be echoed into the query string.
 export const INTEGRATION_CALLBACK_ERRORS = [
   "provider_denied",

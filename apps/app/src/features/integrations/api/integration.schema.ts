@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import {
   INTEGRATION_PROVIDERS,
+  MAX_LINKED_PAGES_PER_REQUEST,
   PAGE_INTEGRATION_PROVIDERS,
 } from "../contracts";
 
@@ -56,7 +57,7 @@ export const linkPagesSchema = z.object({
       }),
     )
     .min(1)
-    .max(20),
+    .max(MAX_LINKED_PAGES_PER_REQUEST),
 });
 
 export const resyncSourceSchema = z.object({

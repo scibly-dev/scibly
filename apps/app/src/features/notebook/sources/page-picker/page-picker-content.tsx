@@ -5,6 +5,8 @@ import type { NotebookTranslations } from "../../i18n/notebook.types";
 
 import { useState } from "react";
 
+import { MAX_LINKED_PAGES_PER_REQUEST } from "@/features/integrations/contracts";
+
 import { PagePickerBreadcrumbs } from "./page-picker-breadcrumbs";
 import { PagePickerFooter } from "./page-picker-footer";
 import { PagePickerList } from "./page-picker-list";
@@ -75,7 +77,7 @@ export const PagePickerBody = ({
           selectablePages={selection.selectablePages}
           selected={selection.selected}
           totalSourceCount={props.totalSourceCount}
-          sourceLimit={props.sourceLimit}
+          maxTotal={props.totalSourceCount + remaining}
           allVisibleSelected={selection.allVisibleSelected}
           t={props.t}
           onToggleSelectAll={selection.toggleSelectAll}
@@ -128,7 +130,14 @@ export function PagePickerContent({
     t,
     onLinked,
   };
-  const remaining = Math.max(0, sourceLimit - totalSourceCount);
+  // Two ceilings, and the lower one wins: how many sources the plan still has
+  // room for, and how many pages one link request may carry. On a paid plan
+  // the first is effectively unlimited, so without the second "select all" on
+  // a large parent used to build a batch the server rejected whole.
+  const remaining = Math.min(
+    Math.max(0, sourceLimit - totalSourceCount),
+    MAX_LINKED_PAGES_PER_REQUEST,
+  );
   const [query, setQuery] = useState("");
   const navigation = usePagePickerNavigation(setQuery);
   const pageState = usePagePickerPages(orgSlug, provider, query, navigation);

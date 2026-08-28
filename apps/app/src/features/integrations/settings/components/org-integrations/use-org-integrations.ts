@@ -39,11 +39,15 @@ export function useOrgIntegrations({
   const disconnectMutation = api.integration.disconnect.useMutation({
     onSuccess: () => {
       toast.success(t.disconnectedSuccessfully);
-      setDisconnectingId(null);
-      setPendingDisconnect(null);
       void utils.integration.list.invalidate({ orgSlug });
     },
     onError: (err) => toast.error(err.message),
+    // Settled, not success: a failure used to leave the row latched disabled,
+    // so the user was told the disconnect failed and then could not retry it.
+    onSettled: () => {
+      setDisconnectingId(null);
+      setPendingDisconnect(null);
+    },
   });
 
   return {

@@ -14,7 +14,9 @@ interface PagePickerSelectAllBarProps {
   selected: Set<string>;
   totalSourceCount: number;
 
-  sourceLimit: number;
+  // Not the plan's source limit: the highest total this picker can actually
+  // reach, which is the lower of the plan's room and one request's page cap.
+  maxTotal: number;
   allVisibleSelected: boolean;
   t: T;
   onToggleSelectAll: () => void;
@@ -24,7 +26,7 @@ export function PagePickerSelectAllBar({
   selectablePages,
   selected,
   totalSourceCount,
-  sourceLimit,
+  maxTotal,
   allVisibleSelected,
   t,
   onToggleSelectAll,
@@ -59,14 +61,14 @@ export function PagePickerSelectAllBar({
       <span
         className={cn(
           "text-[10px] font-medium tabular-nums",
-          projectedTotal >= sourceLimit
+          projectedTotal >= maxTotal
             ? "text-amber-600 dark:text-amber-400"
             : "text-neutral-400",
         )}
       >
         {t.pagesSelected
           .replace("{count}", String(projectedTotal))
-          .replace("{max}", String(sourceLimit))}
+          .replace("{max}", String(maxTotal))}
       </span>
     </div>
   );

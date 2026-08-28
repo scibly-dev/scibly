@@ -225,15 +225,16 @@ describe("what a click asks for", () => {
   });
 });
 
-// Pinned as-is, not endorsed: `disconnectingId` is cleared in `onSuccess` and
-// nowhere else, so a failure leaves the row's own button stuck. Reported as a
-// behavior fix; this test is what stops a refactor changing it by accident.
 describe("a disconnect that failed", () => {
-  it("leaves the button of the row that failed disabled", () => {
+  it("says so and hands the row's button back", () => {
     lists([NOTION], [{ provider: "NOTION", workspaceName: "Acme HQ" }]);
     disconnectMutate.mockImplementation(
-      (_input, options: { onError: (error: Error) => void }) => {
+      (
+        _input,
+        options: { onError: (error: Error) => void; onSettled: () => void },
+      ) => {
         options.onError(new Error("provider said no"));
+        options.onSettled();
       },
     );
     const container = card();
@@ -241,8 +242,8 @@ describe("a disconnect that failed", () => {
     fireEvent.click(button(container, "Disconnect Notion")!);
     fireEvent.click(inDialog("Disconnect")!);
 
-    expect(button(container, "Disconnect Notion")?.disabled).toBe(true);
     expect(toastError).toHaveBeenCalledWith("provider said no");
+    expect(button(container, "Disconnect Notion")?.disabled).toBe(false);
   });
 });
 
