@@ -48,12 +48,17 @@ export async function acquireSyncLease(): Promise<SyncLease | null> {
   }
 }
 
+// The token is a one-hop ticket, not a name for the chain: it travels in the
+// handoff request, and a retried or duplicated delivery would otherwise let two
+// hops continue the same lease at once — the exact concurrency the lease
+// exists to prevent. Rotating it on the way in makes the second delivery lose.
 export async function continueSyncLease(
   token: string,
 ): Promise<SyncLease | null> {
+  const next = crypto.randomUUID();
   const held = await db.integrationSyncLease.updateMany({
     where: { id: SYNC_LEASE_ID, token },
-    data: { heartbeatAt: new Date(), hops: { increment: 1 } },
+    data: { token: next, heartbeatAt: new Date(), hops: { increment: 1 } },
   });
   if (held.count === 0) return null;
 
@@ -61,13 +66,15 @@ export async function continueSyncLease(
     where: { id: SYNC_LEASE_ID },
     select: { token: true, chainStartedAt: true, hops: true },
   });
-  if (!row || row.token !== token) return null;
-  return { token, chainStartedAt: row.chainStartedAt, hops: row.hops };
+  if (!row || row.token !== next) return null;
+  return { token: next, chainStartedAt: row.chainStartedAt, hops: row.hops };
 }
 
 export async function releaseSyncLease(lease: SyncLease): Promise<void> {
   await db.integrationSyncLease.updateMany({
     where: { id: SYNC_LEASE_ID, token: lease.token },
-    data: { heartbeatAt: new Date(0) },
+    // Rotated as well as expired: a handoff still in flight when the hop gave
+    // up must not be able to revive a chain that has already ended.
+    data: { token: crypto.randomUUID(), heartbeatAt: new Date(0) },
   });
 }

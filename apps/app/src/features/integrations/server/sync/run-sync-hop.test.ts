@@ -490,7 +490,7 @@ describe("KC1/KC5/KC6: how a chain ends", () => {
     expect(fetchMock).not.toHaveBeenCalled();
     expect(db.integrationSyncLease.updateMany).toHaveBeenCalledWith({
       where: { id: "singleton", token: LEASE.token },
-      data: { heartbeatAt: new Date(0) },
+      data: { token: expect.any(String), heartbeatAt: new Date(0) },
     });
   });
 
@@ -553,7 +553,7 @@ describe("KC1/KC5/KC6: how a chain ends", () => {
     expect(continued).toBe(false);
     expect(db.integrationSyncLease.updateMany).toHaveBeenCalledWith({
       where: { id: "singleton", token: LEASE.token },
-      data: { heartbeatAt: new Date(0) },
+      data: { token: expect.any(String), heartbeatAt: new Date(0) },
     });
   });
 
@@ -579,7 +579,7 @@ describe("KC1/KC5/KC6: how a chain ends", () => {
       expect(continued).toBe(false);
       expect(db.integrationSyncLease.updateMany).toHaveBeenCalledWith({
         where: { id: "singleton", token: LEASE.token },
-        data: { heartbeatAt: new Date(0) },
+        data: { token: expect.any(String), heartbeatAt: new Date(0) },
       });
       expect(writtenTo("conn-later")).toBeUndefined();
     },

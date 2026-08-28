@@ -36,12 +36,18 @@ beforeEach(() => {
 
   db.integrationSyncLease.updateMany.mockResolvedValue({ count: 1 });
   db.integrationSyncLease.create.mockResolvedValue({ id: "singleton" });
-  db.integrationSyncLease.findUnique.mockResolvedValue({
-    token: LEASE.token,
+  // The row a hop reads back is the row its own update just wrote.
+  db.integrationSyncLease.findUnique.mockImplementation(async () => ({
+    token: rotatedTo(),
     chainStartedAt: CHAIN_STARTED_AT,
     hops: 1,
-  });
+  }));
 });
+
+function rotatedTo(): string {
+  const [args] = db.integrationSyncLease.updateMany.mock.calls[0];
+  return args.data.token;
+}
 
 describe("KC2/KC3: the singleton lease", () => {
   it("takes the lease when the one on record is stale", async () => {
@@ -84,12 +90,21 @@ describe("KC2/KC3: the singleton lease", () => {
     const lease = await continueSyncLease("lease-token");
 
     expect(lease).toEqual({
-      token: "lease-token",
+      token: rotatedTo(),
       chainStartedAt: CHAIN_STARTED_AT,
       hops: 1,
     });
     const [args] = db.integrationSyncLease.updateMany.mock.calls[0];
     expect(args.data.hops).toEqual({ increment: 1 });
+  });
+
+  it("KC2: spends the token, so a duplicated handoff cannot run a second hop", async () => {
+    const first = await continueSyncLease("lease-token");
+
+    expect(first?.token).not.toBe("lease-token");
+    // The row no longer answers to the token the duplicate is carrying.
+    db.integrationSyncLease.updateMany.mockResolvedValue({ count: 0 });
+    expect(await continueSyncLease("lease-token")).toBeNull();
   });
 
   it.each([
@@ -119,7 +134,9 @@ describe("KC2/KC3: the singleton lease", () => {
 
     expect(db.integrationSyncLease.updateMany).toHaveBeenCalledWith({
       where: { id: "singleton", token: LEASE.token },
-      data: { heartbeatAt: new Date(0) },
+      data: { token: expect.any(String), heartbeatAt: new Date(0) },
     });
+    // And not to the token it was released with.
+    expect(rotatedTo()).not.toBe(LEASE.token);
   });
 });
