@@ -230,6 +230,29 @@ const items = orderItemsSchema.parse(data);
 - Proxy matcher literals stay inline in each app's `proxy.ts`; alignment tested
   against `PROXY_MATCHER` from `@scibly/observability/proxy/matcher`.
 
+## Domain vocabulary (`CONTEXT.md`)
+
+- A feature folder's `CONTEXT.md` is binding on **identifiers**, not just prose:
+  module, file, type, function, and constant names must use its terms, and must
+  not use anything on an `_Avoid_` list. Diff the names in a feature against its
+  `CONTEXT.md` before reviewing anything else about naming — drift there is a
+  maintainability finding with a citable source, not a matter of taste.
+- When a refactor names a concept the `CONTEXT.md` does not have, add the term
+  there in the same change (create the file lazily if the feature has none).
+
+## Third-party HTTP responses
+
+- Any JSON coming back from a provider or external API is parsed with a Zod
+  schema before use — never `as T`, never an interface asserted over
+  `response.json()`. The repo idiom is
+  `someSchema.parse(await response.json())` (see
+  `apps/app/src/features/organizations/settings/server/endpoint-probe.ts`).
+- A `// SAFETY:` comment claiming the shape is documented, or that callers check
+  the fields, is not a substitute for a parse — it is a finding in its own
+  right, because nothing keeps the comment true.
+- A shared request helper takes the schema as a parameter rather than a type
+  argument, so parsing cannot be forgotten at a call site.
+
 ## Misc conventions
 
 - Zod is v4 (pinned via pnpm override) — flag v3-only idioms.
@@ -239,6 +262,16 @@ const items = orderItemsSchema.parse(data);
   rather than re-wrapping Radix directly.
 - Env access goes through the typed env (`@t3-oss/env-nextjs`, `apps/app/env.js`)
   — raw `process.env` reads in app code are findings.
+- URLs are built by `@scibly/routes`, never string-concatenated or
+  template-literalled at the call site. The package already loads the base URLs
+  through `loadPackageEnv`, so routing a URL through it usually removes a raw
+  `process.env` read as well. A URL assembled inline — especially one an
+  external service will redirect to — is a finding.
+- A registry keyed by a known id union must be exhaustive over it:
+  `satisfies Record<SomeId, Config>`, so adding a member fails to compile until
+  every registry is updated. `Map<string, Config>` plus a default entry is a
+  finding — it turns a missing case into a silent wrong-looking UI, and parallel
+  registries drift apart without anything failing.
 
 ## Refactor plan and execution requirements
 
