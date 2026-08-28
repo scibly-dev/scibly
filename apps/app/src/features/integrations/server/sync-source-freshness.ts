@@ -3,6 +3,10 @@ import { TimeHelpers } from "@scibly/api/rate-limit";
 import { db, type Prisma } from "@scibly/db";
 
 import { PAGE_INTEGRATION_PROVIDERS } from "@/features/integrations/contracts";
+import {
+  CONNECTED,
+  isConnected,
+} from "@/features/integrations/server/connection-state";
 import { resolveConnectionToken } from "@/features/integrations/server/connection-token";
 import { getPageProvider } from "@/features/integrations/server/registry";
 import { SOURCE_STATUS } from "@/shared/content/sources/constants";
@@ -40,7 +44,13 @@ export async function loadDueConnections(
       // A connection to a provider without pages has nothing that could go
       // stale, so a poll would only spend a call to learn that.
       provider: { in: [...PAGE_INTEGRATION_PROVIDERS] },
-      OR: [{ nextPollAfter: null }, { nextPollAfter: { lte: now } }],
+      // Two ORs, so both go through `AND`: a disconnected connection keeps its
+      // row so its sources keep their link, but there is nothing left to poll
+      // it with.
+      AND: [
+        CONNECTED,
+        { OR: [{ nextPollAfter: null }, { nextPollAfter: { lte: now } }] },
+      ],
     },
     select: { id: true, provider: true },
     orderBy: { lastAttemptedAt: { sort: "asc", nulls: "first" } },
@@ -69,9 +79,9 @@ export function getPollingStart(lastPolledAt: Date | null, now: Date): Date {
 }
 
 // `updateMany`, not `update`: a poll can outlive the connection it is polling —
-// resolving the token is itself what deletes a connection the provider says is
-// gone — and a row that is no longer there is nothing left to record, not a
-// failure worth retrying the whole poll for.
+// the organization can disconnect or delete it mid-run — and a row that is no
+// longer there is nothing left to record, not a failure worth retrying the
+// whole poll for.
 async function recordAttempt(
   connectionId: string,
   data: Prisma.IntegrationConnectionUpdateManyMutationInput,
@@ -146,7 +156,7 @@ export async function pollConnection(
       lastPolledAt: true,
     },
   });
-  if (!connection) return { status: "gone" };
+  if (!connection || !isConnected(connection)) return { status: "gone" };
 
   const sources = await loadSyncableSources(connection.id);
   if (sources.length === 0) {

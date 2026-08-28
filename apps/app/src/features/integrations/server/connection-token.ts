@@ -6,7 +6,8 @@ import { db } from "@scibly/db";
 import { decryptApiKey } from "@/lib/crypto/api-key";
 
 import { IntegrationRevokedError } from "./base-provider";
-import { detachSourcesFromConnection } from "./detach-sources";
+import { DISCONNECTED_CREDENTIAL } from "./connection-state";
+import { warnSourcesOfLostConnection } from "./detach-sources";
 import { getProvider } from "./registry";
 
 // The one place that turns what a connection stores into the token its API
@@ -33,7 +34,7 @@ function revoked(provider: string): AppError {
   return new AppError({
     code: "NOT_FOUND",
     applicationCode: "integration.revoked",
-    message: `The ${provider} integration was removed on ${provider}'s side, so the connection was removed here too. Connect again to resume.`,
+    message: `The ${provider} integration was removed on ${provider}'s side, so it was disconnected here too. Connect again to resume.`,
   });
 }
 
@@ -45,13 +46,16 @@ async function forgetRevokedConnection(
   providerId: IntegrationProviderId,
 ): Promise<void> {
   await db.$transaction(async (tx) => {
-    await detachSourcesFromConnection(
+    await warnSourcesOfLostConnection(
       connection.id,
       providerId,
       "disconnected",
       tx,
     );
-    await tx.integrationConnection.deleteMany({ where: { id: connection.id } });
+    await tx.integrationConnection.updateMany({
+      where: { id: connection.id },
+      data: DISCONNECTED_CREDENTIAL,
+    });
   });
 }
 

@@ -27,7 +27,10 @@ import { requireOrgMember } from "@/features/organizations/server";
 import { encryptApiKey } from "@/lib/crypto/api-key";
 import { verifyOAuthState } from "@/lib/crypto/oauth-state";
 
-import { detachSourcesFromConnection } from "./detach-sources";
+import {
+  clearDisconnectWarning,
+  warnSourcesOfLostConnection,
+} from "./detach-sources";
 
 type CallbackDestination = {
   settingsUrl: string;
@@ -227,12 +230,17 @@ async function completeAndPersistConnection(
       existing.workspaceId !== credential.workspaceId;
 
     if (movedWorkspace) {
-      await detachSourcesFromConnection(
+      await warnSourcesOfLostConnection(
         existing.id,
         callback.provider,
         "workspace_changed",
         tx,
       );
+    } else if (existing) {
+      // The same workspace coming back is the answer to whatever the sources
+      // were warning about, so the warning goes with it. They kept their link
+      // through the disconnect, so there is nothing else to put back.
+      await clearDisconnectWarning(existing.id, callback.provider, tx);
     }
 
     await tx.integrationConnection.upsert({

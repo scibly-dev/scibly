@@ -1,5 +1,6 @@
 import { AppError } from "@scibly/api/application-error";
 import { protectedProcedure } from "@scibly/api/trpc";
+import { db } from "@scibly/db";
 
 import {
   boundedIngest,
@@ -10,6 +11,7 @@ import {
 } from "@/features/notebook/server";
 import { resolveOrg } from "@/features/organizations/server";
 
+import { isConnected } from "../server/connection-state";
 import {
   linkPageSchema,
   linkPagesSchema,
@@ -121,12 +123,21 @@ export const integrationPageProcedures = {
           message: "This source is not an external integration source.",
         });
       }
-      if (!source.integrationId) {
+      // The link survives a disconnect, so having one is not enough: the
+      // connection it points at has to still hold a credential.
+      const connection = source.integrationId
+        ? await db.integrationConnection.findUnique({
+            where: { id: source.integrationId },
+            select: { accessTokenEncrypted: true, installationId: true },
+          })
+        : null;
+      if (!connection || !isConnected(connection)) {
         throw new AppError({
           code: "BAD_REQUEST",
           applicationCode: "api.bad_request",
-          message:
-            "This source's integration was disconnected. Reconnect the integration and re-link the page to resume syncing.",
+          message: source.integrationId
+            ? "This source's integration is disconnected. Reconnect it to resume syncing."
+            : "This source's integration was disconnected. Reconnect the integration and re-link the page to resume syncing.",
         });
       }
       const ingestion = await boundedIngest(userId, source.id);

@@ -11,8 +11,13 @@ import { routes } from "@scibly/routes";
 import { resolveOrg } from "@/features/organizations/server";
 import { signOAuthState } from "@/lib/crypto/oauth-state";
 
+import {
+  CONNECTED,
+  DISCONNECTED_CREDENTIAL,
+  isConnected,
+} from "../server/connection-state";
 import { resolveConnectionToken } from "../server/connection-token";
-import { detachSourcesFromConnection } from "../server/detach-sources";
+import { warnSourcesOfLostConnection } from "../server/detach-sources";
 import {
   getPageProvider,
   getProvider,
@@ -38,7 +43,9 @@ export async function resolveConnectionRow(
       organizationId_provider: { organizationId, provider: providerId },
     },
   });
-  if (!connection) {
+  // A disconnected connection is a row with no credential left on it. Nothing
+  // here can use one, so it is as absent as a row that was never written.
+  if (!connection || !isConnected(connection)) {
     throw new AppError({
       code: "NOT_FOUND",
       applicationCode: "api.not_found",
@@ -80,7 +87,7 @@ export const integrationConnectionProcedures = {
       "admin_or_owner",
     );
     const connections = await db.integrationConnection.findMany({
-      where: { organizationId: organization.id },
+      where: { organizationId: organization.id, ...CONNECTED },
       select: {
         id: true,
         provider: true,
@@ -134,19 +141,22 @@ export const integrationConnectionProcedures = {
         select: { id: true },
       });
 
-      // One transaction: a detach that committed without its delete would
-      // leave the connection listed as live with none of its sources attached,
-      // and the next disconnect would have nothing left to warn on.
+      // One transaction: a warning that committed without the credential going
+      // with it would leave sources warning about a connection still live.
       if (connection) {
         await db.$transaction(async (tx) => {
-          await detachSourcesFromConnection(
+          await warnSourcesOfLostConnection(
             connection.id,
             input.provider,
             "disconnected",
             tx,
           );
-          await tx.integrationConnection.delete({
+          // The row stays, credential-less. It is what remembers which
+          // workspace these sources came from, so a reconnect can tell a
+          // resumed connection from a swapped one.
+          await tx.integrationConnection.update({
             where: { id: connection.id },
+            data: DISCONNECTED_CREDENTIAL,
           });
         });
       }

@@ -6,12 +6,12 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 // still observed individually — what is under test is that both happen, and
 // that they happen through the transaction.
 const db: {
-  integrationConnection: { deleteMany: ReturnType<typeof vi.fn> };
+  integrationConnection: { updateMany: ReturnType<typeof vi.fn> };
   notebookSource: { updateMany: ReturnType<typeof vi.fn> };
   $transaction: ReturnType<typeof vi.fn>;
 } = vi.hoisted(() => {
   const client = {
-    integrationConnection: { deleteMany: vi.fn() },
+    integrationConnection: { updateMany: vi.fn() },
     notebookSource: { updateMany: vi.fn() },
     $transaction: vi.fn(),
   };
@@ -89,22 +89,23 @@ describe("K2 a connection revoked on the provider's side", () => {
     );
   });
 
-  it("K2 deletes the connection it can no longer stand for", async () => {
+  it("K2 takes the credential it can no longer stand for off the row", async () => {
     await expect(resolveConnectionToken(INSTALLED)).rejects.toThrow();
 
-    expect(db.integrationConnection.deleteMany).toHaveBeenCalledWith({
+    expect(db.integrationConnection.updateMany).toHaveBeenCalledWith({
       where: { id: "conn_1" },
+      data: { accessTokenEncrypted: null, installationId: null },
     });
   });
 
-  it("K2 detaches its sources first, exactly as a disconnect does", async () => {
+  it("K2 warns its sources first, exactly as a disconnect does", async () => {
     await expect(resolveConnectionToken(INSTALLED)).rejects.toThrow();
 
     const [args] = db.notebookSource.updateMany.mock.calls[0] as [
       { where: { integrationId: string }; data: { warning: string } },
     ];
     expect(args.where.integrationId).toBe("conn_1");
-    expect(args.data.warning).toMatch(/GITHUB integration was disconnected/);
+    expect(args.data.warning).toMatch(/GITHUB integration is disconnected/);
   });
 
   it("K2 gives up both halves together if either fails", async () => {
@@ -112,7 +113,7 @@ describe("K2 a connection revoked on the provider's side", () => {
 
     await expect(resolveConnectionToken(INSTALLED)).rejects.toThrow("deadlock");
     expect(db.notebookSource.updateMany).not.toHaveBeenCalled();
-    expect(db.integrationConnection.deleteMany).not.toHaveBeenCalled();
+    expect(db.integrationConnection.updateMany).not.toHaveBeenCalled();
   });
 
   it("K2 says so in its own application code, so the client can explain", async () => {
@@ -130,6 +131,6 @@ describe("K2 a connection revoked on the provider's side", () => {
     await expect(resolveConnectionToken(INSTALLED)).rejects.toThrow(
       "GitHub is down",
     );
-    expect(db.integrationConnection.deleteMany).not.toHaveBeenCalled();
+    expect(db.integrationConnection.updateMany).not.toHaveBeenCalled();
   });
 });

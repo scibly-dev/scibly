@@ -300,7 +300,7 @@ describe("LS what is stored", () => {
     });
   });
 
-  it("LS3 re-authorising the same workspace touches no sources", async () => {
+  it("LS3 re-authorising the same workspace keeps its sources and lifts their warning", async () => {
     db.integrationConnection.findUnique.mockResolvedValue({
       id: "conn-1",
       workspaceId: "workspace-1",
@@ -308,7 +308,13 @@ describe("LS what is stored", () => {
 
     await callback({ code: "auth-code", state: state() });
 
-    expect(db.notebookSource.updateMany).not.toHaveBeenCalled();
+    expect(db.notebookSource.updateMany).toHaveBeenCalledWith({
+      where: {
+        integrationId: "conn-1",
+        warning: expect.stringContaining("NOTION integration is disconnected"),
+      },
+      data: { warning: null },
+    });
     expect(db.integrationConnection.upsert).toHaveBeenCalledTimes(1);
   });
 
@@ -337,7 +343,11 @@ describe("LS what is stored", () => {
 
     await callback({ code: "auth-code", state: state() });
 
-    expect(db.notebookSource.updateMany).not.toHaveBeenCalled();
+    expect(db.notebookSource.updateMany).not.toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ integrationId: null }),
+      }),
+    );
   });
 
   it("LS4 detaches before the tokens are overwritten", async () => {
@@ -355,7 +365,7 @@ describe("LS what is stored", () => {
     );
   });
 
-  it("LD4 reconnecting after a disconnect does not revive the detached sources", async () => {
+  it("LD4 a connect with nothing to come back to touches no sources", async () => {
     db.integrationConnection.findUnique.mockResolvedValue(null);
 
     await callback({ code: "auth-code", state: state() });
@@ -515,7 +525,11 @@ describe("LS what an installation stores", () => {
 
     await githubCallback({ installation_id: "99", state: githubState() });
 
-    expect(db.notebookSource.updateMany).not.toHaveBeenCalled();
+    expect(db.notebookSource.updateMany).not.toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ integrationId: null }),
+      }),
+    );
     expect(upserted().update).toMatchObject({ installationId: "99" });
   });
 });

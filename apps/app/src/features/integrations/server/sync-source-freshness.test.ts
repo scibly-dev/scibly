@@ -170,10 +170,21 @@ describe("KS1/KS2/KF3/KB1/KB2/KB4: which connections a sync is due to poll", () 
     await loadDueConnections(NOW);
 
     const [args] = db.integrationConnection.findMany.mock.calls[0];
-    expect(args.where.OR).toEqual([
-      { nextPollAfter: null },
-      { nextPollAfter: { lte: NOW } },
-    ]);
+    expect(args.where.AND).toContainEqual({
+      OR: [{ nextPollAfter: null }, { nextPollAfter: { lte: NOW } }],
+    });
+  });
+
+  it("KF3: excludes a connection left without a credential by a disconnect", async () => {
+    await loadDueConnections(NOW);
+
+    const [args] = db.integrationConnection.findMany.mock.calls[0];
+    expect(args.where.AND).toContainEqual({
+      OR: [
+        { accessTokenEncrypted: { not: null } },
+        { installationId: { not: null } },
+      ],
+    });
   });
 
   it("KB1/KB2: owes only connections of an organization with a live subscription", async () => {
