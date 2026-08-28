@@ -2,7 +2,8 @@ import { AppError } from "@scibly/api/application-error";
 import { protectedProcedure } from "@scibly/api/trpc";
 
 import {
-  ingestOrRefreshSource,
+  boundedIngest,
+  boundedLink,
   linkNotebookPages,
   resolveNotebook,
   resolveOwnedNotebookSource,
@@ -49,43 +50,48 @@ export const integrationPageProcedures = {
         organization.id,
         input.provider,
       );
-      const { sourceIds, skipped } = await linkNotebookPages({
-        notebookId: input.notebookId,
-        organizationId: organization.id,
-        actorId: userId,
-        provider: input.provider,
-        connectionId: connection.id,
-        pages: input.pages,
-      });
+      const { sourceIds, skipped } = await boundedLink(userId, () =>
+        linkNotebookPages({
+          notebookId: input.notebookId,
+          organizationId: organization.id,
+          actorId: userId,
+          provider: input.provider,
+          connectionId: connection.id,
+          pages: input.pages,
+        }),
+      );
       return { sourceIds, skipped };
     }),
 
   linkPage: protectedProcedure
     .input(linkPageSchema)
     .mutation(async ({ input, ctx }) => {
+      const userId = ctx.session.user.id;
       const { organization } = await resolveLinkedNotebook(
         input.orgSlug,
         input.notebookId,
-        ctx.session.user.id,
+        userId,
       );
       const { connection } = await resolveConnectionRow(
         organization.id,
         input.provider,
       );
-      const result = await linkNotebookPages({
-        notebookId: input.notebookId,
-        organizationId: organization.id,
-        actorId: ctx.session.user.id,
-        provider: input.provider,
-        connectionId: connection.id,
-        pages: [
-          {
-            id: input.pageId,
-            title: input.pageTitle,
-            url: input.pageUrl,
-          },
-        ],
-      });
+      const result = await boundedLink(userId, () =>
+        linkNotebookPages({
+          notebookId: input.notebookId,
+          organizationId: organization.id,
+          actorId: userId,
+          provider: input.provider,
+          connectionId: connection.id,
+          pages: [
+            {
+              id: input.pageId,
+              title: input.pageTitle,
+              url: input.pageUrl,
+            },
+          ],
+        }),
+      );
       const sourceId = result.sourceIds[0];
       const ingestion = result.ingestions[0];
       if (!sourceId || !ingestion) {
@@ -123,9 +129,7 @@ export const integrationPageProcedures = {
             "This source's integration was disconnected. Reconnect the integration and re-link the page to resume syncing.",
         });
       }
-      const ingestion = await ingestOrRefreshSource(source.id, {
-        actorId: userId,
-      });
+      const ingestion = await boundedIngest(userId, source.id);
       return { sourceId: source.id, ingestion };
     }),
 };
