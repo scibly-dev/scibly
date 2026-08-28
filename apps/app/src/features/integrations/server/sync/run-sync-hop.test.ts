@@ -1,18 +1,12 @@
-import { notLapsedSubscription } from "@scibly/api/entitlement";
 import { routes } from "@scibly/routes";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { PAGE_INTEGRATION_PROVIDERS } from "@/features/integrations/contracts";
 import { SOURCE_STATUS } from "@/shared/content/sources/constants";
 
 const db = vi.hoisted(() => ({
   integrationConnection: { findMany: vi.fn(), update: vi.fn() },
   notebookSource: { findMany: vi.fn(), updateMany: vi.fn() },
-  integrationSyncLease: {
-    updateMany: vi.fn(),
-    create: vi.fn(),
-    findUnique: vi.fn(),
-  },
+  integrationSyncLease: { updateMany: vi.fn() },
 }));
 
 const provider = vi.hoisted(() => ({ pollModifiedPages: vi.fn() }));
@@ -35,21 +29,10 @@ vi.mock("@/env", () => ({
   },
 }));
 
-const prismaClient = await import("@scibly/db/client");
-const {
-  acquireSyncLease,
-  backoffMs,
-  continueSyncLease,
-  getPollingStart,
-  loadOwedConnections,
-  MAX_SYNC_HOPS,
-  releaseSyncLease,
-  runSyncHop,
-  SYNC_HOP_CONNECTION_LIMIT,
-  SYNC_CLOCK_SKEW_MS,
-  SYNC_HOP_DEADLINE_MS,
-  SYNC_WINDOW_FLOOR_MS,
-} = await import("./sync-source-freshness");
+const { SYNC_CLOCK_SKEW_MS, SYNC_HOP_CONNECTION_LIMIT } =
+  await import("./poll-connection");
+const { MAX_SYNC_HOPS, runSyncHop, SYNC_HOP_DEADLINE_MS } =
+  await import("./run-sync-hop");
 
 const NOW = new Date("2026-07-27T03:00:00.000Z");
 const HOUR = 60 * 60 * 1000;
@@ -123,13 +106,6 @@ function writtenTo(connectionId: string) {
   return call?.[0].data;
 }
 
-function uniqueViolation() {
-  return new prismaClient.Prisma.PrismaClientKnownRequestError(
-    "Unique constraint failed",
-    { code: "P2002", clientVersion: "7.8.0" },
-  );
-}
-
 beforeEach(() => {
   vi.resetAllMocks();
   vi.useFakeTimers({ now: NOW });
@@ -146,12 +122,6 @@ beforeEach(() => {
     }),
   );
   db.integrationSyncLease.updateMany.mockResolvedValue({ count: 1 });
-  db.integrationSyncLease.create.mockResolvedValue({ id: "singleton" });
-  db.integrationSyncLease.findUnique.mockResolvedValue({
-    token: LEASE.token,
-    chainStartedAt: CHAIN_STARTED_AT,
-    hops: 1,
-  });
   registry.getProvider.mockReturnValue(provider);
   registry.getPageProvider.mockReturnValue(provider);
   crypto.decryptApiKey.mockReturnValue("plain-token");
@@ -163,33 +133,6 @@ afterEach(() => {
 });
 
 describe("KW1/KW4/KW5: the interval a poll covers", () => {
-  it.each([
-    {
-      case: "a connection that has never been polled takes the floor",
-      lastPolledAt: null,
-      expected: new Date(NOW.getTime() - SYNC_WINDOW_FLOOR_MS),
-    },
-    {
-      case: "a recent poll covers everything since it, less clock skew",
-      lastPolledAt: new Date(NOW.getTime() - DAY),
-      expected: new Date(NOW.getTime() - DAY - SYNC_CLOCK_SKEW_MS),
-    },
-    {
-      case: "a dormant connection is floored rather than asking for a year",
-      lastPolledAt: new Date(NOW.getTime() - 365 * DAY),
-      expected: new Date(NOW.getTime() - SYNC_WINDOW_FLOOR_MS),
-    },
-    {
-      case: "a watermark exactly one skew inside the floor",
-      lastPolledAt: new Date(
-        NOW.getTime() - SYNC_WINDOW_FLOOR_MS + SYNC_CLOCK_SKEW_MS,
-      ),
-      expected: new Date(NOW.getTime() - SYNC_WINDOW_FLOOR_MS),
-    },
-  ])("$case", ({ lastPolledAt, expected }) => {
-    expect(getPollingStart(lastPolledAt, NOW)).toEqual(expected);
-  });
-
   it("asks the provider for the window its own watermark implies", async () => {
     const lastPolledAt = new Date(NOW.getTime() - 6 * HOUR);
     owed([connection({ lastPolledAt })]);
@@ -214,68 +157,7 @@ describe("KW1/KW4/KW5: the interval a poll covers", () => {
   });
 });
 
-describe("KS1/KS2/KC1/KC4: which connections a hop is accountable for", () => {
-  it("takes the least-recently-attempted first, bounded by the batch", async () => {
-    await loadOwedConnections(LEASE, NOW);
-
-    const [args] = db.integrationConnection.findMany.mock.calls[0];
-
-    expect(args.orderBy).toEqual({
-      lastAttemptedAt: { sort: "asc", nulls: "first" },
-    });
-    expect(args.take).toBe(SYNC_HOP_CONNECTION_LIMIT);
-  });
-
-  it("KC4: owes only connections not yet attempted in this chain", async () => {
-    await loadOwedConnections(LEASE, NOW);
-
-    const [args] = db.integrationConnection.findMany.mock.calls[0];
-    expect(args.where.OR).toEqual([
-      { lastAttemptedAt: null },
-      { lastAttemptedAt: { lt: CHAIN_STARTED_AT } },
-    ]);
-  });
-
-  it("owes only connections to a provider that has pages to poll", async () => {
-    await loadOwedConnections(LEASE, NOW);
-
-    const [args] = db.integrationConnection.findMany.mock.calls[0];
-
-    expect(args.where.provider).toEqual({
-      in: [...PAGE_INTEGRATION_PROVIDERS],
-    });
-  });
-
-  it("KF3: excludes a connection still inside its backoff", async () => {
-    await loadOwedConnections(LEASE, NOW);
-
-    const [args] = db.integrationConnection.findMany.mock.calls[0];
-
-    expect(args.where.AND).toEqual([
-      { OR: [{ nextPollAfter: null }, { nextPollAfter: { lte: NOW } }] },
-    ]);
-  });
-});
-
 describe("KB1/KB2/KB3/KB4: organizations that can pay for what a poll leads to", () => {
-  it("KB1/KB2: owes only connections of an organization with a live subscription", async () => {
-    await loadOwedConnections(LEASE, NOW);
-
-    const [args] = db.integrationConnection.findMany.mock.calls[0];
-
-    expect(args.where.organization).toEqual({
-      subscription: notLapsedSubscription(NOW),
-    });
-  });
-
-  it("KB4: does not restate the affordability rule the debit already owns", async () => {
-    await loadOwedConnections(LEASE, NOW);
-
-    const [args] = db.integrationConnection.findMany.mock.calls[0];
-
-    expect(Object.keys(args.where.organization)).toEqual(["subscription"]);
-  });
-
   it("KB4: charges nothing itself — marking is the whole of what a poll does", async () => {
     owed([connection()]);
     sources({ id: "src-a", externalId: "page-a" });
@@ -499,13 +381,6 @@ describe("KW2/KF2/KF3/KF4: what an attempt writes down", () => {
     },
   );
 
-  it("KF3: the backoff table is what the counter indexes into", () => {
-    expect(backoffMs(0)).toBe(0);
-    expect(backoffMs(3)).toBe(6 * HOUR);
-
-    expect(backoffMs(99)).toBe(7 * DAY);
-  });
-
   it("KF4: any success clears the backoff and the failure count", async () => {
     owed([connection({ consecutiveFailures: 4 })]);
     sources({ id: "src-a", externalId: "page-a" });
@@ -575,87 +450,6 @@ describe("KR1/KR3: what the run marks and what it reports", () => {
 
     const [args] = db.notebookSource.updateMany.mock.calls[0];
     expect(args.data).toEqual({ staleAt: NOW });
-  });
-});
-
-describe("KC2/KC3: the singleton lease", () => {
-  it("takes the lease when the one on record is stale", async () => {
-    db.integrationSyncLease.updateMany.mockResolvedValue({ count: 1 });
-
-    const lease = await acquireSyncLease();
-
-    expect(lease).toMatchObject({ hops: 0, token: expect.any(String) });
-    expect(db.integrationSyncLease.create).not.toHaveBeenCalled();
-    const [args] = db.integrationSyncLease.updateMany.mock.calls[0];
-    expect(args.where.heartbeatAt.lt).toBeInstanceOf(Date);
-  });
-
-  it("takes the lease when no chain has ever run", async () => {
-    db.integrationSyncLease.updateMany.mockResolvedValue({ count: 0 });
-
-    expect(await acquireSyncLease()).toMatchObject({ hops: 0 });
-    expect(db.integrationSyncLease.create).toHaveBeenCalledTimes(1);
-  });
-
-  it("refuses a second trigger while a live chain holds the lease", async () => {
-    db.integrationSyncLease.updateMany.mockResolvedValue({ count: 0 });
-    db.integrationSyncLease.create.mockRejectedValue(uniqueViolation());
-
-    expect(await acquireSyncLease()).toBeNull();
-  });
-
-  it("surfaces a database failure rather than silently declining to run", async () => {
-    db.integrationSyncLease.updateMany.mockResolvedValue({ count: 0 });
-    db.integrationSyncLease.create.mockRejectedValue(
-      new Error("connection lost"),
-    );
-
-    await expect(acquireSyncLease()).rejects.toThrow("connection lost");
-  });
-
-  it("KC4: a hop reads the chain's start instant from the row, not from its caller", async () => {
-    db.integrationSyncLease.updateMany.mockResolvedValue({ count: 1 });
-
-    const lease = await continueSyncLease("lease-token");
-
-    expect(lease).toEqual({
-      token: "lease-token",
-      chainStartedAt: CHAIN_STARTED_AT,
-      hops: 1,
-    });
-    const [args] = db.integrationSyncLease.updateMany.mock.calls[0];
-    expect(args.data.hops).toEqual({ increment: 1 });
-  });
-
-  it.each([
-    {
-      case: "its token was taken over or released",
-      held: { count: 0 },
-      row: null,
-    },
-    {
-      case: "another chain took the row between the update and the read",
-      held: { count: 1 },
-      row: {
-        token: "someone-elses",
-        chainStartedAt: CHAIN_STARTED_AT,
-        hops: 1,
-      },
-    },
-  ])("stops a hop whose $case", async ({ held, row }) => {
-    db.integrationSyncLease.updateMany.mockResolvedValue(held);
-    db.integrationSyncLease.findUnique.mockResolvedValue(row);
-
-    expect(await continueSyncLease("lease-token")).toBeNull();
-  });
-
-  it("KC3: releasing expires the lease rather than deleting the row", async () => {
-    await releaseSyncLease(LEASE);
-
-    expect(db.integrationSyncLease.updateMany).toHaveBeenCalledWith({
-      where: { id: "singleton", token: LEASE.token },
-      data: { heartbeatAt: new Date(0) },
-    });
   });
 });
 

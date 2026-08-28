@@ -4,8 +4,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { cronRequest, runDeferredWork } from "../testing";
 
-// Auth is covered in cron-route-guard.test.ts and the sync run in the sync-source-freshness
-// suite; this suite only tests what the route itself decides — chaining, response-before-work,
+// Auth is covered in cron-route-guard.test.ts and the sync run in the server/sync
+// suites; this suite only tests what the route itself decides — chaining, response-before-work,
 // and failure messages.
 
 const sync = vi.hoisted(() => ({

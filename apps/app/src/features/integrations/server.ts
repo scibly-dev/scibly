@@ -10,4 +10,4 @@ export {
   continueSyncLease,
   runSyncHop,
   type SyncLease,
-} from "./server/sync-source-freshness";
+} from "./server/sync";

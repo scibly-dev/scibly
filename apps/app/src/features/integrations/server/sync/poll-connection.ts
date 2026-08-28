@@ -1,11 +1,10 @@
 import type { IntegrationProviderId } from "@/features/integrations/contracts";
+import type { SyncLease } from "./sync-lease";
 
 import { notLapsedSubscription } from "@scibly/api/entitlement";
 import { TimeHelpers } from "@scibly/api/rate-limit";
-import { db, Prisma } from "@scibly/db";
-import { routes } from "@scibly/routes";
+import { db, type Prisma } from "@scibly/db";
 
-import { env } from "@/env";
 import { PAGE_INTEGRATION_PROVIDERS } from "@/features/integrations/contracts";
 import { resolveConnectionToken } from "@/features/integrations/server/connection-token";
 import { getPageProvider } from "@/features/integrations/server/registry";
@@ -19,12 +18,6 @@ export const SYNC_WINDOW_FLOOR_MS = TimeHelpers.IN_MS.DAY * 7;
 
 export const SYNC_HOP_CONNECTION_LIMIT = 10;
 
-export const SYNC_HOP_DEADLINE_MS = TimeHelpers.IN_MS.MINUTE * 4;
-
-export const MAX_SYNC_HOPS = 50;
-
-const SYNC_LEASE_MS = TimeHelpers.IN_MS.MINUTE * 10;
-
 const SYNC_BACKOFF_MS: readonly number[] = [
   0,
   0,
@@ -35,15 +28,7 @@ const SYNC_BACKOFF_MS: readonly number[] = [
 ];
 const SYNC_BACKOFF_CAP_MS = TimeHelpers.IN_MS.DAY * 7;
 
-const SYNC_LEASE_ID = "singleton";
-
-export interface SyncLease {
-  token: string;
-  chainStartedAt: Date;
-  hops: number;
-}
-
-interface SyncRunTotals {
+export interface SyncRunTotals {
   polled: number;
 
   connectionsFailed: number;
@@ -59,65 +44,7 @@ export function backoffMs(consecutiveFailures: number): number {
   return SYNC_BACKOFF_MS[consecutiveFailures] ?? SYNC_BACKOFF_CAP_MS;
 }
 
-export async function acquireSyncLease(): Promise<SyncLease | null> {
-  const token = crypto.randomUUID();
-  const chainStartedAt = new Date();
-  const taken = await db.integrationSyncLease.updateMany({
-    where: {
-      id: SYNC_LEASE_ID,
-      heartbeatAt: { lt: new Date(Date.now() - SYNC_LEASE_MS) },
-    },
-    data: { token, heartbeatAt: new Date(), chainStartedAt, hops: 0 },
-  });
-  if (taken.count > 0) return { token, chainStartedAt, hops: 0 };
-
-  try {
-    await db.integrationSyncLease.create({
-      data: {
-        id: SYNC_LEASE_ID,
-        token,
-        heartbeatAt: new Date(),
-        chainStartedAt,
-        hops: 0,
-      },
-    });
-    return { token, chainStartedAt, hops: 0 };
-  } catch (error) {
-    if (
-      error instanceof Prisma.PrismaClientKnownRequestError &&
-      error.code === "P2002"
-    ) {
-      return null;
-    }
-    throw error;
-  }
-}
-
-export async function continueSyncLease(
-  token: string,
-): Promise<SyncLease | null> {
-  const held = await db.integrationSyncLease.updateMany({
-    where: { id: SYNC_LEASE_ID, token },
-    data: { heartbeatAt: new Date(), hops: { increment: 1 } },
-  });
-  if (held.count === 0) return null;
-
-  const row = await db.integrationSyncLease.findUnique({
-    where: { id: SYNC_LEASE_ID },
-    select: { token: true, chainStartedAt: true, hops: true },
-  });
-  if (!row || row.token !== token) return null;
-  return { token, chainStartedAt: row.chainStartedAt, hops: row.hops };
-}
-
-export async function releaseSyncLease(lease: SyncLease): Promise<void> {
-  await db.integrationSyncLease.updateMany({
-    where: { id: SYNC_LEASE_ID, token: lease.token },
-    data: { heartbeatAt: new Date(0) },
-  });
-}
-
-type SyncConnection = {
+export type SyncConnection = {
   id: string;
   provider: IntegrationProviderId;
   accessTokenEncrypted: string | null;
@@ -236,7 +163,7 @@ async function markChangedSourcesStale(
   totals.marked += marked.count;
 }
 
-async function pollConnection(
+export async function pollConnection(
   connection: SyncConnection,
   totals: SyncRunTotals,
 ): Promise<void> {
@@ -269,87 +196,4 @@ async function pollConnection(
   totals.polled += 1;
   await markChangedSourcesStale(sources, modifiedIds, totals);
   await recordPollSuccess(connection.id, now);
-}
-
-interface SyncHopResult {
-  totals: SyncRunTotals;
-  continued: boolean;
-}
-
-export async function runSyncHop(lease: SyncLease): Promise<SyncHopResult> {
-  const totals: SyncRunTotals = {
-    polled: 0,
-    connectionsFailed: 0,
-    connectionsEmpty: 0,
-    marked: 0,
-    unchanged: 0,
-  };
-  const hopStartedAt = Date.now();
-
-  try {
-    if (lease.hops >= MAX_SYNC_HOPS) {
-      console.error(
-        `[IntegrationFreshness] Chain hit MAX_SYNC_HOPS (${MAX_SYNC_HOPS}); stopping. The termination condition is wrong.`,
-      );
-      await releaseSyncLease(lease);
-      return { totals, continued: false };
-    }
-
-    // One row more than the hop can poll: a surplus row means the chain still
-    // owes work, which is otherwise only knowable by asking a second time.
-    // Sound because every connection this hop touches gets `lastAttemptedAt`
-    // set to now, which the query's `lt: chainStartedAt` filter then excludes.
-    const owed = await loadOwedConnections(
-      lease,
-      new Date(),
-      SYNC_HOP_CONNECTION_LIMIT + 1,
-    );
-    const connections = owed.slice(0, SYNC_HOP_CONNECTION_LIMIT);
-    let deadlineReached = false;
-    for (const connection of connections) {
-      await pollConnection(connection, totals);
-      if (Date.now() - hopStartedAt >= SYNC_HOP_DEADLINE_MS) {
-        deadlineReached = true;
-        break;
-      }
-    }
-
-    const stillOwed =
-      deadlineReached || owed.length > SYNC_HOP_CONNECTION_LIMIT;
-    if (!stillOwed) {
-      await releaseSyncLease(lease);
-      return { totals, continued: false };
-    }
-
-    await handOffChain({ token: lease.token });
-    return { totals, continued: true };
-  } catch (error) {
-    console.error("[IntegrationFreshness] Hop failed:", error);
-    await releaseSyncLease(lease).catch(() => undefined);
-    return { totals, continued: false };
-  }
-}
-
-async function handOffChain(body: { token: string }): Promise<void> {
-  if (!env.CRON_SECRET) {
-    console.error(
-      "[IntegrationFreshness] CRON_SECRET is not configured; chain not continued",
-    );
-    return;
-  }
-  try {
-    await fetch(routes.app.api.cron.syncIntegrations, {
-      method: "POST",
-      headers: {
-        authorization: `Bearer ${env.CRON_SECRET}`,
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(body),
-    });
-  } catch (error) {
-    console.error(
-      "[IntegrationFreshness] Failed to continue the chain:",
-      error,
-    );
-  }
 }
