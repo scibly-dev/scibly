@@ -20,6 +20,8 @@ const CONFIGURED = {
   GITHUB_APP_SLUG: "scibly-dev",
   GITHUB_APP_ID: "123456",
   GITHUB_APP_PRIVATE_KEY: KEYS.privateKey,
+  GITHUB_APP_CLIENT_ID: "Iv23client",
+  GITHUB_APP_CLIENT_SECRET: "client-secret",
 };
 
 const { GitHubProvider } = await import("./provider");
@@ -47,9 +49,30 @@ function lastRequest() {
     init: call[1] as {
       method: string;
       headers: Record<string, string>;
+      body?: string;
       signal?: AbortSignal;
     },
   };
+}
+
+function requestTo(fragment: string) {
+  const call = fetchMock.mock.calls.find((one) =>
+    String(one[0]).includes(fragment),
+  );
+  if (!call) throw new Error(`nothing was fetched for ${fragment}`);
+  return {
+    url: String(call[0]),
+    init: call[1] as { method: string; body?: string },
+  };
+}
+
+// What GitHub answers when the code redeems and the user behind it does reach
+// the installation they submitted — the two calls that stand between a
+// callback's `installation_id` and a connection.
+function authorizes() {
+  fetchMock
+    .mockResolvedValueOnce(ok({ access_token: "gho_user" }))
+    .mockResolvedValueOnce(ok({ total_count: 1 }));
 }
 
 function decodeJwt(token: string) {
@@ -121,12 +144,13 @@ describe("GH3 starting the install", () => {
 
 describe("GH4 what the callback becomes", () => {
   it("GH4 turns an installation id into the account it was installed on", async () => {
-    fetchMock.mockResolvedValue(
+    authorizes();
+    fetchMock.mockResolvedValueOnce(
       ok({ id: 42, account: { id: 777, login: "acme-inc" } }),
     );
 
     const credential = await new GitHubProvider().completeConnect({
-      code: null,
+      code: "auth-code",
       installationId: "42",
     });
 
@@ -139,12 +163,13 @@ describe("GH4 what the callback becomes", () => {
   });
 
   it("GH4 asks about the installation as the app itself, with a signed JWT", async () => {
-    fetchMock.mockResolvedValue(
+    authorizes();
+    fetchMock.mockResolvedValueOnce(
       ok({ id: 42, account: { id: 777, login: "acme-inc" } }),
     );
 
     await new GitHubProvider().completeConnect({
-      code: null,
+      code: "auth-code",
       installationId: "42",
     });
     const { url, init } = lastRequest();
@@ -154,6 +179,27 @@ describe("GH4 what the callback becomes", () => {
     expect(
       decodeJwt(init.headers.authorization.split(" ")[1] ?? "").payload,
     ).toMatchObject({ iss: "123456" });
+  });
+
+  it("GH4 redeems the code as the app's OAuth client before trusting anything", async () => {
+    authorizes();
+    fetchMock.mockResolvedValueOnce(
+      ok({ id: 42, account: { id: 777, login: "acme-inc" } }),
+    );
+
+    await new GitHubProvider().completeConnect({
+      code: "auth-code",
+      installationId: "42",
+    });
+    const { url, init } = requestTo("login/oauth/access_token");
+
+    expect(url).toBe("https://github.com/login/oauth/access_token");
+    expect(init.method).toBe("POST");
+    expect(JSON.parse(String(init.body))).toEqual({
+      client_id: "Iv23client",
+      client_secret: "client-secret",
+      code: "auth-code",
+    });
   });
 
   it("GH4 refuses a callback that names no installation", async () => {
@@ -166,12 +212,53 @@ describe("GH4 what the callback becomes", () => {
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it("GH4 refuses an installation GitHub gives no account for", async () => {
-    fetchMock.mockResolvedValue(ok({ id: 42, account: null }));
-
+  it("GH4 refuses a callback that carries no user authorization to check", async () => {
     await expect(
       new GitHubProvider().completeConnect({
         code: null,
+        installationId: "42",
+      }),
+    ).rejects.toThrow(/no user authorization/i);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("GH4 refuses an installation the authorizing user cannot reach", async () => {
+    fetchMock
+      .mockResolvedValueOnce(ok({ access_token: "gho_user" }))
+      .mockResolvedValueOnce(failed(404, { message: "Not Found" }));
+
+    await expect(
+      new GitHubProvider().completeConnect({
+        code: "auth-code",
+        // Someone else's installation, submitted by an admin of their own org.
+        installationId: "999",
+      }),
+    ).rejects.toThrow(/not one this user can reach/i);
+    expect(
+      fetchMock.mock.calls.some((one) =>
+        String(one[0]).includes("/app/installations/"),
+      ),
+    ).toBe(false);
+  });
+
+  it("GH4 refuses a code GitHub will not redeem", async () => {
+    fetchMock.mockResolvedValueOnce(ok({ error: "bad_verification_code" }));
+
+    await expect(
+      new GitHubProvider().completeConnect({
+        code: "replayed",
+        installationId: "42",
+      }),
+    ).rejects.toThrow(/bad_verification_code/);
+  });
+
+  it("GH4 refuses an installation GitHub gives no account for", async () => {
+    authorizes();
+    fetchMock.mockResolvedValueOnce(ok({ id: 42, account: null }));
+
+    await expect(
+      new GitHubProvider().completeConnect({
+        code: "auth-code",
         installationId: "42",
       }),
     ).rejects.toThrow(/names no account/i);

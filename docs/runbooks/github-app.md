@@ -19,20 +19,33 @@ personal account (dev) or on the organization that should own it (prod).
 | --- | --- | --- |
 | **GitHub App name** | `Scibly (dev)` — names are globally unique, so add your own suffix if it's taken | `Scibly` |
 | **Homepage URL** | `http://localhost:3001` | your app URL |
-| **Setup URL** (under *Post installation*) | `http://localhost:3001/api/integrations/github/callback` | `${NEXT_PUBLIC_APP_URL}/api/integrations/github/callback` |
+| **Callback URL** (under *Identifying and authorizing users*) | `http://localhost:3001/api/integrations/github/callback` | `${NEXT_PUBLIC_APP_URL}/api/integrations/github/callback` |
+| **Request user authorization (OAuth) during installation** | **checked** | **checked** |
+| **Setup URL** (under *Post installation*) | same URL as the callback | same URL as the callback |
 | **Redirect on update** | checked | checked |
-| **Callback URL** (under *Identifying and authorizing users*) | leave blank | leave blank |
-| **Request user authorization (OAuth) during installation** | **unchecked** | **unchecked** |
 | **Webhook → Active** | unchecked | unchecked |
 | **Where can this GitHub App be installed?** | *Only on this account* | *Any account* |
 
-The **Setup URL is the one that matters**: when someone finishes installing the
-app, GitHub sends their browser there with `installation_id`, `setup_action`,
-and the signed `state` scibly put on the install link. That route
+The **callback URL is the one that matters**: with user authorization checked,
+GitHub sends the installer's browser there with `installation_id`,
+`setup_action`, a `code`, and the signed `state` scibly put on the install
+link. That route
 ([callback/route.ts](../../apps/app/src/app/api/integrations/[provider]/callback/route.ts))
-is what turns the installation into a connection. Leave the OAuth callback
-blank and the user-authorization box unchecked — scibly never asks GitHub for a
-user token, only for the installation.
+is what turns the installation into a connection.
+
+**The user-authorization box is a security control, not a nicety.** The
+`installation_id` in that redirect is a query parameter, so any signed-in
+admin can put any number there — including the id of another organization's
+installation, which the app's own key would happily mint tokens for. The
+`code` beside it is the part that cannot be forged: scibly redeems it for a
+user token and asks GitHub whether *that user* reaches *that installation*
+before the connection is written. Uncheck the box and no code arrives, so
+every connect fails — which is the intended failure direction.
+
+That check is GitHub's answer, not scibly's, so it follows GitHub's own
+permissions: anyone who can reach the installation's repositories on GitHub
+can connect it, and being an owner or admin of the scibly organization is
+required on top of that, never instead of it.
 
 *Redirect on update* is checked so that changing which repositories the
 installation can reach comes back through the same route and refreshes the
@@ -71,6 +84,9 @@ On the app's settings page:
   segment is the slug → `GITHUB_APP_SLUG`
 - **Private keys → Generate a private key** — downloads a `.pem` **once**;
   GitHub keeps no copy → `GITHUB_APP_PRIVATE_KEY`
+- **Client ID**, shown beside the App ID → `GITHUB_APP_CLIENT_ID`
+- **Client secrets → Generate a new client secret** — shown **once** →
+  `GITHUB_APP_CLIENT_SECRET`
 
 The private key is the app's whole identity: anyone holding it can mint tokens
 for every installation. Keep it out of the repository and out of the database —
@@ -90,9 +106,11 @@ multi-line value in a secret manager works too):
 GITHUB_APP_SLUG="scibly-dev"
 GITHUB_APP_ID="123456"
 GITHUB_APP_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----\nMIIEow...\n-----END RSA PRIVATE KEY-----\n"
+GITHUB_APP_CLIENT_ID="Iv23li..."
+GITHUB_APP_CLIENT_SECRET="..."
 ```
 
-All three are required by the env schema, like Notion's: the app refuses to
+All five are required by the env schema, like Notion's: the app refuses to
 boot without them rather than failing at the moment someone presses *Connect*.
 
 ## 4. Verify
@@ -102,7 +120,8 @@ boot without them rather than failing at the moment someone presses *Connect*.
    *Connect* on GitHub.
 3. GitHub asks which account to install on and which repositories to give it.
    Pick a couple rather than *All repositories* — it makes the next step
-   readable.
+   readable. Authorize the app when GitHub asks: that is the step that proves
+   the installation is yours to connect.
 4. You land back on the settings page with GitHub connected, showing the
    account it was installed on and the repositories the installation reaches.
 5. *Disconnect* removes the connection on scibly's side. It does **not**
@@ -133,5 +152,13 @@ different Notion workspace behaves.
   dev credentials against a production install, or the other way round. The
   same 404 *after* connect means the app was uninstalled, and is handled rather
   than reported: the connection is deleted.
+- **`GitHub returned no user authorization for the installation`** on connect —
+  *Request user authorization (OAuth) during installation* is unchecked on the
+  app, so GitHub sent no `code` to verify the installation with. Check it.
+- **`... is not one this user can reach`** on connect — the code was redeemed,
+  and GitHub says the user who authorized it has no access to the installation
+  they submitted. Either they are connecting an installation belonging to a
+  GitHub account they are not a member of, or a stale callback URL was replayed
+  with someone else's `installation_id`.
 - **`401 'Issued at' is in the future`** — the machine's clock is ahead of
   GitHub's by more than the minute the signing already backdates. Fix the clock.

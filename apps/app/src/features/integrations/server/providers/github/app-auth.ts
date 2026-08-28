@@ -8,6 +8,7 @@ import { env } from "@/env";
 // dropped afterwards, which is why none is ever written down.
 
 const GITHUB_API = "https://api.github.com";
+const GITHUB_OAUTH_TOKEN_URL = "https://github.com/login/oauth/access_token";
 
 // GitHub rejects a JWT issued ahead of its own clock and caps the lifetime at
 // ten minutes; both bounds are taken with room to spare.
@@ -18,6 +19,8 @@ export interface GitHubAppConfig {
   appSlug: string;
   appId: string;
   privateKey: string;
+  clientId: string;
+  clientSecret: string;
 }
 
 export interface GitHubInstallation {
@@ -39,6 +42,8 @@ export function readGitHubAppConfig(): GitHubAppConfig {
     // A PEM survives a .env file only with its newlines escaped, so both
     // spellings are normalised to the one OpenSSL will parse.
     privateKey: env.GITHUB_APP_PRIVATE_KEY.replace(/\\n/g, "\n"),
+    clientId: env.GITHUB_APP_CLIENT_ID,
+    clientSecret: env.GITHUB_APP_CLIENT_SECRET,
   };
 }
 
@@ -171,6 +176,69 @@ export async function mintInstallationToken(
     mintedTokenResponse,
   );
   return minted.token;
+}
+
+const userTokenResponse = z.union([
+  z.object({ access_token: z.string() }),
+  z.object({ error: z.string() }),
+]);
+
+/** Redeem the code the install redirect carried for a token that speaks as the
+ * user who installed — never stored, only used to check what they can reach. */
+export async function exchangeUserToken(
+  config: GitHubAppConfig,
+  code: string,
+): Promise<string> {
+  const response = await fetch(GITHUB_OAUTH_TOKEN_URL, {
+    method: "POST",
+    headers: { accept: "application/json", "content-type": "application/json" },
+    body: JSON.stringify({
+      client_id: config.clientId,
+      client_secret: config.clientSecret,
+      code,
+    }),
+    cache: "no-store",
+    signal: AbortSignal.timeout(GITHUB_TIMEOUT_MS),
+  });
+  if (!response.ok) {
+    throw new GitHubRequestError(
+      `GitHub POST ${GITHUB_OAUTH_TOKEN_URL} failed: ${response.status}`,
+      response.status,
+    );
+  }
+  const body = userTokenResponse.parse(await response.json());
+  // A refused or spent code comes back as a 200 with an error in the body.
+  if (!("access_token" in body)) {
+    throw new Error(`GitHub refused the user authorization: ${body.error}`);
+  }
+  return body.access_token;
+}
+
+// Asked as the user rather than as the app: the app can see every installation
+// it has, so its own answer would say nothing about who is standing at the
+// callback. GitHub answers 403 or 404 for an installation the user has no
+// access to, which is the whole question — anything else is a failure to
+// answer it, and is thrown rather than read as a no.
+export async function userCanAccessInstallation(
+  userToken: string,
+  installationId: string,
+): Promise<boolean> {
+  try {
+    await githubRequest(
+      `/user/installations/${encodeURIComponent(installationId)}/repositories?per_page=1`,
+      { method: "GET", authorization: `Bearer ${userToken}` },
+      z.object({ total_count: z.number() }),
+    );
+    return true;
+  } catch (error) {
+    if (
+      error instanceof GitHubRequestError &&
+      (error.status === 403 || error.status === 404)
+    ) {
+      return false;
+    }
+    throw error;
+  }
 }
 
 const REPOS_PER_PAGE = 100;

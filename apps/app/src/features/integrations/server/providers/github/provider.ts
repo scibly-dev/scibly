@@ -10,11 +10,13 @@ import {
   IntegrationRevokedError,
 } from "../../base-provider";
 import {
+  exchangeUserToken,
   fetchInstallation,
   fetchInstallationRepositories,
   GitHubRequestError,
   mintInstallationToken,
   readGitHubAppConfig,
+  userCanAccessInstallation,
 } from "./app-auth";
 
 async function installationIsGone(
@@ -38,8 +40,9 @@ export class GitHubProvider extends IntegrationProvider {
   readonly displayName = "GitHub";
   readonly credential = "app_installation";
 
-  // The redirect back is the app's registered setup URL, so unlike OAuth there
-  // is nothing to pass here; only the state rides along and comes back.
+  // The redirect back is the app's own registered callback URL, so unlike
+  // OAuth there is nothing to pass here; the state rides along and comes back
+  // beside the installation and the code that authorizes it.
   getAuthUrl(state: string, _redirectUri: string): string {
     const { appSlug } = readGitHubAppConfig();
     const url = new URL(
@@ -49,16 +52,32 @@ export class GitHubProvider extends IntegrationProvider {
     return url.toString();
   }
 
+  // The installation id arrives as a query parameter on a browser redirect, so
+  // it is a claim, not a fact: on its own it would let anyone who can pass the
+  // callback for their own organization name someone else's installation and
+  // have it persisted as theirs — every repository behind it readable from a
+  // Scibly org its owners never heard of. The code beside it is the proof.
+  // Redeemed, it says which GitHub user is standing here, and GitHub is asked
+  // whether that user reaches this installation at all.
   async completeConnect(
     params: ConnectCallbackParams,
   ): Promise<IntegrationCredential> {
     if (!params.installationId) {
       throw new Error("GitHub returned no installation to connect to.");
     }
-    const installation = await fetchInstallation(
-      readGitHubAppConfig(),
-      params.installationId,
-    );
+    if (!params.code) {
+      throw new Error(
+        "GitHub returned no user authorization for the installation.",
+      );
+    }
+    const config = readGitHubAppConfig();
+    const userToken = await exchangeUserToken(config, params.code);
+    if (!(await userCanAccessInstallation(userToken, params.installationId))) {
+      throw new Error(
+        `GitHub installation ${params.installationId} is not one this user can reach.`,
+      );
+    }
+    const installation = await fetchInstallation(config, params.installationId);
     return {
       kind: "app_installation",
       installationId: installation.installationId,
