@@ -5,6 +5,8 @@ import type {
 import type { ConnectCallbackParams } from "../../base-provider";
 import type { GitHubAppConfig } from "./app-auth";
 
+import { routes } from "@scibly/routes";
+
 import {
   IntegrationProvider,
   IntegrationRevokedError,
@@ -45,9 +47,7 @@ export class GitHubProvider extends IntegrationProvider {
   // beside the installation and the code that authorizes it.
   getAuthUrl(state: string, _redirectUri: string): string {
     const { appSlug } = readGitHubAppConfig();
-    const url = new URL(
-      `https://github.com/apps/${encodeURIComponent(appSlug)}/installations/new`,
-    );
+    const url = new URL(routes.external.integrations.github.install(appSlug));
     url.searchParams.set("state", state);
     return url.toString();
   }

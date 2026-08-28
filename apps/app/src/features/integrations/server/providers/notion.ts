@@ -7,6 +7,7 @@ import type {
 import type { ConnectCallbackParams } from "../base-provider";
 
 import { Client, isFullPage } from "@notionhq/client";
+import { routes } from "@scibly/routes";
 
 import { env } from "@/env";
 
@@ -32,7 +33,7 @@ export class NotionProvider extends PageIntegrationProvider {
   readonly credential = "oauth_tokens";
 
   getAuthUrl(state: string, redirectUri: string): string {
-    const url = new URL("https://api.notion.com/v1/oauth/authorize");
+    const url = new URL(routes.external.integrations.notion.oauthAuthorize);
     url.searchParams.set("client_id", env.NOTION_CLIENT_ID);
     url.searchParams.set("response_type", "code");
     url.searchParams.set("owner", "user");

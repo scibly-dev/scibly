@@ -1,3 +1,4 @@
+import { routes } from "@scibly/routes";
 import crypto from "crypto";
 import { z } from "zod";
 
@@ -6,9 +7,6 @@ import { env } from "@/env";
 // The app's private key never leaves this module: every call a connection
 // makes carries an installation access token minted here for that call and
 // dropped afterwards, which is why none is ever written down.
-
-const GITHUB_API = "https://api.github.com";
-const GITHUB_OAUTH_TOKEN_URL = "https://github.com/login/oauth/access_token";
 
 // GitHub rejects a JWT issued ahead of its own clock and caps the lifetime at
 // ten minutes; both bounds are taken with room to spare.
@@ -93,19 +91,22 @@ async function githubRequest<T>(
   init: { method: "GET" | "POST"; authorization: string },
   schema: z.ZodType<T>,
 ): Promise<T> {
-  const response = await fetch(`${GITHUB_API}${path}`, {
-    method: init.method,
-    headers: {
-      accept: "application/vnd.github+json",
-      authorization: init.authorization,
-      "x-github-api-version": "2022-11-28",
+  const response = await fetch(
+    `${routes.external.integrations.github.api}${path}`,
+    {
+      method: init.method,
+      headers: {
+        accept: "application/vnd.github+json",
+        authorization: init.authorization,
+        "x-github-api-version": "2022-11-28",
+      },
+      cache: "no-store",
+      // `fetch` waits forever by default. A sync hop polls up to ten connections
+      // inside a four-minute deadline, so one hung request must not be able to
+      // spend the whole hop and strand the rest of the batch unpolled.
+      signal: AbortSignal.timeout(GITHUB_TIMEOUT_MS),
     },
-    cache: "no-store",
-    // `fetch` waits forever by default. A sync hop polls up to ten connections
-    // inside a four-minute deadline, so one hung request must not be able to
-    // spend the whole hop and strand the rest of the batch unpolled.
-    signal: AbortSignal.timeout(GITHUB_TIMEOUT_MS),
-  });
+  );
 
   if (!response.ok) {
     // Only GitHub's status and message are carried out: the request was
@@ -189,7 +190,7 @@ export async function exchangeUserToken(
   config: GitHubAppConfig,
   code: string,
 ): Promise<string> {
-  const response = await fetch(GITHUB_OAUTH_TOKEN_URL, {
+  const response = await fetch(routes.external.integrations.github.oauthToken, {
     method: "POST",
     headers: { accept: "application/json", "content-type": "application/json" },
     body: JSON.stringify({
@@ -202,7 +203,7 @@ export async function exchangeUserToken(
   });
   if (!response.ok) {
     throw new GitHubRequestError(
-      `GitHub POST ${GITHUB_OAUTH_TOKEN_URL} failed: ${response.status}`,
+      `GitHub POST ${routes.external.integrations.github.oauthToken} failed: ${response.status}`,
       response.status,
     );
   }

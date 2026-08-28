@@ -28,7 +28,8 @@ const toHomeUrl = (path: string) =>
 const toAppUrl = (path: string) =>
   env.NEXT_PUBLIC_APP_URL.concat(path.startsWith("/") ? path : `/${path}`);
 
-const GITHUB_REPO_URL = "https://github.com/scibly-dev/scibly" as const;
+const GITHUB_URL = "https://github.com" as const;
+const GITHUB_REPO_URL = `${GITHUB_URL}/scibly-dev/scibly` as const;
 
 const BASE_AUTH_PATH = "/auth" as const;
 const BASE_PROFILE_PATH = "/profile" as const;
@@ -221,6 +222,23 @@ export const routes = {
       repo: GITHUB_REPO_URL,
       issues: `${GITHUB_REPO_URL}/issues` as const,
       file: (path: string) => `${GITHUB_REPO_URL}/blob/main/${path}` as const,
+    },
+
+    // Where the GitHub and Notion integrations talk to, as opposed to the
+    // repository above: an install page a browser is sent to, and the two
+    // origins the server calls.
+    integrations: {
+      github: {
+        api: "https://api.github.com",
+        oauthToken: `${GITHUB_URL}/login/oauth/access_token` as const,
+        install: (appSlug: string) =>
+          `${GITHUB_URL}/apps/${encodeURIComponent(appSlug)}/installations/new` as const,
+      },
+      notion: {
+        oauthAuthorize: "https://api.notion.com/v1/oauth/authorize",
+        page: (id: string) =>
+          `https://www.notion.so/${id.replace(/-/g, "")}` as const,
+      },
     },
   },
 
