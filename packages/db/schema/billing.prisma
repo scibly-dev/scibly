@@ -17,9 +17,7 @@ enum SubscriptionStatus {
   @@map("subscription_status")
 }
 
-/// Billable actions. Retrieval search, web fetch, and failed-ingest retries are free.
-/// `TOPUP_PURCHASE` is the one value that grants rather than spends; reads that
-/// summarise spend count `SPEND_ACTIONS` from `src/topup-catalogue.ts` instead.
+/// `TOPUP_PURCHASE` grants rather than spends; spend summaries count `SPEND_ACTIONS` from `src/topup-catalogue.ts`.
 enum CreditAction {
   CHAT_MESSAGE
   IMAGE_GENERATION
@@ -37,21 +35,19 @@ enum CreditBucket {
   @@map("credit_bucket")
 }
 
-/// Plan limits live as typed constants in `src/plan-catalogue.ts`, not here.
-/// Internal organizations are an ordinary plan with unreachable numbers, never a bypass flag.
+/// INTERNAL is an ordinary plan with unreachable limits, never a bypass flag; limits live in `src/plan-catalogue.ts`.
 model OrganizationSubscription {
   id                      String             @id @default(cuid())
   organizationId          String             @unique
   organization            Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   plan                    SubscriptionPlan
   status                  SubscriptionStatus @default(ACTIVE)
-  /// When the subscription entered PAST_DUE and its grace period started; null otherwise. Set once by a guarded write, cleared on recovery.
+  /// When the grace period started; null otherwise.
   pastDueSince            DateTime?
   currentPeriodStart      DateTime
-  /// End of the period this row is for, and so the next renewal charge date;
-  /// null for plans that never bill (TRIAL, INTERNAL).
+  /// The next renewal charge date; null for plans that never bill (TRIAL, INTERNAL).
   currentPeriodEnd        DateTime?
-  /// Start of the period whose public-session ceiling warning has already been mailed; a new period re-arms it. Claimed by a guarded `updateMany`.
+  /// Start of the period whose session-ceiling warning was already mailed; a new period re-arms it.
   sessionCeilingWarnedFor DateTime?
   purchasedLearnerSeats   Int                @default(0)
   stripeCustomerId        String?            @unique
@@ -62,18 +58,14 @@ model OrganizationSubscription {
   @@map("organization_subscription")
 }
 
-/// Debit target for a guarded `updateMany`. `allowanceRemaining` resets each
-/// period; `topupRemaining` never expires.
+/// `allowanceRemaining` resets each period; `topupRemaining` never expires.
 model OrganizationCredit {
   id                         String       @id @default(cuid())
   organizationId             String       @unique
   organization               Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   allowanceRemaining         Int
   topupRemaining             Int          @default(0)
-  /// Highest allowance-warning threshold already mailed this period, as a whole
-  /// percentage; 0 means neither has fired. Raised by a guarded `updateMany` so
-  /// concurrent charges crossing one line notify once, and reset with the
-  /// allowance below.
+  /// Highest warning threshold already mailed this period, as a whole percentage; 0 means none has fired.
   notifiedAllowanceThreshold Int          @default(0)
   periodStart                DateTime
   periodEnd                  DateTime?
@@ -83,7 +75,7 @@ model OrganizationCredit {
   @@map("organization_credit")
 }
 
-/// Append-only charge audit trail; refunds set `refundedAt` instead of deleting rows. `TOPUP_PURCHASE` rows take their id from the Stripe checkout session, so a re-delivered purchase credits nothing.
+/// Append-only: refunds set `refundedAt` rather than deleting, and `TOPUP_PURCHASE` rows take their id from the Stripe checkout session so a re-delivered purchase credits nothing.
 model CreditLedgerEntry {
   id             String       @id @default(cuid())
   organizationId String
@@ -94,7 +86,7 @@ model CreditLedgerEntry {
   notebook       Notebook?    @relation(fields: [notebookId], references: [id], onDelete: SetNull)
   action         CreditAction
   creditsCharged Int
-  /// Which bucket the charge was debited from — a refund must credit the same one.
+  /// A refund must credit the same bucket it debited.
   bucket         CreditBucket
   refundedAt     DateTime?
   createdAt      DateTime     @default(now())

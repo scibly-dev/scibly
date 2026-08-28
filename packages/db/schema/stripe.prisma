@@ -1,7 +1,4 @@
-/// Better Auth Stripe plugin's own bookkeeping table (mirrors `@better-auth/stripe`'s
-/// `src/schema.ts`), not the domain model — that's `OrganizationSubscription` /
-/// `OrganizationCredit` in `billing.prisma`, kept in sync by
-/// `packages/auth/src/billing/sync-subscription.ts` via the plugin's lifecycle hooks.
+/// Mirrors `@better-auth/stripe`'s own `src/schema.ts`, not the domain model — that is `billing.prisma`, kept in sync by `packages/auth/src/billing/sync-subscription.ts`.
 model Subscription {
   id                   String    @id @default(cuid())
   plan                 String
