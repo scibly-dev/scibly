@@ -7,11 +7,11 @@ steps, or [docker.md](docker.md) instead if you just want it running —
 
 ## Prerequisites
 
-| Tool       | Minimum       | Recommended                                                |
-| ---------- | ------------- | ----------------------------------------------------------- |
-| Node       | ≥22 ([`engines`](../package.json)) | 22 LTS — matches [CI](../.github/workflows/ci.yml); production images run 24 |
-| pnpm       | —             | 10.33.0, exact — pinned in [package.json](../package.json)'s `packageManager` field; `corepack enable` picks it up |
-| PostgreSQL | —             | any recent version — one database, shared by `apps/app`, `apps/web`, and `apps/collab` |
+| Tool       | Minimum                            | Recommended                                                                                                        |
+| ---------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Node       | ≥22 ([`engines`](../package.json)) | 22 LTS — matches [CI](../.github/workflows/ci.yml); production images run 24                                       |
+| pnpm       | —                                  | 10.33.0, exact — pinned in [package.json](../package.json)'s `packageManager` field; `corepack enable` picks it up |
+| PostgreSQL | —                                  | any recent version — one database, shared by `apps/app`, `apps/web`, and `apps/collab`                             |
 
 ## 1. Install
 
@@ -140,11 +140,10 @@ pnpm dev:inngest
 
 That's the Inngest dev server, dashboard on http://localhost:8288, pointed at
 `apps/app`'s serve route (`/api/inngest`). It picks up whatever
-`apps/app/src/lib/inngest/functions/index.ts` registers, re-syncing on its own
-as you edit. `heartbeat` is there to prove the wiring: it runs every 15
-minutes, and sending `scibly/heartbeat.requested` with `{ "fail": true }` from
-the dashboard's event tester makes it fail, so you can watch the three
-attempts `retries: 2` produces.
+`apps/app/src/server/inngest.ts` registers, re-syncing on its own as you edit.
+Nothing waits for a cron to come round: the dashboard's event tester sends any
+event by hand, so `scibly/integration-poll.requested` with a `connectionId`
+runs one poll on the spot.
 
 ## Checks
 
@@ -166,7 +165,7 @@ pnpm validate      # check + test:unit + test:e2e
   running, then fill credentials in as you need the features behind them.
 - **Background functions never run** — `pnpm dev` does not start the Inngest
   dev server; `pnpm dev:inngest` does, separately (see step 4). With it
-  running, http://localhost:8288 lists `heartbeat` under Functions; if it
+  running, http://localhost:8288 lists them under Functions; if it
   doesn't, the app wasn't reachable at http://localhost:3001/api/inngest when
   the server polled it.
 - **i18n or editor-schema errors on `dev`/`build`** — both `apps/app` and

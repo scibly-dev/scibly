@@ -43,8 +43,6 @@ export interface IntegrationPageRevision {
 
 export interface OAuthTokens {
   accessToken: string;
-  refreshToken?: string;
-  expiresAt?: Date;
   workspaceId?: string;
   workspaceName?: string;
 }

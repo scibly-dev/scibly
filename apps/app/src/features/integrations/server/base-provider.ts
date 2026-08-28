@@ -45,12 +45,6 @@ export abstract class BaseIntegrationProvider {
     redirectUri: string,
   ): Promise<OAuthTokens>;
 
-  async refreshToken(_refreshToken: string): Promise<OAuthTokens> {
-    throw new Error(
-      `${this.providerId} does not support token refresh. Reconnect the integration.`,
-    );
-  }
-
   pollModifiedPages(_token: string, _since: Date): Promise<IntegrationPage[]> {
     return Promise.resolve([]);
   }

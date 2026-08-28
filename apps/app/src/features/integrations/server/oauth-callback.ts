@@ -179,10 +179,6 @@ async function exchangeAndPersistConnection(
 
   const connectionData = {
     accessTokenEncrypted: encryptApiKey(tokens.accessToken),
-    refreshTokenEncrypted: tokens.refreshToken
-      ? encryptApiKey(tokens.refreshToken)
-      : null,
-    tokenExpiresAt: tokens.expiresAt ?? null,
     workspaceId: tokens.workspaceId ?? null,
     workspaceName: tokens.workspaceName ?? null,
 

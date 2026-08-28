@@ -58,17 +58,6 @@ export const env = createEnv({
       .min(1)
       .default("google/gemini-3.1-flash-lite-image"),
 
-    CRON_SECRET: z
-      .string()
-      .min(1)
-      .optional()
-      .refine(
-        (val) => process.env.NODE_ENV !== "production" || val !== undefined,
-        {
-          message:
-            "CRON_SECRET is required in production — without it, cron sync silently never runs (fails closed at request time, but deploys succeed).",
-        },
-      ),
     /** HMAC key shared only by the app token issuer and collab verifier. */
     COLLAB_TOKEN_SECRET: z.string().min(32),
 
@@ -131,7 +120,6 @@ export const env = createEnv({
     AI_GATEWAY_API_KEY: process.env.AI_GATEWAY_API_KEY,
     SCIBLY_DEFAULT_CHAT_MODEL: process.env.SCIBLY_DEFAULT_CHAT_MODEL,
     SCIBLY_DEFAULT_IMAGE_MODEL: process.env.SCIBLY_DEFAULT_IMAGE_MODEL,
-    CRON_SECRET: process.env.CRON_SECRET,
     COLLAB_TOKEN_SECRET:
       process.env.COLLAB_TOKEN_SECRET ?? process.env.BETTER_AUTH_SECRET,
 
