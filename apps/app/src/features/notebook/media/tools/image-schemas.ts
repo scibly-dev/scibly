@@ -1,3 +1,4 @@
+import { httpsUrl } from "@scibly/schemas/common";
 import { z } from "zod";
 
 export const GENERATED_IMAGE_PAGE_SIZE = 12;
@@ -76,7 +77,7 @@ export const generateImageInputSchema = z.object({
 
 export const generateImageOutputSchema = z.object({
   imageId: z.string(),
-  url: z.string().url(),
+  url: httpsUrl(),
   prompt: z.string(),
   alt: z.string(),
   mediaType: z.literal("image/webp"),
@@ -136,7 +137,7 @@ export const listNotebookMediaInputSchema = z.object({
 
 const listNotebookMediaItemSchema = z.object({
   id: z.string(),
-  url: z.url(),
+  url: httpsUrl(),
   alt: z.string(),
   prompt: z.string(),
   width: z.number().int().positive().optional(),

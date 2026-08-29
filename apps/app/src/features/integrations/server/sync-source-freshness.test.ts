@@ -7,18 +7,19 @@ const db = vi.hoisted(() => ({
   integrationConnection: {
     findMany: vi.fn(),
     findUnique: vi.fn(),
-    update: vi.fn(),
+    updateMany: vi.fn(),
   },
   notebookSource: { findMany: vi.fn(), updateMany: vi.fn() },
+  $transaction: vi.fn(),
 }));
 
 const provider = vi.hoisted(() => ({ pollModifiedPages: vi.fn() }));
-const registry = vi.hoisted(() => ({ getProvider: vi.fn() }));
-const crypto = vi.hoisted(() => ({ decryptApiKey: vi.fn() }));
+const registry = vi.hoisted(() => ({ getPageProvider: vi.fn() }));
+const token = vi.hoisted(() => ({ resolveConnectionToken: vi.fn() }));
 
 vi.mock("@scibly/db", () => ({ db }));
 vi.mock("@/features/integrations/server/registry", () => registry);
-vi.mock("@/lib/crypto/api-key", () => crypto);
+vi.mock("@/features/integrations/server/connection-token", () => token);
 
 const {
   backoffMs,
@@ -72,7 +73,7 @@ function markedStale(): string[] {
 }
 
 function writtenTo(connectionId: string) {
-  const call = db.integrationConnection.update.mock.calls.find(
+  const call = db.integrationConnection.updateMany.mock.calls.find(
     ([args]) => args.where.id === connectionId,
   );
   return call?.[0].data;
@@ -84,15 +85,18 @@ beforeEach(() => {
 
   db.integrationConnection.findMany.mockResolvedValue([]);
   db.integrationConnection.findUnique.mockResolvedValue(connection());
-  db.integrationConnection.update.mockResolvedValue({});
+  db.integrationConnection.updateMany.mockResolvedValue({ count: 1 });
   db.notebookSource.findMany.mockResolvedValue([]);
   db.notebookSource.updateMany.mockImplementation(
     async ({ where }: { where: { id: { in: string[] } } }) => ({
       count: where.id.in.length,
     }),
   );
-  registry.getProvider.mockReturnValue(provider);
-  crypto.decryptApiKey.mockReturnValue("plain-token");
+  db.$transaction.mockImplementation(async (ops: Promise<unknown>[]) =>
+    Promise.all(ops),
+  );
+  registry.getPageProvider.mockReturnValue(provider);
+  token.resolveConnectionToken.mockResolvedValue("plain-token");
   provider.pollModifiedPages.mockResolvedValue([]);
 });
 
@@ -166,10 +170,21 @@ describe("KS1/KS2/KF3/KB1/KB2/KB4: which connections a sync is due to poll", () 
     await loadDueConnections(NOW);
 
     const [args] = db.integrationConnection.findMany.mock.calls[0];
-    expect(args.where.OR).toEqual([
-      { nextPollAfter: null },
-      { nextPollAfter: { lte: NOW } },
-    ]);
+    expect(args.where.AND).toContainEqual({
+      OR: [{ nextPollAfter: null }, { nextPollAfter: { lte: NOW } }],
+    });
+  });
+
+  it("KF3: excludes a connection left without a credential by a disconnect", async () => {
+    await loadDueConnections(NOW);
+
+    const [args] = db.integrationConnection.findMany.mock.calls[0];
+    expect(args.where.AND).toContainEqual({
+      OR: [
+        { accessTokenEncrypted: { not: null } },
+        { installationId: { not: null } },
+      ],
+    });
   });
 
   it("KB1/KB2: owes only connections of an organization with a live subscription", async () => {
@@ -281,7 +296,7 @@ describe("KF1: a poll that cannot run", () => {
     {
       case: "a provider the registry does not know",
       break: () =>
-        registry.getProvider.mockImplementation(() => {
+        registry.getPageProvider.mockImplementation(() => {
           throw new Error("Unknown provider: gone");
         }),
       message: "Unknown provider: gone",
@@ -289,9 +304,9 @@ describe("KF1: a poll that cannot run", () => {
     {
       case: "a credential that will not decrypt",
       break: () =>
-        crypto.decryptApiKey.mockImplementation(() => {
-          throw new Error("bad ciphertext");
-        }),
+        token.resolveConnectionToken.mockRejectedValue(
+          new Error("bad ciphertext"),
+        ),
       message: "bad ciphertext",
     },
     {
@@ -319,7 +334,7 @@ describe("KF1: a poll that cannot run", () => {
 
     await expect(pollConnection("conn-1")).rejects.toThrow();
 
-    expect(db.integrationConnection.update).not.toHaveBeenCalled();
+    expect(db.integrationConnection.updateMany).not.toHaveBeenCalled();
     expect(db.notebookSource.updateMany).not.toHaveBeenCalled();
   });
 
@@ -327,10 +342,10 @@ describe("KF1: a poll that cannot run", () => {
     db.integrationConnection.findUnique.mockResolvedValue(null);
 
     expect(await pollConnection("conn-gone")).toEqual({ status: "gone" });
-    expect(db.integrationConnection.update).not.toHaveBeenCalled();
+    expect(db.integrationConnection.updateMany).not.toHaveBeenCalled();
 
     await recordPollFailure("conn-gone", NOW);
-    expect(db.integrationConnection.update).not.toHaveBeenCalled();
+    expect(db.integrationConnection.updateMany).not.toHaveBeenCalled();
   });
 });
 
@@ -377,8 +392,8 @@ describe("KW1/KW2/KF2/KF3/KF4: what an attempt writes down", () => {
     { failures: 4, case: "72h for the fifth", expected: 3 * DAY },
     {
       failures: 8,
-      case: "capped at 7 days however long it stays broken",
-      expected: 7 * DAY,
+      case: "capped at 3 days however long it stays broken",
+      expected: 3 * DAY,
     },
   ])(
     "KF3: backs a failing connection off — $case",
@@ -399,7 +414,7 @@ describe("KW1/KW2/KF2/KF3/KF4: what an attempt writes down", () => {
     expect(backoffMs(0)).toBe(0);
     expect(backoffMs(3)).toBe(6 * HOUR);
 
-    expect(backoffMs(99)).toBe(7 * DAY);
+    expect(backoffMs(99)).toBe(3 * DAY);
   });
 
   it("KF4: any success clears the backoff and the failure count", async () => {

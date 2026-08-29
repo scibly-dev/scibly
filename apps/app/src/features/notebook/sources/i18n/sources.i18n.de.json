@@ -50,7 +50,10 @@
         "openInSourceLabel": "In Notion öffnen",
         "browseDatabase": "Datenbank durchsuchen",
         "browseSubpages": "Unterseiten durchsuchen",
-        "failedToLink": "Seite konnte nicht verknüpft werden"
+        "failedToLink": "Seite konnte nicht verknüpft werden",
+        "pagesAdded": "{count} Seite(n) erfolgreich hinzugefügt",
+        "pagesAddedWithSkipped": "{count} Seite(n) hinzugefügt ({skipped} bereits verknüpft)",
+        "allAlreadyLinked": "Alle ausgewählten Seiten sind bereits mit diesem Notebook verknüpft."
       },
       "statusPending": "Ausstehend",
       "statusProcessing": "Verarbeitung",

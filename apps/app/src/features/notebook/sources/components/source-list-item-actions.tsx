@@ -4,6 +4,7 @@ import type { ReactElement } from "react";
 import type { RouterOutputs } from "@/shared/api/trpc/client";
 import type { NotebookTranslations } from "../../i18n/notebook.types";
 
+import { httpsUrl } from "@scibly/schemas/common";
 import {
   Download,
   ExternalLink,
@@ -167,6 +168,12 @@ export function SourceListItemActions({
   onResync,
   onDelete,
 }: SourceListItemActionsProps) {
+  // Rows stored before the link schemas were tightened were never protocol-checked,
+  // so a `javascript:` url may already be in the database.
+  const externalHref = httpsUrl().safeParse(item.externalUrl).success
+    ? item.externalUrl
+    : null;
+
   return (
     <div className="absolute top-4 right-4">
       <div className="transition-opacity duration-150 group-hover:pointer-events-none group-hover:opacity-0">
@@ -199,10 +206,10 @@ export function SourceListItemActions({
             onClick={onRetry}
           />
 
-          {item.externalUrl ? (
+          {externalHref ? (
             <SourceActionTooltip label={t.openExternal}>
               <a
-                href={item.externalUrl}
+                href={externalHref}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(event) => event.stopPropagation()}

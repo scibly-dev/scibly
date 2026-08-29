@@ -46,6 +46,15 @@ export const env = createEnv({
     NOTION_CLIENT_ID: z.string().min(1),
     NOTION_CLIENT_SECRET: z.string().min(1),
 
+    /** GitHub App credentials — see docs/runbooks/github-app.md */
+    GITHUB_APP_SLUG: z.string().min(1),
+    GITHUB_APP_ID: z.string().min(1),
+    /** PEM private key; newlines may be escaped as \n for .env files. */
+    GITHUB_APP_PRIVATE_KEY: z.string().min(1),
+    /** OAuth half of the same app: proves who installed it, at the callback. */
+    GITHUB_APP_CLIENT_ID: z.string().min(1),
+    GITHUB_APP_CLIENT_SECRET: z.string().min(1),
+
     AI_GATEWAY_API_KEY: z.string().min(1),
     /** Gateway model ID used when the client selects Scibly AI (scibly/default) */
     SCIBLY_DEFAULT_CHAT_MODEL: z
@@ -116,6 +125,12 @@ export const env = createEnv({
 
     NOTION_CLIENT_ID: process.env.NOTION_CLIENT_ID,
     NOTION_CLIENT_SECRET: process.env.NOTION_CLIENT_SECRET,
+
+    GITHUB_APP_SLUG: process.env.GITHUB_APP_SLUG,
+    GITHUB_APP_ID: process.env.GITHUB_APP_ID,
+    GITHUB_APP_PRIVATE_KEY: process.env.GITHUB_APP_PRIVATE_KEY,
+    GITHUB_APP_CLIENT_ID: process.env.GITHUB_APP_CLIENT_ID,
+    GITHUB_APP_CLIENT_SECRET: process.env.GITHUB_APP_CLIENT_SECRET,
 
     AI_GATEWAY_API_KEY: process.env.AI_GATEWAY_API_KEY,
     SCIBLY_DEFAULT_CHAT_MODEL: process.env.SCIBLY_DEFAULT_CHAT_MODEL,

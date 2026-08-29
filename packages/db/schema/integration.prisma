@@ -1,29 +1,38 @@
 enum IntegrationProvider {
   NOTION
-  CONFLUENCE
-  SHAREPOINT
+  GITHUB
 
   @@map("integration_provider")
 }
 
 model IntegrationConnection {
-  id                   String              @id @default(cuid())
-  organizationId       String
-  organization         Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  provider             IntegrationProvider
-  accessTokenEncrypted String
-  workspaceId          String?
-  workspaceName        String?
-  connectedByUserId    String
-  connectedBy          User                @relation(fields: [connectedByUserId], references: [id])
+  id                    String              @id @default(cuid())
+  organizationId        String
+  organization          Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  provider              IntegrationProvider
+  /// AES-256-GCM encrypted access token. Null for providers whose credential is
+  /// an installation rather than a token — see `installationId`.
+  accessTokenEncrypted  String?
+  /// The app installation this connection is, for providers connected by
+  /// installing an app rather than by an OAuth grant (GitHub). It is the whole
+  /// credential: the token it stands for is minted per call and never written
+  /// here. Exclusive with the token columns above.
+  installationId        String?
+  workspaceId           String?
+  workspaceName         String?
+  connectedByUserId     String
+  connectedBy           User                @relation(fields: [connectedByUserId], references: [id])
   /// Advances only on a successful poll, so a failed run costs delay, not changes.
-  lastPolledAt         DateTime?
+  lastPolledAt          DateTime?
   /// Advances on every attempt, successful or not.
-  lastAttemptedAt      DateTime?
-  consecutiveFailures  Int                 @default(0)
-  nextPollAfter        DateTime?
-  createdAt            DateTime            @default(now())
-  updatedAt            DateTime            @updatedAt
+  lastAttemptedAt       DateTime?
+  consecutiveFailures   Int                 @default(0)
+  /// When this connection may next be polled, written at failure time from
+  /// `consecutiveFailures`. A column rather than a computed predicate because a
+  /// backed-off connection has to be excluded by the query that selects it.
+  nextPollAfter         DateTime?
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
 
   @@unique([organizationId, provider])
   @@index([organizationId])

@@ -1,9 +1,11 @@
 "use client";
 
-import type { IntegrationProviderId } from "@/features/integrations/contracts";
+import type { PageIntegrationProviderId } from "@/features/integrations/contracts";
 import type { NotebookTranslations } from "../../i18n/notebook.types";
 
 import { useState } from "react";
+
+import { MAX_LINKED_PAGES_PER_REQUEST } from "@/features/integrations/contracts";
 
 import { PagePickerBreadcrumbs } from "./page-picker-breadcrumbs";
 import { PagePickerFooter } from "./page-picker-footer";
@@ -27,7 +29,7 @@ export interface PagePickerContentProps {
   onOpenChange: (open: boolean) => void;
   notebookId: string;
   orgSlug: string;
-  provider: IntegrationProviderId;
+  provider: PageIntegrationProviderId;
   totalSourceCount: number;
 
   sourceLimit: number;
@@ -75,7 +77,7 @@ export const PagePickerBody = ({
           selectablePages={selection.selectablePages}
           selected={selection.selected}
           totalSourceCount={props.totalSourceCount}
-          sourceLimit={props.sourceLimit}
+          maxTotal={props.totalSourceCount + remaining}
           allVisibleSelected={selection.allVisibleSelected}
           t={props.t}
           onToggleSelectAll={selection.toggleSelectAll}
@@ -128,7 +130,12 @@ export function PagePickerContent({
     t,
     onLinked,
   };
-  const remaining = Math.max(0, sourceLimit - totalSourceCount);
+  // On a paid plan the source limit is effectively unlimited, so the per-request cap is
+  // what keeps "select all" from building a batch the server rejects whole.
+  const remaining = Math.min(
+    Math.max(0, sourceLimit - totalSourceCount),
+    MAX_LINKED_PAGES_PER_REQUEST,
+  );
   const [query, setQuery] = useState("");
   const navigation = usePagePickerNavigation(setQuery);
   const pageState = usePagePickerPages(orgSlug, provider, query, navigation);

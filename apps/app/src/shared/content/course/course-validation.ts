@@ -1,4 +1,5 @@
 import { CourseMode, LessonIcon } from "@scibly/db/enums";
+import { httpsUrl } from "@scibly/schemas/common";
 import { z } from "zod";
 
 import { lessonDescriptionSchema } from "@/shared/content/learning/lesson-description";
@@ -36,7 +37,7 @@ export const updateCourseUpdatesSchema = z.object({
   description: z.string().optional(),
   category: z.string().optional(),
   tags: z.array(z.string()).optional(),
-  thumbnail: z.string().url().nullable().optional(),
+  thumbnail: httpsUrl().nullable().optional(),
   passingScorePct: z.number().int().min(0).max(100).nullable().optional(),
   maxTries: z.number().int().min(1).nullable().optional(),
   allowAnonymous: z.boolean().optional(),

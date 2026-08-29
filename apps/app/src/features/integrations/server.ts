@@ -1,7 +1,8 @@
 import "server-only";
 
 export { integrationRouter } from "./api/integration.router";
+export { handleIntegrationConnectCallback } from "./server/connect-callback";
+export { resolveConnectionToken } from "./server/connection-token";
 export { integrationPoll, integrationSync } from "./server/integration-sync";
 export { buildIntegrationNotebookTools } from "./server/notebook-tools";
-export { handleIntegrationOAuthCallback } from "./server/oauth-callback";
-export { getProvider, listProviders } from "./server/registry";
+export { getPageProvider } from "./server/registry";

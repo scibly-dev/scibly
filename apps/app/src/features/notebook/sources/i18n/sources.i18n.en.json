@@ -50,7 +50,10 @@
         "openInSourceLabel": "Open in Notion",
         "browseDatabase": "Browse database",
         "browseSubpages": "Browse subpages",
-        "failedToLink": "Failed to link page"
+        "failedToLink": "Failed to link page",
+        "pagesAdded": "{count} page(s) added successfully",
+        "pagesAddedWithSkipped": "{count} page(s) added ({skipped} already linked)",
+        "allAlreadyLinked": "All selected pages are already linked to this notebook."
       },
       "statusPending": "Pending",
       "statusProcessing": "Processing",

@@ -2,10 +2,12 @@ import type { ExtractableSource, SourceExtractor } from "./types";
 
 import { db } from "@scibly/db";
 
-import { getProvider } from "@/features/integrations/server";
-import { decryptApiKey } from "@/lib/crypto/api-key";
+import {
+  getPageProvider,
+  resolveConnectionToken,
+} from "@/features/integrations/server";
 
-async function resolveIntegration(source: ExtractableSource) {
+async function resolveSourceConnection(source: ExtractableSource) {
   if (!source.integrationId || !source.externalId) {
     throw new Error(
       `Integration source ${source.type} missing integrationId or externalId.`,
@@ -33,8 +35,8 @@ async function resolveIntegration(source: ExtractableSource) {
   }
 
   return {
-    provider: getProvider(connection.provider),
-    token: decryptApiKey(connection.accessTokenEncrypted),
+    provider: getPageProvider(connection.provider),
+    token: await resolveConnectionToken(connection),
     externalId: source.externalId,
   };
 }
@@ -43,17 +45,19 @@ export const notionPageExtractor: SourceExtractor = {
   isIntegration: true,
 
   async getRevision(source) {
-    const { provider, token, externalId } = await resolveIntegration(source);
+    const { provider, token, externalId } =
+      await resolveSourceConnection(source);
     return provider.getPageRevision(token, externalId);
   },
 
   async extract(source) {
-    const { provider, token, externalId } = await resolveIntegration(source);
+    const { provider, token, externalId } =
+      await resolveSourceConnection(source);
     const content = await provider.fetchPageContent(token, externalId);
 
+    // No `pageCount`: it counts the pages of a parsed file, and a provider's page is one page.
     return {
       text: content.text,
-      pageCount: content.pageCount,
       title: content.title,
       lastEdited: content.lastEdited,
     };

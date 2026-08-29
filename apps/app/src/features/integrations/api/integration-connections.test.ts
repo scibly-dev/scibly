@@ -18,20 +18,26 @@ import {
 } from "./integration.schema";
 
 // Real tRPC caller over the real router, so input validation runs for real.
-// `db` and `resolveOrg` are mocked; `detachSourcesFromConnection` is not.
+// `db` and `resolveOrg` are mocked; `warnSourcesOfLostConnection` is not.
 
-const db = vi.hoisted(() => ({
-  integrationConnection: {
-    findUnique: vi.fn(),
-    findMany: vi.fn(),
-    delete: vi.fn(),
-    create: vi.fn(),
-    upsert: vi.fn(),
-  },
-  notebookSource: { updateMany: vi.fn(), deleteMany: vi.fn() },
-  notebookSourceChunk: { deleteMany: vi.fn() },
-  scene: { deleteMany: vi.fn() },
-}));
+const db = vi.hoisted(() => {
+  const client = {
+    integrationConnection: {
+      findUnique: vi.fn(),
+      findMany: vi.fn(),
+      update: vi.fn(),
+      create: vi.fn(),
+      upsert: vi.fn(),
+    },
+    notebookSource: { updateMany: vi.fn(), deleteMany: vi.fn() },
+    notebookSourceChunk: { deleteMany: vi.fn() },
+    scene: { deleteMany: vi.fn() },
+    // The doubled client is handed straight back, so writes made inside the
+    // transaction land on the same spy.
+    $transaction: vi.fn((run: (tx: unknown) => unknown) => run(client)),
+  };
+  return client;
+});
 const resolveOrg = vi.hoisted(() => vi.fn());
 
 vi.mock("@scibly/db", () => ({ db }));
@@ -40,7 +46,8 @@ vi.mock("@/features/organizations/server", () => ({
   resolveOrg,
 }));
 vi.mock("@/features/notebook/server", () => ({
-  ingestOrRefreshSource: vi.fn(),
+  boundedIngest: vi.fn(),
+  boundedLink: vi.fn((_userId: string, link: () => unknown) => link()),
   linkNotebookPages: vi.fn(),
   resolveNotebook: vi.fn(),
   resolveOwnedNotebookSource: vi.fn(),
@@ -100,7 +107,7 @@ beforeEach(() => {
   resolveOrg.mockResolvedValue({ organization: { id: "org-resolved" } });
   db.integrationConnection.findMany.mockResolvedValue([]);
   db.integrationConnection.findUnique.mockResolvedValue({ id: "conn-1" });
-  db.integrationConnection.delete.mockResolvedValue({});
+  db.integrationConnection.update.mockResolvedValue({});
   db.notebookSource.updateMany.mockResolvedValue({ count: 2 });
 });
 
@@ -112,6 +119,7 @@ describe("LA1 one door only", () => {
       "linkPage",
       "linkPages",
       "list",
+      "listGrants",
       "listPageChildren",
       "resyncSource",
       "searchPages",
@@ -188,7 +196,7 @@ describe("LR who may see, who may change", () => {
       );
 
       expect(await refusalCode(() => call(caller()))).toBe("FORBIDDEN");
-      expect(db.integrationConnection.delete).not.toHaveBeenCalled();
+      expect(db.integrationConnection.update).not.toHaveBeenCalled();
       expect(db.notebookSource.updateMany).not.toHaveBeenCalled();
     },
   );
@@ -197,7 +205,24 @@ describe("LR who may see, who may change", () => {
     await caller().list({ orgSlug: "acme" });
 
     expect(db.integrationConnection.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({ where: { organizationId: "org-resolved" } }),
+      expect.objectContaining({
+        where: expect.objectContaining({ organizationId: "org-resolved" }),
+      }),
+    );
+  });
+
+  it("LR2 lists only the connections that still hold a credential", async () => {
+    await caller().list({ orgSlug: "acme" });
+
+    expect(db.integrationConnection.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          OR: [
+            { accessTokenEncrypted: { not: null } },
+            { installationId: { not: null } },
+          ],
+        }),
+      }),
     );
   });
 
@@ -208,6 +233,7 @@ describe("LR who may see, who may change", () => {
       INTEGRATION_PROVIDERS.map((providerId) => ({
         providerId,
         displayName: expect.any(String),
+        listsGrants: expect.any(Boolean),
       })),
     );
   });
@@ -231,27 +257,25 @@ describe("LR who may see, who may change", () => {
 });
 
 describe("LD what a disconnect leaves behind", () => {
-  it("LD1 deletes the row that holds the tokens", async () => {
+  it("LD1 wipes the credential off the row and keeps the row", async () => {
     const result = await caller().disconnect({
       orgSlug: "acme",
       provider: "NOTION",
     });
 
-    expect(db.integrationConnection.delete).toHaveBeenCalledWith({
+    expect(db.integrationConnection.update).toHaveBeenCalledWith({
       where: { id: "conn-1" },
+      data: { accessTokenEncrypted: null, installationId: null },
     });
     expect(result).toEqual({ success: true });
   });
 
-  it("LD2 detaches the sources it pulled in and tells the author why", async () => {
+  it("LD2 warns the sources it pulled in and leaves them linked", async () => {
     await caller().disconnect({ orgSlug: "acme", provider: "NOTION" });
 
     expect(db.notebookSource.updateMany).toHaveBeenCalledWith({
       where: { integrationId: "conn-1" },
-      data: {
-        integrationId: null,
-        warning: expect.stringContaining("disconnected"),
-      },
+      data: { warning: expect.stringContaining("disconnected") },
     });
   });
 
@@ -263,13 +287,13 @@ describe("LD what a disconnect leaves behind", () => {
     expect(db.scene.deleteMany).not.toHaveBeenCalled();
   });
 
-  it("LD2 detaches before the row the sources point at is gone", async () => {
+  it("LD2 warns before the credential the warning is about is gone", async () => {
     await caller().disconnect({ orgSlug: "acme", provider: "NOTION" });
 
     expect(
       db.notebookSource.updateMany.mock.invocationCallOrder[0],
     ).toBeLessThan(
-      db.integrationConnection.delete.mock.invocationCallOrder[0] ?? 0,
+      db.integrationConnection.update.mock.invocationCallOrder[0] ?? 0,
     );
   });
 
@@ -282,7 +306,7 @@ describe("LD what a disconnect leaves behind", () => {
     });
 
     expect(result).toEqual({ success: true });
-    expect(db.integrationConnection.delete).not.toHaveBeenCalled();
+    expect(db.integrationConnection.update).not.toHaveBeenCalled();
     expect(db.notebookSource.updateMany).not.toHaveBeenCalled();
   });
 

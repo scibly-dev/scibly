@@ -2,8 +2,6 @@ enum NotebookSourceType {
   PDF
   TEXT
   NOTION_PAGE
-  CONFLUENCE_PAGE
-  SHAREPOINT_PAGE
 
   @@map("notebook_source_type")
 }

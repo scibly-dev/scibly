@@ -10,6 +10,7 @@ export {
   persistMessages,
 } from "./chat/server/messages";
 export { buildImageNotebookTools } from "./media/tools/image-notebook-tools";
+export { boundedIngest, boundedLink } from "./sources/api/bounded-ingest";
 export { assertOrgCanAffordIngest } from "./sources/ingestion/ingest-funding";
 export {
   ingestOrRefreshSource,

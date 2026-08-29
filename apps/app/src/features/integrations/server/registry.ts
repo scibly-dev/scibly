@@ -1,14 +1,17 @@
 import type { IntegrationProviderId } from "../contracts";
-import type { BaseIntegrationProvider } from "./base-provider";
+import type { IntegrationProvider } from "./base-provider";
 
 import { AppError } from "@scibly/api/application-error";
 
 import { INTEGRATION_PROVIDERS } from "../contracts";
+import { PageIntegrationProvider } from "./base-provider";
+import { GitHubProvider } from "./providers/github/provider";
 import { NotionProvider } from "./providers/notion";
 
 export const PROVIDERS = {
   NOTION: new NotionProvider(),
-} satisfies Record<IntegrationProviderId, BaseIntegrationProvider>;
+  GITHUB: new GitHubProvider(),
+} satisfies Record<IntegrationProviderId, IntegrationProvider>;
 
 export function isIntegrationProvider(
   providerId: string,
@@ -16,7 +19,7 @@ export function isIntegrationProvider(
   return INTEGRATION_PROVIDERS.some((known) => known === providerId);
 }
 
-export function getProvider(providerId: string): BaseIntegrationProvider {
+export function getProvider(providerId: string): IntegrationProvider {
   if (!isIntegrationProvider(providerId)) {
     throw new AppError({
       code: "NOT_FOUND",
@@ -27,6 +30,19 @@ export function getProvider(providerId: string): BaseIntegrationProvider {
   return PROVIDERS[providerId];
 }
 
-export function listProviders(): BaseIntegrationProvider[] {
+export function getPageProvider(providerId: string): PageIntegrationProvider {
+  const provider = getProvider(providerId);
+  if (!(provider instanceof PageIntegrationProvider)) {
+    throw new AppError({
+      code: "BAD_REQUEST",
+      applicationCode: "api.bad_request",
+      message: `${provider.providerId} offers no pages to read.`,
+    });
+  }
+  return provider;
+}
+
+// The annotation is the point: a subclass property widens `providerId` to `string`.
+export function listProviders(): IntegrationProvider[] {
   return Object.values(PROVIDERS);
 }

@@ -1,7 +1,12 @@
 import type {
   IntegrationCallbackError,
+  IntegrationCredential,
   IntegrationProviderId,
 } from "../contracts";
+import type {
+  ConnectCallbackParams,
+  IntegrationProvider,
+} from "./base-provider";
 
 import { getSession } from "@scibly/auth/session";
 import { db } from "@scibly/db";
@@ -14,7 +19,6 @@ import {
 } from "@scibly/routes";
 import { type NextRequest, NextResponse } from "next/server";
 
-import { env } from "@/env";
 import {
   getProvider,
   isIntegrationProvider,
@@ -23,7 +27,10 @@ import { requireOrgMember } from "@/features/organizations/server";
 import { encryptApiKey } from "@/lib/crypto/api-key";
 import { verifyOAuthState } from "@/lib/crypto/oauth-state";
 
-import { detachSourcesFromConnection } from "./detach-sources";
+import {
+  clearDisconnectWarning,
+  warnSourcesOfLostConnection,
+} from "./detach-sources";
 
 type CallbackDestination = {
   settingsUrl: string;
@@ -31,7 +38,7 @@ type CallbackDestination = {
 
 type ValidCallback = CallbackDestination & {
   provider: IntegrationProviderId;
-  code: string;
+  params: ConnectCallbackParams;
   orgSlug: string;
   connectedByUserId: string;
 };
@@ -47,6 +54,21 @@ function errorRedirect(
 
 function providerError(oauthError: string): IntegrationCallbackError {
   return oauthError === "access_denied" ? "provider_denied" : "provider_error";
+}
+
+function readCallbackParams(
+  searchParams: URLSearchParams,
+  provider: IntegrationProvider,
+): ConnectCallbackParams | null {
+  const params: ConnectCallbackParams = {
+    code: searchParams.get("code"),
+    installationId: searchParams.get("installation_id"),
+  };
+  const required =
+    provider.credential === "app_installation"
+      ? params.installationId
+      : params.code;
+  return required ? params : null;
 }
 
 function validateCallback(
@@ -67,7 +89,6 @@ function validateCallback(
   };
 
   const oauthError = searchParams.get("error");
-  const code = searchParams.get("code");
   const state = searchParams.get("state");
 
   if (!state) {
@@ -98,9 +119,6 @@ function validateCallback(
   if (oauthError) {
     return { ok: false, destination, reason: providerError(oauthError) };
   }
-  if (!code) {
-    return { ok: false, destination, reason: "missing_params" };
-  }
   if (!orgSlug || !userId || !isIntegrationProvider(provider)) {
     return { ok: false, destination, reason: "invalid_state" };
   }
@@ -109,12 +127,17 @@ function validateCallback(
     return { ok: false, destination, reason: "state_mismatch" };
   }
 
+  const params = readCallbackParams(searchParams, getProvider(provider));
+  if (!params) {
+    return { ok: false, destination, reason: "missing_params" };
+  }
+
   return {
     ok: true,
     callback: {
       ...destination,
       provider,
-      code,
+      params,
       orgSlug,
       connectedByUserId: userId,
     },
@@ -144,60 +167,89 @@ async function authorizeCallback(
   }
 }
 
-async function exchangeAndPersistConnection(
+// The two shapes use disjoint columns, and each connect clears the other's.
+function credentialColumns(credential: IntegrationCredential) {
+  if (credential.kind === "app_installation") {
+    return {
+      accessTokenEncrypted: null,
+      installationId: credential.installationId,
+    };
+  }
+  return {
+    accessTokenEncrypted: encryptApiKey(credential.accessToken),
+    installationId: null,
+  };
+}
+
+async function completeAndPersistConnection(
   callback: ValidCallback,
   organizationId: string,
 ) {
-  const redirectUri = `${env.NEXT_PUBLIC_APP_URL}/api/integrations/${callback.provider.toLowerCase()}/callback`;
+  const redirectUri = routes.app.api.integrations.callback(callback.provider);
 
-  const existing = await db.integrationConnection.findUnique({
-    where: {
-      organizationId_provider: {
-        organizationId,
-        provider: callback.provider,
-      },
-    },
-    select: { id: true, workspaceId: true },
-  });
-
-  const tokens = await getProvider(callback.provider).exchangeCode(
-    callback.code,
+  // Outside the transaction: no row lock is held for as long as the provider takes.
+  const credential = await getProvider(callback.provider).completeConnect(
+    callback.params,
     redirectUri,
   );
 
-  if (
-    existing?.workspaceId &&
-    tokens.workspaceId &&
-    existing.workspaceId !== tokens.workspaceId
-  ) {
-    await detachSourcesFromConnection(
-      existing.id,
-      callback.provider,
-      "workspace_changed",
-    );
-  }
-
-  const connectionData = {
-    accessTokenEncrypted: encryptApiKey(tokens.accessToken),
-    workspaceId: tokens.workspaceId ?? null,
-    workspaceName: tokens.workspaceName ?? null,
-
-    connectedByUserId: callback.connectedByUserId,
+  const where = {
+    organizationId_provider: { organizationId, provider: callback.provider },
   };
 
-  await db.integrationConnection.upsert({
-    where: {
-      organizationId_provider: {
+  const connectionData = {
+    ...credentialColumns(credential),
+    workspaceId: credential.workspaceId ?? null,
+    workspaceName: credential.workspaceName ?? null,
+
+    connectedByUserId: callback.connectedByUserId,
+
+    // A reconnect answers whatever the polls were failing on, so its backoff does not outlive it.
+    consecutiveFailures: 0,
+    nextPollAfter: null,
+  };
+
+  await db.$transaction(async (tx) => {
+    // Read inside the transaction: two callbacks landing together would otherwise
+    // both see the pre-connect workspace.
+    const existing = await tx.integrationConnection.findUnique({
+      where,
+      select: { id: true, workspaceId: true },
+    });
+
+    const movedWorkspace =
+      existing?.workspaceId &&
+      credential.workspaceId &&
+      existing.workspaceId !== credential.workspaceId;
+
+    if (movedWorkspace) {
+      await warnSourcesOfLostConnection(
+        existing.id,
+        callback.provider,
+        "workspace_changed",
+        tx,
+      );
+    } else if (existing) {
+      await clearDisconnectWarning(existing.id, callback.provider, tx);
+    }
+
+    await tx.integrationConnection.upsert({
+      where,
+      create: {
         organizationId,
         provider: callback.provider,
+        ...connectionData,
       },
-    },
-    create: { organizationId, provider: callback.provider, ...connectionData },
-    update: connectionData,
+      // A different workspace shares none of the old one's history, so the
+      // watermark that decided what had already been seen goes with it.
+      update: movedWorkspace
+        ? { ...connectionData, lastPolledAt: null }
+        : connectionData,
+    });
   });
 }
 
-export async function handleIntegrationOAuthCallback(
+export async function handleIntegrationConnectCallback(
   req: NextRequest,
   { params }: { params: Promise<{ provider: string }> },
 ) {
@@ -214,13 +266,13 @@ export async function handleIntegrationOAuthCallback(
   }
 
   try {
-    await exchangeAndPersistConnection(callback, authorization.organizationId);
+    await completeAndPersistConnection(callback, authorization.organizationId);
     return NextResponse.redirect(
       `${callback.settingsUrl}?${INTEGRATION_CONNECTED_QUERY_PARAM}=${callback.provider.toLowerCase()}`,
     );
   } catch (err) {
     console.error(
-      `[IntegrationCallback] ${callback.provider} token exchange failed:`,
+      `[IntegrationCallback] ${callback.provider} connect failed:`,
       err,
     );
     return errorRedirect(callback, "token_exchange_failed");

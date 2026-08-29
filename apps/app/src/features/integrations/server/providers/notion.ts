@@ -1,15 +1,17 @@
 import type {
+  IntegrationCredential,
   IntegrationPage,
   IntegrationPageContent,
   IntegrationPageRevision,
-  OAuthTokens,
 } from "../../contracts";
+import type { ConnectCallbackParams } from "../base-provider";
 
 import { Client, isFullPage } from "@notionhq/client";
+import { routes } from "@scibly/routes";
 
 import { env } from "@/env";
 
-import { BaseIntegrationProvider } from "../base-provider";
+import { PageIntegrationProvider } from "../base-provider";
 import {
   collectNotionChildPages,
   extractNotionPageIcon,
@@ -17,12 +19,19 @@ import {
   listNotionDatabasePages,
 } from "./notion-pages";
 
-export class NotionProvider extends BaseIntegrationProvider {
+// The SDK waits a minute by default and retries, which a four-minute sync hop cannot afford.
+const NOTION_TIMEOUT_MS = 30_000;
+
+const notionClient = (auth?: string) =>
+  new Client({ auth, timeoutMs: NOTION_TIMEOUT_MS });
+
+export class NotionProvider extends PageIntegrationProvider {
   readonly providerId = "NOTION";
   readonly displayName = "Notion";
+  readonly credential = "oauth_tokens";
 
   getAuthUrl(state: string, redirectUri: string): string {
-    const url = new URL("https://api.notion.com/v1/oauth/authorize");
+    const url = new URL(routes.external.integrations.notion.oauthAuthorize);
     url.searchParams.set("client_id", env.NOTION_CLIENT_ID);
     url.searchParams.set("response_type", "code");
     url.searchParams.set("owner", "user");
@@ -31,15 +40,22 @@ export class NotionProvider extends BaseIntegrationProvider {
     return url.toString();
   }
 
-  async exchangeCode(code: string, redirectUri: string): Promise<OAuthTokens> {
-    const response = await new Client().oauth.token({
+  async completeConnect(
+    params: ConnectCallbackParams,
+    redirectUri: string,
+  ): Promise<IntegrationCredential> {
+    if (!params.code) {
+      throw new Error("Notion returned no authorisation code to exchange.");
+    }
+    const response = await notionClient().oauth.token({
       client_id: env.NOTION_CLIENT_ID,
       client_secret: env.NOTION_CLIENT_SECRET,
       grant_type: "authorization_code",
-      code,
+      code: params.code,
       redirect_uri: redirectUri,
     });
     return {
+      kind: "oauth_tokens",
       accessToken: response.access_token,
       workspaceId: response.workspace_id,
       workspaceName: response.workspace_name ?? undefined,
@@ -47,7 +63,7 @@ export class NotionProvider extends BaseIntegrationProvider {
   }
 
   async searchPages(token: string, query: string): Promise<IntegrationPage[]> {
-    const response = await new Client({ auth: token }).search({
+    const response = await notionClient(token).search({
       query,
       filter: { value: "page", property: "object" },
       sort: { direction: "descending", timestamp: "last_edited_time" },
@@ -66,7 +82,7 @@ export class NotionProvider extends BaseIntegrationProvider {
     token: string,
     since: Date,
   ): Promise<IntegrationPage[]> {
-    const notion = new Client({ auth: token });
+    const notion = notionClient(token);
     const sinceIso = since.toISOString();
     const pages: IntegrationPage[] = [];
     let cursor: string | undefined;
@@ -102,21 +118,21 @@ export class NotionProvider extends BaseIntegrationProvider {
     token: string,
     pageId: string,
   ): Promise<IntegrationPage[]> {
-    return collectNotionChildPages(new Client({ auth: token }), pageId);
+    return collectNotionChildPages(notionClient(token), pageId);
   }
 
   async listDatabasePages(
     token: string,
     databaseId: string,
   ): Promise<IntegrationPage[]> {
-    return listNotionDatabasePages(new Client({ auth: token }), databaseId);
+    return listNotionDatabasePages(notionClient(token), databaseId);
   }
 
   async getPageRevision(
     token: string,
     pageId: string,
   ): Promise<IntegrationPageRevision | null> {
-    const page = await new Client({ auth: token }).pages.retrieve({
+    const page = await notionClient(token).pages.retrieve({
       page_id: pageId,
     });
     if (!isFullPage(page)) return null;
@@ -130,7 +146,7 @@ export class NotionProvider extends BaseIntegrationProvider {
     token: string,
     pageId: string,
   ): Promise<IntegrationPageContent> {
-    const notion = new Client({ auth: token });
+    const notion = notionClient(token);
     const [revision, markdownResponse] = await Promise.all([
       this.getPageRevision(token, pageId),
       notion.pages.retrieveMarkdown({ page_id: pageId }),

@@ -1,5 +1,10 @@
 import { z } from "zod/v4";
 
+import { httpsUrl } from "../common";
+
+/** The org a procedure acts on, addressed the way the URL addresses it. */
+export const orgSlugInput = z.object({ orgSlug: z.string() });
+
 export const createOrganizationSchema = z.object({
   name: z.string().min(2).max(100),
   slug: z
@@ -10,7 +15,7 @@ export const createOrganizationSchema = z.object({
       /^[a-z0-9-]+$/,
       "Slug may only contain lowercase letters, numbers and hyphens",
     ),
-  logo: z.string().url().optional(),
+  logo: httpsUrl().optional(),
 });
 
 export const updateOrganizationSchema = z.object({
@@ -25,5 +30,5 @@ export const updateOrganizationSchema = z.object({
       "Slug may only contain lowercase letters, numbers and hyphens",
     )
     .optional(),
-  logo: z.string().url().optional(),
+  logo: httpsUrl().optional(),
 });

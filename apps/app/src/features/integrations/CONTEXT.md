@@ -1,29 +1,46 @@
 # Integrations
 
-How an organization's own documents, living in someone else's system, become
-material a notebook can read — and how a change made over there is noticed back
-here. Nothing in this context writes a course; it only supplies and re-checks
-what a source was made from.
+How an organization's own material, living in someone else's system, becomes
+reachable from here — and how a change made over there is noticed back here.
+Mostly that material is documents a notebook can read, but a provider is worth
+connecting even when it offers none. Nothing in this context writes a course; it
+only supplies and re-checks what a source was made from.
 
 ## Language
 
 ### The connection
 
 **Provider**:
-An outside system pages can be pulled from — Notion, Confluence, SharePoint.
-Adding one is adding a provider, not an integration.
+An outside system an organization connects to — Notion, GitHub.
+Either its material is pages a notebook can import, or it is only read from
+elsewhere; a provider is worth connecting either way, and only the first kind is
+ever shown to a notebook. Adding one is adding a provider, not an integration.
 _Avoid_: service, vendor, app
 
 **Connection**:
 One organization's authorised link to one provider, and the credential behind
 it. At most one per provider per organization, made by the person who authorised
-it.
+it. The credential comes in one of two shapes — stored OAuth tokens, or an
+installation — and a connection is only ever one of them.
 _Avoid_: integration (the context, not the record), account, credential
+
+**Installation**:
+What a provider connected by letting an app in, rather than by granting tokens,
+leaves behind: an id standing for what the app was let onto. It is not a token —
+the token it stands for is minted from the app's own key for the one call that
+needs it and never written down.
+_Avoid_: token, app, integration
+
+**Grant**:
+A named piece of a workspace an installation was let at — a GitHub repository.
+Only a provider that hands access out piece by piece has any; a workspace given
+whole grants nothing to list.
+_Avoid_: repository (GitHub's word for one), scope, permission, resource
 
 **Workspace**:
 The container on the provider's side that a connection can reach — a Notion
-workspace, a Confluence site. Reconnecting to a different one does not carry the
-old one's pages across.
+workspace, the GitHub account an app was installed on.
+Reconnecting to a different one does not carry the old one's pages across.
 _Avoid_: site, tenant, organization (ours, and never theirs)
 
 **Page**:
@@ -60,7 +77,8 @@ _Avoid_: fetch, check, sync (the run, not the turn)
 
 **Refresh**:
 Getting a new access token for a connection whose old one expired. Said only of
-credentials — content is never refreshed, it is synced.
+stored credentials — content is never refreshed, it is synced, and an
+installation never is either: its token is minted afresh each time.
 _Avoid_: renew, re-sync
 
 **Watermark**:
