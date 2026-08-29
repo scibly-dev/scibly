@@ -4,6 +4,8 @@ import { Toaster } from "@scibly/ui/components/sonner";
 import { getDictionary } from "@/i18n/dictionaries";
 import Providers from "@/shared/api/provider";
 
+import { HtmlLang } from "./html-lang";
+
 export async function generateStaticParams() {
   return [{ lang: "en" }, { lang: "de" }];
 }
@@ -23,12 +25,7 @@ export default async function LangLayout({
 
   return (
     <div data-locale={lang}>
-      {/* `<html>` is one segment above, where the locale isn't a param yet. */}
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `document.documentElement.lang=${JSON.stringify(lang)}`,
-        }}
-      />
+      <HtmlLang lang={lang} />
       <ErrorBoundaryWrapper
         title={errorBoundaryTitle}
         retryLabel={errorBoundaryRetryLabel}

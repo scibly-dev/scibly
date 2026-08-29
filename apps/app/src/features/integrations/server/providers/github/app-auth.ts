@@ -231,6 +231,49 @@ export interface GitHubRepositoryList {
   totalCount: number;
 }
 
+const repositoryResponse = z.object({
+  full_name: z.string(),
+  default_branch: z.string(),
+});
+
+const treeResponse = z.object({
+  tree: z.array(z.object({ path: z.string(), type: z.string() })).optional(),
+});
+
+// Deep enough to name a folder someone would scope to, shallow enough to read.
+const MAX_FOLDER_DEPTH = 2;
+const MAX_FOLDERS = 200;
+
+// ponytail: one recursive tree call, filtered here — walk the tree a level at a
+// time if a monorepo's answer ever gets too big to be worth fetching whole.
+export async function fetchRepositoryFolders(
+  token: string,
+  repositoryId: string,
+): Promise<string[]> {
+  const authorization = `Bearer ${token}`;
+  // Asked by id, not by name: a rename must not turn a scoped topic into a 404.
+  const repository = await githubRequest(
+    `/repositories/${encodeURIComponent(repositoryId)}`,
+    { method: "GET", authorization },
+    repositoryResponse,
+  );
+  const { tree } = await githubRequest(
+    `/repos/${repository.full_name}/git/trees/${encodeURIComponent(repository.default_branch)}?recursive=1`,
+    { method: "GET", authorization },
+    treeResponse,
+  );
+
+  return (tree ?? [])
+    .filter(
+      (entry) =>
+        entry.type === "tree" &&
+        entry.path.split("/").length <= MAX_FOLDER_DEPTH,
+    )
+    .map((entry) => entry.path)
+    .sort()
+    .slice(0, MAX_FOLDERS);
+}
+
 export async function fetchInstallationRepositories(
   token: string,
 ): Promise<GitHubRepositoryList> {

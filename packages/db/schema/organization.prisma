@@ -22,6 +22,7 @@ model Organization {
   credit               OrganizationCredit?
   creditLedgerEntries  CreditLedgerEntry[]
   courseEnrollments    CourseEnrollment[]
+  knowledgeTopics      KnowledgeTopic[]
 
   @@unique([slug])
   @@map("organization")
@@ -35,6 +36,7 @@ model Member {
   user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   role           String       @default("member")
   createdAt      DateTime
+  maintainedTopics KnowledgeTopic[] @relation("KnowledgeTopicMaintainers")
 
   @@index([organizationId])
   @@index([userId])

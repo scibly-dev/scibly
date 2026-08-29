@@ -8,6 +8,7 @@ import {
   BookOpen,
   CreditCard,
   LayoutDashboard,
+  Library,
   Settings,
   Sparkles,
   Users,
@@ -85,6 +86,17 @@ const getOrgNavGroups = (
   isOwner: boolean,
 ): NavGroup[] => {
   const orgRoutes = routes.app.profile.org(slug);
+  // Every member reaches Knowledge; only an admin may change what is in it.
+  const knowledgeGroup: NavGroup = {
+    label: locale === "de" ? "Wissen" : "Knowledge",
+    items: [
+      {
+        label: locale === "de" ? "Themen" : "Topics",
+        href: orgRoutes.knowledge.root,
+        icon: <Library className="h-4 w-4" />,
+      },
+    ],
+  };
 
   if (!isCreator) {
     return [
@@ -108,6 +120,7 @@ const getOrgNavGroups = (
           },
         ],
       },
+      knowledgeGroup,
     ];
   }
 
@@ -127,6 +140,7 @@ const getOrgNavGroups = (
         },
       ],
     },
+    knowledgeGroup,
     {
       label: locale === "de" ? "Lernbereich" : "Learning",
       items: [

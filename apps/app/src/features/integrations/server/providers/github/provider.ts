@@ -15,6 +15,7 @@ import {
   exchangeUserToken,
   fetchInstallation,
   fetchInstallationRepositories,
+  fetchRepositoryFolders,
   GitHubRequestError,
   mintInstallationToken,
   readGitHubAppConfig,
@@ -93,6 +94,10 @@ export class GitHubProvider extends IntegrationProvider {
       }
       throw error;
     }
+  }
+
+  async listFolders(token: string, grantId: string): Promise<string[]> {
+    return fetchRepositoryFolders(token, grantId);
   }
 
   async listGrants(token: string): Promise<IntegrationGrantList> {

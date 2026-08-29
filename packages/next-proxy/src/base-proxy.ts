@@ -4,6 +4,10 @@ import {
   pathnameHasLocalePrefix,
   stripLocaleFromPathname,
 } from "@scibly/i18n";
+import {
+  localeCookieName,
+  localeCookieOptions,
+} from "@scibly/i18n/constants";
 import { loadPackageEnv } from "@scibly/lib/internal";
 import {
   appRoutesPathnames,
@@ -194,7 +198,18 @@ export const baseProxy = (options?: BaseProxyOptions) => {
       const locale = resolveLocaleFromRequest(request);
       const headers = new Headers(request.headers);
       headers.set("x-scibly-locale", locale);
-      return continueWithPathname(request, pathnameWithoutLocale, headers);
+      const response = continueWithPathname(
+        request,
+        pathnameWithoutLocale,
+        headers,
+      );
+      // A locale in the URL is an explicit choice: persist it, or the next
+      // locale-less in-app link (rewritten from the cookie) drops back to a
+      // stale locale. A prefetch is not a choice, so it may not flip the cookie.
+      if (!request.headers.get("next-router-prefetch")) {
+        response.cookies.set(localeCookieName, locale, localeCookieOptions);
+      }
+      return response;
     }
 
     if (pathnameMatchesRoute(pathnameWithoutLocale, EMBED_ROUTE_PATHNAME)) {

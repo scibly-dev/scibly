@@ -1,6 +1,6 @@
 "use client";
 
-import { appendLocalePrefix, stripLocaleFromPathname } from "@scibly/i18n";
+import { stripLocaleFromPathname } from "@scibly/i18n";
 import {
   defaultLocale,
   LanguageOptions,
@@ -17,14 +17,13 @@ import {
 } from "@scibly/ui/components/dropdown-menu";
 import { setCookie } from "cookies-next";
 import { Check, ChevronDown, Globe } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useRef, useState } from "react";
 
 export default function LanguageSwitcher() {
   const params = useParams();
   const locale =
     locales.find((candidate) => candidate === params.lang) ?? defaultLocale;
-  const router = useRouter();
 
   const [open, setOpen] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -43,20 +42,17 @@ export default function LanguageSwitcher() {
   const handleLanguageChange = (newLocale: Locale) => {
     if (newLocale === locale) return;
 
-    const updatedPath = appendLocalePrefix(
-      newLocale,
-      stripLocaleFromPathname(window.location.pathname),
-    );
-    // Read off the location at click time rather than through
-    // useSearchParams: that hook demands a Suspense boundary, and without one
-    // it bails every page rendering this switcher to the client entirely.
-    const newUrl = new URL(
-      `${updatedPath}${window.location.search}`,
-      window.location.origin,
-    );
-
     setCookie(localeCookieName, newLocale, localeCookieOptions);
-    router.push(newUrl.toString());
+    // In-app URLs carry no locale prefix — the cookie does, and the proxy
+    // rewrites from it. A full navigation rather than router.push, because a
+    // locale switch stales every route the client router has prefetched, and
+    // only the current one could be refreshed. Read off the location at click
+    // time rather than through useSearchParams: that hook demands a Suspense
+    // boundary, and without one it bails every page rendering this switcher
+    // to the client entirely.
+    window.location.assign(
+      `${stripLocaleFromPathname(window.location.pathname)}${window.location.search}`,
+    );
   };
 
   return (

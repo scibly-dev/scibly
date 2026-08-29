@@ -37,6 +37,9 @@ export abstract class IntegrationProvider {
   mintAccessToken?(installationId: string): Promise<string>;
 
   listGrants?(token: string): Promise<IntegrationGrantList>;
+
+  // The folders inside one grant, for a caller narrowing a scope within it.
+  listFolders?(token: string, grantId: string): Promise<string[]>;
 }
 
 export abstract class PageIntegrationProvider extends IntegrationProvider {

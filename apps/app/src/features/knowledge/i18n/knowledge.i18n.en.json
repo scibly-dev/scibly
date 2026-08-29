@@ -1,0 +1,75 @@
+{
+  "knowledge": {
+    "title": "Knowledge",
+    "subtitle": "Living documents kept in step with the repositories they describe.",
+    "newTopic": "New topic",
+    "empty": {
+      "title": "No topics yet",
+      "description": "A topic names one document and the repositories it follows."
+    },
+    "gate": {
+      "lockedTitle": "Knowledge is included from {plan}",
+      "lockedDescription": "Upgrade to {plan} to keep documentation in step with your repositories.",
+      "lapsedTitle": "Subscription lapsed",
+      "lapsedDescription": "Reactivate the subscription to create or change knowledge topics.",
+      "fallbackPlan": "a paid plan"
+    },
+    "health": {
+      "lastSync": "Last sync",
+      "never": "Never",
+      "pendingSuggestions": "{count} pending suggestions"
+    },
+    "card": {
+      "repositories": "Repositories",
+      "maintainers": "Maintainers",
+      "noMaintainers": "None",
+      "language": "Language",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "form": {
+      "createTitle": "New topic",
+      "editTitle": "Edit topic",
+      "description": "What the document is about, and which repositories it follows.",
+      "optional": "optional",
+      "name": "Name",
+      "namePlaceholder": "Onboarding guide",
+      "nameRequired": "Give the topic a name.",
+      "language": "Document language",
+      "languageEn": "English",
+      "languageDe": "German",
+      "repositories": "Repositories",
+      "repositoriesHint": "The topic follows changes in the repositories you pick — each one fully, unless you narrow it to folders or a pattern.",
+      "repositoriesSelect": "Select repositories…",
+      "repositoriesRequired": "Pick at least one repository.",
+      "repositoriesLoading": "Loading repositories…",
+      "repositoriesEmpty": "No repositories. Connect GitHub in integration settings first.",
+      "repositoriesUnreachable": "Marked repositories are no longer in the connected GitHub installation. Remove them to save.",
+      "maintainers": "Maintainers",
+      "maintainersHint": "They review what the sync suggests. You can add them later.",
+      "maintainersSelect": "Select maintainers…",
+      "maintainersEmpty": "No members to pick yet.",
+      "foldersBrowse": "Browse folders",
+      "foldersLoading": "Loading folders…",
+      "foldersEmpty": "No folders in this repository.",
+      "pathsPlaceholder": "docs/**/*.md",
+      "pathsInvalid": "“{glob}” is not a path inside the repository. Drop the leading slash and any “..”.",
+      "add": "Add",
+      "filterPlaceholder": "Search…",
+      "noMatches": "Nothing matches that search.",
+      "selected": "{count} selected",
+      "cancel": "Cancel",
+      "save": "Save",
+      "saving": "Saving…",
+      "created": "Topic created",
+      "updated": "Topic updated"
+    },
+    "deleteDialog": {
+      "title": "Delete topic?",
+      "description": "\"{name}\" and everything it has gathered will be removed.",
+      "confirm": "Delete",
+      "cancel": "Cancel",
+      "deleted": "Topic deleted"
+    }
+  }
+}

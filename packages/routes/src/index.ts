@@ -178,6 +178,9 @@ export const routes = {
           templates: {
             root: toAppUrl(`${baseOrgRoute}/templates`),
           },
+          knowledge: {
+            root: toAppUrl(`${baseOrgRoute}/knowledge`),
+          },
           members: {
             root: toAppUrl(`${baseOrgRoute}/members`),
           },

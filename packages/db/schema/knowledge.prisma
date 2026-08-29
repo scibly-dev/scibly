@@ -1,0 +1,29 @@
+/// The language a topic's document is written in. Lower-cased to match the
+/// `Locale` the app already passes around, so no mapping is needed either way.
+enum KnowledgeTopicLanguage {
+  en
+  de
+
+  @@map("knowledge_topic_language")
+}
+
+/// One living document: what it is about, which repositories it watches, and
+/// who reviews what the sync proposes for it.
+model KnowledgeTopic {
+  id             String                 @id @default(cuid())
+  organizationId String
+  organization   Organization           @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name           String
+  /// `{ id, fullName, pathGlobs }[]`, resolved from the GitHub installation at
+  /// write time: the id survives a rename, the name is what a maintainer reads,
+  /// and the globs narrow that one repository — empty means all of it.
+  repositories   Json
+  language       KnowledgeTopicLanguage
+  /// Members, not users: someone who leaves the organization stops maintaining.
+  maintainers    Member[]               @relation("KnowledgeTopicMaintainers")
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+
+  @@unique([organizationId, name])
+  @@map("knowledge_topic")
+}

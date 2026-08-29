@@ -5,6 +5,7 @@ import { type EditorUiPage } from "@/app/[lang]/i18n/editor-ui.types";
 import { type AuthPage } from "@/features/auth/i18n/auth.types";
 import { type UserSettingsPage } from "@/features/auth/settings/i18n/user-settings.types";
 import { type CoursesTranslations } from "@/features/course-authoring/contracts";
+import { type KnowledgeTranslations } from "@/features/knowledge/contracts";
 import { type LearningPlayerTranslations } from "@/features/learning/course-player/ui/player/i18n/learning-player.types";
 import { type LearnDashboardTranslations } from "@/features/learning/i18n/learning.types";
 import { type PublicCourseTranslations } from "@/features/learning/public-course/i18n/public-course.types";
@@ -32,6 +33,7 @@ export type Dictionary = {
     onboarding: OnboardingPage;
     courses: CoursesTranslations;
     notebook: NotebookTranslations;
+    knowledge: KnowledgeTranslations;
   };
 };
 

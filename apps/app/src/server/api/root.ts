@@ -9,6 +9,7 @@ import { courseRouter } from "@/features/course-authoring/courses/api/course.rou
 import { sceneRouter } from "@/features/course-authoring/scenes/api/scene.router";
 import { healthRouter } from "@/features/health/api/health.router";
 import { integrationRouter } from "@/features/integrations/server";
+import { knowledgeRouter } from "@/features/knowledge/server";
 import { learningRouter } from "@/features/learning/api/learning.router";
 import { sceneProgressRouter } from "@/features/learning/progression/api/scene-progress.router";
 import { notebookRouter } from "@/features/notebook/api/notebook.router";
@@ -29,6 +30,7 @@ const featureRouter = createTRPCRouter({
   orgAiConfig: orgAiConfigRouter,
   billing: billingRouter,
   integration: integrationRouter,
+  knowledge: knowledgeRouter,
   scene: sceneRouter,
   sceneProgress: sceneProgressRouter,
 });
