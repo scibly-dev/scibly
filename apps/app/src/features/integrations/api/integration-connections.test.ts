@@ -4,21 +4,20 @@ import { AppError } from "@scibly/api/application-error";
 import { createCallerFactory } from "@scibly/api/trpc";
 // The context's `db` is the same doubled object, borrowed for its Prisma type.
 import { db as contextDb } from "@scibly/db";
+import { rateLimitCounter } from "@test/mocks/rate-limit-counter";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { INTEGRATION_PROVIDERS } from "../contracts";
 import {
   disconnectIntegrationSchema,
   getAuthUrlSchema,
-  linkPageSchema,
   linkPagesSchema,
   listPageChildrenSchema,
   providerInput,
   searchPagesSchema,
 } from "./integration.schema";
 
-// Real tRPC caller over the real router, so input validation runs for real.
-// `db` and `resolveOrg` are mocked; `warnSourcesOfLostConnection` is not.
+// Real tRPC caller over the real router, so input validation runs for real; `db` and `resolveOrg` are mocked, `warnSourcesOfLostConnection` is not.
 
 const db = vi.hoisted(() => {
   const client = {
@@ -31,9 +30,8 @@ const db = vi.hoisted(() => {
     },
     notebookSource: { updateMany: vi.fn(), deleteMany: vi.fn() },
     notebookSourceChunk: { deleteMany: vi.fn() },
+    rateLimit: { updateMany: vi.fn(), create: vi.fn(), findUnique: vi.fn() },
     scene: { deleteMany: vi.fn() },
-    // The doubled client is handed straight back, so writes made inside the
-    // transaction land on the same spy.
     $transaction: vi.fn((run: (tx: unknown) => unknown) => run(client)),
   };
   return client;
@@ -102,8 +100,14 @@ async function refusalCode(call: () => Promise<unknown>): Promise<string> {
   return "resolved";
 }
 
+const limiter = rateLimitCounter();
+
 beforeEach(() => {
   vi.clearAllMocks();
+  limiter.clear();
+  db.rateLimit.updateMany.mockImplementation(limiter.model.updateMany);
+  db.rateLimit.create.mockImplementation(limiter.model.create);
+  db.rateLimit.findUnique.mockImplementation(limiter.model.findUnique);
   resolveOrg.mockResolvedValue({ organization: { id: "org-resolved" } });
   db.integrationConnection.findMany.mockResolvedValue([]);
   db.integrationConnection.findUnique.mockResolvedValue({ id: "conn-1" });
@@ -116,7 +120,6 @@ describe("LA1 one door only", () => {
     expect(Object.keys(integrationRouter._def.procedures).sort()).toEqual([
       "disconnect",
       "getAuthUrl",
-      "linkPage",
       "linkPages",
       "list",
       "listGrants",
@@ -332,7 +335,6 @@ describe("LP provider identity", () => {
     ["disconnect", disconnectIntegrationSchema],
     ["searchPages", searchPagesSchema],
     ["listPageChildren", listPageChildrenSchema],
-    ["linkPage", linkPageSchema],
     ["linkPages", linkPagesSchema],
   ];
 
@@ -363,5 +365,37 @@ describe("LP provider identity", () => {
     for (const providerId of INTEGRATION_PROVIDERS) {
       expect(providerInput.parse(providerId)).toBe(providerId);
     }
+  });
+});
+
+describe("LP the three provider proxies share one ceiling", () => {
+  it.each([
+    [
+      "listGrants",
+      () => caller().listGrants({ orgSlug: "acme", provider: "NOTION" }),
+    ],
+    [
+      "searchPages",
+      () =>
+        caller().searchPages({
+          orgSlug: "acme",
+          provider: "NOTION",
+          query: "x",
+        }),
+    ],
+    [
+      "listPageChildren",
+      () =>
+        caller().listPageChildren({
+          orgSlug: "acme",
+          provider: "NOTION",
+          pageId: "page-1",
+        }),
+    ],
+  ] as const)("%s is refused once the window is spent", async (_name, call) => {
+    limiter.setSpent("admin-1", "integration.proxy", 1_000);
+
+    expect(await refusalCode(call)).toBe("TOO_MANY_REQUESTS");
+    expect(db.integrationConnection.findUnique).not.toHaveBeenCalled();
   });
 });

@@ -5,7 +5,7 @@ import { db, type Prisma } from "@scibly/db";
 type DetachReason = "disconnected" | "workspace_changed";
 type Tx = Prisma.TransactionClient | typeof db;
 
-export function disconnectWarning(provider: IntegrationProviderId): string {
+function disconnectWarning(provider: IntegrationProviderId): string {
   return `The ${provider} integration is disconnected. Reconnect it to resume syncing.`;
 }
 
@@ -17,8 +17,6 @@ export async function warnSourcesOfLostConnection(
 ) {
   await tx.notebookSource.updateMany({
     where: { integrationId: connectionId },
-    // A disconnect keeps the link so reconnecting the same workspace picks these
-    // sources back up; a changed workspace is where the link really is dead.
     data:
       reason === "disconnected"
         ? { warning: disconnectWarning(provider) }
@@ -31,14 +29,10 @@ export async function warnSourcesOfLostConnection(
 
 export async function clearDisconnectWarning(
   connectionId: string,
-  provider: IntegrationProviderId,
   tx: Tx = db,
 ) {
   await tx.notebookSource.updateMany({
-    where: {
-      integrationId: connectionId,
-      warning: disconnectWarning(provider),
-    },
+    where: { integrationId: connectionId, warning: { not: null } },
     data: { warning: null },
   });
 }

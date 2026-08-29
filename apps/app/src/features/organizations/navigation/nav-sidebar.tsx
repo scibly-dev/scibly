@@ -86,7 +86,6 @@ const getOrgNavGroups = (
   isOwner: boolean,
 ): NavGroup[] => {
   const orgRoutes = routes.app.profile.org(slug);
-  // Every member reaches Knowledge; only an admin may change what is in it.
   const knowledgeGroup: NavGroup = {
     label: locale === "de" ? "Wissen" : "Knowledge",
     items: [

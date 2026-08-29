@@ -28,6 +28,13 @@ A repository-relative pattern narrowing a topic inside the repositories it
 watches. None means the whole repository. It may not climb out of one.
 _Avoid_: path, pattern, include
 
+**Folder**:
+A repository-relative directory the installation offers back, so a
+path glob can be picked instead of typed. Picking one stores the
+glob it means (`folder + "/**"`), never the folder itself — nothing downstream
+knows a scope was narrowed from a list rather than by hand.
+_Avoid_: directory, tree, dir
+
 **Maintainer**:
 A [member](../organizations/CONTEXT.md) who reviews what the sync suggests for a
 topic. Held as a member, not a user: leaving the organization ends

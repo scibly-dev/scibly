@@ -121,9 +121,7 @@ export const createCallerFactory = t.createCallerFactory;
 export const createTRPCRouter = t.router;
 export const mergeTRPCRouters = t.mergeRouters;
 
-// performance.now(), not Date.now(), and a fixed delay, not a random one: a
-// prerender refuses any unstable value it sees, so a wall clock or a dice roll
-// here breaks every route whose server prefetch passes through this middleware.
+// A fixed delay off `performance.now()`: a prerender refuses any unstable value, so a wall clock or a dice roll here breaks every route prefetching through this middleware.
 const DEV_LATENCY_MS = 250;
 
 const timingMiddleware = t.middleware(async ({ next, path }) => {

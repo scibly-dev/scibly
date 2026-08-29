@@ -8,6 +8,7 @@ const db = vi.hoisted(() => ({
     findMany: vi.fn(),
     findUnique: vi.fn(),
     updateMany: vi.fn(),
+    updateManyAndReturn: vi.fn(),
   },
   notebookSource: { findMany: vi.fn(), updateMany: vi.fn() },
   $transaction: vi.fn(),
@@ -52,8 +53,15 @@ function connection(overrides: Partial<Connection> = {}): Connection {
   };
 }
 
-function stored(row: Partial<Connection> & { consecutiveFailures?: number }) {
+function stored(row: Partial<Connection>) {
   db.integrationConnection.findUnique.mockResolvedValue(row);
+}
+
+// The failure counter is incremented by the database, so a test says what the database settled on rather than what the row held beforehand.
+function counted(consecutiveFailures: number) {
+  db.integrationConnection.updateManyAndReturn.mockResolvedValue([
+    { consecutiveFailures },
+  ]);
 }
 
 function sources(...rows: { id: string; externalId: string | null }[]): void {
@@ -72,11 +80,15 @@ function markedStale(): string[] {
   );
 }
 
+// A failure writes twice — the counted increment, then the backoff it implies — so this is everything an attempt put on the row.
 function writtenTo(connectionId: string) {
-  const call = db.integrationConnection.updateMany.mock.calls.find(
-    ([args]) => args.where.id === connectionId,
-  );
-  return call?.[0].data;
+  const written = [
+    ...db.integrationConnection.updateMany.mock.calls,
+    ...db.integrationConnection.updateManyAndReturn.mock.calls,
+  ]
+    .filter(([args]) => args.where.id === connectionId)
+    .map(([args]) => args.data);
+  return written.length === 0 ? undefined : Object.assign({}, ...written);
 }
 
 beforeEach(() => {
@@ -86,6 +98,7 @@ beforeEach(() => {
   db.integrationConnection.findMany.mockResolvedValue([]);
   db.integrationConnection.findUnique.mockResolvedValue(connection());
   db.integrationConnection.updateMany.mockResolvedValue({ count: 1 });
+  counted(1);
   db.notebookSource.findMany.mockResolvedValue([]);
   db.notebookSource.updateMany.mockImplementation(
     async ({ where }: { where: { id: { in: string[] } } }) => ({
@@ -166,6 +179,13 @@ describe("KS1/KS2/KF3/KB1/KB2/KB4: which connections a sync is due to poll", () 
     });
   });
 
+  it("takes one run's worth, so the event batch it feeds has a ceiling", async () => {
+    await loadDueConnections(NOW);
+
+    const [args] = db.integrationConnection.findMany.mock.calls[0];
+    expect(args.take).toBeGreaterThan(0);
+  });
+
   it("KF3: excludes a connection still inside its backoff", async () => {
     await loadDueConnections(NOW);
 
@@ -235,12 +255,16 @@ describe("KS3/KS4: which sources a connection contributes", () => {
     expect(outcome).toEqual({ status: "empty" });
   });
 
-  it("still records the attempt, so an empty connection keeps its place in the order", async () => {
+  it("records the attempt as the success it is, so an emptied connection leaves its backoff", async () => {
     sources();
 
     await pollConnection("conn-1");
 
-    expect(writtenTo("conn-1")).toEqual({ lastAttemptedAt: NOW });
+    expect(writtenTo("conn-1")).toEqual({
+      lastAttemptedAt: NOW,
+      consecutiveFailures: 0,
+      nextPollAfter: null,
+    });
   });
 });
 
@@ -340,6 +364,7 @@ describe("KF1: a poll that cannot run", () => {
 
   it("a connection disconnected before its turn is not polled and not backed off", async () => {
     db.integrationConnection.findUnique.mockResolvedValue(null);
+    db.integrationConnection.updateManyAndReturn.mockResolvedValue([]);
 
     expect(await pollConnection("conn-gone")).toEqual({ status: "gone" });
     expect(db.integrationConnection.updateMany).not.toHaveBeenCalled();
@@ -365,19 +390,28 @@ describe("KW1/KW2/KF2/KF3/KF4: what an attempt writes down", () => {
     });
   });
 
-  it("KF2: a failure moves the attempt timestamp and the counter", async () => {
-    stored({ consecutiveFailures: 0 });
+  it("KF2: a failure moves the attempt timestamp and has the database count", async () => {
+    counted(1);
 
     await recordPollFailure("conn-1", NOW);
 
     expect(writtenTo("conn-1")).toMatchObject({
       lastAttemptedAt: NOW,
-      consecutiveFailures: 1,
+      consecutiveFailures: { increment: 1 },
     });
   });
 
+  it("KF2: two failures racing over one connection land on two, not one", async () => {
+    counted(2);
+
+    await recordPollFailure("conn-1", NOW);
+
+    expect(db.integrationConnection.findUnique).not.toHaveBeenCalled();
+    expect(writtenTo("conn-1")).toMatchObject({ nextPollAfter: null });
+  });
+
   it("KW2: a failure leaves the watermark where it was", async () => {
-    stored({ consecutiveFailures: 0 });
+    counted(1);
 
     await recordPollFailure("conn-1", NOW);
 
@@ -385,25 +419,24 @@ describe("KW1/KW2/KF2/KF3/KF4: what an attempt writes down", () => {
   });
 
   it.each([
-    { failures: 0, case: "nothing for the first failure", expected: 0 },
-    { failures: 1, case: "nothing for the second", expected: 0 },
-    { failures: 2, case: "6h once the third lands", expected: 6 * HOUR },
-    { failures: 3, case: "24h for the fourth", expected: DAY },
-    { failures: 4, case: "72h for the fifth", expected: 3 * DAY },
+    { settled: 1, case: "nothing for the first failure", expected: 0 },
+    { settled: 2, case: "nothing for the second", expected: 0 },
+    { settled: 3, case: "6h once the third lands", expected: 6 * HOUR },
+    { settled: 4, case: "24h for the fourth", expected: DAY },
+    { settled: 5, case: "72h for the fifth", expected: 3 * DAY },
     {
-      failures: 8,
+      settled: 9,
       case: "capped at 3 days however long it stays broken",
       expected: 3 * DAY,
     },
   ])(
     "KF3: backs a failing connection off — $case",
-    async ({ failures, expected }) => {
-      stored({ consecutiveFailures: failures });
+    async ({ settled, expected }) => {
+      counted(settled);
 
       await recordPollFailure("conn-1", NOW);
 
       expect(writtenTo("conn-1")).toMatchObject({
-        consecutiveFailures: failures + 1,
         nextPollAfter:
           expected === 0 ? null : new Date(NOW.getTime() + expected),
       });

@@ -2,7 +2,6 @@ import { z } from "zod/v4";
 
 import { httpsUrl } from "../common";
 
-/** The org a procedure acts on, addressed the way the URL addresses it. */
 export const orgSlugInput = z.object({ orgSlug: z.string() });
 
 export const createOrganizationSchema = z.object({

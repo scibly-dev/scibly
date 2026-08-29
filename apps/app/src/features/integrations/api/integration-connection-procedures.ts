@@ -4,6 +4,7 @@ import type {
 } from "../contracts";
 
 import { AppError } from "@scibly/api/application-error";
+import { withRateLimit } from "@scibly/api/rate-limit";
 import { protectedProcedure } from "@scibly/api/trpc";
 import { db } from "@scibly/db";
 import { routes } from "@scibly/routes";
@@ -32,6 +33,16 @@ import {
   searchPagesSchema,
 } from "./integration.schema";
 
+const PROXY_LIMIT = {
+  endpoint: "integration.proxy",
+  maxPerWindow: 300,
+  tooManyRequestsMessage:
+    "Too many integration requests. Please try again in a bit.",
+} as const;
+
+const boundedProxy = <T>(userId: string, ask: () => Promise<T>) =>
+  withRateLimit({ db, identifier: userId, ...PROXY_LIMIT }, ask);
+
 export async function resolveConnectionRow(
   organizationId: string,
   providerId: IntegrationProviderId,
@@ -39,6 +50,12 @@ export async function resolveConnectionRow(
   const connection = await db.integrationConnection.findUnique({
     where: {
       organizationId_provider: { organizationId, provider: providerId },
+    },
+    select: {
+      id: true,
+      provider: true,
+      accessTokenEncrypted: true,
+      installationId: true,
     },
   });
   if (!connection || !isConnected(connection)) {
@@ -133,8 +150,7 @@ export const integrationConnectionProcedures = {
         select: { id: true },
       });
 
-      // One transaction: a warning that committed without the credential going
-      // with it would leave sources warning about a connection still live.
+      // One transaction: a warning committed without the credential going with it would leave sources warning about a live connection.
       if (connection) {
         await db.$transaction(async (tx) => {
           await warnSourcesOfLostConnection(
@@ -152,8 +168,7 @@ export const integrationConnectionProcedures = {
       return { success: true };
     }),
 
-  // Its own procedure rather than part of `list`, so the settings page never
-  // waits on a provider that is slow or down.
+  // Its own procedure rather than part of `list`, so the settings page never waits on a provider that is slow or down.
   listGrants: protectedProcedure
     .input(listGrantsSchema)
     .query(async ({ input, ctx }) => {
@@ -162,13 +177,15 @@ export const integrationConnectionProcedures = {
         ctx.session.user.id,
         "admin_or_owner",
       );
-      const { provider, token } = await resolveConnection(
-        organization.id,
-        input.provider,
-      );
-      return (
-        (await provider.listGrants?.(token)) ?? { grants: [], totalCount: 0 }
-      );
+      return boundedProxy(ctx.session.user.id, async () => {
+        const { provider, token } = await resolveConnection(
+          organization.id,
+          input.provider,
+        );
+        return (
+          (await provider.listGrants?.(token)) ?? { grants: [], totalCount: 0 }
+        );
+      });
     }),
 
   searchPages: protectedProcedure
@@ -179,11 +196,13 @@ export const integrationConnectionProcedures = {
         ctx.session.user.id,
         "admin_or_owner",
       );
-      const { provider, token } = await resolvePageConnection(
-        organization.id,
-        input.provider,
-      );
-      return { pages: await provider.searchPages(token, input.query) };
+      return boundedProxy(ctx.session.user.id, async () => {
+        const { provider, token } = await resolvePageConnection(
+          organization.id,
+          input.provider,
+        );
+        return { pages: await provider.searchPages(token, input.query) };
+      });
     }),
 
   listPageChildren: protectedProcedure
@@ -194,14 +213,16 @@ export const integrationConnectionProcedures = {
         ctx.session.user.id,
         "admin_or_owner",
       );
-      const { provider, token } = await resolvePageConnection(
-        organization.id,
-        input.provider,
-      );
-      const pages =
-        input.nodeType === "database"
-          ? await provider.listDatabasePages(token, input.pageId)
-          : await provider.listChildren(token, input.pageId);
-      return { pages };
+      return boundedProxy(ctx.session.user.id, async () => {
+        const { provider, token } = await resolvePageConnection(
+          organization.id,
+          input.provider,
+        );
+        const pages =
+          input.nodeType === "database"
+            ? await provider.listDatabasePages(token, input.pageId)
+            : await provider.listChildren(token, input.pageId);
+        return { pages };
+      });
     }),
 };

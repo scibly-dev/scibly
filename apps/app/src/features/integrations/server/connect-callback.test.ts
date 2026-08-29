@@ -27,8 +27,7 @@ const db = vi.hoisted(() => {
       upsert: vi.fn<(args: UpsertArgs) => Promise<unknown>>(),
     },
     notebookSource: { updateMany: vi.fn() },
-    // The doubled client is handed straight back, so the transaction's reads and
-    // writes land on the same spies.
+    // The doubled client is handed straight back, so the transaction's reads and writes land on the same spies.
     $transaction: vi.fn((run: (tx: unknown) => unknown) => run(client)),
   };
   return client;
@@ -296,21 +295,34 @@ describe("LS what is stored", () => {
     });
   });
 
-  it("LS3 re-authorising the same workspace keeps its sources and lifts their warning", async () => {
+  it("LS3 reconnecting a disconnected workspace keeps its sources and lifts their warning", async () => {
     db.integrationConnection.findUnique.mockResolvedValue({
       id: "conn-1",
       workspaceId: "workspace-1",
+      accessTokenEncrypted: null,
+      installationId: null,
     });
 
     await callback({ code: "auth-code", state: state() });
 
     expect(db.notebookSource.updateMany).toHaveBeenCalledWith({
-      where: {
-        integrationId: "conn-1",
-        warning: expect.stringContaining("NOTION integration is disconnected"),
-      },
+      where: { integrationId: "conn-1", warning: { not: null } },
       data: { warning: null },
     });
+    expect(db.integrationConnection.upsert).toHaveBeenCalledTimes(1);
+  });
+
+  it("LS3 re-authorising a connection that never went down touches no warnings", async () => {
+    db.integrationConnection.findUnique.mockResolvedValue({
+      id: "conn-1",
+      workspaceId: "workspace-1",
+      accessTokenEncrypted: "still-connected",
+      installationId: null,
+    });
+
+    await callback({ code: "auth-code", state: state() });
+
+    expect(db.notebookSource.updateMany).not.toHaveBeenCalled();
     expect(db.integrationConnection.upsert).toHaveBeenCalledTimes(1);
   });
 

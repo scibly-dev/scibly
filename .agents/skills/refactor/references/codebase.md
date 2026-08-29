@@ -102,6 +102,23 @@ already provides is a finding.
   stale-closure bugs are classic issues in the editor-adjacent code.
 - User-generated HTML must go through `dompurify` before any
   `dangerouslySetInnerHTML`.
+- **The middleware is `apps/app/src/proxy.ts`, not `middleware.ts`.** This
+  version renamed it. `grep`ing for `middleware.ts` returns nothing and does
+  **not** mean the app is unguarded. `proxy.ts` exports `config.matcher` plus
+  `proxy = createAppProxy()` → `createSciblyProxy(baseProxy())` in
+  `packages/next-proxy/`. `baseProxy` ends every unmatched request at
+  `createRedirectWithLocale`, which prepends a locale when the first segment is
+  not one — so `[lang]` is always a real `Locale` by the time a layout sees it.
+  The one bypass is `checkStaticFiles` (`static-assets.ts`): `/_next/*` and any
+  pathname ending in a media/text extension return `NextResponse.next()`
+  untouched.
+- **Route params are still untrusted input.** `generateStaticParams` does not
+  restrict which params render — `dynamicParams` defaults to `true`, so the
+  proxy is the only thing narrowing them, and it is one `matcher` or
+  `skipPathPrefixes` edit away from not being. Narrow a route param to its
+  domain type at the layout boundary (`getLocale(lang, true)`) before passing it
+  on, and never interpolate one into `dangerouslySetInnerHTML`: `JSON.stringify`
+  does not escape `<`, so it cannot stop a `</script>` breakout.
 
 ### Feature component folders
 

@@ -49,12 +49,15 @@
       "maintainersHint": "They review what the sync suggests. You can add them later.",
       "maintainersSelect": "Select maintainers…",
       "maintainersEmpty": "No members to pick yet.",
+      "maintainersLoading": "Loading members…",
+      "maintainersUnavailable": "Members could not be loaded. Reload the page to try again.",
       "foldersBrowse": "Browse folders",
       "foldersLoading": "Loading folders…",
       "foldersEmpty": "No folders in this repository.",
       "pathsPlaceholder": "docs/**/*.md",
       "pathsInvalid": "“{glob}” is not a path inside the repository. Drop the leading slash and any “..”.",
       "add": "Add",
+      "remove": "Remove {name}",
       "filterPlaceholder": "Search…",
       "noMatches": "Nothing matches that search.",
       "selected": "{count} selected",
@@ -62,7 +65,11 @@
       "save": "Save",
       "saving": "Saving…",
       "created": "Topic created",
-      "updated": "Topic updated"
+      "updated": "Topic updated",
+      "repositoriesUnavailable": "Repositories could not be loaded. Reload the page to try again.",
+      "repositoriesMax": "A topic can follow at most {max} repositories.",
+      "pathsMax": "A repository can be narrowed to at most {max} patterns.",
+      "repositoriesInvalid": "One of the path patterns is not valid. Remove it and try again."
     },
     "deleteDialog": {
       "title": "Delete topic?",
@@ -70,6 +77,7 @@
       "confirm": "Delete",
       "cancel": "Cancel",
       "deleted": "Topic deleted"
-    }
+    },
+    "loadFailed": "Topics could not be loaded. Reload the page to try again."
   }
 }

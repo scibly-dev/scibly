@@ -18,7 +18,7 @@ import {
 import { setCookie } from "cookies-next";
 import { Check, ChevronDown, Globe } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function LanguageSwitcher() {
   const params = useParams();
@@ -39,17 +39,19 @@ export default function LanguageSwitcher() {
     }, 150);
   };
 
+  // A locale switch is a full navigation, so a pending close would set state on a component that is already gone.
+  useEffect(
+    () => () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    },
+    [],
+  );
+
   const handleLanguageChange = (newLocale: Locale) => {
     if (newLocale === locale) return;
 
     setCookie(localeCookieName, newLocale, localeCookieOptions);
-    // In-app URLs carry no locale prefix — the cookie does, and the proxy
-    // rewrites from it. A full navigation rather than router.push, because a
-    // locale switch stales every route the client router has prefetched, and
-    // only the current one could be refreshed. Read off the location at click
-    // time rather than through useSearchParams: that hook demands a Suspense
-    // boundary, and without one it bails every page rendering this switcher
-    // to the client entirely.
+    // Full navigation, not router.push: a locale switch stales every route the client router has prefetched, and useSearchParams would bail this switcher's whole page to the client.
     window.location.assign(
       `${stripLocaleFromPathname(window.location.pathname)}${window.location.search}`,
     );

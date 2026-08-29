@@ -1,4 +1,5 @@
 import type { TopicRepository } from "../contracts";
+import type { TopicRepositoryInput } from "./knowledge.schema";
 
 import { AppError } from "@scibly/api/application-error";
 import {
@@ -6,8 +7,9 @@ import {
   decideKnowledgeSync,
   describeKnowledgeSyncAccess,
 } from "@scibly/api/entitlement";
+import { withRateLimit } from "@scibly/api/rate-limit";
 import { protectedProcedure } from "@scibly/api/trpc";
-import { db } from "@scibly/db";
+import { db, Prisma } from "@scibly/db";
 
 import { resolveConnection } from "@/features/integrations/server";
 import { resolveOrg } from "@/features/organizations/server";
@@ -34,15 +36,18 @@ const TOPIC_SELECT = {
   },
 } as const;
 
-type StoredTopic = {
-  repositories: unknown;
-  maintainers: { id: string; user: { name: string; email: string } }[];
-};
+type StoredTopic = Prisma.KnowledgeTopicGetPayload<{
+  select: typeof TOPIC_SELECT;
+}>;
 
-// Health has nowhere to come from until the sync tickets land, so it is stated
-// as the constant it is rather than dressed up as a value that could vary. The
-// ticket that starts syncing replaces this with the real columns.
 const NEVER_SYNCED = { lastSyncedAt: null, pendingSuggestions: 0 };
+
+const FOLDERS_LIMIT = {
+  endpoint: "knowledge.listFolders",
+  maxPerWindow: 120,
+  tooManyRequestsMessage:
+    "Too many folder listings. Please try again in a bit.",
+} as const;
 
 const toTopicView = <T extends StoredTopic>({
   repositories,
@@ -73,29 +78,38 @@ const badScope = (message: string) =>
     message,
   });
 
-// The repository ids arrive from a browser, so the installation — not the client
-// — decides which repositories exist and what they are called. A repeated id
-// keeps its first entry, so a duplicate cannot smuggle in a second glob set.
+const unreachableRepository = (id: string) =>
+  badScope(
+    `Repository ${id} is not one this organization's GitHub installation reaches.`,
+  );
+
 async function resolveRepositories(
   organizationId: string,
-  repositories: { id: string; pathGlobs: string[] }[],
-): Promise<TopicRepository[]> {
+  repositories: TopicRepositoryInput[],
+) {
   const { provider, token } = await resolveConnection(organizationId, "GITHUB");
-  const { grants } = (await provider.listGrants?.(token)) ?? { grants: [] };
+  const { grants, totalCount } = (await provider.listGrants?.(token)) ?? {
+    grants: [],
+    totalCount: 0,
+  };
   const nameById = new Map(grants.map((grant) => [grant.id, grant.name]));
+  const listedEverything = grants.length >= totalCount;
 
   const unique = [
     ...new Map(repositories.map((repo) => [repo.id, repo])).values(),
   ];
-  return unique.map(({ id, pathGlobs }) => {
-    const fullName = nameById.get(id);
-    if (!fullName) {
-      throw badScope(
-        `Repository ${id} is not one this organization's GitHub installation reaches.`,
-      );
-    }
-    return { id, fullName, pathGlobs };
-  });
+  // Sequential, not `Promise.all`: a truncated listing can leave fifty ids to resolve, and GitHub answers that burst with a rate limit.
+  const settled: TopicRepository[] = [];
+  for (const { id, pathGlobs } of unique) {
+    const fullName =
+      nameById.get(id) ??
+      (listedEverything
+        ? undefined
+        : (await provider.resolveGrant?.(token, id))?.name);
+    if (!fullName) throw unreachableRepository(id);
+    settled.push({ id, fullName, pathGlobs });
+  }
+  return { repositories: settled };
 }
 
 async function resolveMaintainers(
@@ -115,33 +129,45 @@ async function resolveMaintainers(
   return members.map(({ id }) => ({ id }));
 }
 
-// Everything a write needs, gathered once: the admin check, the plan gate, and
-// the two scopes the client is not trusted to state.
-async function prepareTopicWrite(
+async function writeTopic<T>(write: () => Promise<T>): Promise<T> {
+  try {
+    return await write();
+  } catch (error) {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === "P2002"
+    ) {
+      throw new AppError({
+        code: "CONFLICT",
+        applicationCode: "knowledge.name_taken",
+        message: "A topic with this name already exists in this organization.",
+      });
+    }
+    throw error;
+  }
+}
+
+async function requireKnowledgeAdmin(orgSlug: string, userId: string) {
+  const { organization } = await resolveOrg(orgSlug, userId, "admin_or_owner");
+  assertAllowed(await decideKnowledgeSync(db, organization.id));
+  return { organizationId: organization.id };
+}
+
+async function resolveTopicScope(
+  organizationId: string,
   input: {
-    orgSlug: string;
-    repositories: { id: string; pathGlobs: string[] }[];
+    repositories: TopicRepositoryInput[];
     maintainerMemberIds: string[];
   },
-  userId: string,
 ) {
-  const { organization } = await resolveOrg(
-    input.orgSlug,
-    userId,
-    "admin_or_owner",
-  );
-  assertAllowed(await decideKnowledgeSync(db, organization.id));
-
-  const [repositories, maintainers] = await Promise.all([
-    resolveRepositories(organization.id, input.repositories),
-    resolveMaintainers(organization.id, input.maintainerMemberIds),
+  const [{ repositories }, maintainers] = await Promise.all([
+    resolveRepositories(organizationId, input.repositories),
+    resolveMaintainers(organizationId, input.maintainerMemberIds),
   ]);
-  return { organizationId: organization.id, repositories, maintainers };
+  return { repositories, maintainers };
 }
 
 export const knowledgeTopicProcedures = {
-  // Open to any member: the gate decides what the page offers, not whether it
-  // renders at all.
   list: protectedProcedure.input(orgSlugInput).query(async ({ input, ctx }) => {
     const { organization, membership } = await resolveOrg(
       input.orgSlug,
@@ -158,8 +184,6 @@ export const knowledgeTopicProcedures = {
     ]);
 
     return {
-      // Carried here so the screen needs no organization lookup of its own just
-      // to name the members a maintainer can be picked from.
       organizationId: organization.id,
       topics: topics.map(toTopicView),
       access,
@@ -167,91 +191,106 @@ export const knowledgeTopicProcedures = {
     };
   }),
 
-  // Named so nobody has to guess a path: the folders come from the installation,
-  // and the same admin check and gate guard them as the write they feed.
   listFolders: protectedProcedure
     .input(listFoldersSchema)
     .query(async ({ input, ctx }) => {
-      const { organization } = await resolveOrg(
+      const { organizationId } = await requireKnowledgeAdmin(
         input.orgSlug,
         ctx.session.user.id,
-        "admin_or_owner",
       );
-      assertAllowed(await decideKnowledgeSync(db, organization.id));
 
-      // Settled against the installation first, so an id from a browser cannot
-      // ask about a repository this organization does not reach.
-      await resolveRepositories(organization.id, [
-        { id: input.repositoryId, pathGlobs: [] },
-      ]);
-      const { provider, token } = await resolveConnection(
-        organization.id,
-        "GITHUB",
+      return withRateLimit(
+        { db, identifier: ctx.session.user.id, ...FOLDERS_LIMIT },
+        async () => {
+          const { provider, token } = await resolveConnection(
+            organizationId,
+            "GITHUB",
+          );
+          if (!(await provider.resolveGrant?.(token, input.repositoryId))) {
+            throw unreachableRepository(input.repositoryId);
+          }
+          return {
+            folders:
+              (await provider.listFolders?.(token, input.repositoryId)) ?? [],
+          };
+        },
       );
-      return {
-        folders:
-          (await provider.listFolders?.(token, input.repositoryId)) ?? [],
-      };
     }),
 
   create: protectedProcedure
     .input(createTopicSchema)
     .mutation(async ({ input, ctx }) => {
-      const { organizationId, repositories, maintainers } =
-        await prepareTopicWrite(input, ctx.session.user.id);
+      const { organizationId } = await requireKnowledgeAdmin(
+        input.orgSlug,
+        ctx.session.user.id,
+      );
+      const { repositories, maintainers } = await resolveTopicScope(
+        organizationId,
+        input,
+      );
 
-      const topic = await db.knowledgeTopic.create({
-        data: {
-          organizationId,
-          name: input.name,
-          repositories: toStoredRepositories(repositories),
-          language: input.language,
-          maintainers: { connect: maintainers },
-        },
-        select: TOPIC_SELECT,
-      });
+      const topic = await writeTopic(() =>
+        db.knowledgeTopic.create({
+          data: {
+            organizationId,
+            name: input.name,
+            repositories: toStoredRepositories(repositories),
+            language: input.language,
+            maintainers: { connect: maintainers },
+          },
+          select: TOPIC_SELECT,
+        }),
+      );
       return toTopicView(topic);
     }),
 
   update: protectedProcedure
     .input(updateTopicSchema)
     .mutation(async ({ input, ctx }) => {
-      const { organizationId, repositories, maintainers } =
-        await prepareTopicWrite(input, ctx.session.user.id);
+      const { organizationId } = await requireKnowledgeAdmin(
+        input.orgSlug,
+        ctx.session.user.id,
+      );
 
-      // Found within the organization first: a topic id from another tenant is
-      // a miss, not something to update and then refuse.
       const existing = await db.knowledgeTopic.findFirst({
         where: { id: input.topicId, organizationId },
         select: { id: true },
       });
       if (!existing) throw topicNotFound();
 
-      const topic = await db.knowledgeTopic.update({
-        where: { id: existing.id },
-        data: {
-          name: input.name,
-          repositories: toStoredRepositories(repositories),
-          language: input.language,
-          maintainers: { set: maintainers },
-        },
-        select: TOPIC_SELECT,
-      });
+      const { repositories, maintainers } = await resolveTopicScope(
+        organizationId,
+        input,
+      );
+
+      const topic = await writeTopic(() =>
+        db.knowledgeTopic.update({
+          where: { id: existing.id },
+          data: {
+            name: input.name,
+            repositories: toStoredRepositories(repositories),
+            language: input.language,
+            maintainers: { set: maintainers },
+          },
+          select: TOPIC_SELECT,
+        }),
+      );
       return toTopicView(topic);
     }),
 
   delete: protectedProcedure
     .input(deleteTopicSchema)
     .mutation(async ({ input, ctx }) => {
+      // No plan gate: a lapsed subscription blocks writes, but an organization's own data stays theirs to remove.
       const { organization } = await resolveOrg(
         input.orgSlug,
         ctx.session.user.id,
         "admin_or_owner",
       );
-      assertAllowed(await decideKnowledgeSync(db, organization.id));
+      const organizationId = organization.id;
 
       const { count } = await db.knowledgeTopic.deleteMany({
-        where: { id: input.topicId, organizationId: organization.id },
+        where: { id: input.topicId, organizationId },
       });
       if (count === 0) throw topicNotFound();
       return { success: true };

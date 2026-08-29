@@ -4,10 +4,7 @@ import {
   pathnameHasLocalePrefix,
   stripLocaleFromPathname,
 } from "@scibly/i18n";
-import {
-  localeCookieName,
-  localeCookieOptions,
-} from "@scibly/i18n/constants";
+import { localeCookieName, localeCookieOptions } from "@scibly/i18n/constants";
 import { loadPackageEnv } from "@scibly/lib/internal";
 import {
   appRoutesPathnames,
@@ -203,10 +200,11 @@ export const baseProxy = (options?: BaseProxyOptions) => {
         pathnameWithoutLocale,
         headers,
       );
-      // A locale in the URL is an explicit choice: persist it, or the next
-      // locale-less in-app link (rewritten from the cookie) drops back to a
-      // stale locale. A prefetch is not a choice, so it may not flip the cookie.
-      if (!request.headers.get("next-router-prefetch")) {
+      // A locale in the URL is an explicit choice worth persisting — but a prefetch is not a choice, and an embed runs on someone else's site where this app may set nothing.
+      if (
+        !request.headers.get("next-router-prefetch") &&
+        !pathnameMatchesRoute(pathnameWithoutLocale, EMBED_ROUTE_PATHNAME)
+      ) {
         response.cookies.set(localeCookieName, locale, localeCookieOptions);
       }
       return response;

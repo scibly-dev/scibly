@@ -48,8 +48,6 @@ export const MAX_FILE_SIZE = {
   NOTION_PAGE: 0,
 } as const satisfies Record<SourceType, number>;
 
-// A source still waiting for a file this recently granted is excused from the
-// ingest refresh; past this window the upload can no longer land.
 export const SOURCE_UPLOAD_GRANT_TTL_MS = 10 * 60 * 1000;
 
 export const UPLOAD_SOURCE_TYPES = [
@@ -59,8 +57,6 @@ export const UPLOAD_SOURCE_TYPES = [
 
 export type UploadSourceType = (typeof UPLOAD_SOURCE_TYPES)[number];
 
-// A `Map` so `get` answers `undefined` for extensions that aren't accepted,
-// which indexing wouldn't guarantee.
 export const EXTENSION_TO_SOURCE_TYPE = new Map<string, UploadSourceType>([
   [".pdf", SOURCE_TYPES.PDF],
   [".txt", SOURCE_TYPES.TEXT],

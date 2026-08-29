@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-// Nothing of GitHub is mocked but the network: the app JWT is really signed, and
-// really verified against a key generated for this file.
+// Nothing of GitHub is mocked but the network: the app JWT is really signed and really verified against a key generated for this file.
 
 const mockEnv = vi.hoisted(() => ({}) as Record<string, string>);
 
@@ -226,7 +225,6 @@ describe("GH4 what the callback becomes", () => {
     await expect(
       new GitHubProvider().completeConnect({
         code: "auth-code",
-        // Someone else's installation, submitted by an admin of their own org.
         installationId: "999",
       }),
     ).rejects.toThrow(/not one this user can reach/i);
@@ -288,8 +286,6 @@ describe("GH5 the minted token", () => {
   it("GH5 refuses a body that is not the shape it asked for", async () => {
     fetchMock.mockResolvedValue(ok({ token: 12345 }));
 
-    // A cast would have handed a number down as the access token and failed
-    // somewhere with no GitHub in the stack trace.
     await expect(new GitHubProvider().mintAccessToken("42")).rejects.toThrow();
   });
 
@@ -372,7 +368,6 @@ describe("GH6 what the installation reaches", () => {
     ]);
     expect(totalCount).toBe(2);
     expect(lastRequest().init.headers.authorization).toBe("Bearer ghs_minted");
-    // A page that came back short is the last page; no second request for it.
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
@@ -388,10 +383,7 @@ describe("GH6 what the installation reaches", () => {
       "ghs_minted",
     );
 
-    // Ten pages is the budget: the settings strip stops there and admits it
-    // rather than spending fifteen requests to render a list nobody reads.
     expect(fetchMock).toHaveBeenCalledTimes(10);
-    // Fewer than the count: the settings page reads that as "showing a prefix".
     expect(grants).toHaveLength(1000);
     expect(totalCount).toBe(1500);
     expect(lastRequest().url).toContain("page=10");
@@ -403,6 +395,75 @@ describe("GH6 what the installation reaches", () => {
     await expect(
       new GitHubProvider().listGrants("ghs_minted"),
     ).resolves.toEqual({ grants: [], totalCount: 0 });
+  });
+});
+
+describe("GH8 the folders a topic can be scoped to", () => {
+  function repositoryTrees(trees: Record<string, unknown[]>) {
+    fetchMock.mockImplementation((url: string) => {
+      if (url.includes("/repositories/"))
+        return Promise.resolve(
+          ok({ full_name: "acme-inc/api", default_branch: "main" }),
+        );
+      const sha = String(url.split("/git/trees/").at(-1));
+      return Promise.resolve(ok({ tree: trees[sha] ?? [] }));
+    });
+  }
+
+  function treeRequests() {
+    return fetchMock.mock.calls.filter((one) =>
+      String(one[0]).includes("/git/trees/"),
+    );
+  }
+
+  it("GH8 walks a level at a time rather than fetching the whole tree", async () => {
+    repositoryTrees({
+      main: [
+        { path: "docs", type: "tree", sha: "docs-sha" },
+        { path: "README.md", type: "blob", sha: "readme-sha" },
+        { path: "src", type: "tree", sha: "src-sha" },
+      ],
+      "docs-sha": [
+        { path: "guides", type: "tree", sha: "guides-sha" },
+        { path: "intro.md", type: "blob", sha: "intro-sha" },
+      ],
+    });
+
+    const folders = await new GitHubProvider().listFolders("ghs_minted", "9");
+
+    expect(folders).toEqual(["docs", "docs/guides", "src"]);
+    expect(treeRequests()).toHaveLength(3);
+    expect(JSON.stringify(treeRequests())).not.toContain("recursive");
+  });
+
+  it("GH8 stops walking once the root alone fills the folder cap", async () => {
+    repositoryTrees({
+      main: Array.from({ length: 250 }, (_, index) => ({
+        path: `package-${index}`,
+        type: "tree",
+        sha: `sha-${index}`,
+      })),
+    });
+
+    const folders = await new GitHubProvider().listFolders("ghs_minted", "9");
+
+    expect(folders).toHaveLength(200);
+    expect(treeRequests()).toHaveLength(1);
+  });
+
+  it("GH8 stops at its request budget rather than asking once per folder", async () => {
+    repositoryTrees({
+      main: Array.from({ length: 100 }, (_, index) => ({
+        path: `package-${index}`,
+        type: "tree",
+        sha: `sha-${index}`,
+      })),
+    });
+
+    const folders = await new GitHubProvider().listFolders("ghs_minted", "9");
+
+    expect(folders).toHaveLength(100);
+    expect(treeRequests()).toHaveLength(32);
   });
 });
 

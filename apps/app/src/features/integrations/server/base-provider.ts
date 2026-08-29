@@ -1,6 +1,7 @@
 import type {
   IntegrationCredential,
   IntegrationCredentialKind,
+  IntegrationGrant,
   IntegrationGrantList,
   IntegrationPage,
   IntegrationPageContent,
@@ -38,7 +39,11 @@ export abstract class IntegrationProvider {
 
   listGrants?(token: string): Promise<IntegrationGrantList>;
 
-  // The folders inside one grant, for a caller narrowing a scope within it.
+  resolveGrant?(
+    token: string,
+    grantId: string,
+  ): Promise<IntegrationGrant | null>;
+
   listFolders?(token: string, grantId: string): Promise<string[]>;
 }
 

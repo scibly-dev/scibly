@@ -1,9 +1,10 @@
 import type {
   IntegrationCredential,
+  IntegrationGrant,
   IntegrationGrantList,
 } from "../../../contracts";
 import type { ConnectCallbackParams } from "../../base-provider";
-import type { GitHubAppConfig } from "./app-auth";
+import type { GitHubAppConfig, GitHubRepository } from "./app-auth";
 
 import { routes } from "@scibly/routes";
 
@@ -15,12 +16,19 @@ import {
   exchangeUserToken,
   fetchInstallation,
   fetchInstallationRepositories,
+  fetchInstallationRepository,
   fetchRepositoryFolders,
   GitHubRequestError,
   mintInstallationToken,
   readGitHubAppConfig,
   userCanAccessInstallation,
 } from "./app-auth";
+
+const asGrant = (repository: GitHubRepository): IntegrationGrant => ({
+  id: String(repository.id),
+  name: repository.full_name,
+  url: repository.html_url,
+});
 
 async function installationIsGone(
   config: GitHubAppConfig,
@@ -103,13 +111,14 @@ export class GitHubProvider extends IntegrationProvider {
   async listGrants(token: string): Promise<IntegrationGrantList> {
     const { repositories, totalCount } =
       await fetchInstallationRepositories(token);
-    return {
-      grants: repositories.map((repository) => ({
-        id: String(repository.id),
-        name: repository.full_name,
-        url: repository.html_url,
-      })),
-      totalCount,
-    };
+    return { grants: repositories.map(asGrant), totalCount };
+  }
+
+  async resolveGrant(
+    token: string,
+    grantId: string,
+  ): Promise<IntegrationGrant | null> {
+    const repository = await fetchInstallationRepository(token, grantId);
+    return repository === null ? null : asGrant(repository);
   }
 }

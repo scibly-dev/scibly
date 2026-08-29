@@ -11,8 +11,7 @@ const disconnectMutate = vi.hoisted(() => vi.fn());
 const toastError = vi.hoisted(() => vi.fn());
 const toastSuccess = vi.hoisted(() => vi.fn());
 
-// The two mutations are handed their own callbacks, so a test decides which one
-// a click runs — that is how a *failed* disconnect is staged.
+// The two mutations are handed their own callbacks, so a test decides which one a click runs — that is how a failed disconnect is staged.
 vi.mock("@/shared/api/trpc/client", () => ({
   api: {
     useUtils: () => ({ integration: { list: { invalidate } } }),
@@ -77,8 +76,6 @@ function grants(...names: string[]): void {
   grantsOf(names.length, ...names);
 }
 
-// The count the provider reported can exceed what it listed: a listing that
-// stopped at its page budget is what the strip has to summarise.
 function grantsOf(totalCount: number, ...names: string[]): void {
   useGrants.mockReturnValue({
     data: {
@@ -101,8 +98,7 @@ const card = () =>
 const button = (container: HTMLElement, label: string) =>
   container.querySelector<HTMLButtonElement>(`button[aria-label="${label}"]`);
 
-// The confirmation is portalled out of the card, so it is found on the page
-// rather than inside it.
+// The confirmation is portalled out of the card, so it is found on the page rather than inside it.
 const dialog = () =>
   document.body.querySelector<HTMLElement>("[role='alertdialog']");
 
@@ -142,8 +138,6 @@ describe("what a row says about a provider", () => {
 });
 
 describe("which mark stands for which provider", () => {
-  // The two icons are told apart by the one thing that is entirely theirs: the
-  // path each draws.
   const NOTION_PATH = "M4.459 4.208";
   const GITHUB_PATH = "M12 .5C5.37";
 

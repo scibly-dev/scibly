@@ -2,6 +2,7 @@ export type KnowledgeTranslations = {
   title: string;
   subtitle: string;
   newTopic: string;
+  loadFailed: string;
   empty: {
     title: string;
     description: string;
@@ -44,16 +45,23 @@ export type KnowledgeTranslations = {
     repositoriesLoading: string;
     repositoriesEmpty: string;
     repositoriesUnreachable: string;
+    repositoriesUnavailable: string;
+    repositoriesMax: string;
+    repositoriesInvalid: string;
     maintainers: string;
     maintainersHint: string;
     maintainersSelect: string;
     maintainersEmpty: string;
+    maintainersLoading: string;
+    maintainersUnavailable: string;
     foldersBrowse: string;
     foldersLoading: string;
     foldersEmpty: string;
     pathsPlaceholder: string;
     pathsInvalid: string;
+    pathsMax: string;
     add: string;
+    remove: string;
     filterPlaceholder: string;
     noMatches: string;
     selected: string;
