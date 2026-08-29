@@ -5,7 +5,6 @@ import type { OrgSettingsPage } from "@/features/organizations/contracts";
 import { SettingsCard } from "@/shared/ui/settings-card";
 
 import { DisconnectIntegrationDialog } from "./disconnect-integration-dialog";
-import { OrgIntegrationsEmpty } from "./org-integrations-empty";
 import { ProviderRow } from "./provider-row";
 import { useOrgIntegrations } from "./use-org-integrations";
 
@@ -55,7 +54,11 @@ export function OrgIntegrationsCard({
           );
         })}
 
-        {allProviders.length === 0 && <OrgIntegrationsEmpty t={t} />}
+        {allProviders.length === 0 && (
+          <p className="text-[13px] text-neutral-500 dark:text-neutral-400">
+            {t.noProvidersAvailable}
+          </p>
+        )}
       </div>
       <DisconnectIntegrationDialog
         provider={pendingDisconnect}

@@ -11,11 +11,8 @@ import { api } from "@/shared/api/trpc/client";
 
 import { ProviderGrantsDialog } from "./provider-grants-dialog";
 
-// Enough to recognise the connection at a glance; the rest is a click away.
 const VISIBLE_GRANTS = 4;
 
-// Its own query, so the card renders at once and only this strip waits on the
-// provider.
 export const ProviderGrants = ({
   orgSlug,
   provider,
@@ -33,13 +30,9 @@ export const ProviderGrants = ({
       provider,
     });
 
-  // The token this query needs is minted per call, so this strip is where an
-  // uninstall on the provider's side first shows up. The server has already
-  // dropped the connection by the time the error arrives; refetching the list
-  // is what takes the row off the page.
+  // The server has already dropped the connection by the time this error arrives,
+  // so refetching the list is what takes the row off the page.
   const wasRevoked = error?.data?.applicationCode === "integration.revoked";
-  // Named, because a reader with two connections cannot tell from "this
-  // integration" which of them just went away.
   const revokedNotice = t.revokedNotice.replace(
     "{provider}",
     t.providers[provider],

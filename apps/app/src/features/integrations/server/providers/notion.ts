@@ -19,9 +19,7 @@ import {
   listNotionDatabasePages,
 } from "./notion-pages";
 
-// A sync hop polls up to ten connections inside a four-minute deadline, so a
-// Notion request that hangs must give up long before the hop does. The SDK's
-// own default is a minute, which one call could spend twice over on retries.
+// The SDK waits a minute by default and retries, which a four-minute sync hop cannot afford.
 const NOTION_TIMEOUT_MS = 30_000;
 
 const notionClient = (auth?: string) =>

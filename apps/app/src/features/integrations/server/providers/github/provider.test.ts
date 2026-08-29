@@ -1,8 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-// Nothing of GitHub is mocked but the network: the app JWT is really signed,
-// and really verified here against the public half of a key generated for this
-// file.
+// Nothing of GitHub is mocked but the network: the app JWT is really signed, and
+// really verified against a key generated for this file.
 
 const mockEnv = vi.hoisted(() => ({}) as Record<string, string>);
 
@@ -66,9 +65,6 @@ function requestTo(fragment: string) {
   };
 }
 
-// What GitHub answers when the code redeems and the user behind it does reach
-// the installation they submitted — the two calls that stand between a
-// callback's `installation_id` and a connection.
 function authorizes() {
   fetchMock
     .mockResolvedValueOnce(ok({ access_token: "gho_user" }))
@@ -325,9 +321,6 @@ describe("GH5 the minted token", () => {
   });
 
   it("GH5 asks the app whether the installation is really gone before saying so", async () => {
-    // Acting on "revoked" deletes the connection and detaches every source
-    // hanging off it, so a mint that 404s while the installation is still
-    // listed stays an ordinary failure.
     fetchMock
       .mockResolvedValueOnce(failed(404, { message: "Not Found" }))
       .mockResolvedValueOnce(ok({ id: 42, account: { id: 7, login: "acme" } }));

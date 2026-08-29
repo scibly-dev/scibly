@@ -221,9 +221,6 @@ export const routes = {
       file: (path: string) => `${GITHUB_REPO_URL}/blob/main/${path}` as const,
     },
 
-    // Where the GitHub and Notion integrations talk to, as opposed to the
-    // repository above: an install page a browser is sent to, and the two
-    // origins the server calls.
     integrations: {
       github: {
         api: "https://api.github.com",

@@ -33,18 +33,15 @@ async function installationIsGone(
   }
 }
 
-// GitHub is connected by installing an app on an account, not by an OAuth
-// grant, so what comes back is an installation id. The workspace behind it is
-// the account id — not the installation id, which a reinstall replaces — so
-// that is what tells a reconnect from a move to a different organization.
+// The workspace is the account id, not the installation id a reinstall replaces: only
+// the account tells a reconnect from a move to a different organization.
 export class GitHubProvider extends IntegrationProvider {
   readonly providerId = "GITHUB";
   readonly displayName = "GitHub";
   readonly credential = "app_installation";
 
-  // The redirect back is the app's own registered callback URL, so unlike
-  // OAuth there is nothing to pass here; the state rides along and comes back
-  // beside the installation and the code that authorizes it.
+  // The install page redirects to the app's own registered callback, so there is
+  // no redirect URI to pass.
   getAuthUrl(state: string, _redirectUri: string): string {
     const { appSlug } = readGitHubAppConfig();
     const url = new URL(routes.external.integrations.github.install(appSlug));
@@ -52,13 +49,8 @@ export class GitHubProvider extends IntegrationProvider {
     return url.toString();
   }
 
-  // The installation id arrives as a query parameter on a browser redirect, so
-  // it is a claim, not a fact: on its own it would let anyone who can pass the
-  // callback for their own organization name someone else's installation and
-  // have it persisted as theirs — every repository behind it readable from a
-  // Scibly org its owners never heard of. The code beside it is the proof.
-  // Redeemed, it says which GitHub user is standing here, and GitHub is asked
-  // whether that user reaches this installation at all.
+  // The installation id is a claim on a browser redirect; the code beside it is the
+  // proof that the user standing here reaches that installation at all.
   async completeConnect(
     params: ConnectCallbackParams,
   ): Promise<IntegrationCredential> {
@@ -86,13 +78,8 @@ export class GitHubProvider extends IntegrationProvider {
     };
   }
 
-  // GitHub answers 404 for an installation that no longer exists, which is
-  // what an uninstall on its side looks like from here — the id we hold is
-  // simply gone, and no token will ever be minted from it again. Acting on
-  // that throws the connection away and detaches every source hanging off it,
-  // so one 404 from one endpoint is not enough to go on: the app is asked
-  // directly whether the installation is still there, and anything short of a
-  // second 404 stays an ordinary failure that changes nothing.
+  // Acting on revoked throws the connection away, so one 404 is not enough to go on:
+  // the app is asked directly whether the installation is really gone.
   async mintAccessToken(installationId: string): Promise<string> {
     const config = readGitHubAppConfig();
     try {

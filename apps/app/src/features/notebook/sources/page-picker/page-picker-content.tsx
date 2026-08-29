@@ -130,10 +130,8 @@ export function PagePickerContent({
     t,
     onLinked,
   };
-  // Two ceilings, and the lower one wins: how many sources the plan still has
-  // room for, and how many pages one link request may carry. On a paid plan
-  // the first is effectively unlimited, so without the second "select all" on
-  // a large parent used to build a batch the server rejected whole.
+  // On a paid plan the source limit is effectively unlimited, so the per-request cap is
+  // what keeps "select all" from building a batch the server rejects whole.
   const remaining = Math.min(
     Math.max(0, sourceLimit - totalSourceCount),
     MAX_LINKED_PAGES_PER_REQUEST,

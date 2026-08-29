@@ -32,8 +32,6 @@ import {
   searchPagesSchema,
 } from "./integration.schema";
 
-// No credential is touched here — enough for anything that only needs to know
-// the connection exists.
 export async function resolveConnectionRow(
   organizationId: string,
   providerId: IntegrationProviderId,
@@ -43,8 +41,6 @@ export async function resolveConnectionRow(
       organizationId_provider: { organizationId, provider: providerId },
     },
   });
-  // A disconnected connection is a row with no credential left on it. Nothing
-  // here can use one, so it is as absent as a row that was never written.
   if (!connection || !isConnected(connection)) {
     throw new AppError({
       code: "NOT_FOUND",
@@ -66,8 +62,6 @@ export async function resolveConnection(
   };
 }
 
-// Page-shaped work goes through here instead: the provider it hands back is
-// one that has pages.
 export async function resolvePageConnection(
   organizationId: string,
   providerId: PageIntegrationProviderId,
@@ -101,8 +95,6 @@ export const integrationConnectionProcedures = {
     const allProviders = listProviders().map((provider) => ({
       providerId: provider.providerId,
       displayName: provider.displayName,
-      // The browser cannot check a server method for itself, so the one place
-      // that can says whether the provider has one.
       listsGrants: Boolean(provider.listGrants),
     }));
     return { connections, allProviders };
@@ -151,9 +143,6 @@ export const integrationConnectionProcedures = {
             "disconnected",
             tx,
           );
-          // The row stays, credential-less. It is what remembers which
-          // workspace these sources came from, so a reconnect can tell a
-          // resumed connection from a swapped one.
           await tx.integrationConnection.update({
             where: { id: connection.id },
             data: DISCONNECTED_CREDENTIAL,

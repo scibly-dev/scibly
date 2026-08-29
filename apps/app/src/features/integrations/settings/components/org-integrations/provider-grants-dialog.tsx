@@ -14,8 +14,6 @@ import { ExternalLink } from "lucide-react";
 
 import { ScrollArea } from "@/shared/ui/components/scroll-area";
 
-// An installation on a large organisation reaches hundreds of repositories.
-// The strip shows a handful; the whole list lives here, where it can scroll.
 export function ProviderGrantsDialog({
   open,
   onOpenChange,
@@ -34,8 +32,6 @@ export function ProviderGrantsDialog({
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>{t.grantsTitle}</DialogTitle>
-          {/* Says "showing 1000 of 1500" when the listing stopped at its page
-              budget, so a partial list never looks like the whole of it. */}
           <DialogDescription>
             {t.grantsShown
               .replace("{shown}", String(grants.length))

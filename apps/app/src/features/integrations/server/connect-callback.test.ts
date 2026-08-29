@@ -10,10 +10,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { decryptApiKey } from "@/lib/crypto/api-key";
 import { signOAuthState } from "@/lib/crypto/oauth-state";
 
-// Exercises the full route handler; only the database, session, membership
-// policy, and what the provider makes of its own callback are mocked. The state
-// signer is real.
-
 const APP_URL = "http://localhost:3000";
 const SETTINGS = `${APP_URL}/de/profile/org/acme/settings`;
 const NOW = new Date("2026-07-27T12:00:00.000Z");
@@ -31,8 +27,8 @@ const db = vi.hoisted(() => {
       upsert: vi.fn<(args: UpsertArgs) => Promise<unknown>>(),
     },
     notebookSource: { updateMany: vi.fn() },
-    // The doubled client is handed straight back, so the reads and writes the
-    // callback makes inside the transaction land on the same spies.
+    // The doubled client is handed straight back, so the transaction's reads and
+    // writes land on the same spies.
     $transaction: vi.fn((run: (tx: unknown) => unknown) => run(client)),
   };
   return client;
@@ -449,9 +445,6 @@ describe("LS what is stored", () => {
   });
 });
 
-// GitHub comes back from an install, not from an OAuth grant: the callback
-// carries an installation id and no code, and what is stored is the
-// installation rather than a token.
 describe("LS what an installation stores", () => {
   let install: CompleteConnect;
 

@@ -4,12 +4,7 @@ import { z } from "zod";
 
 import { env } from "@/env";
 
-// The app's private key never leaves this module: every call a connection
-// makes carries an installation access token minted here for that call and
-// dropped afterwards, which is why none is ever written down.
-
-// GitHub rejects a JWT issued ahead of its own clock and caps the lifetime at
-// ten minutes; both bounds are taken with room to spare.
+// GitHub rejects a JWT issued ahead of its own clock and caps the lifetime at ten minutes.
 const JWT_BACKDATE_SECONDS = 60;
 const JWT_LIFETIME_SECONDS = 8 * 60;
 
@@ -49,7 +44,6 @@ function base64url(value: string | Buffer): string {
   return Buffer.from(value).toString("base64url");
 }
 
-/** A short-lived assertion that this is the app — never an installation. */
 export function signAppJwt(config: GitHubAppConfig, now = new Date()): string {
   const issuedAt = Math.floor(now.getTime() / 1000) - JWT_BACKDATE_SECONDS;
   const header = base64url(JSON.stringify({ alg: "RS256", typ: "JWT" }));
@@ -68,8 +62,6 @@ export function signAppJwt(config: GitHubAppConfig, now = new Date()): string {
   return `${header}.${payload}.${base64url(signature)}`;
 }
 
-/** Carries GitHub's status out, so a caller can tell a gone installation
- * apart from a network or permission failure. */
 export class GitHubRequestError extends Error {
   constructor(
     message: string,
@@ -82,10 +74,6 @@ export class GitHubRequestError extends Error {
 
 const GITHUB_TIMEOUT_MS = 30_000;
 
-// The schema is a parameter rather than a type argument: a cast would describe
-// the body GitHub is documented to send, which is not the same claim as the
-// body it did send — an unexpected shape belongs in a thrown error here, not in
-// an undefined three call frames away.
 async function githubRequest<T>(
   path: string,
   init: { method: "GET" | "POST"; authorization: string },
@@ -101,17 +89,14 @@ async function githubRequest<T>(
         "x-github-api-version": "2022-11-28",
       },
       cache: "no-store",
-      // `fetch` waits forever by default. A sync hop polls up to ten connections
-      // inside a four-minute deadline, so one hung request must not be able to
-      // spend the whole hop and strand the rest of the batch unpolled.
+      // `fetch` waits forever by default, and one hung request must not spend a whole sync hop.
       signal: AbortSignal.timeout(GITHUB_TIMEOUT_MS),
     },
   );
 
   if (!response.ok) {
-    // Only GitHub's status and message are carried out: the request was
-    // authorised with a JWT or a minted token, and neither belongs in an error
-    // a caller may log.
+    // The request carried a JWT or a minted token, so nothing but GitHub's own
+    // status and message goes into an error a caller may log.
     const message = await response
       .json()
       .then((body: { message?: string }) => body.message)
@@ -144,7 +129,6 @@ const repositoriesResponse = z.object({
     .optional(),
 });
 
-/** Who the app was installed on, asked as the app itself. */
 export async function fetchInstallation(
   config: GitHubAppConfig,
   installationId: string,
@@ -166,7 +150,6 @@ export async function fetchInstallation(
   };
 }
 
-/** Mint the hour-long token this installation stands for. Never stored. */
 export async function mintInstallationToken(
   config: GitHubAppConfig,
   installationId: string,
@@ -184,8 +167,6 @@ const userTokenResponse = z.union([
   z.object({ error: z.string() }),
 ]);
 
-/** Redeem the code the install redirect carried for a token that speaks as the
- * user who installed — never stored, only used to check what they can reach. */
 export async function exchangeUserToken(
   config: GitHubAppConfig,
   code: string,
@@ -215,11 +196,8 @@ export async function exchangeUserToken(
   return body.access_token;
 }
 
-// Asked as the user rather than as the app: the app can see every installation
-// it has, so its own answer would say nothing about who is standing at the
-// callback. GitHub answers 403 or 404 for an installation the user has no
-// access to, which is the whole question — anything else is a failure to
-// answer it, and is thrown rather than read as a no.
+// Asked as the user, not as the app: the app can see every installation it has, so
+// only the user's own answer says whether they reach this one.
 export async function userCanAccessInstallation(
   userToken: string,
   installationId: string,
@@ -244,19 +222,15 @@ export async function userCanAccessInstallation(
 
 const REPOS_PER_PAGE = 100;
 
-// An installation on a large organisation can reach thousands of repositories.
-// Listing them is a settings-page nicety, so it walks a bounded number of pages
-// and says when it stopped early rather than spending a request per hundred
-// until GitHub runs out.
+// A large organisation can reach thousands of repositories, and listing them is a
+// settings-page nicety, so it stops early and says that it did.
 const MAX_REPOSITORY_PAGES = 10;
 
 export interface GitHubRepositoryList {
   repositories: GitHubRepository[];
-  /** What GitHub says the installation reaches, listed or not. */
   totalCount: number;
 }
 
-/** The repositories the installation was given. */
 export async function fetchInstallationRepositories(
   token: string,
 ): Promise<GitHubRepositoryList> {

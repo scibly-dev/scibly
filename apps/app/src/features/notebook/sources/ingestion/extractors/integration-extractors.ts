@@ -55,9 +55,7 @@ export const notionPageExtractor: SourceExtractor = {
       await resolveSourceConnection(source);
     const content = await provider.fetchPageContent(token, externalId);
 
-    // No `pageCount`: it counts the pages of a parsed file, and a provider's
-    // page is one page. The field stays optional on `ExtractedContent` for the
-    // PDF path, which is the only thing that has ever set it.
+    // No `pageCount`: it counts the pages of a parsed file, and a provider's page is one page.
     return {
       text: content.text,
       title: content.title,

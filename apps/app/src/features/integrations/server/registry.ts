@@ -30,8 +30,6 @@ export function getProvider(providerId: string): IntegrationProvider {
   return PROVIDERS[providerId];
 }
 
-// For the page picker and everything downstream of it: a provider id that came
-// off a row or a request is only good here if the provider actually has pages.
 export function getPageProvider(providerId: string): PageIntegrationProvider {
   const provider = getProvider(providerId);
   if (!(provider instanceof PageIntegrationProvider)) {
@@ -44,6 +42,7 @@ export function getPageProvider(providerId: string): PageIntegrationProvider {
   return provider;
 }
 
+// The annotation is the point: a subclass property widens `providerId` to `string`.
 export function listProviders(): IntegrationProvider[] {
   return Object.values(PROVIDERS);
 }

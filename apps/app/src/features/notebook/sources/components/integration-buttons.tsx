@@ -25,11 +25,6 @@ interface IntegrationButtonsProps {
   disabled?: boolean;
 }
 
-// Buttons come from PAGE_INTEGRATION_PROVIDERS, the connectable providers that
-// actually offer pages to import — a provider connected for something else has
-// nothing to show a page picker. PROVIDER_DISPLAY is cosmetic only and never
-// gates which providers render — it is keyed by the same union, so every
-// provider iterated here has an entry.
 export function IntegrationButtons({
   connectedProviders,
   t,

@@ -13,7 +13,6 @@ export type ProviderRowProps = {
     listsGrants?: boolean;
   };
   connection?: { workspaceName: string | null };
-  /** Whether this row's disconnect is out of reach for the moment. */
   isBusy: boolean;
   isConnectPending: boolean;
   t: OrgSettingsPage["integrations"];

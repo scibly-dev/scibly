@@ -32,8 +32,8 @@ const db = vi.hoisted(() => {
     notebookSource: { updateMany: vi.fn(), deleteMany: vi.fn() },
     notebookSourceChunk: { deleteMany: vi.fn() },
     scene: { deleteMany: vi.fn() },
-    // The doubled client is handed straight back, so a write made through the
-    // transaction is still observed on the same spy.
+    // The doubled client is handed straight back, so writes made inside the
+    // transaction land on the same spy.
     $transaction: vi.fn((run: (tx: unknown) => unknown) => run(client)),
   };
   return client;

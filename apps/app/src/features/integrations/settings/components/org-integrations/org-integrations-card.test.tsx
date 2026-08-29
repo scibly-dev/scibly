@@ -210,8 +210,6 @@ describe("what a click asks for", () => {
     expect(disconnectMutate).not.toHaveBeenCalled();
   });
 
-  // One dialog serves every row, so the provider it is asking about has to be
-  // the one just clicked, not the one clicked before.
   it("asks about the row just clicked, not the row refused before it", () => {
     lists(
       [NOTION, GITHUB],
@@ -280,7 +278,6 @@ describe("the grants strip", () => {
 
     const container = card();
 
-    // Four repositories and the button standing for the other five.
     expect(container.querySelectorAll("li")).toHaveLength(5);
     expect(container.textContent).toContain("5 more");
     expect(container.textContent).not.toContain("acme-inc/repo-8");

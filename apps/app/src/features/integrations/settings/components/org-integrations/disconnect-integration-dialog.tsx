@@ -14,8 +14,6 @@ import {
   AlertDialogTitle,
 } from "@/shared/ui/components/alert-dialog";
 
-// One instance for the whole card, not one per row: which provider is being
-// asked about is the state, so there is nothing per-row to hold.
 export function DisconnectIntegrationDialog({
   provider,
   isConfirming,
@@ -23,7 +21,6 @@ export function DisconnectIntegrationDialog({
   onClose,
   t,
 }: {
-  /** The provider being asked about; non-null is what opens the dialog. */
   provider: IntegrationProviderId | null;
   isConfirming: boolean;
   onConfirm: () => void;

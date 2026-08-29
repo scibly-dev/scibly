@@ -25,10 +25,8 @@ const SYNC_BACKOFF_MS: readonly number[] = [
   TimeHelpers.IN_MS.DAY,
   TimeHelpers.IN_MS.DAY * 3,
 ];
-// The ladder plateaus at its last rung rather than at the window floor: a gap
-// as long as `SYNC_WINDOW_FLOOR_MS` is exactly the gap `getPollingStart` can no
-// longer reach back across, so a connection backed off that far would return to
-// a window that starts after the changes it was backed off through.
+// Capped below `SYNC_WINDOW_FLOOR_MS`: a longer backoff would return a connection to a
+// window that starts after the changes it slept through.
 const SYNC_BACKOFF_CAP_MS = TimeHelpers.IN_MS.DAY * 3;
 
 export function backoffMs(consecutiveFailures: number): number {
@@ -41,12 +39,8 @@ export async function loadDueConnections(
   return db.integrationConnection.findMany({
     where: {
       organization: { subscription: notLapsedSubscription(now) },
-      // A connection to a provider without pages has nothing that could go
-      // stale, so a poll would only spend a call to learn that.
       provider: { in: [...PAGE_INTEGRATION_PROVIDERS] },
-      // Two ORs, so both go through `AND`: a disconnected connection keeps its
-      // row so its sources keep their link, but there is nothing left to poll
-      // it with.
+      // Two ORs cannot share one object, so both go through `AND`.
       AND: [
         CONNECTED,
         { OR: [{ nextPollAfter: null }, { nextPollAfter: { lte: now } }] },
@@ -78,10 +72,7 @@ export function getPollingStart(lastPolledAt: Date | null, now: Date): Date {
   return new Date(Math.max(lastPolledAt.getTime() - SYNC_CLOCK_SKEW_MS, floor));
 }
 
-// `updateMany`, not `update`: a poll can outlive the connection it is polling —
-// the organization can disconnect or delete it mid-run — and a row that is no
-// longer there is nothing left to record, not a failure worth retrying the
-// whole poll for.
+// `updateMany` so a poll that outlived its connection records nothing instead of throwing.
 async function recordAttempt(
   connectionId: string,
   data: Prisma.IntegrationConnectionUpdateManyMutationInput,
@@ -92,10 +83,8 @@ async function recordAttempt(
   });
 }
 
-// One batch, because the watermark is a claim about the marks: it says
-// everything up to `pollStartedAt` has been accounted for, which is only true
-// if the sources this poll found changed were actually marked stale. Advancing
-// it on its own would put those changes permanently behind the window.
+// One batch: advancing the watermark without the marks would put those changes
+// permanently behind the window.
 async function commitPollSuccess(
   connectionId: string,
   pollStartedAt: Date,
@@ -165,8 +154,6 @@ export async function pollConnection(
   }
 
   const provider = getPageProvider(connection.provider);
-  // Not the stored token: an app installation stores only its id and mints the
-  // token it stands for here, per poll.
   const token = await resolveConnectionToken(connection);
   const pages = await provider.pollModifiedPages(
     token,

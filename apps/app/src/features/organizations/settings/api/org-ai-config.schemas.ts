@@ -7,7 +7,6 @@ import {
   byoaiModelDescriptionSchema,
 } from "@/shared/ai/byoai-model-schema";
 
-// Re-exported so call sites keep importing their own feature's schema module.
 export { orgSlugInput };
 
 export const addModelSchema = orgSlugInput

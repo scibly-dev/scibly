@@ -56,8 +56,6 @@ function providerError(oauthError: string): IntegrationCallbackError {
   return oauthError === "access_denied" ? "provider_denied" : "provider_error";
 }
 
-// An OAuth provider sends back a code to redeem, an app installation the id of
-// the installation just made. Only the one the provider deals in is looked at.
 function readCallbackParams(
   searchParams: URLSearchParams,
   provider: IntegrationProvider,
@@ -189,9 +187,7 @@ async function completeAndPersistConnection(
 ) {
   const redirectUri = routes.app.api.integrations.callback(callback.provider);
 
-  // The provider round trip stays outside the transaction: it is a network
-  // call, and holding a row lock across it would be a lock held for as long as
-  // the provider feels like taking.
+  // Outside the transaction: no row lock is held for as long as the provider takes.
   const credential = await getProvider(callback.provider).completeConnect(
     callback.params,
     redirectUri,
@@ -208,17 +204,14 @@ async function completeAndPersistConnection(
 
     connectedByUserId: callback.connectedByUserId,
 
-    // A reconnect is the answer to whatever the polls were failing on, so the
-    // backoff the failures built up does not outlive it: the connection is
-    // eligible again on the next chain rather than hours from now.
+    // A reconnect answers whatever the polls were failing on, so its backoff does not outlive it.
     consecutiveFailures: 0,
     nextPollAfter: null,
   };
 
   await db.$transaction(async (tx) => {
-    // Read inside the transaction, not before the provider call: two callbacks
-    // landing together would otherwise both see the pre-connect workspace and
-    // decide independently whether to detach.
+    // Read inside the transaction: two callbacks landing together would otherwise
+    // both see the pre-connect workspace.
     const existing = await tx.integrationConnection.findUnique({
       where,
       select: { id: true, workspaceId: true },
@@ -237,9 +230,6 @@ async function completeAndPersistConnection(
         tx,
       );
     } else if (existing) {
-      // The same workspace coming back is the answer to whatever the sources
-      // were warning about, so the warning goes with it. They kept their link
-      // through the disconnect, so there is nothing else to put back.
       await clearDisconnectWarning(existing.id, callback.provider, tx);
     }
 

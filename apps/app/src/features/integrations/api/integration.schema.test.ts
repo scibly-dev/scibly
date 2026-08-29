@@ -2,10 +2,8 @@ import { describe, expect, it } from "vitest";
 
 import { linkPageSchema } from "./integration.schema";
 
-// The url a provider hands back is stored and later rendered as an `href`, so
-// the schema is the first of the two places that has to reject a scheme the
-// browser would execute. (The second is the anchor in
-// `source-list-item-actions.tsx`, which guards rows written before this.)
+// The url is stored and later rendered as an `href`, so the schema has to reject a
+// scheme the browser would execute.
 describe("linkPageSchema pageUrl", () => {
   const link = (pageUrl: string) =>
     linkPageSchema.safeParse({

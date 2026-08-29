@@ -168,9 +168,8 @@ export function SourceListItemActions({
   onResync,
   onDelete,
 }: SourceListItemActionsProps) {
-  // Rows stored before the link schemas were tightened were never
-  // protocol-checked, so a `javascript:` url already in the database would
-  // otherwise land straight in this href.
+  // Rows stored before the link schemas were tightened were never protocol-checked,
+  // so a `javascript:` url may already be in the database.
   const externalHref = httpsUrl().safeParse(item.externalUrl).success
     ? item.externalUrl
     : null;

@@ -5,9 +5,7 @@ import { SOURCE_STATUS } from "@/shared/content/sources/constants";
 
 import { ingestOrRefreshSource } from "../ingestion/ingest-source";
 
-// Retry, upload confirmation, replacement confirmation, page linking and resync
-// all trigger the same extraction work, so they share one rate-limit ceiling
-// instead of five.
+// Five entry points trigger the same extraction work, so they share one ceiling.
 const INGEST_LIMIT = {
   endpoint: "source.ingest",
   maxPerWindow: 30,
@@ -28,8 +26,7 @@ export function boundedIngest(userId: string, sourceId: string) {
   );
 }
 
-// A linked batch costs one slot however many pages it carries: the schema caps
-// the batch, and a request that linked nothing did no extraction to pay for.
+// A linked batch costs one slot however many pages it carries.
 export function boundedLink<T extends { sourceIds: string[] }>(
   userId: string,
   link: () => Promise<T>,

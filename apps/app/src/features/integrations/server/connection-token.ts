@@ -10,9 +10,6 @@ import { DISCONNECTED_CREDENTIAL } from "./connection-state";
 import { warnSourcesOfLostConnection } from "./detach-sources";
 import { getProvider } from "./registry";
 
-// The one place that turns what a connection stores into the token its API
-// calls carry: an OAuth connection keeps an encrypted token, an app
-// installation keeps only its id and mints a fresh token here for each use.
 export interface ConnectionCredential {
   id: string;
   provider: IntegrationProviderId;
@@ -28,8 +25,6 @@ function unusable(provider: string): AppError {
   });
 }
 
-// Its own application code so the client can say what happened rather than
-// showing a connection that has already been taken away.
 function revoked(provider: string): AppError {
   return new AppError({
     code: "NOT_FOUND",
@@ -38,9 +33,6 @@ function revoked(provider: string): AppError {
   });
 }
 
-// Uninstalling the app is the provider's own disconnect, just announced
-// nowhere: the id we hold is dead and no later call can revive it. Treat it
-// exactly as a disconnect pressed here, so the two sides agree again.
 async function forgetRevokedConnection(
   connection: ConnectionCredential,
   providerId: IntegrationProviderId,

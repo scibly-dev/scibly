@@ -42,10 +42,8 @@ function useOAuthResultNotifications(
 ) {
   const router = useRouter();
   const trpcUtils = api.useUtils();
-  // What the callback left in the query string is read once and then taken out
-  // of the url, so re-running this on any later render would be reading a
-  // result that has already been reported. React also runs the effect twice in
-  // development, and the ref is what makes the second run a no-op.
+  // The result is read once and then taken out of the url; the ref is what makes
+  // React's second development run a no-op.
   const reported = useRef(false);
   useEffect(() => {
     if (reported.current) return;
@@ -53,8 +51,6 @@ function useOAuthResultNotifications(
 
     const url = new URL(window.location.href);
     if (integrationConnected) {
-      // The callback lands on a fresh mount either way — a stable id keeps one
-      // toast on screen.
       toast.success(t.connectedSuccessfully, {
         id: `integration-connected-${integrationConnected}`,
       });

@@ -14,8 +14,6 @@ interface PagePickerSelectAllBarProps {
   selected: Set<string>;
   totalSourceCount: number;
 
-  // Not the plan's source limit: the highest total this picker can actually
-  // reach, which is the lower of the plan's room and one request's page cap.
   maxTotal: number;
   allVisibleSelected: boolean;
   t: T;
