@@ -1,10 +1,16 @@
 import createMDX from "@next/mdx";
+import path from "node:path";
+
 import "./src/env.js";
 
 import { getAllowedDevOrigins } from "../../scripts/lan-dev.mjs";
 
 /** @type {import("next").NextConfig} */
 const config = {
+  output: "standalone",
+  // Tracing defaults to this app's own folder, which in a workspace leaves
+  // every @scibly/* package out of the standalone bundle.
+  outputFileTracingRoot: path.join(import.meta.dirname, "../.."),
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
   images: {
     qualities: [75, 85, 90],
