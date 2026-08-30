@@ -1,11 +1,7 @@
 import { auth } from "@scibly/auth/config";
 import { REDIRECT_URL_PARAM, routes } from "@scibly/routes";
 
-/**
- * Shadows better-auth's own `/api/auth/mcp/authorize`: the plugin prompts for
- * consent only when the client asks, and its own login redirect drops the
- * authorization request.
- */
+/** Shadows better-auth's own `/api/auth/mcp/authorize`, which prompts for consent only when the client asks and drops the authorization request on its login redirect. */
 export async function GET(request: Request) {
   const url = new URL(request.url);
 

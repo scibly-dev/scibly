@@ -12,10 +12,7 @@ import {
 
 import { MCP_TOOL_NAMES, type OrgScope, scopeToolInput } from "./tool-surface";
 
-/**
- * MCP has no transcript, so streamed deltas go nowhere — no allow-listed tool
- * streams today, and one that does needs a real writer before it is listed.
- */
+/** MCP has no transcript, so a tool that actually streams needs a real writer before it is allow-listed. */
 const NO_STREAM: UIMessageStreamWriter<NotebookMessage> = {
   write: () => {},
   merge: () => {},
@@ -40,10 +37,7 @@ export function jsonRpcError(
   );
 }
 
-/**
- * Points a token-less client at this resource's OAuth metadata;
- * `Access-Control-Expose-Headers` is what lets a browser client read it.
- */
+/** `Access-Control-Expose-Headers` is what lets a browser client read the challenge. */
 export function mcpUnauthorized(request: Request): Response {
   const challenge = `Bearer resource_metadata="${new URL(request.url).origin}/.well-known/oauth-protected-resource"`;
   return jsonRpcError(-32000, "Unauthorized: Authentication required", {

@@ -3,11 +3,7 @@ import { z } from "zod";
 
 import { consentDestinations } from "../mcp-consent/origins";
 
-/**
- * Listed from access tokens rather than consent records: a token is what
- * actually grants access, so an agent shows here exactly while it can still act
- * as the user.
- */
+/** Listed from access tokens, not consent records: a token is what actually grants access, so an agent shows here exactly while it can still act as the user. */
 export const connectedAgentRouter = createTRPCRouter({
   list: protectedProcedure.query(async ({ ctx }) => {
     const grants = await ctx.db.oauthAccessToken.findMany({

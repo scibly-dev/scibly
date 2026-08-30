@@ -14,11 +14,7 @@ import { createCaller } from "@/server/api/root";
 
 export const MAX_MCP_REQUESTS_PER_WINDOW = 600;
 
-/**
- * The slug gates entry and fills in every tool's `orgSlug`; ids beyond that are
- * authorized by the procedure behind each tool, and the token itself carries a
- * user, not an organization (ADR 0004).
- */
+/** The slug gates entry; the token carries a user, not an organization (ADR 0004), and ids beyond the slug are authorized by the procedure behind each tool. */
 export async function POST(
   request: Request,
   context: { params: Promise<{ orgSlug: string }> },
