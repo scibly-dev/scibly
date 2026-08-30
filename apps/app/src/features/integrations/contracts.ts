@@ -15,6 +15,11 @@ export const PAGE_INTEGRATION_PROVIDERS = [
 export type PageIntegrationProviderId =
   (typeof PAGE_INTEGRATION_PROVIDERS)[number];
 
+export type RepositoryIntegrationProviderId = Extract<
+  IntegrationProviderId,
+  "GITHUB"
+>;
+
 export const MAX_LINKED_PAGES_PER_REQUEST = 20;
 
 // A provider's raw `?error=` is always mapped to `provider_denied` or `provider_error` first — it must never be echoed into the query string.

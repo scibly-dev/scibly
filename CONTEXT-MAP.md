@@ -33,6 +33,10 @@
   settled against the live installation, so _grant_ is integrations' word used
   unchanged — knowledge stores the id and the name the installation gave, and
   never decides for itself what a repository is called.
+- **Knowledge → Integrations**: a topic's document is projected onto a Notion
+  _page_ through the same connection notebook sources are picked from, so
+  knowledge needs that connection to write, not only to read. Where the page
+  goes is knowledge's (_destination_); reaching Notion at all is integrations'.
 - **Knowledge → Organizations**: a maintainer is a _member_, so leaving the
   organization ends maintainership without knowledge being told.
 - **Knowledge → Entitlement**: creating, editing, or deleting a topic is

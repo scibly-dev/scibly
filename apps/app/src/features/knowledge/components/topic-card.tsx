@@ -9,12 +9,14 @@ import { TopicCardField } from "./topic-card-field";
 export function TopicCard({
   topic,
   canEdit,
+  canDelete,
   onEdit,
   onDelete,
   t,
 }: {
   topic: KnowledgeTopic;
   canEdit: boolean;
+  canDelete: boolean;
   onEdit: () => void;
   onDelete: () => void;
   t: KnowledgeTranslations;
@@ -23,18 +25,37 @@ export function TopicCard({
     <Card>
       <CardContent className="flex flex-col gap-4 p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <h2 className="text-ink text-base font-semibold">{topic.name}</h2>
             <Badge variant="outline">{topic.language.toUpperCase()}</Badge>
+            {topic.externallyEditedAt ? (
+              <Badge variant="outline" title={t.card.externallyEditedHint}>
+                {t.card.externallyEdited}
+              </Badge>
+            ) : null}
+            {topic.documentUrl ? (
+              <a
+                href={topic.documentUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="text-ink-muted hover:text-ink text-[13px] underline underline-offset-2"
+              >
+                {t.card.openDocument}
+              </a>
+            ) : null}
           </div>
-          {canEdit ? (
+          {canEdit || canDelete ? (
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" onClick={onEdit}>
-                {t.card.edit}
-              </Button>
-              <Button variant="ghost" size="sm" onClick={onDelete}>
-                {t.card.delete}
-              </Button>
+              {canEdit ? (
+                <Button variant="outline" size="sm" onClick={onEdit}>
+                  {t.card.edit}
+                </Button>
+              ) : null}
+              {canDelete ? (
+                <Button variant="ghost" size="sm" onClick={onDelete}>
+                  {t.card.delete}
+                </Button>
+              ) : null}
             </div>
           ) : null}
         </div>
@@ -62,7 +83,7 @@ export function TopicCard({
           </TopicCardField>
         </dl>
 
-        {/* Both values are placeholders until the sync tickets land. */}
+        {/* The count is a placeholder until the sync tickets land. */}
         <p className="text-ink-faint text-[12px]">
           {t.health.lastSync}: {t.health.never}
           {" · "}

@@ -40,6 +40,12 @@ cp packages/db/.env.example packages/db/.env
   `SKIP_ENV_VALIDATION=true` and leave those blank — the app boots, but
   features that depend on a missing credential (media uploads, billing,
   Notion import, ...) won't work until it's supplied.
+- `NOTION_CLIENT_ID` / `NOTION_CLIENT_SECRET` come from a Notion public
+  integration. Its **capabilities** must include _Insert content_ and _Update
+  content_, not only read — Knowledge writes each topic's document to a Notion
+  page. The capabilities live on the integration, not in the authorize URL, so
+  a workspace connected before they were enabled keeps working for reading and
+  must reconnect before Knowledge can write.
 - `GITHUB_APP_SLUG`, `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY`,
   `GITHUB_APP_CLIENT_ID` and `GITHUB_APP_CLIENT_SECRET` are
   required by that schema, like Notion's credentials. They come from a GitHub

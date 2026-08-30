@@ -64,7 +64,20 @@ already provides is a finding.
 - Multi-write invariants (e.g. create + counter update) belong in
   `prisma.$transaction`.
 - Connection handling was deliberately tuned for serverless — flag new
-  `PrismaClient` instantiations outside `packages/db`.
+  `PrismaClient` instantiations outside `packages/db`. In particular, never
+  hold a `$transaction` open across an external HTTP call: the pool is sized
+  for serverless, and a multi-second provider round-trip inside a transaction
+  is an outage under concurrency. Keep the external call outside and wrap only
+  the database statements.
+- **Check whether a migration has shipped before planning around it.** A
+  migration still absent from `origin/main` has never been applied to a
+  production database, so a column rename is an edit to that migration's SQL in
+  place — no second migration, no backfill, no data risk. Confirm with
+  `git cat-file -e origin/main:packages/db/migrations/<name>/migration.sql`
+  (non-zero exit = branch-local). This inverts the usual advice, so state the
+  check in the plan rather than the conclusion: the window closes the moment
+  the branch merges, and a plan that says "renaming is free" without saying why
+  becomes wrong silently.
 
 ## TipTap / ProseMirror / Yjs
 
@@ -228,6 +241,14 @@ const items = orderItemsSchema.parse(data);
   messages; API messages via `packages/api/src/i18n`. Hardcoded user-facing
   English strings in components or procedures are findings. `pnpm check`
   includes an i18n consistency check — new keys must pass it.
+- A feature's `*.types.ts` should be **derived from the English JSON**, not
+  hand-transcribed: `export type XTranslations = (typeof xEn)["a"]["b"];` (3-4
+  lines — see the seven files under `apps/app/src/features/notebook/*/i18n/`).
+  The hand-written style is still the majority (17 files, 9-152 lines each) and
+  is where dead keys hide: nothing ties the interface to the JSON, so removing a
+  key means editing three files by hand and a stale key never fails to compile.
+  Deriving also removes the `as XTranslations` casts such files force on tests.
+  Worth proposing whenever a refactor touches a feature's i18n anyway.
 
 ## Observability (`packages/observability`, `apps/web`)
 
@@ -289,6 +310,20 @@ const items = orderItemsSchema.parse(data);
   every registry is updated. `Map<string, Config>` plus a default entry is a
   finding — it turns a missing case into a silent wrong-looking UI, and parallel
   registries drift apart without anything failing.
+- **Optional methods on a base class are how a capability seam rots.** When
+  only some implementations of a provider/adapter base support a capability,
+  the repo's pattern is a narrowed subclass plus a narrowed resolver, not
+  `someMethod?()` on the base — see `PageIntegrationProvider` /
+  `getPageProvider` / `resolvePageConnection` in
+  `apps/app/src/features/integrations/`, which declare the page methods
+  `abstract` and non-optional so no call site needs `?.` or a fallback. Optional
+  methods push the capability check to every call site as `await p.m?.(x) ?? F`,
+  and the fallback `F` is unreachable in practice, so it is never exercised and
+  drifts into being wrong — in one live case the "empty" fallback made a
+  downstream `listedEverything` check compute as `true`, inverting the intent of
+  the very fallback it came from. Treat an optional method with more than one
+  call site as a finding, and check what each fallback value does downstream
+  rather than assuming a dead branch is a harmless one.
 
 ## Refactor plan and execution requirements
 

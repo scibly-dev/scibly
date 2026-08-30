@@ -1,6 +1,12 @@
+// The client bundle imports this, so the enum comes from the schema-only entry point.
+import type { KnowledgeTopicLanguage } from "@scibly/db/enums";
+
 import { type RouterOutputs } from "@/shared/api/trpc/contracts";
 
-export const TOPIC_LANGUAGES = ["en", "de"] as const;
+export const TOPIC_LANGUAGES = [
+  "en",
+  "de",
+] as const satisfies readonly KnowledgeTopicLanguage[];
 
 export type TopicLanguage = (typeof TOPIC_LANGUAGES)[number];
 
@@ -14,12 +20,8 @@ export const isValidPathGlob = (glob: string) =>
   !glob.includes("..") &&
   !glob.includes("\\");
 
-// `pathGlobs` empty means the whole repository.
-export type TopicRepository = {
-  id: string;
-  fullName: string;
-  pathGlobs: string[];
-};
+export type { TopicRepositoryInput } from "./api/knowledge.schema";
+export type { TopicRepository } from "./server/topic-repositories";
 
 export type KnowledgeTopicsView = RouterOutputs["knowledge"]["list"];
 

@@ -1,4 +1,4 @@
-import type { KnowledgeTopic, KnowledgeTranslations } from "../contracts";
+import type { KnowledgeTopic } from "../contracts";
 
 import {
   act,
@@ -7,12 +7,11 @@ import {
   screen,
   waitFor,
 } from "@testing-library/react";
+import { toast } from "sonner";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import knowledgeEn from "../i18n/knowledge.i18n.en.json";
 import { TopicDialog } from "./topic-dialog";
-
-// Characterization tests: they pin what the dialog does today, quirks included.
 
 const listFolders = vi.hoisted(() => vi.fn());
 const listGrants = vi.hoisted(() => vi.fn());
@@ -34,13 +33,13 @@ vi.mock("@/shared/api/trpc/client", () => ({
   },
 }));
 vi.mock("sonner", () => ({
-  toast: { success: vi.fn(), error: vi.fn() },
+  toast: { success: vi.fn(), warning: vi.fn(), error: vi.fn() },
 }));
 
-const t = knowledgeEn.knowledge as KnowledgeTranslations;
+const t = knowledgeEn.knowledge;
 
 type MutationOptions = {
-  onSuccess: () => void;
+  onSuccess: (saved: { externallyEditedAt: Date | null }) => void;
   onError: (failure: { message: string }) => void;
 };
 
@@ -57,7 +56,6 @@ const topic = {
     { id: "repo-b", fullName: "acme/api", pathGlobs: [] },
   ],
   maintainers: [{ memberId: "member-1", name: "Ada", email: "ada@acme.test" }],
-  lastSyncedAt: null,
   pendingSuggestions: 0,
   createdAt: new Date(),
   updatedAt: new Date(),
@@ -105,8 +103,8 @@ const save = () =>
 const nameInput = () =>
   screen.getByPlaceholderText(t.form.namePlaceholder) as HTMLInputElement;
 const patternInput = () =>
-  screen.getAllByPlaceholderText(t.form.pathsPlaceholder)[0]!;
-const addPattern = (glob: string) => {
+  screen.getAllByPlaceholderText(t.form.globPlaceholder)[0]!;
+const addGlob = (glob: string) => {
   fireEvent.change(patternInput(), { target: { value: glob } });
   fireEvent.click(screen.getAllByRole("button", { name: t.form.add })[0]!);
 };
@@ -123,7 +121,7 @@ describe("dirtiness is order-insensitive", () => {
     );
     expect(save().disabled).toBe(false);
 
-    addPattern("docs/**");
+    addGlob("docs/**");
     expect(
       screen.getByRole("button", { name: removeLabel("docs/**") }),
     ).not.toBeNull();
@@ -189,10 +187,10 @@ describe("required fields are refused before the network", () => {
 describe("path globs are judged where they are typed", () => {
   it("names the glob it refuses and does not add it", () => {
     open();
-    addPattern("../secrets");
+    addGlob("../secrets");
 
     expect(screen.getByRole("alert").textContent).toContain(
-      t.form.pathsInvalid.replace("{glob}", "../secrets"),
+      t.form.globInvalid.replace("{glob}", "../secrets"),
     );
     expect(
       screen.queryByRole("button", { name: removeLabel("../secrets") }),
@@ -201,7 +199,7 @@ describe("path globs are judged where they are typed", () => {
 
   it("ignores a glob the repository already has", () => {
     open();
-    addPattern("docs/**");
+    addGlob("docs/**");
 
     expect(
       screen.getAllByRole("button", { name: removeLabel("docs/**") }),
@@ -259,6 +257,33 @@ describe("the folder list is asked for, not assumed", () => {
   });
 });
 
+describe("what the dialog says a save did", () => {
+  const saveTopic = async () => {
+    open();
+    fireEvent.change(nameInput(), { target: { value: "Onboarding" } });
+    fireEvent.click(save());
+    await waitFor(() => expect(mutate).toHaveBeenCalled());
+  };
+
+  it("says the topic was updated when the document went with it", async () => {
+    await saveTopic();
+
+    act(() => lastUpdateOptions.onSuccess({ externallyEditedAt: null }));
+
+    expect(toast.success).toHaveBeenCalledWith(t.form.updated);
+    expect(toast.warning).not.toHaveBeenCalled();
+  });
+
+  it("says the page was left alone when someone else had edited it", async () => {
+    await saveTopic();
+
+    act(() => lastUpdateOptions.onSuccess({ externallyEditedAt: new Date() }));
+
+    expect(toast.warning).toHaveBeenCalledWith(t.form.updatedDocumentLeft);
+    expect(toast.success).not.toHaveBeenCalled();
+  });
+});
+
 describe("the submit-failure banner", () => {
   it("holds the server's refusal with the form still filled in", async () => {
     open();
@@ -275,8 +300,7 @@ describe("the submit-failure banner", () => {
     expect(nameInput().value).toBe("Onboarding");
   });
 
-  // Pinned, not endorsed: the glob field and the submit failure share one channel, so an unrelated glob clears a server error.
-  it("is cleared by adding an unrelated glob", async () => {
+  it("survives a refusal from the glob field, which speaks for itself", async () => {
     open();
     fireEvent.change(nameInput(), { target: { value: "Onboarding" } });
     fireEvent.click(save());
@@ -285,8 +309,13 @@ describe("the submit-failure banner", () => {
       lastUpdateOptions.onError({ message: "A topic with this name exists." }),
     );
 
-    addPattern("guides/**");
+    addGlob("../secrets");
 
-    expect(screen.queryByRole("alert")).toBeNull();
+    const alerts = screen.getAllByRole("alert").map((el) => el.textContent);
+    expect(alerts).toHaveLength(2);
+    expect(alerts.join("")).toContain("A topic with this name exists.");
+    expect(alerts.join("")).toContain(
+      t.form.globInvalid.replace("{glob}", "../secrets"),
+    );
   });
 });

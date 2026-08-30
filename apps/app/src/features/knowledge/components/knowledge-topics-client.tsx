@@ -16,6 +16,7 @@ import { api } from "@/shared/api/trpc/client";
 import { ConfirmDeleteDialog } from "@/shared/ui/confirm-delete-dialog";
 import { FeatureGateNotice } from "@/shared/ui/feature-gate-notice";
 
+import { DocumentDestinationCard } from "./document-destination-card";
 import { TopicCard } from "./topic-card";
 import { TopicDialog } from "./topic-dialog";
 
@@ -77,12 +78,22 @@ export function KnowledgeTopicsClient({
         />
       )}
 
-      {canWrite ? (
-        <div>
-          <Button onClick={() => setEditing(null)}>
+      {canWrite && data.destination ? (
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <Button
+            onClick={() => setEditing(null)}
+            disabled={!data.destination.destinationPageId}
+          >
             <Plus className="h-4 w-4" />
             {t.newTopic}
           </Button>
+          <DocumentDestinationCard
+            t={t}
+            orgSlug={orgSlug}
+            connected={data.destination.connected}
+            destinationPageId={data.destination.destinationPageId}
+            parent={data.destination.parent}
+          />
         </div>
       ) : null}
 
@@ -102,6 +113,7 @@ export function KnowledgeTopicsClient({
               key={topic.id}
               topic={topic}
               canEdit={canWrite}
+              canDelete={data.canManage}
               onEdit={() => setEditing(topic)}
               onDelete={() => setPendingDelete(topic)}
               t={t}

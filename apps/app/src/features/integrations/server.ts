@@ -1,7 +1,11 @@
 import "server-only";
 
 export { integrationRouter } from "./api/integration.router";
-export { resolveConnection } from "./api/integration-connection-procedures";
+export {
+  resolveConnection,
+  resolvePageConnection,
+  resolveRepositoryConnection,
+} from "./api/integration-connection-procedures";
 export { handleIntegrationConnectCallback } from "./server/connect-callback";
 export { resolveConnectionToken } from "./server/connection-token";
 export { integrationPoll, integrationSync } from "./server/integration-sync";
