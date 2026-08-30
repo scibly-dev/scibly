@@ -10,19 +10,31 @@ enum KnowledgeTopicLanguage {
 /// One living document: what it is about, which repositories it watches, and
 /// who reviews what the sync proposes for it.
 model KnowledgeTopic {
-  id             String                 @id @default(cuid())
-  organizationId String
-  organization   Organization           @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  name           String
+  id                 String                 @id @default(cuid())
+  organizationId     String
+  organization       Organization           @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name               String
   /// `{ id, fullName, pathGlobs }[]`, resolved from the GitHub installation at
   /// write time: the id survives a rename, the name is what a maintainer reads,
   /// and the globs narrow that one repository — empty means all of it.
-  repositories   Json
-  language       KnowledgeTopicLanguage
+  repositories       Json
+  language           KnowledgeTopicLanguage
+  /// The canonical document; Notion holds a projection, never the other way round.
+  markdown           String                 @default("")
+  /// Deleting the topic leaves the page: documents belong to the organization.
+  notionPageId       String?
+  notionRevisionAt   DateTime?
+  /// Of the markdown last published, so a later synthesis can tell a real change from a re-save.
+  documentHash       String?
+  publishedAt        DateTime?
+  /// When the page's revision was last compared against `notionRevisionAt`.
+  verifiedAt         DateTime?
+  /// A revision this side did not write; a flagged document is never overwritten.
+  externallyEditedAt DateTime?
   /// Members, not users: someone who leaves the organization stops maintaining.
-  maintainers    Member[]               @relation("KnowledgeTopicMaintainers")
-  createdAt      DateTime               @default(now())
-  updatedAt      DateTime               @updatedAt
+  maintainers        Member[]               @relation("KnowledgeTopicMaintainers")
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
 
   @@unique([organizationId, name])
   @@map("knowledge_topic")

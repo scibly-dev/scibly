@@ -23,9 +23,28 @@
       "repositories": "Repositories",
       "maintainers": "Maintainers",
       "noMaintainers": "None",
-      "language": "Language",
       "edit": "Edit",
-      "delete": "Delete"
+      "delete": "Delete",
+      "openDocument": "Open document",
+      "externallyEdited": "Edited in Notion",
+      "externallyEditedHint": "Someone changed this page in Notion. Scibly will not overwrite it."
+    },
+    "destination": {
+      "title": "Where documents live",
+      "description": "Pick the Notion page that “Scibly Knowledge” should be created under. Every topic's document becomes a sub-page of it.",
+      "current": "Currently under:",
+      "currentUnknown": "not shared with Scibly",
+      "notConnected": "Connect Notion in integration settings first, and allow Scibly to insert and update content.",
+      "select": "Select a page…",
+      "loading": "Loading pages…",
+      "empty": "No pages are shared with Scibly. Share one in Notion, then reload.",
+      "save": "Create page",
+      "move": "Move page",
+      "change": "Change",
+      "saving": "Creating…",
+      "moving": "Moving…",
+      "created": "Scibly Knowledge created",
+      "moved": "Scibly Knowledge moved"
     },
     "form": {
       "createTitle": "New topic",
@@ -54,8 +73,8 @@
       "foldersBrowse": "Browse folders",
       "foldersLoading": "Loading folders…",
       "foldersEmpty": "No folders in this repository.",
-      "pathsPlaceholder": "docs/**/*.md",
-      "pathsInvalid": "“{glob}” is not a path inside the repository. Drop the leading slash and any “..”.",
+      "globPlaceholder": "docs/**/*.md",
+      "globInvalid": "“{glob}” is not a path inside the repository. Drop the leading slash and any “..”.",
       "add": "Add",
       "remove": "Remove {name}",
       "filterPlaceholder": "Search…",
@@ -68,8 +87,9 @@
       "updated": "Topic updated",
       "repositoriesUnavailable": "Repositories could not be loaded. Reload the page to try again.",
       "repositoriesMax": "A topic can follow at most {max} repositories.",
-      "pathsMax": "A repository can be narrowed to at most {max} patterns.",
-      "repositoriesInvalid": "One of the path patterns is not valid. Remove it and try again."
+      "globMax": "A repository can be narrowed to at most {max} path globs.",
+      "repositoriesInvalid": "One of the path patterns is not valid. Remove it and try again.",
+      "updatedDocumentLeft": "Topic saved. Its Notion page was changed outside Scibly, so Scibly left it alone."
     },
     "deleteDialog": {
       "title": "Delete topic?",

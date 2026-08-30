@@ -4,7 +4,10 @@ import type { IntegrationProvider } from "./base-provider";
 import { AppError } from "@scibly/api/application-error";
 
 import { INTEGRATION_PROVIDERS } from "../contracts";
-import { PageIntegrationProvider } from "./base-provider";
+import {
+  PageIntegrationProvider,
+  RepositoryIntegrationProvider,
+} from "./base-provider";
 import { GitHubProvider } from "./providers/github/provider";
 import { NotionProvider } from "./providers/notion";
 
@@ -37,6 +40,20 @@ export function getPageProvider(providerId: string): PageIntegrationProvider {
       code: "BAD_REQUEST",
       applicationCode: "api.bad_request",
       message: `${provider.providerId} offers no pages to read.`,
+    });
+  }
+  return provider;
+}
+
+export function getRepositoryProvider(
+  providerId: string,
+): RepositoryIntegrationProvider {
+  const provider = getProvider(providerId);
+  if (!(provider instanceof RepositoryIntegrationProvider)) {
+    throw new AppError({
+      code: "BAD_REQUEST",
+      applicationCode: "api.bad_request",
+      message: `${provider.providerId} offers no repositories to scope.`,
     });
   }
   return provider;

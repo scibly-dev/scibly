@@ -27,7 +27,6 @@ export function RepoScopeRow({
   pathGlobs,
   onGlobs,
   onRemove,
-  onInvalid,
 }: {
   t: KnowledgeTranslations;
   orgSlug: string;
@@ -38,30 +37,33 @@ export function RepoScopeRow({
   pathGlobs: string[];
   onGlobs: (globs: string[]) => void;
   onRemove: () => void;
-  onInvalid: (message: string | null) => void;
 }) {
-  const [pattern, setPattern] = useState("");
-  // Asked only once someone opens the list: each is a paginated walk of a real GitHub tree, and a topic may hold fifty repositories.
+  const [glob, setGlob] = useState("");
+  const [refusal, setRefusal] = useState<string | null>(null);
+  // Asked only once someone opens the list: each is a paginated walk of a real GitHub folder listing, and a topic may hold fifty repositories.
   const [browsing, setBrowsing] = useState(false);
   const folders = api.knowledge.listFolders.useQuery(
     { orgSlug, repositoryId: id },
     { enabled: browsing && !stale },
   );
 
-  const addPattern = () => {
-    const glob = pattern.trim();
-    if (glob === "") return;
-    if (!isValidPathGlob(glob)) {
-      return onInvalid(t.form.pathsInvalid.replace("{glob}", glob));
+  const addGlob = () => {
+    const trimmed = glob.trim();
+    if (trimmed === "") return;
+    if (!isValidPathGlob(trimmed)) {
+      return setRefusal(t.form.globInvalid.replace("{glob}", trimmed));
     }
-    if (!pathGlobs.includes(glob) && pathGlobs.length >= MAX_TOPIC_PATH_GLOBS) {
-      return onInvalid(
-        t.form.pathsMax.replace("{max}", String(MAX_TOPIC_PATH_GLOBS)),
+    if (
+      !pathGlobs.includes(trimmed) &&
+      pathGlobs.length >= MAX_TOPIC_PATH_GLOBS
+    ) {
+      return setRefusal(
+        t.form.globMax.replace("{max}", String(MAX_TOPIC_PATH_GLOBS)),
       );
     }
-    onInvalid(null);
-    if (!pathGlobs.includes(glob)) onGlobs([...pathGlobs, glob]);
-    setPattern("");
+    setRefusal(null);
+    if (!pathGlobs.includes(trimmed)) onGlobs([...pathGlobs, trimmed]);
+    setGlob("");
   };
 
   return (
@@ -122,20 +124,20 @@ export function RepoScopeRow({
                     .filter((glob) => glob.endsWith(FOLDER_SUFFIX))
                     .map((glob) => glob.slice(0, -FOLDER_SUFFIX.length))}
                   onToggle={(folder) => {
-                    const glob = folder + FOLDER_SUFFIX;
+                    const picked = folder + FOLDER_SUFFIX;
                     if (
-                      !pathGlobs.includes(glob) &&
+                      !pathGlobs.includes(picked) &&
                       pathGlobs.length >= MAX_TOPIC_PATH_GLOBS
                     ) {
-                      return onInvalid(
-                        t.form.pathsMax.replace(
+                      return setRefusal(
+                        t.form.globMax.replace(
                           "{max}",
                           String(MAX_TOPIC_PATH_GLOBS),
                         ),
                       );
                     }
-                    onInvalid(null);
-                    onGlobs(toggle(pathGlobs, glob));
+                    setRefusal(null);
+                    onGlobs(toggle(pathGlobs, picked));
                   }}
                   empty={
                     folders.isPending
@@ -146,13 +148,13 @@ export function RepoScopeRow({
               </PopoverContent>
             </Popover>
             <Input
-              value={pattern}
-              placeholder={t.form.pathsPlaceholder}
-              onChange={(event) => setPattern(event.target.value)}
+              value={glob}
+              placeholder={t.form.globPlaceholder}
+              onChange={(event) => setGlob(event.target.value)}
               onKeyDown={(event) => {
                 if (event.key === "Enter") {
                   event.preventDefault();
-                  addPattern();
+                  addGlob();
                 }
               }}
               className="h-8 flex-1 text-[13px]"
@@ -161,14 +163,19 @@ export function RepoScopeRow({
               type="button"
               variant="outline"
               size="sm"
-              onClick={addPattern}
-              disabled={pattern.trim() === ""}
+              onClick={addGlob}
+              disabled={glob.trim() === ""}
               className="shrink-0"
             >
               <Plus className="h-3.5 w-3.5" aria-hidden="true" />
               {t.form.add}
             </Button>
           </div>
+          {refusal === null ? null : (
+            <p role="alert" className="text-destructive text-[12px]">
+              {refusal}
+            </p>
+          )}
           <Chips
             t={t}
             values={pathGlobs.map((glob) => ({ id: glob, label: glob }))}

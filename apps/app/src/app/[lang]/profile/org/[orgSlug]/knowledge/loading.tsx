@@ -1,4 +1,4 @@
-import { TopicsSkeleton } from "@/features/knowledge/screen";
+import { TopicsSkeleton } from "@/features/knowledge/components/topics-skeleton";
 import { SkeletonPage, SkeletonPageHeader } from "@/shared/ui/page-skeleton";
 
 export default function Loading() {

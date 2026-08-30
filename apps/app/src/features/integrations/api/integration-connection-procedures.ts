@@ -1,6 +1,7 @@
 import type {
   IntegrationProviderId,
   PageIntegrationProviderId,
+  RepositoryIntegrationProviderId,
 } from "../contracts";
 
 import { AppError } from "@scibly/api/application-error";
@@ -22,6 +23,7 @@ import { warnSourcesOfLostConnection } from "../server/detach-sources";
 import {
   getPageProvider,
   getProvider,
+  getRepositoryProvider,
   listProviders,
 } from "../server/registry";
 import {
@@ -56,6 +58,7 @@ export async function resolveConnectionRow(
       provider: true,
       accessTokenEncrypted: true,
       installationId: true,
+      knowledgeDestinationPageId: true,
     },
   });
   if (!connection || !isConnected(connection)) {
@@ -88,6 +91,17 @@ export async function resolvePageConnection(
     providerId,
   );
   return { connection, token, provider: getPageProvider(providerId) };
+}
+
+export async function resolveRepositoryConnection(
+  organizationId: string,
+  providerId: RepositoryIntegrationProviderId,
+) {
+  const { connection, token } = await resolveConnection(
+    organizationId,
+    providerId,
+  );
+  return { connection, token, provider: getRepositoryProvider(providerId) };
 }
 
 export const integrationConnectionProcedures = {

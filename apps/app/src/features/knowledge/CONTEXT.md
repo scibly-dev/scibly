@@ -3,18 +3,37 @@
 What an organization wants written down about its own code, and kept true as
 that code moves. A topic states the intent — this document, about this much of
 these repositories — and names who is trusted to judge what the sync later
-proposes for it. This context decides scope and stewardship only; noticing a
-change, drafting a suggestion, and metering the cost belong to the tickets that
-follow.
+proposes for it. A topic now also has a document: markdown held here, projected
+onto a Notion page the organization can read and edit. This context decides
+scope, stewardship, and where the projection lands; noticing a change, drafting
+a suggestion, and metering the cost belong to the tickets that follow.
 
 ## Language
 
 **Topic**:
 One living document: its name, the [grants](../integrations/CONTEXT.md) it
 watches, how far into them it looks, and who reviews what is proposed for it.
-The topic is the definition, never the prose — a topic has no text of its own
-yet, and creating one changes nothing outside this context.
-_Avoid_: document, page, article, doc
+The topic is the definition, not the prose — the prose is its _document_.
+_Avoid_: page, article, doc
+
+**Document**:
+A topic's markdown, held here. This side is canonical: the Notion page is a
+projection of it, never a source read back. A new topic's document is the
+_skeleton_ — the five headings and nothing under them.
+_Avoid_: content, body, text
+
+**Destination**:
+The one Notion page an organization's documents are filed under, called
+"Scibly Knowledge". Notion cannot create a page at the workspace root, so an
+admin picks a granted page to put it beneath; until they do, the organization
+has nowhere to put a document and cannot create a topic.
+_Avoid_: root, folder (a repository directory here), workspace
+
+**Externally edited**:
+Someone changed the Notion page since this side last wrote it — the page's
+revision is not the one we left. A document in that state is flagged and never
+overwritten; the page keeps whatever they wrote.
+_Avoid_: conflict, dirty, out of sync
 
 **Scope**:
 The part of the world a topic is about: at least one repository, optionally

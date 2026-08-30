@@ -8,6 +8,7 @@ import type {
   IntegrationPageRevision,
   IntegrationProviderId,
   PageIntegrationProviderId,
+  RepositoryIntegrationProviderId,
 } from "../contracts";
 
 export interface ConnectCallbackParams {
@@ -47,6 +48,19 @@ export abstract class IntegrationProvider {
   listFolders?(token: string, grantId: string): Promise<string[]>;
 }
 
+export abstract class RepositoryIntegrationProvider extends IntegrationProvider {
+  abstract readonly providerId: RepositoryIntegrationProviderId;
+
+  abstract listGrants(token: string): Promise<IntegrationGrantList>;
+
+  abstract resolveGrant(
+    token: string,
+    grantId: string,
+  ): Promise<IntegrationGrant | null>;
+
+  abstract listFolders(token: string, grantId: string): Promise<string[]>;
+}
+
 export abstract class PageIntegrationProvider extends IntegrationProvider {
   abstract readonly providerId: PageIntegrationProviderId;
 
@@ -79,4 +93,26 @@ export abstract class PageIntegrationProvider extends IntegrationProvider {
     token: string,
     since: Date,
   ): Promise<IntegrationPage[]>;
+
+  abstract createPage(
+    token: string,
+    input: { parentPageId: string; title: string; markdown?: string },
+  ): Promise<{ id: string; revision: Date }>;
+
+  abstract writePage(
+    token: string,
+    pageId: string,
+    input: { title: string; markdown: string },
+  ): Promise<{ revision: Date }>;
+
+  abstract movePage(
+    token: string,
+    pageId: string,
+    parentPageId: string,
+  ): Promise<void>;
+
+  abstract getParentPageId(
+    token: string,
+    pageId: string,
+  ): Promise<string | null>;
 }

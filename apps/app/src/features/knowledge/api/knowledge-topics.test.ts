@@ -1,3 +1,4 @@
+import { routes } from "@scibly/routes";
 import { rateLimitCounter } from "@test/mocks/rate-limit-counter";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -11,11 +12,13 @@ const db = vi.hoisted(() => ({
     deleteMany: vi.fn(),
   },
   member: { findMany: vi.fn() },
+  integrationConnection: { update: vi.fn() },
   organizationSubscription: { findUnique: vi.fn() },
   rateLimit: { updateMany: vi.fn(), create: vi.fn(), findUnique: vi.fn() },
 }));
 const resolveOrg = vi.hoisted(() => vi.fn());
-const resolveConnection = vi.hoisted(() => vi.fn());
+const resolveRepositoryConnection = vi.hoisted(() => vi.fn());
+const resolvePageConnection = vi.hoisted(() => vi.fn());
 
 vi.mock("@scibly/db", () => ({
   db,
@@ -30,8 +33,13 @@ vi.mock("@scibly/db", () => ({
   },
 }));
 vi.mock("@/features/organizations/server", () => ({ resolveOrg }));
-vi.mock("@/features/integrations/server", () => ({ resolveConnection }));
+vi.mock("@/features/integrations/server", () => ({
+  resolveRepositoryConnection,
+  resolvePageConnection,
+}));
 
+const { APIErrorCode, APIResponseError } = await import("@notionhq/client");
+const { AppError } = await import("@scibly/api/application-error");
 const { createCallerFactory } = await import("@scibly/api/trpc");
 const { db: prisma, Prisma } = await import("@scibly/db");
 const { knowledgeRouter } = await import("./knowledge.router");
@@ -119,6 +127,45 @@ const STORED = {
   ],
 };
 
+const DESTINATION_PAGE_ID = "notion-root";
+const PARENT_PAGE_ID = "notion-parent";
+const DOC_PAGE_ID = "notion-doc";
+const OUR_REVISION = new Date("2026-02-01T10:00:00Z");
+
+const notionDouble = () => ({
+  createPage: vi
+    .fn()
+    .mockResolvedValue({ id: DOC_PAGE_ID, revision: OUR_REVISION }),
+  writePage: vi.fn().mockResolvedValue({ revision: OUR_REVISION }),
+  movePage: vi.fn().mockResolvedValue(undefined),
+  getParentPageId: vi.fn().mockResolvedValue(PARENT_PAGE_ID),
+  getPageRevision: vi
+    .fn()
+    .mockResolvedValue({ title: "Team wiki", lastEdited: OUR_REVISION }),
+});
+
+let notion = notionDouble();
+
+const connectNotion = (knowledgeDestinationPageId: string | null) =>
+  resolvePageConnection.mockResolvedValue({
+    token: "notion_token",
+    provider: notion,
+    connection: { id: "conn-notion", knowledgeDestinationPageId },
+  });
+
+const notionRefusal = (
+  code: (typeof APIErrorCode)[keyof typeof APIErrorCode],
+) =>
+  new APIResponseError({
+    code,
+    message: "API token is invalid.",
+    status: 403,
+    headers: new Headers(),
+    rawBodyText: "",
+    additional_data: undefined,
+    request_id: undefined,
+  });
+
 const limiter = rateLimitCounter();
 
 beforeEach(() => {
@@ -132,7 +179,7 @@ beforeEach(() => {
     organization: { id: ORG_ID },
     membership: { role: "owner" },
   });
-  resolveConnection.mockResolvedValue({
+  resolveRepositoryConnection.mockResolvedValue({
     token: "ghs_token",
     provider: {
       listGrants: vi.fn().mockResolvedValue({
@@ -149,6 +196,9 @@ beforeEach(() => {
         ),
     },
   });
+  notion = notionDouble();
+  connectNotion(DESTINATION_PAGE_ID);
+  db.integrationConnection.update.mockResolvedValue({});
   db.member.findMany.mockResolvedValue([{ id: "mem-1" }]);
   db.knowledgeTopic.findMany.mockResolvedValue([STORED]);
   db.knowledgeTopic.findFirst.mockResolvedValue({ id: STORED.id });
@@ -199,7 +249,7 @@ describe("the plan gate", () => {
 
     await refusal(() => caller().create(newTopic));
 
-    expect(resolveConnection).not.toHaveBeenCalled();
+    expect(resolveRepositoryConnection).not.toHaveBeenCalled();
   });
 
   it("permits the same creation on BUSINESS", async () => {
@@ -267,7 +317,7 @@ describe("scope is the server's to decide", () => {
     );
 
     expect(error.code).toBe("BAD_REQUEST");
-    expect(resolveConnection).not.toHaveBeenCalled();
+    expect(resolveRepositoryConnection).not.toHaveBeenCalled();
   });
 
   it("reads a malformed repositories column as an empty scope, not a crash", async () => {
@@ -346,6 +396,8 @@ describe("only an admin may change a topic", () => {
 
     expect(resolveOrg).toHaveBeenCalledWith(ORG_SLUG, USER_ID, "member");
     expect(view.canManage).toBe(false);
+    expect(view.destination).toBeNull();
+    expect(resolvePageConnection).not.toHaveBeenCalled();
   });
 });
 
@@ -377,7 +429,6 @@ describe("health is a placeholder until the sync tickets land", () => {
     const view = await caller().list({ orgSlug: ORG_SLUG });
 
     expect(view.topics[0]).toMatchObject({
-      lastSyncedAt: null,
       pendingSuggestions: 0,
     });
   });
@@ -412,7 +463,7 @@ describe("the folder preview is guarded like the write it feeds", () => {
     );
 
     expect(error.code).toBe("PAYMENT_REQUIRED");
-    expect(resolveConnection).not.toHaveBeenCalled();
+    expect(resolveRepositoryConnection).not.toHaveBeenCalled();
   });
 
   it("asks for admin_or_owner, not mere membership", async () => {
@@ -425,7 +476,7 @@ describe("the folder preview is guarded like the write it feeds", () => {
     );
   });
 
-  it("stops a caller who asks for the tree over and over", async () => {
+  it("stops a caller who asks for the folder listing over and over", async () => {
     limiter.setSpent(USER_ID, "knowledge.listFolders", 1_000);
 
     const error = await refusal(() =>
@@ -433,13 +484,13 @@ describe("the folder preview is guarded like the write it feeds", () => {
     );
 
     expect(error.code).toBe("TOO_MANY_REQUESTS");
-    expect(resolveConnection).not.toHaveBeenCalled();
+    expect(resolveRepositoryConnection).not.toHaveBeenCalled();
   });
 });
 
 describe("a repository the listing never got as far as", () => {
   const truncated = (resolveGrant: unknown) =>
-    resolveConnection.mockResolvedValue({
+    resolveRepositoryConnection.mockResolvedValue({
       token: "ghs_token",
       provider: {
         listGrants: vi.fn().mockResolvedValue({
@@ -481,7 +532,7 @@ describe("a repository the listing never got as far as", () => {
 
   it("does not ask about an id the complete listing already answered for", async () => {
     const resolveGrant = vi.fn();
-    resolveConnection.mockResolvedValue({
+    resolveRepositoryConnection.mockResolvedValue({
       token: "ghs_token",
       provider: {
         listGrants: vi.fn().mockResolvedValue({
@@ -495,6 +546,23 @@ describe("a repository the listing never got as far as", () => {
     await caller().create(newTopic);
 
     expect(resolveGrant).not.toHaveBeenCalled();
+  });
+});
+
+describe("a connection that offers no repositories", () => {
+  it("refuses the write there and then, and writes nothing", async () => {
+    resolveRepositoryConnection.mockRejectedValue(
+      new AppError({
+        code: "BAD_REQUEST",
+        applicationCode: "api.bad_request",
+        message: "NOTION offers no repositories to scope.",
+      }),
+    );
+
+    const error = await refusal(() => caller().create(newTopic));
+
+    expect(error.applicationCode).toBe("api.bad_request");
+    expect(db.knowledgeTopic.create).not.toHaveBeenCalled();
   });
 });
 
@@ -518,11 +586,345 @@ describe("a name already in use is named", () => {
 
   it("tells the form which field collides on update", async () => {
     db.knowledgeTopic.update.mockRejectedValue(taken());
+    db.knowledgeTopic.findFirst.mockResolvedValue({
+      id: STORED.id,
+      markdown: "## Overview\n",
+      notionPageId: DOC_PAGE_ID,
+      notionRevisionAt: OUR_REVISION,
+    });
 
     const error = await refusal(() =>
       caller().update({ ...newTopic, topicId: STORED.id }),
     );
 
     expect(error.applicationCode).toBe("knowledge.name_taken");
+  });
+
+  it("leaves the page untouched when the new name is already taken", async () => {
+    db.knowledgeTopic.update.mockRejectedValue(taken());
+    db.knowledgeTopic.findFirst.mockResolvedValue({
+      id: STORED.id,
+      markdown: "## Overview\n",
+      notionPageId: DOC_PAGE_ID,
+      notionRevisionAt: OUR_REVISION,
+    });
+
+    await refusal(() =>
+      caller().update({ ...newTopic, topicId: STORED.id, name: "Taken" }),
+    );
+
+    expect(notion.writePage).not.toHaveBeenCalled();
+  });
+});
+
+describe("a topic gets a document in Notion", () => {
+  it("creates the skeleton page under the org's root and stores the mapping", async () => {
+    await caller().create(newTopic);
+
+    expect(notion.createPage).toHaveBeenCalledWith("notion_token", {
+      parentPageId: DESTINATION_PAGE_ID,
+      title: newTopic.name,
+      markdown: expect.stringContaining("## Overview"),
+    });
+
+    const { data } = db.knowledgeTopic.create.mock.calls[0]![0];
+    expect(data).toMatchObject({
+      notionPageId: DOC_PAGE_ID,
+      notionRevisionAt: OUR_REVISION,
+      externallyEditedAt: null,
+    });
+    expect(data.documentHash).toEqual(expect.any(String));
+    expect(data.markdown).toBe(notion.createPage.mock.calls[0]![1].markdown);
+  });
+
+  it("writes the skeleton the ticket names, in the topic's language", async () => {
+    await caller().create({ ...newTopic, language: "de" });
+
+    expect(notion.createPage.mock.calls[0]![1].markdown).toBe(
+      [
+        "## Überblick",
+        "## Entscheidungen & Begründung",
+        "## Einschränkungen & Fallstricke",
+        "## Wie es funktioniert",
+        "## Änderungsprotokoll",
+      ].join("\n\n") + "\n",
+    );
+  });
+
+  it("refuses before writing a row when nobody has picked where documents live", async () => {
+    connectNotion(null);
+
+    const error = await refusal(() => caller().create(newTopic));
+
+    expect(error.applicationCode).toBe("knowledge.notion_destination_missing");
+    expect(notion.createPage).not.toHaveBeenCalled();
+    expect(db.knowledgeTopic.create).not.toHaveBeenCalled();
+  });
+
+  it("tells a read-only connection to reconnect rather than reporting an outage", async () => {
+    for (const code of [
+      APIErrorCode.RestrictedResource,
+      APIErrorCode.Unauthorized,
+    ]) {
+      notion.createPage.mockRejectedValue(notionRefusal(code));
+
+      const error = await refusal(() => caller().create(newTopic));
+
+      expect(error.code).toBe("FORBIDDEN");
+      expect(error.applicationCode).toBe("knowledge.notion_write_denied");
+      expect(error.message).toContain("Reconnect");
+    }
+    expect(db.knowledgeTopic.create).not.toHaveBeenCalled();
+  });
+
+  it("lets the list say whether a destination is picked yet", async () => {
+    const view = await caller().list({ orgSlug: ORG_SLUG });
+
+    expect(view.destination).toEqual({
+      connected: true,
+      destinationPageId: DESTINATION_PAGE_ID,
+      parent: {
+        title: "Team wiki",
+        url: routes.external.integrations.notion.page(PARENT_PAGE_ID),
+      },
+    });
+    expect(notion.getParentPageId).toHaveBeenCalledWith(
+      "notion_token",
+      DESTINATION_PAGE_ID,
+    );
+  });
+
+  it("says the destination is unknown rather than failing the page when Notion will not answer", async () => {
+    notion.getParentPageId.mockRejectedValue(new Error("notion down"));
+
+    const view = await caller().list({ orgSlug: ORG_SLUG });
+
+    expect(view.destination).toEqual({
+      connected: true,
+      destinationPageId: DESTINATION_PAGE_ID,
+      parent: null,
+    });
+  });
+
+  it("creates the root page under the granted parent the first time", async () => {
+    connectNotion(null);
+
+    const result = await caller().setDocumentDestination({
+      orgSlug: ORG_SLUG,
+      parentPageId: "granted-1",
+    });
+
+    expect(result.destinationPageId).toBe(DOC_PAGE_ID);
+    expect(notion.createPage).toHaveBeenCalledWith("notion_token", {
+      parentPageId: "granted-1",
+      title: "Scibly Knowledge",
+    });
+    expect(db.integrationConnection.update.mock.calls[0]![0]).toEqual({
+      where: { id: "conn-notion" },
+      data: { knowledgeDestinationPageId: DOC_PAGE_ID },
+    });
+  });
+
+  it("moves the root page rather than stranding the documents under a second one", async () => {
+    const result = await caller().setDocumentDestination({
+      orgSlug: ORG_SLUG,
+      parentPageId: "granted-2",
+    });
+
+    expect(result.destinationPageId).toBe(DESTINATION_PAGE_ID);
+    expect(notion.movePage).toHaveBeenCalledWith(
+      "notion_token",
+      DESTINATION_PAGE_ID,
+      "granted-2",
+    );
+    expect(notion.createPage).not.toHaveBeenCalled();
+    expect(db.integrationConnection.update).not.toHaveBeenCalled();
+  });
+
+  it("replaces a destination page that no longer exists in Notion", async () => {
+    notion.getPageRevision.mockResolvedValue(null);
+
+    const result = await caller().setDocumentDestination({
+      orgSlug: ORG_SLUG,
+      parentPageId: "granted-2",
+    });
+
+    expect(notion.movePage).not.toHaveBeenCalled();
+    expect(result.destinationPageId).toBe(DOC_PAGE_ID);
+    expect(db.integrationConnection.update.mock.calls[0]![0]).toEqual({
+      where: { id: "conn-notion" },
+      data: { knowledgeDestinationPageId: DOC_PAGE_ID },
+    });
+  });
+
+  it("reports no destination when Notion is not connected", async () => {
+    resolvePageConnection.mockRejectedValue(new Error("not connected"));
+
+    const view = await caller().list({ orgSlug: ORG_SLUG });
+
+    expect(view.destination).toEqual({
+      connected: false,
+      destinationPageId: null,
+      parent: null,
+    });
+  });
+});
+
+describe("the writes that reach Notion are bounded too", () => {
+  it("stops a caller who creates topic after topic", async () => {
+    limiter.setSpent(USER_ID, "knowledge.writeTopic", 1_000);
+
+    const error = await refusal(() => caller().create(newTopic));
+
+    expect(error.code).toBe("TOO_MANY_REQUESTS");
+    expect(notion.createPage).not.toHaveBeenCalled();
+  });
+
+  it("stops a caller who re-points the destination over and over", async () => {
+    limiter.setSpent(USER_ID, "knowledge.writeTopic", 1_000);
+
+    const error = await refusal(() =>
+      caller().setDocumentDestination({
+        orgSlug: ORG_SLUG,
+        parentPageId: "granted-2",
+      }),
+    );
+
+    expect(error.code).toBe("TOO_MANY_REQUESTS");
+    expect(notion.movePage).not.toHaveBeenCalled();
+  });
+
+  it("spends the same allowance on updates as on creates", async () => {
+    db.knowledgeTopic.findFirst.mockResolvedValue({
+      id: STORED.id,
+      markdown: "## Overview\n",
+      notionPageId: DOC_PAGE_ID,
+      notionRevisionAt: OUR_REVISION,
+    });
+    limiter.setSpent(USER_ID, "knowledge.writeTopic", 1_000);
+
+    const error = await refusal(() =>
+      caller().update({ ...newTopic, topicId: STORED.id }),
+    );
+
+    expect(error.code).toBe("TOO_MANY_REQUESTS");
+    expect(db.knowledgeTopic.update).not.toHaveBeenCalled();
+  });
+});
+
+describe("a page edited in Notion is never overwritten", () => {
+  const existing = {
+    id: STORED.id,
+    markdown: "## Overview\n",
+    notionPageId: DOC_PAGE_ID,
+    notionRevisionAt: OUR_REVISION,
+  };
+
+  it("republishes when the page still carries our revision", async () => {
+    db.knowledgeTopic.findFirst.mockResolvedValue(existing);
+
+    await caller().update({ ...newTopic, topicId: STORED.id, name: "Renamed" });
+
+    expect(notion.writePage).toHaveBeenCalledWith("notion_token", DOC_PAGE_ID, {
+      title: "Renamed",
+      markdown: existing.markdown,
+    });
+    expect(db.knowledgeTopic.update.mock.calls[1]![0].data).toMatchObject({
+      externallyEditedAt: null,
+    });
+  });
+
+  it("flags the topic and leaves the page alone when someone else edited it", async () => {
+    db.knowledgeTopic.findFirst.mockResolvedValue(existing);
+    notion.getPageRevision.mockResolvedValue({
+      lastEdited: new Date("2026-02-02T09:00:00Z"),
+    });
+
+    await caller().update({ ...newTopic, topicId: STORED.id });
+
+    expect(notion.writePage).not.toHaveBeenCalled();
+    const { data } = db.knowledgeTopic.update.mock.calls[1]![0];
+    expect(data.externallyEditedAt).toBeInstanceOf(Date);
+    expect(data.notionRevisionAt).toBeUndefined();
+  });
+
+  it("leaves a topic that has no page yet without one", async () => {
+    db.knowledgeTopic.findFirst.mockResolvedValue({
+      ...existing,
+      notionPageId: null,
+      notionRevisionAt: null,
+    });
+
+    await caller().update({ ...newTopic, topicId: STORED.id });
+
+    expect(notion.createPage).not.toHaveBeenCalled();
+    expect(notion.writePage).not.toHaveBeenCalled();
+  });
+
+  it("flags the topic when Notion will not say what revision the page carries", async () => {
+    db.knowledgeTopic.findFirst.mockResolvedValue(existing);
+    notion.getPageRevision.mockResolvedValue(null);
+
+    await caller().update({ ...newTopic, topicId: STORED.id });
+
+    expect(notion.writePage).not.toHaveBeenCalled();
+    const { data } = db.knowledgeTopic.update.mock.calls[1]![0];
+    expect(data.externallyEditedAt).toBeInstanceOf(Date);
+    expect(data.notionPageId).toBeUndefined();
+    expect(data.notionRevisionAt).toBeUndefined();
+  });
+
+  it("still renames the row when the page is flagged, and says the page was left", async () => {
+    db.knowledgeTopic.findFirst.mockResolvedValue(existing);
+    notion.getPageRevision.mockResolvedValue({
+      lastEdited: new Date("2026-02-02T09:00:00Z"),
+    });
+
+    db.knowledgeTopic.update.mockResolvedValue({
+      ...STORED,
+      externallyEditedAt: new Date(),
+    });
+
+    const view = await caller().update({
+      ...newTopic,
+      topicId: STORED.id,
+      name: "Renamed",
+    });
+
+    expect(db.knowledgeTopic.update.mock.calls[0]![0].data.name).toBe(
+      "Renamed",
+    );
+    expect(notion.writePage).not.toHaveBeenCalled();
+    const { data } = db.knowledgeTopic.update.mock.calls[1]![0];
+    expect(data.notionRevisionAt).toBeUndefined();
+    expect(view.externallyEditedAt).toBeInstanceOf(Date);
+  });
+
+  it("saves the rest of the topic even when no document is written", async () => {
+    db.knowledgeTopic.findFirst.mockResolvedValue({
+      ...existing,
+      notionPageId: null,
+      notionRevisionAt: null,
+    });
+
+    const topic = await caller().update({
+      ...newTopic,
+      topicId: STORED.id,
+      name: "Renamed",
+    });
+
+    expect(topic.id).toBe(STORED.id);
+    expect(db.knowledgeTopic.update.mock.calls[0]![0].data.name).toBe(
+      "Renamed",
+    );
+  });
+});
+
+describe("deleting a topic leaves the document behind", () => {
+  it("removes the row and its mapping without touching Notion", async () => {
+    await caller().delete({ orgSlug: ORG_SLUG, topicId: STORED.id });
+
+    expect(resolvePageConnection).not.toHaveBeenCalled();
+    expect(db.knowledgeTopic.deleteMany).toHaveBeenCalledTimes(1);
   });
 });

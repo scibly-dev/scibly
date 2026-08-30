@@ -23,9 +23,28 @@
       "repositories": "Repositories",
       "maintainers": "Verantwortliche",
       "noMaintainers": "Keine",
-      "language": "Sprache",
       "edit": "Bearbeiten",
-      "delete": "Löschen"
+      "delete": "Löschen",
+      "openDocument": "Dokument öffnen",
+      "externallyEdited": "In Notion bearbeitet",
+      "externallyEditedHint": "Jemand hat diese Seite in Notion geändert. Scibly überschreibt sie nicht."
+    },
+    "destination": {
+      "title": "Wo Dokumente liegen",
+      "description": "Wähle die Notion-Seite, unter der „Scibly Knowledge“ angelegt wird. Das Dokument jedes Themas wird zu einer Unterseite davon.",
+      "current": "Liegt aktuell unter:",
+      "currentUnknown": "nicht mit Scibly geteilt",
+      "notConnected": "Verbinde zuerst Notion in den Integrationseinstellungen und erlaube Scibly, Inhalte einzufügen und zu aktualisieren.",
+      "select": "Seite auswählen…",
+      "loading": "Seiten werden geladen…",
+      "empty": "Es ist keine Seite mit Scibly geteilt. Teile eine in Notion und lade neu.",
+      "save": "Seite anlegen",
+      "move": "Seite verschieben",
+      "change": "Ändern",
+      "saving": "Wird angelegt…",
+      "moving": "Wird verschoben…",
+      "created": "Scibly Knowledge angelegt",
+      "moved": "Scibly Knowledge verschoben"
     },
     "form": {
       "createTitle": "Neues Thema",
@@ -54,8 +73,8 @@
       "foldersBrowse": "Ordner durchsuchen",
       "foldersLoading": "Ordner werden geladen…",
       "foldersEmpty": "Keine Ordner in diesem Repository.",
-      "pathsPlaceholder": "docs/**/*.md",
-      "pathsInvalid": "„{glob}“ ist kein Pfad im Repository. Lass den führenden Schrägstrich und jedes „..“ weg.",
+      "globPlaceholder": "docs/**/*.md",
+      "globInvalid": "„{glob}“ ist kein Pfad im Repository. Lass den führenden Schrägstrich und jedes „..“ weg.",
       "add": "Hinzufügen",
       "remove": "{name} entfernen",
       "filterPlaceholder": "Suchen…",
@@ -68,8 +87,9 @@
       "updated": "Thema aktualisiert",
       "repositoriesUnavailable": "Repositories konnten nicht geladen werden. Lade die Seite neu.",
       "repositoriesMax": "Ein Thema kann höchstens {max} Repositories folgen.",
-      "pathsMax": "Ein Repository lässt sich auf höchstens {max} Muster eingrenzen.",
-      "repositoriesInvalid": "Eines der Pfadmuster ist ungültig. Entferne es und versuche es erneut."
+      "globMax": "Ein Repository lässt sich auf höchstens {max} Pfad-Globs eingrenzen.",
+      "repositoriesInvalid": "Eines der Pfadmuster ist ungültig. Entferne es und versuche es erneut.",
+      "updatedDocumentLeft": "Thema gespeichert. Die Notion-Seite wurde außerhalb von Scibly geändert, deshalb hat Scibly sie unangetastet gelassen."
     },
     "deleteDialog": {
       "title": "Thema löschen?",

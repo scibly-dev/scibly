@@ -1,4 +1,8 @@
 import type {
+  PageObjectResponse,
+  PartialPageObjectResponse,
+} from "@notionhq/client";
+import type {
   IntegrationCredential,
   IntegrationPage,
   IntegrationPageContent,
@@ -6,7 +10,12 @@ import type {
 } from "../../contracts";
 import type { ConnectCallbackParams } from "../base-provider";
 
-import { Client, isFullPage } from "@notionhq/client";
+import {
+  APIErrorCode,
+  Client,
+  isFullPage,
+  isNotionClientError,
+} from "@notionhq/client";
 import { routes } from "@scibly/routes";
 
 import { env } from "@/env";
@@ -28,6 +37,12 @@ const POLL_PAGE_SIZE = 100;
 
 const notionClient = (auth?: string) =>
   new Client({ auth, timeoutMs: NOTION_TIMEOUT_MS });
+
+// A deleted or un-shared page has no revision to report; the caller decides what that means.
+const PAGE_GONE = new Set<string>([
+  APIErrorCode.ObjectNotFound,
+  APIErrorCode.RestrictedResource,
+]);
 
 export class NotionProvider extends PageIntegrationProvider {
   readonly providerId = "NOTION";
@@ -141,14 +156,69 @@ export class NotionProvider extends PageIntegrationProvider {
     token: string,
     pageId: string,
   ): Promise<IntegrationPageRevision | null> {
-    const page = await notionClient(token).pages.retrieve({
-      page_id: pageId,
-    });
-    if (!isFullPage(page)) return null;
+    const page = await notionClient(token)
+      .pages.retrieve({ page_id: pageId })
+      .catch((error: unknown) => {
+        if (isNotionClientError(error) && PAGE_GONE.has(error.code))
+          return null;
+        throw error;
+      });
+    if (!page || !isFullPage(page)) return null;
     return {
       title: extractNotionPageTitle(page.properties),
       lastEdited: new Date(page.last_edited_time),
     };
+  }
+
+  async createPage(
+    token: string,
+    input: { parentPageId: string; title: string; markdown?: string },
+  ): Promise<{ id: string; revision: Date }> {
+    const page = await notionClient(token).pages.create({
+      parent: { page_id: input.parentPageId },
+      properties: { title: { title: [{ text: { content: input.title } }] } },
+      markdown: input.markdown ?? "",
+    });
+    return { id: page.id, revision: await this.revisionOf(token, page) };
+  }
+
+  async writePage(
+    token: string,
+    pageId: string,
+    input: { title: string; markdown: string },
+  ): Promise<{ revision: Date }> {
+    const notion = notionClient(token);
+    await notion.pages.updateMarkdown({
+      page_id: pageId,
+      type: "replace_content",
+      replace_content: {
+        new_str: input.markdown,
+        allow_deleting_content: true,
+      },
+    });
+    // Title last: its response carries the revision both writes left behind.
+    const page = await notion.pages.update({
+      page_id: pageId,
+      properties: { title: { title: [{ text: { content: input.title } }] } },
+    });
+    return { revision: await this.revisionOf(token, page) };
+  }
+
+  async movePage(
+    token: string,
+    pageId: string,
+    parentPageId: string,
+  ): Promise<void> {
+    await notionClient(token).pages.move({
+      page_id: pageId,
+      parent: { page_id: parentPageId },
+    });
+  }
+
+  async getParentPageId(token: string, pageId: string): Promise<string | null> {
+    const page = await notionClient(token).pages.retrieve({ page_id: pageId });
+    if (!isFullPage(page)) return null;
+    return page.parent.type === "page_id" ? page.parent.page_id : null;
   }
 
   async fetchPageContent(
@@ -166,5 +236,17 @@ export class NotionProvider extends PageIntegrationProvider {
 
       lastEdited: revision?.lastEdited ?? new Date(),
     };
+  }
+
+  private async revisionOf(
+    token: string,
+    page: PageObjectResponse | PartialPageObjectResponse,
+  ): Promise<Date> {
+    if (isFullPage(page)) return new Date(page.last_edited_time);
+    const revision = await this.getPageRevision(token, page.id);
+    if (!revision) {
+      throw new Error("Notion did not say when the page was last edited.");
+    }
+    return revision.lastEdited;
   }
 }

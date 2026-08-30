@@ -9,8 +9,8 @@ import type { GitHubAppConfig, GitHubRepository } from "./app-auth";
 import { routes } from "@scibly/routes";
 
 import {
-  IntegrationProvider,
   IntegrationRevokedError,
+  RepositoryIntegrationProvider,
 } from "../../base-provider";
 import {
   exchangeUserToken,
@@ -44,7 +44,7 @@ async function installationIsGone(
 
 // The workspace is the account id, not the installation id a reinstall replaces: only
 // the account tells a reconnect from a move to a different organization.
-export class GitHubProvider extends IntegrationProvider {
+export class GitHubProvider extends RepositoryIntegrationProvider {
   readonly providerId = "GITHUB";
   readonly displayName = "GitHub";
   readonly credential = "app_installation";
