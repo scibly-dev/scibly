@@ -2,20 +2,25 @@ import type { buildToolRegistry } from "@/features/notebook/server";
 
 import { z } from "zod";
 
-/**
- * Every tool an external agent may call; deletes never join it, the in-app
- * confirmation gate has no MCP equivalent.
- */
+/** Deletes never join this list: the in-app confirmation gate has no MCP equivalent. */
 export const MCP_TOOL_NAMES = [
+  "createCourse",
   "listCourses",
   "getCourseById",
+  "createLesson",
+  "updateLesson",
+  "reorderLessons",
   "listLessons",
+  "createScene",
+  "updateScene",
+  "reorderScenes",
   "listScenes",
   "getEditorSchema",
   "getCourseStats",
   "listEnrollments",
   "getAvailableMembers",
   "getOrganization",
+  "listMyOrganizations",
   "listMembers",
   "listInvitations",
   "getDashboardStats",
@@ -25,13 +30,12 @@ export const MCP_TOOL_NAMES = [
   ReturnType<typeof buildToolRegistry>
 >)[];
 
-export type OrgScope = { orgSlug: string; organizationId: string };
+// `sourceIds` never crosses the boundary (ADR 0005), `html` goes through
+// `insertContent` instead, and `courseVersionId` names a published version
+// while this surface is draft-only.
+const UNREACHABLE_KEYS = ["html", "sourceIds", "courseVersionId"];
 
-/**
- * The tool's schema minus the organization keys, plus the values to put back:
- * whatever an agent sends under those keys is discarded.
- */
-export function scopeToolInput(inputSchema: unknown, scope: OrgScope) {
+export function mcpToolInput(inputSchema: unknown) {
   if (!(inputSchema instanceof z.ZodObject)) {
     throw new Error("An MCP tool must declare a zod object input schema.");
   }
@@ -39,21 +43,9 @@ export function scopeToolInput(inputSchema: unknown, scope: OrgScope) {
   // eslint-disable-next-line anti-slop/no-shape-in-symbol-names -- zod owns this property name; only our alias is ours to pick.
   const fields: Record<string, z.ZodType> = inputSchema.shape;
 
-  // Tools disagree on what to call the organization, hence three keys for one.
-  const inject = Object.fromEntries(
-    Object.entries({
-      orgSlug: scope.orgSlug,
-      slug: scope.orgSlug,
-      organizationId: scope.organizationId,
-    }).filter(([key]) => key in fields),
-  );
-
-  return {
-    schema: z.object(
-      Object.fromEntries(
-        Object.entries(fields).filter(([key]) => !(key in inject)),
-      ),
+  return z.object(
+    Object.fromEntries(
+      Object.entries(fields).filter(([key]) => !UNREACHABLE_KEYS.includes(key)),
     ),
-    inject,
-  };
+  );
 }

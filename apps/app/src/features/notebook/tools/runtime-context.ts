@@ -7,6 +7,8 @@ export type NotebookRuntimeContext = {
   caller: TrpcCaller;
   session: Principal;
   notebookId?: string;
-  orgSlug: string;
+  // Absent outside a notebook: an external agent reaches the tools through an
+  // endpoint that names no organization, and passes one per call instead.
+  orgSlug?: string;
   dataStream: UIMessageStreamWriter<NotebookMessage>;
 };

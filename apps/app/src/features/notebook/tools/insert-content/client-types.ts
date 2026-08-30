@@ -1,6 +1,3 @@
-import type { HocuspocusProvider } from "@hocuspocus/provider";
-import type { Editor } from "@tiptap/react";
-
 import { TRPCClientError } from "@trpc/client";
 
 export type GetSceneContentClientOutput = {
@@ -38,27 +35,28 @@ export type ClientToolCall = {
 };
 
 export interface ClientToolContext {
-  editor: Editor | null;
   activeSceneId: string | undefined;
-  websocketProvider:
-    | HocuspocusProvider["configuration"]["websocketProvider"]
-    | null
-    | undefined;
+
+  // Reading and writing are the server's, even for the scene the author has
+  // open in front of them: the collab room merges the write back into that
+  // editor anyway, and one path means one place content is validated.
+  readSceneContent: (
+    sceneId: string,
+  ) => Promise<{ html: string; sourceIds: string[] }>;
+  writeSceneContent: (params: {
+    sceneId: string;
+    html: string;
+    mode: "replace" | "append";
+  }) => Promise<void>;
+
   addToolOutput: (output: ClientToolOutput) => void;
   recordSceneLineage?: (params: {
     sceneId: string;
     sourceIds: string[];
   }) => Promise<void>;
-  fetchSceneSourceIds?: (sceneId: string) => Promise<string[]>;
 
   announceTargetScene?: (sceneId: string) => Promise<void>;
   hasLinkedNotebook?: boolean;
-}
-
-interface ResolvedScene {
-  targetSceneId: string;
-  editor: Editor | null;
-  error?: string;
 }
 
 export function getClientToolCallInput(
@@ -70,40 +68,21 @@ export function getClientToolCallInput(
 export function getClientToolErrorMessage(err: unknown): string {
   if (err instanceof TRPCClientError) return err.message;
   if (err instanceof Error) return err.message;
-  return "Failed to record source lineage.";
+  return String(err);
 }
 
+/** A tool call that names no scene means the one the author is looking at. */
 export function resolveTargetScene(
   sceneIdArg: unknown,
-  ctx: ClientToolContext,
-): ResolvedScene {
-  const sceneId = typeof sceneIdArg === "string" ? sceneIdArg : "";
-  const currentActiveSceneId = ctx.activeSceneId;
-
-  if (
-    (!sceneId || sceneId === currentActiveSceneId) &&
-    ctx.editor &&
-    currentActiveSceneId
-  ) {
-    return { targetSceneId: currentActiveSceneId, editor: ctx.editor };
-  }
-
-  const targetSceneId = sceneId || currentActiveSceneId;
+  activeSceneId: string | undefined,
+) {
+  const targetSceneId =
+    (typeof sceneIdArg === "string" ? sceneIdArg : "") || activeSceneId;
   if (!targetSceneId) {
     return {
       targetSceneId: "",
-      editor: null,
       error: "No active scene and no sceneId provided.",
     };
   }
-
-  if (!ctx.websocketProvider) {
-    return {
-      targetSceneId,
-      editor: null,
-      error: "Collaboration websocket provider not available.",
-    };
-  }
-
-  return { targetSceneId, editor: null };
+  return { targetSceneId, error: undefined };
 }

@@ -6,7 +6,13 @@ import { getAllowedDevOrigins } from "../../scripts/lan-dev.mjs";
 const config = {
   cacheComponents: true,
   // Keep one Yjs constructor identity across Turbopack server and SSR chunks.
-  serverExternalPackages: ["pdf-parse", "pdfjs-dist", "@napi-rs/canvas", "yjs"],
+  serverExternalPackages: [
+    "pdf-parse",
+    "pdfjs-dist",
+    "@napi-rs/canvas",
+    "yjs",
+    "jsdom",
+  ],
   allowedDevOrigins: getAllowedDevOrigins(),
   images: {
     qualities: [75, 85, 90],

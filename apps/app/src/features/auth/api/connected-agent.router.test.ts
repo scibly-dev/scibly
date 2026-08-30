@@ -72,12 +72,21 @@ describe("showing a user which agents can act as them", () => {
     await caller().list();
 
     const args = db.oauthAccessToken.findMany.mock.calls[0]![0] as {
-      where: { userId: string; refreshTokenExpiresAt: { gt: Date } };
+      where: {
+        userId: string;
+        OR: [
+          { accessTokenExpiresAt: { gt: Date } },
+          { refreshTokenExpiresAt: { gt: Date } },
+        ];
+      };
       distinct: string[];
       orderBy: { createdAt: string };
     };
     expect(args.where.userId).toBe(USER_ID);
-    expect(args.where.refreshTokenExpiresAt.gt).toBeInstanceOf(Date);
+    // Either token still live counts: the MCP endpoint admits on the access
+    // token alone, so a live one is an agent that can still act.
+    expect(args.where.OR[0].accessTokenExpiresAt.gt).toBeInstanceOf(Date);
+    expect(args.where.OR[1].refreshTokenExpiresAt.gt).toBeInstanceOf(Date);
     expect(args.distinct).toEqual(["clientId"]);
     expect(args.orderBy).toEqual({ createdAt: "desc" });
   });

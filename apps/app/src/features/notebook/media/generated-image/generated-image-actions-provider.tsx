@@ -1,12 +1,10 @@
 "use client";
 
-import type { HocuspocusProvider } from "@hocuspocus/provider";
 import type { ReactNode } from "react";
 import type { NotebookTranslations } from "../../i18n/notebook.types";
 import type { ImageInsertTarget } from "./insert-target-storage";
 
-import { HocuspocusContext } from "@hocuspocus/provider-react";
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import {
@@ -16,7 +14,6 @@ import {
 } from "@/lib/utils/download-remote-file";
 import { api } from "@/shared/api/trpc/client";
 
-import { useLatestRef } from "../../chat/runtime/use-latest-ref";
 import { useCourseBuilderStore } from "../../course-builder/course-builder-store";
 import { openCourseBuilderStudio } from "../../course-builder/hooks/open-course-builder-studio";
 import { useCourseSceneTargets } from "../../course-builder/hooks/use-course-scene-targets";
@@ -32,9 +29,6 @@ import {
   GeneratedImageActionsContext,
   type InsertGeneratedImageLabels,
 } from "./use-generated-image-actions";
-
-type WebsocketProvider =
-  HocuspocusProvider["configuration"]["websocketProvider"];
 
 interface PendingInsert {
   url: string;
@@ -97,7 +91,6 @@ function useImageInsert(params: {
   openPicker: (url: string, alt: string) => void;
   utils: ReturnType<typeof api.useUtils>;
   labels: InsertGeneratedImageLabels;
-  websocketProviderRef: React.RefObject<WebsocketProvider | null | undefined>;
   invalidate: () => void;
 }) {
   return useCallback(
@@ -118,12 +111,10 @@ function useImageInsert(params: {
       }
       return performImageInsert({
         url,
-        alt,
         target: resolved,
         utils: params.utils,
         insertLabels: params.labels,
         notebookId: params.notebookId,
-        websocketProvider: params.websocketProviderRef.current,
         invalidateMediaLibrary: params.invalidate,
       });
     },
@@ -137,7 +128,6 @@ function useConfirmImageTarget(params: {
   utils: ReturnType<typeof api.useUtils>;
   labels: InsertGeneratedImageLabels;
   notebookId: string | undefined;
-  websocketProviderRef: React.RefObject<WebsocketProvider | null | undefined>;
   invalidate: () => void;
 }) {
   return useCallback(
@@ -145,12 +135,10 @@ function useConfirmImageTarget(params: {
       if (!params.pending) return;
       const success = await performImageInsert({
         url: params.pending.url,
-        alt: params.pending.alt,
         target,
         utils: params.utils,
         insertLabels: params.labels,
         notebookId: params.notebookId,
-        websocketProvider: params.websocketProviderRef.current,
         invalidateMediaLibrary: params.invalidate,
       });
       if (success) params.close();
@@ -198,11 +186,6 @@ export function GeneratedImageActionsProvider({
   notebookId,
   orgSlug,
 }: GeneratedImageActionsProviderProps) {
-  const hocuspocusContext = useContext(HocuspocusContext);
-  const websocketProviderRef = useLatestRef<
-    WebsocketProvider | null | undefined
-  >(hocuspocusContext?.websocketProvider);
-
   const { utils, invalidate: invalidateMediaLibrary } =
     useMediaLibraryInvalidation(notebookId, orgSlug);
   const insertLabels: InsertGeneratedImageLabels = t.chat.imageGeneration;
@@ -238,7 +221,6 @@ export function GeneratedImageActionsProvider({
     openPicker,
     utils,
     labels: insertLabels,
-    websocketProviderRef,
     invalidate: invalidateMediaLibrary,
   });
 
@@ -251,7 +233,6 @@ export function GeneratedImageActionsProvider({
     utils,
     labels: insertLabels,
     notebookId,
-    websocketProviderRef,
     invalidate: invalidateMediaLibrary,
   });
 

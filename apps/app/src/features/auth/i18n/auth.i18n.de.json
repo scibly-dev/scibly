@@ -95,7 +95,7 @@
     },
     "mcpConsentPage": {
       "title": "Agent mit deinem Konto verbinden?",
-      "description": "Dieser Agent handelt in deinem Namen. Er kann die Kurse, Lektionen, Mitglieder und Einschreibungen aller Organisationen lesen, denen du angehörst.",
+      "description": "Dieser Agent handelt in deinem Namen. Er kann die Kurse, Lektionen, Mitglieder und Einschreibungen aller Organisationen lesen, denen du angehörst, und Inhalte in deine Entwurfs-Szenen schreiben — veröffentlichte Kurse bleiben unberührt. Szenen, die er schreibt, verweisen auf keine Quellen und werden deshalb nie als veraltet markiert, wenn sich eine Quelle ändert.",
       "destination": "Mit deiner Zustimmung geht der Zugriffscode an:",
       "warning": "Fahre nur fort, wenn du das selbst gestartet hast.",
       "approve": "Verbinden",

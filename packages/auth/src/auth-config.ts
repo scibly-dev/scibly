@@ -161,8 +161,6 @@ export const auth = betterAuth({
   },
   plugins: [
     jwt({ jwt: { issuer: env.NEXT_PUBLIC_APP_URL } }),
-    // An external agent gets an access token as the author who consented, over
-    // the app's own login (ADR 0004).
     mcp({
       loginPage: routes.app.auth.signIn,
       oidcConfig: {

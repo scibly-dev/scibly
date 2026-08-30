@@ -10,12 +10,10 @@ import {
   getNotebookSkills,
 } from "@/features/notebook/server";
 
-import { MCP_TOOL_NAMES, type OrgScope, scopeToolInput } from "./tool-surface";
+import { registerSceneContentTools } from "./scene-content-tools";
+import { MCP_TOOL_NAMES, mcpToolInput } from "./tool-surface";
 
-/**
- * MCP has no transcript, so streamed deltas go nowhere — no allow-listed tool
- * streams today, and one that does needs a real writer before it is listed.
- */
+/** MCP has no transcript, so a tool that actually streams needs a real writer before it is allow-listed. */
 const NO_STREAM: UIMessageStreamWriter<NotebookMessage> = {
   write: () => {},
   merge: () => {},
@@ -25,7 +23,6 @@ const NO_STREAM: UIMessageStreamWriter<NotebookMessage> = {
 export type McpGrant = {
   caller: TrpcCaller;
   session: Principal;
-  scope: OrgScope;
 };
 
 /** Codes come from the -320xx implementation range the spec leaves to the server. */
@@ -40,10 +37,7 @@ export function jsonRpcError(
   );
 }
 
-/**
- * Points a token-less client at this resource's OAuth metadata;
- * `Access-Control-Expose-Headers` is what lets a browser client read it.
- */
+/** `Access-Control-Expose-Headers` is what lets a browser client read the challenge. */
 export function mcpUnauthorized(request: Request): Response {
   const challenge = `Bearer resource_metadata="${new URL(request.url).origin}/.well-known/oauth-protected-resource"`;
   return jsonRpcError(-32000, "Unauthorized: Authentication required", {
@@ -60,12 +54,9 @@ export async function handleMcpRequest(
   grant: McpGrant,
 ): Promise<Response> {
   const registry: ToolSet = await buildToolRegistry(
-    {
-      caller: grant.caller,
-      session: grant.session,
-      orgSlug: grant.scope.orgSlug,
-      dataStream: NO_STREAM,
-    },
+    // No organization: the agent names one per call, the way it names a course
+    // or a lesson, and every tool that takes one authorizes it for this user.
+    { caller: grant.caller, session: grant.session, dataStream: NO_STREAM },
     // `loadSkill` names the available skills in its own input schema.
     await getNotebookSkills(),
   );
@@ -77,28 +68,25 @@ export async function handleMcpRequest(
     const execute = tool?.execute;
     if (!execute) continue;
 
-    const { schema, inject } = scopeToolInput(tool.inputSchema, grant.scope);
-
     server.registerTool(
       name,
       {
         description:
           typeof tool.description === "string" ? tool.description : undefined,
-        inputSchema: schema,
+        inputSchema: mcpToolInput(tool.inputSchema),
       },
       async (args) => {
-        const output = await execute(
-          { ...args, ...inject },
-          {
-            toolCallId: name,
-            messages: [],
-            context: undefined,
-          },
-        );
+        const output = await execute(args, {
+          toolCallId: name,
+          messages: [],
+          context: undefined,
+        });
         return { content: [{ type: "text", text: JSON.stringify(output) }] };
       },
     );
   }
+
+  registerSceneContentTools(server, grant.session.user);
 
   return createMcpHandler(() => server, { legacy: "stateless" }).fetch(request);
 }

@@ -27,11 +27,7 @@ type TRPCContext = {
   actor?: { userId: string } | null;
 };
 
-/**
- * A caller that authenticated by other means than the session cookie passes
- * `principal`, which also drops the inbound `x-correlation-id` — that header is
- * only as trustworthy as the client sending it.
- */
+/** A `principal` caller drops the inbound `x-correlation-id`: that header is only as trustworthy as the client sending it. */
 export const createTRPCContext = async (opt: {
   headers: Headers;
   principal?: Principal;

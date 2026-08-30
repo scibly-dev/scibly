@@ -1,13 +1,10 @@
 import type { NodeViewRenderer } from "@tiptap/core";
-import type { Node as ProseMirrorNode, ResolvedPos } from "@tiptap/pm/model";
+import type { ResolvedPos } from "@tiptap/pm/model";
 
 import { createBlockMarkdownSpec, mergeAttributes, Node } from "@tiptap/core";
-import { isChangeOrigin } from "@tiptap/extension-collaboration";
-import { Plugin, PluginKey } from "@tiptap/pm/state";
 
-import getDefaultReactBlockAttributes, {
-  getNodeAttributes,
-} from "@/shared/content/editor/blocks/attributes/get-default-react-block-attributes";
+import getDefaultReactBlockAttributes from "@/shared/content/editor/blocks/attributes/get-default-react-block-attributes";
+import { createStepsSyncPlugin } from "@/shared/content/editor/blocks/steps/plugins/steps-sync-plugin";
 import {
   defaultAnswerData,
   defaultQuestionData,
@@ -38,19 +35,6 @@ const createEmptyStep = () => ({
   type: STEP_NODE_NAME,
   content: [{ type: "paragraph" }],
 });
-
-export function findEmptyStep(block: ProseMirrorNode): number | null {
-  for (let index = 0; index < block.childCount; index += 1) {
-    const step = block.child(index);
-    if (step.textContent.trim()) continue;
-    let hasMedia = false;
-    step.descendants((child) => {
-      if (child.isLeaf && !child.isText) hasMedia = true;
-    });
-    if (!hasMedia) return index + 1;
-  }
-  return null;
-}
 
 function stepDepth($pos: ResolvedPos) {
   for (let depth = $pos.depth; depth > 0; depth -= 1) {
@@ -152,47 +136,7 @@ const stepsNode = Node.create({
   },
 
   addProseMirrorPlugins() {
-    const { editor } = this;
-    return [
-      new Plugin({
-        key: new PluginKey("stepsSync"),
-        appendTransaction: (transactions, _oldState, newState) => {
-          if (!editor.isEditable) return null;
-          if (transactions.some(isChangeOrigin)) return null;
-          if (!transactions.some((transaction) => transaction.docChanged)) {
-            return null;
-          }
-
-          const { tr } = newState;
-          let modified = false;
-          newState.doc.descendants((node, pos) => {
-            if (node.type.name !== STEPS_NODE_NAME) return true;
-
-            const { questionBlockAttributes: attributes } = getNodeAttributes<{
-              questionBlockAttributes: { questionData: QuestionData };
-            }>(node);
-            const authored = attributes.questionData;
-            const questionData: QuestionData = {
-              stepCount: node.childCount,
-              firstEmptyStep: findEmptyStep(node),
-            };
-            if (
-              authored.stepCount !== questionData.stepCount ||
-              authored.firstEmptyStep !== questionData.firstEmptyStep
-            ) {
-              tr.setNodeAttribute(pos, "questionBlockAttributes", {
-                ...attributes,
-                questionData,
-              });
-              modified = true;
-            }
-            return false;
-          });
-
-          return modified ? tr : null;
-        },
-      }),
-    ];
+    return [createStepsSyncPlugin(this.editor)];
   },
 
   addKeyboardShortcuts() {

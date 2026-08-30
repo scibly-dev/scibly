@@ -1,20 +1,11 @@
 "use client";
 
-import type { HocuspocusProvider } from "@hocuspocus/provider";
 import type { ReactNode } from "react";
 import type { NotebookContextValue } from "./context";
 
-import { HocuspocusContext } from "@hocuspocus/provider-react";
 import { routes } from "@scibly/routes";
 import { useRouter } from "next/navigation";
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { isQuotaExceededCreditsError } from "@/shared/ai/errors";
 import { DEFAULT_MODEL_ID } from "@/shared/ai/models";
@@ -35,13 +26,7 @@ interface NotebookProviderProps {
   initialMessage?: string;
 }
 
-type WebsocketProvider =
-  HocuspocusProvider["configuration"]["websocketProvider"];
-
-function useNotebookModel(
-  orgSlug: string,
-  websocketProvider: WebsocketProvider | null | undefined,
-) {
+function useNotebookModel(orgSlug: string) {
   const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
   const { data: preferences } = api.orgAiConfig.getPreferences.useQuery({
     orgSlug,
@@ -51,7 +36,6 @@ function useNotebookModel(
   return {
     currentModelId,
     currentModelIdRef: useLatestRef(currentModelId),
-    websocketProviderRef: useLatestRef(websocketProvider),
     setCurrentModelId: useCallback((id: string) => setSelectedModelId(id), []),
   };
 }
@@ -151,7 +135,6 @@ function useNotebookRuntime(params: {
     orgSlugRef,
     activeNotebookIdRef: params.activeNotebookIdRef,
     currentModelIdRef: params.model.currentModelIdRef,
-    websocketProviderRef: params.model.websocketProviderRef,
     setActiveNotebookId: params.setActiveNotebookId,
   });
   const sync = useNotebookSync({
@@ -237,14 +220,12 @@ export function NotebookProvider({
   initialMessage,
 }: NotebookProviderProps) {
   const router = useRouter();
-  const hocuspocusContext = useContext(HocuspocusContext);
-
   const [activeNotebookId, setActiveNotebookId] = useState<string | undefined>(
     notebookIdProp === "new" ? undefined : notebookIdProp,
   );
   const activeNotebookIdRef = useLatestRef(activeNotebookId);
 
-  const model = useNotebookModel(orgSlug, hocuspocusContext?.websocketProvider);
+  const model = useNotebookModel(orgSlug);
 
   const runtime = useNotebookRuntime({
     orgSlug,

@@ -70,7 +70,6 @@ const NOTEBOOK = {
   orgSlugRef: { current: "acme" },
   activeNotebookIdRef: { current: "notebook-1" as string | undefined },
   currentModelIdRef: { current: "test-model" },
-  websocketProviderRef: { current: null },
   setActiveNotebookId: () => undefined,
 };
 

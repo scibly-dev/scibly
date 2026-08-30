@@ -1,10 +1,20 @@
 import { AppError } from "@scibly/api/application-error";
 import { db, toMemberRole } from "@scibly/db";
+import { isRawHtmlState } from "@scibly/lib/collab-yjs";
 
 import { sceneLineageService } from "@/features/course-authoring/scenes/server/scene-lineage";
 import { requireOrgMember } from "@/features/organizations/server";
+import { normalizeAuthorTipTapContent } from "@/shared/content/editor/server";
 
 import { requireCourseEnrollment } from "../../access/server/policy";
+import {
+  readSceneHtml,
+  type SceneUser,
+} from "../editor/document-synchronization/server/scene-document";
+import {
+  sceneHtml,
+  sceneSchema,
+} from "../editor/document-synchronization/server/scene-html";
 import { requireSceneContentAccess } from "./scene-access";
 import { mapAuthoringScene } from "./scene-mapping";
 
@@ -110,19 +120,39 @@ export async function getSceneLocation(userId: string, sceneId: string) {
   };
 }
 
-export async function getSceneContent(userId: string, sceneId: string) {
-  const scene = await requireSceneContentAccess(sceneId, userId);
+/**
+ * For a draft the live collab document is authoritative and `documentState`
+ * only its last flush; a published scene has no room behind it, so the row is
+ * the frozen copy.
+ */
+export async function getSceneContent(user: SceneUser, sceneId: string) {
+  const scene = await requireSceneContentAccess(sceneId, user.id);
   const sourceIds = await sceneLineageService.getLineageForScene(sceneId);
-  const state = scene.documentState;
-  if (!state || state.length === 0) return { sceneId, html: "", sourceIds };
-  return {
-    sceneId,
-    html:
-      state[0] === 0x3c
-        ? new TextDecoder().decode(state)
-        : "[Binary Yjs state — the editor content is not readable through this API]",
-    sourceIds,
-  };
+
+  if (scene.courseVersionId == null) {
+    const result = await readSceneHtml({ sceneId, user });
+    if (!result.success) {
+      throw new AppError({
+        code: "INTERNAL_SERVER_ERROR",
+        applicationCode: "api.internal_error",
+        message: result.error,
+      });
+    }
+    return { sceneId, html: result.html, sourceIds };
+  }
+
+  return { sceneId, html: frozenSceneHtml(scene.documentState), sourceIds };
+}
+
+/** Scenes last saved before collaborative editing are still parked as raw HTML. */
+function frozenSceneHtml(documentState: Uint8Array | null): string {
+  if (!documentState || documentState.length === 0) return "";
+  if (isRawHtmlState(documentState)) {
+    return new TextDecoder().decode(documentState);
+  }
+  return sceneHtml(
+    sceneSchema().nodeFromJSON(normalizeAuthorTipTapContent(documentState)),
+  );
 }
 
 export async function getSceneLineage(userId: string, sceneId: string) {

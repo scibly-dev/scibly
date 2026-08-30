@@ -14,6 +14,19 @@ import { toast } from "sonner";
 
 import { useTranslation } from "@/i18n/hooks/use-translation";
 
+async function requestConsentRedirect(accept: boolean, consentCode: string) {
+  const response = await fetch("/api/auth/oauth2/consent", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ accept, consent_code: consentCode }),
+  });
+
+  const body: unknown = response.ok ? await response.json() : null;
+  return body && typeof body === "object" && "redirectURI" in body
+    ? body.redirectURI
+    : null;
+}
+
 export const McpConsentScreen = ({
   agentName,
   agentOrigins,
@@ -29,17 +42,9 @@ export const McpConsentScreen = ({
   const decide = async (accept: boolean) => {
     setIsDeciding(true);
 
-    const response = await fetch("/api/auth/oauth2/consent", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ accept, consent_code: consentCode }),
-    });
-
-    const body: unknown = response.ok ? await response.json() : null;
-    const redirectUri =
-      body && typeof body === "object" && "redirectURI" in body
-        ? body.redirectURI
-        : null;
+    const redirectUri = await requestConsentRedirect(accept, consentCode).catch(
+      () => null,
+    );
 
     if (typeof redirectUri !== "string") {
       toast.error(translations.mcpConsentPage.error);

@@ -7,6 +7,7 @@ import type {
 
 import { randomUUID } from "node:crypto";
 
+import { isRawHtmlState } from "@scibly/lib/collab-yjs";
 import { yDocToProsemirrorJSON } from "@tiptap/y-tiptap";
 
 import "server-only";
@@ -23,10 +24,6 @@ const EMPTY_DOCUMENT: JSONContent = Object.freeze({
   type: "doc",
   content: [],
 });
-
-function isRawHtml(state: Uint8Array): boolean {
-  return state[0] === 0x3c;
-}
 
 function parseAuthorDocument(
   documentState: Buffer | Uint8Array | null,
@@ -133,7 +130,7 @@ export function getAuthorPreviewContent(
 ): Content {
   if (!documentState || documentState.length === 0) return EMPTY_DOCUMENT;
   const state = new Uint8Array(documentState);
-  return isRawHtml(state)
+  return isRawHtmlState(state)
     ? new TextDecoder().decode(state)
     : normalizeAuthorTipTapContent(state);
 }

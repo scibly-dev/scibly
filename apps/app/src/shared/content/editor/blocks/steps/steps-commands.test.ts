@@ -1,7 +1,7 @@
 import { Editor } from "@tiptap/core";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { findEmptyStep } from "@/shared/content/editor/blocks/steps/node";
+import { findEmptyStep } from "@/shared/content/editor/blocks/steps/schema";
 import {
   STEP_NODE_NAME,
   STEPS_NODE_NAME,

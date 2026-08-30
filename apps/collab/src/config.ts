@@ -5,7 +5,6 @@ import "dotenv/config";
 const env = loadPackageEnv("@scibly/collab", {
   COLLAB_PORT: process.env.COLLAB_PORT,
   COLLAB_TRUST_PROXY: process.env.COLLAB_TRUST_PROXY,
-  COLLAB_FLUSH_INTERVAL_MS: process.env.COLLAB_FLUSH_INTERVAL_MS || "500",
   COLLAB_CLEANUP_INTERVAL_MS:
     process.env.COLLAB_CLEANUP_INTERVAL_MS || String(5 * 60_000),
   COLLAB_TOKEN_SECRET:
@@ -24,7 +23,6 @@ export const config = {
 
   trustProxy: env.COLLAB_TRUST_PROXY === "true",
   nodeEnv: env.NODE_ENV,
-  flushIntervalMs: parseInt(env.COLLAB_FLUSH_INTERVAL_MS, 10),
   cleanupIntervalMs: parseInt(env.COLLAB_CLEANUP_INTERVAL_MS, 10),
   tokenSecret: env.COLLAB_TOKEN_SECRET,
 } as const;

@@ -6,7 +6,6 @@ import { renderHook } from "@testing-library/react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { handleClientToolCall } from "@/features/notebook/tools/insert-content/client";
-import { useQuestionBlockStore } from "@/shared/content/editor/assessment/grading/question-block-store";
 
 import {
   INITIAL_STATE,
@@ -31,11 +30,6 @@ const REMOTE = {
   scene: { id: "scene-elsewhere", title: "The suspicious link" },
 };
 
-const editor = { commands: {} } as unknown as ClientToolContext["editor"];
-const websocketProvider = {
-  connect: () => undefined,
-} as unknown as ClientToolContext["websocketProvider"];
-
 function fakeUtils() {
   return {
     client: {
@@ -52,10 +46,20 @@ function fakeUtils() {
             }),
           ),
         },
-        getSceneLineage: {
+        getSceneContent: {
           query: vi.fn(async (_input: { sceneId: string }) => ({
+            html: "<p>What is already there.</p>",
             sourceIds: ["source-1", "source-2"],
           })),
+        },
+        writeSceneContent: {
+          mutate: vi.fn(
+            async (_input: {
+              sceneId: string;
+              html: string;
+              mode: "replace" | "append";
+            }) => ({ sceneId: _input.sceneId, success: true as const }),
+          ),
         },
       },
     },
@@ -82,7 +86,6 @@ function mount({ notebook = "linked" }: { notebook?: "linked" | "none" } = {}) {
     activeNotebookIdRef: {
       current: notebook === "linked" ? "notebook-1" : undefined,
     },
-    websocketProviderRef: { current: websocketProvider },
     utils: fakeUtils(),
     addToolOutput,
     onToolCallRef,
@@ -123,7 +126,6 @@ const lastCall = () => handled.mock.calls.at(-1)?.[0];
 beforeEach(() => {
   handled.mockClear();
   useCourseBuilderStore.setState(INITIAL_STATE);
-  useQuestionBlockStore.setState({ editor: null });
 });
 
 describe("which calls this browser answers", () => {
@@ -192,14 +194,22 @@ describe("the runtime the handler is given", () => {
     expect(lastContext().activeSceneId).toBeUndefined();
   });
 
-  it("hands over the mounted editor and the collab connection", () => {
-    useQuestionBlockStore.getState().setEditor(editor);
-    const { onToolCallRef } = mount();
-
+  it("a write goes to the server, even for the scene the author has open", async () => {
+    useCourseBuilderStore.getState().setActiveScene(OPEN_SCENE);
+    const { onToolCallRef, utils } = mount();
     fire(onToolCallRef);
 
-    expect(lastContext().editor).toBe(editor);
-    expect(lastContext().websocketProvider).toBe(websocketProvider);
+    await lastContext().writeSceneContent({
+      sceneId: OPEN_SCENE.id,
+      html: "<p>Drafted.</p>",
+      mode: "replace",
+    });
+
+    expect(utils.client.scene.writeSceneContent.mutate).toHaveBeenCalledWith({
+      sceneId: OPEN_SCENE.id,
+      html: "<p>Drafted.</p>",
+      mode: "replace",
+    });
   });
 
   it("a notebook behind the course makes grounding advice worth giving", () => {
@@ -317,14 +327,15 @@ describe("recording what a write was grounded in", () => {
     });
   });
 
-  it("reads a scene's sources from its lineage", async () => {
+  it("a scene's content and its sources arrive together, in one read", async () => {
     const { onToolCallRef, utils } = mount();
     fire(onToolCallRef);
 
-    await expect(
-      lastContext().fetchSceneSourceIds?.("scene-7"),
-    ).resolves.toEqual(["source-1", "source-2"]);
-    expect(utils.client.scene.getSceneLineage.query).toHaveBeenCalledWith({
+    await expect(lastContext().readSceneContent("scene-7")).resolves.toEqual({
+      html: "<p>What is already there.</p>",
+      sourceIds: ["source-1", "source-2"],
+    });
+    expect(utils.client.scene.getSceneContent.query).toHaveBeenCalledWith({
       sceneId: "scene-7",
     });
   });

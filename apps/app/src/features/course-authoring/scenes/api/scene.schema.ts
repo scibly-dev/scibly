@@ -59,6 +59,21 @@ export const setSceneLineageSchema = z.object({
     ),
 });
 
+export const writeSceneContentSchema = z.object({
+  sceneId: z.string().describe("The ID of the draft scene to write to."),
+  html: z
+    .string()
+    .describe(
+      "HTML conforming to the editor schema (call get_editor_schema first).",
+    ),
+  mode: z
+    .enum(["replace", "append"])
+    .default("replace")
+    .describe(
+      "Whether the HTML replaces the scene's content or is added after it.",
+    ),
+});
+
 export const getSceneContentSchema = z.object({
   sceneId: z.string().describe("The ID of the scene to read content from."),
 });

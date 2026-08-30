@@ -1,6 +1,5 @@
 "use client";
 
-import type { HocuspocusProvider } from "@hocuspocus/provider";
 import type { RefObject } from "react";
 import type { NotebookMessage } from "@/features/notebook/chat/contracts";
 import type { api } from "@/shared/api/trpc/client";
@@ -16,34 +15,23 @@ import {
   type ClientToolOutput,
   handleClientToolCall,
 } from "@/features/notebook/tools/insert-content/client";
-import { useQuestionBlockStore } from "@/shared/content/editor/assessment/grading/question-block-store";
 
 import { useCourseBuilderStore } from "../../course-builder/course-builder-store";
 import { announceAgentScene } from "../../course-builder/hooks/announce-agent-scene";
 import { invalidateCourseSceneState } from "../../course-builder/hooks/invalidate-course-scene-state";
 import { useLatestRef } from "./use-latest-ref";
 
-type WebsocketProvider =
-  HocuspocusProvider["configuration"]["websocketProvider"];
-
 type ChatUtils = ReturnType<typeof api.useUtils>;
 
 interface EditorClientToolsOptions {
   activeNotebookIdRef: RefObject<string | undefined>;
-  websocketProviderRef: RefObject<WebsocketProvider | null | undefined>;
   utils: ChatUtils;
   addToolOutput: ChatAddToolOutputFunction<NotebookMessage>;
   onToolCallRef: RefObject<ChatOnToolCallCallback<NotebookMessage>>;
 }
 
 export function useEditorClientTools(options: EditorClientToolsOptions) {
-  const {
-    activeNotebookIdRef,
-    websocketProviderRef,
-    utils,
-    addToolOutput,
-    onToolCallRef,
-  } = options;
+  const { activeNotebookIdRef, utils, addToolOutput, onToolCallRef } = options;
   const utilsRef = useLatestRef(utils);
   const addToolOutputRef = useLatestRef(addToolOutput);
 
@@ -62,13 +50,15 @@ export function useEditorClientTools(options: EditorClientToolsOptions) {
       };
 
       const { activeScene } = useCourseBuilderStore.getState();
-      const editor = useQuestionBlockStore.getState().editor;
 
       void handleClientToolCall(clientToolCall, {
-        editor,
         activeSceneId: activeScene?.id,
-        websocketProvider: websocketProviderRef.current,
         hasLinkedNotebook: !!activeNotebookIdRef.current,
+        readSceneContent: (sceneId) =>
+          utilsRef.current.client.scene.getSceneContent.query({ sceneId }),
+        writeSceneContent: async (params) => {
+          await utilsRef.current.client.scene.writeSceneContent.mutate(params);
+        },
         recordSceneLineage: async (params) => {
           const result =
             await utilsRef.current.client.scene.setSceneLineage.mutate({
@@ -83,13 +73,6 @@ export function useEditorClientTools(options: EditorClientToolsOptions) {
         },
         announceTargetScene: (sceneId) =>
           announceAgentScene(sceneId, utilsRef.current),
-        fetchSceneSourceIds: async (sceneId) => {
-          const result =
-            await utilsRef.current.client.scene.getSceneLineage.query({
-              sceneId,
-            });
-          return result.sourceIds;
-        },
 
         addToolOutput: (output: ClientToolOutput) => {
           if ("sourceIds" in output) {
@@ -108,11 +91,5 @@ export function useEditorClientTools(options: EditorClientToolsOptions) {
         },
       });
     };
-  }, [
-    activeNotebookIdRef,
-    websocketProviderRef,
-    onToolCallRef,
-    utilsRef,
-    addToolOutputRef,
-  ]);
+  }, [activeNotebookIdRef, onToolCallRef, utilsRef, addToolOutputRef]);
 }
