@@ -92,6 +92,16 @@
     },
     "successCard": {
       "resending": "Erneut senden..."
+    },
+    "mcpConsentPage": {
+      "title": "Agent mit deinem Konto verbinden?",
+      "description": "Dieser Agent handelt in deinem Namen. Er kann die Kurse, Lektionen, Mitglieder und Einschreibungen aller Organisationen lesen, denen du angehörst.",
+      "destination": "Mit deiner Zustimmung geht der Zugriffscode an:",
+      "warning": "Fahre nur fort, wenn du das selbst gestartet hast.",
+      "approve": "Verbinden",
+      "deny": "Abbrechen",
+      "working": "Wird verbunden...",
+      "error": "Die Verbindung konnte nicht abgeschlossen werden. Starte erneut aus deinem Agenten heraus."
     }
   }
 }

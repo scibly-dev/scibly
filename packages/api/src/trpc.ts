@@ -1,4 +1,4 @@
-import { getSession } from "@scibly/auth/session";
+import { getSession, type Principal } from "@scibly/auth/session";
 import { db } from "@scibly/db";
 import { resolveLocaleFromHeaders } from "@scibly/i18n/resolve-locale-from-headers";
 import {
@@ -20,19 +20,27 @@ import { getRequestLocale, runWithRequestLocale } from "./request-locale";
 
 type TRPCContext = {
   db: typeof db;
-  session: Awaited<ReturnType<typeof getSession>>;
+  session: Principal | null;
   headers: Headers;
   locale: ReturnType<typeof resolveLocaleFromHeaders>;
   correlationId?: string;
   actor?: { userId: string } | null;
 };
 
+/**
+ * A caller that authenticated by other means than the session cookie passes
+ * `principal`, which also drops the inbound `x-correlation-id` — that header is
+ * only as trustworthy as the client sending it.
+ */
 export const createTRPCContext = async (opt: {
   headers: Headers;
+  principal?: Principal;
 }): Promise<TRPCContext> => {
-  const session = await getSession(opt.headers);
+  const session = opt.principal ?? (await getSession(opt.headers));
   const locale = resolveLocaleFromHeaders(opt.headers);
-  const suppliedCorrelationId = opt.headers.get("x-correlation-id");
+  const suppliedCorrelationId = opt.principal
+    ? null
+    : opt.headers.get("x-correlation-id");
   const correlationId =
     suppliedCorrelationId &&
     /^[a-zA-Z0-9._:-]{1,128}$/.test(suppliedCorrelationId)
@@ -42,7 +50,7 @@ export const createTRPCContext = async (opt: {
   return {
     db,
     session,
-    ...opt,
+    headers: opt.headers,
     locale,
     correlationId,
     actor: session?.user ? { userId: session.user.id } : null,

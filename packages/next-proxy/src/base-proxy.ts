@@ -116,7 +116,14 @@ export const baseProxy = (options?: BaseProxyOptions) => {
     );
     const session = getSessionCookie(request);
 
-    if (isAuthRoute && session) {
+    // The one page under /auth a signed-in user is supposed to reach; bouncing
+    // them would strand the agent on an authorization it can never get.
+    const isMcpConsentRoute = pathnameMatchesRoute(
+      pathnameWithoutLocale,
+      new URL(routes.app.auth.mcpConsent).pathname,
+    );
+
+    if (isAuthRoute && !isMcpConsentRoute && session) {
       const newUrl = new URL(routes.app.auth.callback.login.success);
       return createRedirectWithLocale(request, newUrl.origin, newUrl.pathname);
     }

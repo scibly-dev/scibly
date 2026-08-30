@@ -19,6 +19,7 @@ import { z } from "zod";
 
 import { useUserSettingsStore } from "../user-settings-store";
 import { AvatarSettingsCard } from "./avatar-settings-card";
+import { ConnectedAgentsSettings } from "./connected-agents-settings";
 import { DeleteAccountSettings } from "./delete-account-settings";
 import { NotificationSettingCard, TextSettingCard } from "./user-setting-cards";
 
@@ -227,6 +228,7 @@ export function UserSettingsForm({
           })
         }
       />
+      <ConnectedAgentsSettings t={t} />
       <DeleteAccountSettings
         t={t}
         user={user}

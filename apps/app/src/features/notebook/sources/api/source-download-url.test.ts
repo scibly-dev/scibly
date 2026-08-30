@@ -54,14 +54,6 @@ function caller(userId: string) {
     correlationId: "corr-1",
     actor: { userId },
     session: {
-      session: {
-        id: "sess-1",
-        createdAt: now,
-        updatedAt: now,
-        userId,
-        expiresAt: new Date("2026-12-31T00:00:00Z"),
-        token: "token",
-      },
       user: {
         id: userId,
         name: "Author",

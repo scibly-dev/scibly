@@ -12,7 +12,7 @@ import { FormFieldError } from "@scibly/ui/components/form-field-error";
 import { Input } from "@scibly/ui/components/input";
 import PasswordInput from "@scibly/ui/components/password-input";
 import { Loader2 } from "lucide-react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -46,7 +46,6 @@ function useSignInForm({
   const signInSchema = useMemo(() => getSignInSchema(locale), [locale]);
   const { translations } = useTranslation("auth");
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
   const searchParams = useSearchParams();
   const successfullLoginRedirectUrl = getRedirectUrl(
     searchParams.get(REDIRECT_URL_PARAM),
@@ -66,7 +65,9 @@ function useSignInForm({
       },
       {
         onSuccess: () => {
-          router.push(successfullLoginRedirectUrl);
+          // A hard navigation: the resumed target may be an API route, which
+          // the app router refuses to push to.
+          window.location.href = successfullLoginRedirectUrl;
         },
         onError: (ctx) => {
           if (ctx.error.code === "EMAIL_NOT_VERIFIED") {

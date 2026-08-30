@@ -31,6 +31,15 @@
       "description": "Receive emails about new features, updates, and promotions.",
       "footer": "We won't spam you."
     },
+    "connectedAgents": {
+      "title": "Connected agents",
+      "description": "External agents you have allowed to act as you. Disconnecting one takes effect immediately.",
+      "empty": "No agent is connected to your account.",
+      "connectedOn": "Connected {date}",
+      "disconnect": "Disconnect",
+      "disconnected": "{name} can no longer act as you.",
+      "error": "The agent could not be disconnected. Try again."
+    },
     "deleteAccount": {
       "title": "Delete Account",
       "description": "Permanently delete your account and all associated data. This action cannot be undone - please proceed with caution.",

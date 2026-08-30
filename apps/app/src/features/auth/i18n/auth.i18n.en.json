@@ -92,6 +92,16 @@
     },
     "successCard": {
       "resending": "Resending..."
+    },
+    "mcpConsentPage": {
+      "title": "Connect an agent to your account?",
+      "description": "This agent will act as you. It can read the courses, lessons, members and enrollments of every organization you belong to.",
+      "destination": "Approving sends the access code to:",
+      "warning": "Only continue if you started this yourself.",
+      "approve": "Connect",
+      "deny": "Cancel",
+      "working": "Connecting...",
+      "error": "The connection could not be completed. Start again from your agent."
     }
   }
 }

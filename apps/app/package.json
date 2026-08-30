@@ -48,6 +48,7 @@
     "@hocuspocus/provider": "^4.0.0",
     "@hocuspocus/provider-react": "^4.0.0",
     "@hookform/resolvers": "^5.2.2",
+    "@modelcontextprotocol/server": "^2.0.0",
     "@napi-rs/canvas": "^0.1.80",
     "@notionhq/client": "^5.22.0",
     "@radix-ui/react-alert-dialog": "^1.1.6",

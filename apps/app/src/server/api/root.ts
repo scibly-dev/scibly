@@ -4,6 +4,7 @@ import {
   mergeTRPCRouters,
 } from "@scibly/api/trpc";
 
+import { connectedAgentRouter } from "@/features/auth/api/connected-agent.router";
 import { collaborationRouter } from "@/features/course-authoring/collaboration/api/collaboration.router";
 import { courseRouter } from "@/features/course-authoring/courses/api/course.router";
 import { sceneRouter } from "@/features/course-authoring/scenes/api/scene.router";
@@ -21,6 +22,7 @@ import { fileHandlerRouter } from "@/shared/content/editor/server";
 
 const featureRouter = createTRPCRouter({
   collab: collaborationRouter,
+  connectedAgent: connectedAgentRouter,
   organization: organizationRouter,
   fileHandler: fileHandlerRouter,
   course: courseRouter,

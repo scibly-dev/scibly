@@ -88,4 +88,14 @@ export type AuthPage = {
   successCard: {
     resending: string;
   };
+  mcpConsentPage: {
+    title: string;
+    description: string;
+    destination: string;
+    warning: string;
+    approve: string;
+    deny: string;
+    working: string;
+    error: string;
+  };
 };
