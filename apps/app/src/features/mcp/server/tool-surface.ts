@@ -2,14 +2,18 @@ import type { buildToolRegistry } from "@/features/notebook/server";
 
 import { z } from "zod";
 
-/**
- * Every tool an external agent may call; deletes never join it, the in-app
- * confirmation gate has no MCP equivalent.
- */
+/** Deletes never join this list: the in-app confirmation gate has no MCP equivalent. */
 export const MCP_TOOL_NAMES = [
+  "createCourse",
   "listCourses",
   "getCourseById",
+  "createLesson",
+  "updateLesson",
+  "reorderLessons",
   "listLessons",
+  "createScene",
+  "updateScene",
+  "reorderScenes",
   "listScenes",
   "getEditorSchema",
   "getCourseStats",
@@ -25,12 +29,12 @@ export const MCP_TOOL_NAMES = [
   ReturnType<typeof buildToolRegistry>
 >)[];
 
+// `html` writes straight into the document the collaborative writer owns, and
+// `sourceIds` starts lineage no external scene ever gets (ADR 0005).
+const UNREACHABLE_KEYS = ["html", "sourceIds"];
+
 export type OrgScope = { orgSlug: string; organizationId: string };
 
-/**
- * The tool's schema minus the organization keys, plus the values to put back:
- * whatever an agent sends under those keys is discarded.
- */
 export function scopeToolInput(inputSchema: unknown, scope: OrgScope) {
   if (!(inputSchema instanceof z.ZodObject)) {
     throw new Error("An MCP tool must declare a zod object input schema.");
@@ -48,10 +52,12 @@ export function scopeToolInput(inputSchema: unknown, scope: OrgScope) {
     }).filter(([key]) => key in fields),
   );
 
+  const dropped = new Set([...Object.keys(inject), ...UNREACHABLE_KEYS]);
+
   return {
     schema: z.object(
       Object.fromEntries(
-        Object.entries(fields).filter(([key]) => !(key in inject)),
+        Object.entries(fields).filter(([key]) => !dropped.has(key)),
       ),
     ),
     inject,
