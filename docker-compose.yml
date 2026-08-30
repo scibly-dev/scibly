@@ -63,6 +63,8 @@ services:
     env_file: .env
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-scibly}:${POSTGRES_PASSWORD:-scibly}@postgres:5432/${POSTGRES_DB:-scibly}
+      # The published host port is not reachable from inside the network.
+      COLLAB_WS_URL: ${COLLAB_WS_URL:-ws://collab:${COLLAB_PORT:-4000}}
     ports:
       - "3001:3001"
     depends_on:

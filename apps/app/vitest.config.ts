@@ -10,6 +10,9 @@ export default defineConfig({
       "next/headers": resolve(__dirname, "./__test__/mocks/next-headers.ts"),
       "@": resolve(__dirname, "./src"),
       "@test": resolve(__dirname, "./__test__"),
+      // The real collab server, so the writer seam is tested against the thing
+      // it talks to in production rather than a stand-in.
+      "@collab": resolve(__dirname, "../collab/src"),
     },
   },
   test: {

@@ -71,6 +71,13 @@ export const env = createEnv({
       ),
     /** HMAC key shared only by the app token issuer and collab verifier. */
     COLLAB_TOKEN_SECRET: z.string().min(32),
+    /**
+     * Where server-side collab clients dial the collab server. Defaults to the
+     * browser-facing URL, which is wrong whenever the two reach the collab
+     * service over different networks (in Docker the app must use the service
+     * name, not the published host port).
+     */
+    COLLAB_WS_URL: z.string().optional(),
   },
 
   client: {
@@ -123,6 +130,7 @@ export const env = createEnv({
     CRON_SECRET: process.env.CRON_SECRET,
     COLLAB_TOKEN_SECRET:
       process.env.COLLAB_TOKEN_SECRET ?? process.env.BETTER_AUTH_SECRET,
+    COLLAB_WS_URL: process.env.COLLAB_WS_URL,
 
     // client side variables
     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,

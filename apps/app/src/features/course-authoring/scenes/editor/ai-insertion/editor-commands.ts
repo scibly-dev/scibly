@@ -2,10 +2,12 @@ import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
 import type { Editor } from "@tiptap/react";
 import type { EditorCountStorage } from "@/shared/content/editor/extensions/editor-count";
 
-import { DOMParser as ProseMirrorDOMParser } from "@tiptap/pm/model";
 import { z } from "zod";
 
-import { stripLearnerStateFromQuestionBlocks } from "@/shared/content/client";
+import {
+  editorLimitError,
+  parseEditorHtml,
+} from "@/shared/content/editor/documents/validate-editor-html";
 
 interface GetSceneContentArgs {
   editor: Editor | null;
@@ -39,93 +41,6 @@ function message(error: unknown): string {
 
 const insertContentInputSchema = z.object({ html: z.string() });
 
-function prepareInsertHtml(html: string) {
-  try {
-    return {
-      html: stripLearnerStateFromQuestionBlocks(html),
-      error: undefined,
-    };
-  } catch (stripError: unknown) {
-    return { html, error: message(stripError) };
-  }
-}
-
-function knownDataTypes(editor: Editor): Set<string> {
-  const types = new Set<string>();
-  const specs = [
-    ...Object.values(editor.schema.nodes),
-    ...Object.values(editor.schema.marks),
-  ];
-  for (const { spec } of specs) {
-    for (const rule of spec.parseDOM ?? []) {
-      const tag = "tag" in rule && typeof rule.tag === "string" ? rule.tag : "";
-      const dataType = /data-type=["']([^"']+)["']/.exec(tag)?.[1];
-      if (dataType) types.add(dataType);
-    }
-  }
-  return types;
-}
-
-// ProseMirror's DOM parser silently drops unrecognized blocks instead of throwing, so this checks explicitly.
-function unknownBlockTypes(editor: Editor, body: HTMLElement): string[] {
-  const known = knownDataTypes(editor);
-  const found = new Set<string>();
-  for (const element of body.querySelectorAll("[data-type]")) {
-    const dataType = element.getAttribute("data-type");
-    if (dataType && !known.has(dataType)) found.add(dataType);
-  }
-  return [...found];
-}
-
-type ParsedHtml = { node: ProseMirrorNode } | { error: string };
-
-function parseHtml(editor: Editor, html: string): ParsedHtml {
-  if (typeof DOMParser === "undefined") {
-    return {
-      error:
-        "Scene content cannot be validated in this environment, so the write was refused rather than applied unchecked.",
-    };
-  }
-
-  let body: HTMLElement;
-  try {
-    body = new DOMParser().parseFromString(html, "text/html").body;
-  } catch (error: unknown) {
-    return { error: `HTML could not be parsed: ${message(error)}` };
-  }
-
-  const unknown = unknownBlockTypes(editor, body);
-  if (unknown.length > 0) {
-    return {
-      error:
-        `Unknown block type(s): ${unknown.join(", ")}. The editor schema has no such block, ` +
-        "so it would be dropped and its contents flattened into plain text. " +
-        "Call getEditorSchema and use an exact data-type.",
-    };
-  }
-
-  let node: ProseMirrorNode;
-  try {
-    node = ProseMirrorDOMParser.fromSchema(editor.schema).parse(body);
-  } catch (error: unknown) {
-    return {
-      error: `HTML / JSON validation failed: ${message(error)}. Ensure your HTML structure is correct, custom node tags are valid, and all JSON block attributes (like questionblock-data or data-media-attributes) have valid, properly escaped JSON structures.`,
-    };
-  }
-
-  const survivingText = node.textBetween(0, node.content.size, " ").trim();
-  if (!survivingText && (body.textContent ?? "").trim()) {
-    return {
-      error:
-        "None of the content survived parsing into the editor schema — the scene would end up empty. " +
-        "Check the HTML against getEditorSchema.",
-    };
-  }
-
-  return { node };
-}
-
-// `filterTransaction` also enforces these limits but fails silently, so this makes it a reportable error.
 function limitError(
   editor: Editor,
   node: ProseMirrorNode,
@@ -134,38 +49,30 @@ function limitError(
   const counts: EditorCountStorage | undefined = editor.storage.editorCount;
   if (!counts) return null;
 
-  const characters =
-    (mode === "append" ? counts.characters() : 0) + counts.characters({ node });
-  const blocks =
-    (mode === "append" ? counts.blocks() : 0) + counts.blocks({ node });
-
-  if (counts.maxCharacters > 0 && characters > counts.maxCharacters) {
-    return `This would leave the scene at ${characters} characters; the limit is ${counts.maxCharacters}. Split the content across more scenes.`;
-  }
-  if (counts.maxBlocks > 0 && blocks > counts.maxBlocks) {
-    return `This would leave the scene at ${blocks} blocks; the limit is ${counts.maxBlocks}. Split the content across more scenes.`;
-  }
-  return null;
+  return editorLimitError(
+    node,
+    mode === "append"
+      ? { characters: counts.characters(), blocks: counts.blocks() }
+      : { characters: 0, blocks: 0 },
+    { maxCharacters: counts.maxCharacters, maxBlocks: counts.maxBlocks },
+  );
 }
 
-function contentError(
+function applied(
   editor: Editor,
   html: string,
-  { allowEmpty, mode }: { allowEmpty: boolean; mode: WriteMode },
-): Extract<EditorContentResult, { success: false }> | null {
-  if (!html) {
-    return allowEmpty
-      ? null
-      : { success: false, error: "HTML content is empty or missing.", html };
+  options: { apply: (editor: Editor, html: string) => void },
+): EditorContentResult {
+  try {
+    options.apply(editor, html);
+    return { success: true, html };
+  } catch (editorError: unknown) {
+    return {
+      success: false,
+      error: `Editor failed to render the HTML content: ${message(editorError)}`,
+      html,
+    };
   }
-
-  const parsed = parseHtml(editor, html);
-  if ("error" in parsed) {
-    return { success: false, error: parsed.error, html };
-  }
-
-  const limit = limitError(editor, parsed.node, mode);
-  return limit ? { success: false, error: limit, html } : null;
 }
 
 function executeContent(
@@ -177,31 +84,34 @@ function executeContent(
   },
 ): EditorContentResult {
   const parsedInput = insertContentInputSchema.safeParse(toolCall.input);
-  const prepared = prepareInsertHtml(
-    parsedInput.success ? parsedInput.data.html : "",
-  );
-  const html = prepared.html;
-  if (prepared.error) return { success: false, error: prepared.error, html };
-  if (!editor) {
-    return {
-      success: false,
-      error: "Editor is not active or available.",
-      html,
-    };
-  }
-  const error = contentError(editor, html, options);
-  if (error) return error;
+  const html = parsedInput.success ? parsedInput.data.html : "";
 
-  try {
-    options.apply(editor, html);
-    return { success: true, html };
-  } catch (editorError: unknown) {
+  if (!editor) {
+    return { success: false, error: "Editor is not active or available.", html };
+  }
+  if (!html) {
+    return options.allowEmpty
+      ? applied(editor, html, options)
+      : { success: false, error: "HTML content is empty or missing.", html };
+  }
+  if (typeof DOMParser === "undefined") {
     return {
       success: false,
-      error: `Editor failed to render the HTML content: ${message(editorError)}`,
+      error:
+        "Scene content cannot be validated in this environment, so the write was refused rather than applied unchecked.",
       html,
     };
   }
+
+  const parsed = parseEditorHtml(editor.schema, html, new DOMParser());
+  if ("error" in parsed) {
+    return { success: false, error: parsed.error, html };
+  }
+
+  const limit = limitError(editor, parsed.node, options.mode);
+  if (limit) return { success: false, error: limit, html: parsed.html };
+
+  return applied(editor, parsed.html, options);
 }
 
 export function executeInsertContent(
