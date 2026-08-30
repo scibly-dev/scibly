@@ -3,6 +3,10 @@ import { Editor } from "@tiptap/core";
 
 import { vanillaApi } from "@/shared/api/trpc/client";
 import { createSessionAwareRoomProvider } from "@/shared/content/editor/collaboration/create-room-provider";
+import {
+  awaitDelivered,
+  awaitSynced,
+} from "@/shared/content/editor/collaboration/provider-handshake";
 import extensions from "@/shared/content/editor/extensions";
 import { insertMediaNodeAtEnd } from "@/shared/content/editor/media/utils/media";
 import {
@@ -25,54 +29,6 @@ interface BackgroundCollabOptions {
 
 function errorMessage(error: unknown) {
   return error instanceof Error ? error.message : "Unknown error";
-}
-
-type RoomProvider = ReturnType<typeof createSessionAwareRoomProvider>;
-
-function waitForDelivery(
-  provider: RoomProvider,
-  sceneId: string,
-  timeoutMs: number,
-): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
-    if (!provider.hasUnsyncedChanges) {
-      resolve();
-      return;
-    }
-
-    const settleIfDelivered = () => {
-      if (provider.hasUnsyncedChanges) return;
-      cleanup();
-      resolve();
-    };
-
-    const handleClose = ({ event }: { event: CloseEvent }) => {
-      cleanup();
-      reject(
-        new Error(
-          `Connection closed before the write to scene ${sceneId} was acknowledged: ${event?.reason || "Unknown reason"} (Code: ${event?.code})`,
-        ),
-      );
-    };
-
-    const timeout = setTimeout(() => {
-      cleanup();
-      reject(
-        new Error(
-          `Write to scene ${sceneId} was not acknowledged by the collab server within ${timeoutMs}ms`,
-        ),
-      );
-    }, timeoutMs);
-
-    const cleanup = () => {
-      clearTimeout(timeout);
-      provider.off("unsyncedChanges", settleIfDelivered);
-      provider.off("close", handleClose);
-    };
-
-    provider.on("unsyncedChanges", settleIfDelivered);
-    provider.on("close", handleClose);
-  });
 }
 
 async function withBackgroundEditor<T>(
@@ -103,53 +59,7 @@ async function withBackgroundEditor<T>(
   provider.attach();
 
   try {
-    await new Promise<void>((resolve, reject) => {
-      const handleSynced = () => {
-        cleanup();
-        resolve();
-      };
-
-      const handleAuthFailed = ({ reason }: { reason: string }) => {
-        cleanup();
-        reject(
-          new Error(`Authentication failed for scene ${sceneId}: ${reason}`),
-        );
-      };
-
-      const handleClose = ({ event }: { event: CloseEvent }) => {
-        cleanup();
-        reject(
-          new Error(
-            `Connection closed for scene ${sceneId}: ${event?.reason || "Unknown reason"} (Code: ${event?.code})`,
-          ),
-        );
-      };
-
-      const timeout = setTimeout(() => {
-        cleanup();
-        reject(
-          new Error(
-            `Connection to collab server timed out for scene ${sceneId}`,
-          ),
-        );
-      }, timeoutMs);
-
-      const cleanup = () => {
-        clearTimeout(timeout);
-        provider.off("synced", handleSynced);
-        provider.off("authenticationFailed", handleAuthFailed);
-        provider.off("close", handleClose);
-      };
-
-      if (provider.isSynced) {
-        cleanup();
-        resolve();
-      } else {
-        provider.on("synced", handleSynced);
-        provider.on("authenticationFailed", handleAuthFailed);
-        provider.on("close", handleClose);
-      }
-    });
+    await awaitSynced(provider, sceneId, timeoutMs);
 
     const editor = new Editor({
       extensions: extensions({
@@ -176,7 +86,7 @@ async function withBackgroundEditor<T>(
 
     try {
       const result = await action(editor);
-      await waitForDelivery(provider, sceneId, deliveryTimeoutMs);
+      await awaitDelivered(provider, sceneId, deliveryTimeoutMs);
       return result;
     } finally {
       editor.destroy();

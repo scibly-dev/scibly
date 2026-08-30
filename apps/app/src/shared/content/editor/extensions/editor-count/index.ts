@@ -22,6 +22,33 @@ const hintContent = (node: ProseMirrorNode): string =>
     ? (getNodeAttributes<HintBlockAttributes>(node).content ?? "")
     : "";
 
+// Exported as plain functions so anything holding a ProseMirror node — including
+// the headless server writer, which has no `Editor` — counts the same way.
+export function countCharacters(node: ProseMirrorNode): number {
+  let characterCount = 0;
+
+  node.content.descendants((node) => {
+    if (node.isText) {
+      characterCount += node.text?.length ?? 0;
+    } else {
+      characterCount += hintContent(node).length;
+    }
+  });
+  return characterCount;
+}
+
+export function countBlocks(node: ProseMirrorNode): number {
+  let blockCount = 0;
+
+  node.nodesBetween(0, node.content.size, (node) => {
+    if (node.isBlock) {
+      blockCount++;
+    }
+  });
+
+  return blockCount;
+}
+
 interface EditorCountOptions {
   charLimit: number | null | undefined;
   blockLimit: number | null | undefined;
@@ -151,19 +178,8 @@ export const EditorCount = Extension.create<
   },
 
   onBeforeCreate() {
-    this.storage.characters = (options) => {
-      const node = options?.node ?? this.editor.state.doc;
-      let characterCount = 0;
-
-      node.content.descendants((node) => {
-        if (node.isText) {
-          characterCount += node.text?.length ?? 0;
-        } else {
-          characterCount += hintContent(node).length;
-        }
-      });
-      return characterCount;
-    };
+    this.storage.characters = (options) =>
+      countCharacters(options?.node ?? this.editor.state.doc);
 
     this.storage.words = (options) => {
       const node = options?.node ?? this.editor.state.doc;
@@ -179,18 +195,8 @@ export const EditorCount = Extension.create<
       return wordCount;
     };
 
-    this.storage.blocks = (options) => {
-      const node = options?.node ?? this.editor.state.doc;
-      let blockCount = 0;
-
-      node.nodesBetween(0, node.content.size, (node) => {
-        if (node.isBlock) {
-          blockCount++;
-        }
-      });
-
-      return blockCount;
-    };
+    this.storage.blocks = (options) =>
+      countBlocks(options?.node ?? this.editor.state.doc);
   },
 
   addProseMirrorPlugins() {
