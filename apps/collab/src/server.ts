@@ -6,7 +6,6 @@ import { wrapRawHtmlState } from "@scibly/lib/collab-yjs";
 
 import { authenticateConnection } from "./auth.js";
 import { config } from "./config.js";
-import { scheduleDbFlush } from "./persistence.js";
 import { isRateLimited } from "./rate-limiter.js";
 import { clientIp } from "./request.js";
 
@@ -61,9 +60,17 @@ export function createCollabServer({
           if (!scene) return null;
           return wrapRawHtmlState(scene.documentState);
         },
+        // Written through, not batched: Hocuspocus unloads a document once this
+        // resolves, so anything still only in memory is silently lost (the hook
+        // is already debounced upstream).
         store: async ({ documentName, state }) => {
           if (documentName.startsWith("course-meta-")) return;
-          scheduleDbFlush(documentName, state);
+
+          const { sceneId } = CollabDocument.parse(documentName);
+          await database.scene.updateMany({
+            where: { id: sceneId },
+            data: { documentState: Buffer.from(state) },
+          });
         },
       }),
     ],

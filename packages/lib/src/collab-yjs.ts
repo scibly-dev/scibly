@@ -2,9 +2,10 @@ import * as Y from "yjs";
 
 import { COLLAB_INITIAL_HTML_KEY, COLLAB_METADATA_MAP_NAME } from "./collab";
 
+/** `<`. A scene saved as seed HTML rather than as a Yjs update starts with a tag. */
 const RAW_HTML_LEADING_BYTE = 0x3c;
 
-const isRawHtmlState = (state: Uint8Array): boolean =>
+export const isRawHtmlState = (state: Uint8Array): boolean =>
   state[0] === RAW_HTML_LEADING_BYTE;
 
 const encodeHtmlAsYUpdate = (state: Uint8Array): Uint8Array | null => {

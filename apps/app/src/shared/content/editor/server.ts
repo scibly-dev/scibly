@@ -24,7 +24,10 @@ import { extractQuestionBlockSnapshots } from "@/shared/content/editor/documents
 
 export type { PublishedSceneArtifacts };
 export { fileHandlerRouter } from "./media/api";
-export { getAuthorPreviewContent } from "@/shared/content/editor/documents/tiptap-document";
+export {
+  getAuthorPreviewContent,
+  normalizeAuthorTipTapContent,
+} from "@/shared/content/editor/documents/tiptap-document";
 export {
   extractQuestionBlockSnapshots,
   getQuestionBlockAttributes,

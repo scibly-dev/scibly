@@ -1,6 +1,7 @@
 import type { QuestionBlockAttributes } from "@/shared/content/contracts";
 import type { QuestionBlocksType } from "@/shared/content/editor/blocks/registry/shared";
 
+import { isRawHtmlState } from "@scibly/lib/collab-yjs";
 import * as Y from "yjs";
 
 import {
@@ -11,10 +12,6 @@ import { editorSchemaRegistry } from "@/shared/content/editor/blocks/registry/sh
 
 // Shared between the Yjs reader and the publish (TipTap) reader, so both give
 // the same document the same answer.
-
-function isRawHtmlState(state: Uint8Array): boolean {
-  return state[0] === 0x3c;
-}
 
 export function isBlankHtmlState(state: Uint8Array): boolean {
   return (

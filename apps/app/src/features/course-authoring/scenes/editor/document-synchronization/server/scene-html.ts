@@ -1,10 +1,13 @@
 import type { Node as ProseMirrorNode, Schema } from "@tiptap/pm/model";
 
 import { getSchema } from "@tiptap/core";
+import { DOMSerializer } from "@tiptap/pm/model";
+import { EditorState } from "@tiptap/pm/state";
 import { JSDOM } from "jsdom";
 
 import "server-only";
 import { editorSchemaRegistry } from "@/shared/content/editor/blocks/registry/shared";
+import { authorNormalizationPlugins } from "@/shared/content/editor/documents/author-normalization";
 import {
   editorLimitError,
   parseEditorHtml,
@@ -28,46 +31,33 @@ export class SceneHtmlError extends Error {
 }
 
 let schema: Schema | undefined;
-let parser: ReturnType<typeof createDomParser> | undefined;
+let dom: JSDOM | undefined;
+let parser: DOMParser | undefined;
 
-function createDomParser() {
-  const { DOMParser } = new JSDOM("").window;
-  return new DOMParser();
+/** One jsdom window for the process: building one costs more than a scene write. */
+function domWindow() {
+  dom ??= new JSDOM("");
+  return dom.window;
 }
 
-function domParser() {
-  parser ??= createDomParser();
-  return parser;
-}
-
-/**
- * The editor's schema without a browser. Node views are the only client-only
- * half of a block definition and they contribute no nodes or marks, so what the
- * server parses with is what the editor renders with — `scene-html.test.ts`
- * holds that claim.
- */
+/** The editor's schema without a browser: node views are the only client-only
+ * half of a block definition and contribute no nodes or marks —
+ * `scene-html.test.ts` holds that claim. */
 export function sceneSchema(): Schema {
   schema ??= getSchema(editorSchemaRegistry.materializeSchemaExtensions({}));
   return schema;
 }
 
-/**
- * Validates agent-authored HTML the way the editor would and returns the
- * ProseMirror node to write. Throws rather than returning a partial document —
- * nothing may touch the author document until this has passed.
- *
- * `existing` is the document the content is being appended to, so the size
- * limits count the result rather than just the new part; omit it when the
- * content replaces the document.
- */
+/** Throws rather than returning a partial document; pass `existing` when
+ * appending so the size limits count the result, not just the new part. */
 export function parseSceneHtml(
   html: string,
   existing?: ProseMirrorNode,
 ): ProseMirrorNode {
-  // jsdom rather than a global `DOMParser`: this runs in the Node server, and
-  // building the parser explicitly keeps it independent of whether some other
-  // module happened to install DOM globals.
-  const parsed = parseEditorHtml(sceneSchema(), html, domParser());
+  // jsdom rather than a global `DOMParser`, so the Node server stays
+  // independent of whether another module installed DOM globals.
+  parser ??= new (domWindow().DOMParser)();
+  const parsed = parseEditorHtml(sceneSchema(), html, parser);
   if ("error" in parsed) throw new SceneHtmlError(parsed.error);
 
   const limit = editorLimitError(
@@ -80,4 +70,34 @@ export function parseSceneHtml(
   if (limit) throw new SceneHtmlError(limit);
 
   return parsed.node;
+}
+
+/** The other direction: the author document as the HTML an agent can read and
+ * hand back to `parseSceneHtml`. */
+export function sceneHtml(node: ProseMirrorNode): string {
+  const { document } = domWindow();
+  const container = document.createElement("div");
+  container.appendChild(
+    DOMSerializer.fromSchema(sceneSchema()).serializeFragment(node.content, {
+      document,
+    }),
+  );
+  return container.innerHTML;
+}
+
+/** Runs the author-normalization plugins over the write as the editor would;
+ * `previous` is what they read to tell an edit from content that merely
+ * arrived, and a bare `EditorState` rather than an `Editor` keeps the server
+ * free of the global `window`/`document` an `Editor` needs. */
+export function normalizeAuthorDocument(
+  previous: ProseMirrorNode,
+  next: ProseMirrorNode,
+): ProseMirrorNode {
+  const state = EditorState.create({
+    doc: previous,
+    plugins: authorNormalizationPlugins(sceneSchema()),
+  });
+  const { tr } = state;
+  tr.replaceWith(0, previous.content.size, next.content);
+  return state.apply(tr).doc;
 }

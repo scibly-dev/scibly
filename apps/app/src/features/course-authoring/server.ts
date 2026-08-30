@@ -40,13 +40,16 @@ export {
 } from "./lessons/server/lessons";
 export { publishCourse } from "./publishing/server/publish-course";
 export { publishCourseSnapshot } from "./publishing/server/publish-course-snapshot";
+export { writeSceneHtml } from "./scenes/editor/document-synchronization/server/scene-document";
 export {
   getOutdatedScenes,
   getStaleSourcesForNotebook,
 } from "./scenes/review/server/source-status";
+export { requireDraftSceneContentAccess } from "./scenes/server/scene-access";
 export {
   setDraftSceneLineage,
   updateDraftScene,
+  writeSceneContent,
 } from "./scenes/server/scene-content";
 export { mapAuthoringScene } from "./scenes/server/scene-mapping";
 export {

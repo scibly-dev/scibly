@@ -1,11 +1,4 @@
 import {
-  executeGetSceneContent,
-  executeInsertContent,
-  performBackgroundInsertion,
-  performBackgroundRead,
-} from "@/features/course-authoring/client";
-
-import {
   type ClientToolCall,
   type ClientToolContext,
   getClientToolCallInput,
@@ -14,11 +7,6 @@ import {
 } from "./client-types";
 import { buildQualityWarning } from "./scene-quality";
 
-export {
-  appendContentToScene,
-  type AppendContentToSceneOutput,
-  type AppendContentToSceneParams,
-} from "./append-content";
 export type {
   ClientToolCall,
   ClientToolCallInput,
@@ -30,7 +18,6 @@ export type {
 } from "./client-types";
 
 type RawClientToolInput = ReturnType<typeof getClientToolCallInput>;
-type ResolvedTarget = ReturnType<typeof resolveTargetScene>;
 
 function addResolutionError(
   toolCall: ClientToolCall,
@@ -49,38 +36,17 @@ function addResolutionError(
 async function handleGetSceneContent(
   ctx: ClientToolContext,
   targetSceneId: string,
-  editor: ResolvedTarget["editor"],
 ) {
-  const loadSourceIds = () =>
-    ctx.fetchSceneSourceIds?.(targetSceneId) ?? Promise.resolve([]);
-  if (editor) {
-    const output = executeGetSceneContent({
-      editor,
-      activeSceneId: targetSceneId,
-    });
-    const sourceIds = await loadSourceIds();
-    ctx.addToolOutput({ ...output, sourceIds });
-    return;
-  }
   try {
-    const [res, sourceIds] = await Promise.all([
-      performBackgroundRead({
-        sceneId: targetSceneId,
-        websocketProvider: ctx.websocketProvider,
-      }),
-      loadSourceIds(),
-    ]);
-    ctx.addToolOutput({
-      html: res.error ? undefined : (res.html ?? ""),
-      sceneId: targetSceneId,
-      sourceIds,
-      error: res.error,
-    });
+    const { html, sourceIds } = await ctx.readSceneContent(targetSceneId);
+    ctx.addToolOutput({ html, sceneId: targetSceneId, sourceIds });
   } catch (error) {
+    // No `html` at all rather than an empty string: a failed read that reads as
+    // an empty scene comes back as a write that empties it.
     ctx.addToolOutput({
       sceneId: targetSceneId,
       sourceIds: [],
-      error: getClientToolErrorMessage(error) || "Background read failed",
+      error: getClientToolErrorMessage(error) || "Scene read failed",
     });
   }
 }
@@ -89,10 +55,8 @@ async function recordLineage(
   ctx: ClientToolContext,
   sceneId: string,
   sourceIds: string[] | undefined,
-  success: boolean,
 ): Promise<string | undefined> {
-  if (!success || !sourceIds?.length || !ctx.recordSceneLineage)
-    return undefined;
+  if (!sourceIds?.length || !ctx.recordSceneLineage) return undefined;
   try {
     await ctx.recordSceneLineage({ sceneId, sourceIds });
     return undefined;
@@ -117,90 +81,42 @@ function insertionWarnings(
   };
 }
 
-function addInsertionOutput(
-  ctx: ClientToolContext,
-  output: { success: boolean; html: string; error?: string },
-  warnings: {
-    lineageWarning?: string;
-    groundingWarning?: string;
-    qualityWarning?: string;
-  },
-) {
-  const applicable = output.success ? warnings : {};
-  ctx.addToolOutput({
-    ...output,
-    lineageWarning: applicable.lineageWarning,
-    groundingWarning: applicable.groundingWarning,
-    qualityWarning: applicable.qualityWarning,
-  });
-}
-
 function sourceIdsFrom(rawArgs: RawClientToolInput) {
   if (!Array.isArray(rawArgs.sourceIds)) return undefined;
   return rawArgs.sourceIds.filter((id): id is string => typeof id === "string");
 }
 
 async function handleInsertContent(
-  toolCall: ClientToolCall,
   ctx: ClientToolContext,
   targetSceneId: string,
-  editor: ResolvedTarget["editor"],
   rawArgs: RawClientToolInput,
 ) {
   const html = typeof rawArgs.html === "string" ? rawArgs.html : "";
   const sourceIds = sourceIdsFrom(rawArgs);
-  const { groundingWarning, qualityWarning } = insertionWarnings(
-    ctx,
-    sourceIds,
-    html,
-  );
-  if (editor) {
-    const output = executeInsertContent({ editor, toolCall });
-    const lineageWarning = await recordLineage(
-      ctx,
-      targetSceneId,
-      sourceIds,
-      output.success,
-    );
-    addInsertionOutput(ctx, output, {
-      lineageWarning,
-      groundingWarning,
-      qualityWarning,
+
+  try {
+    await ctx.writeSceneContent({
+      sceneId: targetSceneId,
+      html,
+      mode: "replace",
+    });
+  } catch (error) {
+    // Advice about content that never landed would only mislead, so a refused
+    // write carries the reason and nothing else.
+    ctx.addToolOutput({
+      success: false,
+      html,
+      error: getClientToolErrorMessage(error) || "Scene write failed",
     });
     return;
   }
-  try {
-    const result = await performBackgroundInsertion({
-      sceneId: targetSceneId,
-      html,
-      websocketProvider: ctx.websocketProvider,
-    });
-    const lineageWarning = await recordLineage(
-      ctx,
-      targetSceneId,
-      sourceIds,
-      result.success,
-    );
-    addInsertionOutput(
-      ctx,
-      { success: result.success, html, error: result.error },
-      {
-        lineageWarning,
-        groundingWarning,
-        qualityWarning,
-      },
-    );
-  } catch (error) {
-    addInsertionOutput(
-      ctx,
-      {
-        success: false,
-        html,
-        error: getClientToolErrorMessage(error) || "Background update failed",
-      },
-      { groundingWarning, qualityWarning },
-    );
-  }
+
+  ctx.addToolOutput({
+    success: true,
+    html,
+    lineageWarning: await recordLineage(ctx, targetSceneId, sourceIds),
+    ...insertionWarnings(ctx, sourceIds, html),
+  });
 }
 
 export async function handleClientToolCall(
@@ -210,9 +126,9 @@ export async function handleClientToolCall(
   const { toolName } = toolCall;
   const rawArgs = getClientToolCallInput(toolCall);
 
-  const { targetSceneId, editor, error } = resolveTargetScene(
+  const { targetSceneId, error } = resolveTargetScene(
     rawArgs.sceneId,
-    ctx,
+    ctx.activeSceneId,
   );
 
   if (error) {
@@ -221,10 +137,10 @@ export async function handleClientToolCall(
   }
 
   if (toolName === "getSceneContent") {
-    await handleGetSceneContent(ctx, targetSceneId, editor);
+    await handleGetSceneContent(ctx, targetSceneId);
   } else if (toolName === "insertContent") {
     await ctx.announceTargetScene?.(targetSceneId);
-    await handleInsertContent(toolCall, ctx, targetSceneId, editor, rawArgs);
+    await handleInsertContent(ctx, targetSceneId, rawArgs);
   } else {
     console.warn(`[ClientTools] Unknown client tool name: ${toolName}`);
   }

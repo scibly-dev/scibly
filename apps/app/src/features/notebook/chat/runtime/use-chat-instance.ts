@@ -1,6 +1,5 @@
 "use client";
 
-import type { HocuspocusProvider } from "@hocuspocus/provider";
 import type { RefObject } from "react";
 import type { NotebookMessage } from "@/features/notebook/chat/contracts";
 
@@ -18,14 +17,10 @@ import { createNotebookTransport } from "./notebook-transport";
 import { useChatDataParts } from "./use-chat-data-parts";
 import { useEditorClientTools } from "./use-editor-client-tools";
 
-type WebsocketProvider =
-  HocuspocusProvider["configuration"]["websocketProvider"];
-
 interface UseChatInstanceParams {
   orgSlugRef: RefObject<string>;
   activeNotebookIdRef: RefObject<string | undefined>;
   currentModelIdRef: RefObject<string>;
-  websocketProviderRef: RefObject<WebsocketProvider | null | undefined>;
   setActiveNotebookId: (id: string | undefined) => void;
 }
 
@@ -71,7 +66,6 @@ export function useChatInstance({
   orgSlugRef,
   activeNotebookIdRef,
   currentModelIdRef,
-  websocketProviderRef,
   setActiveNotebookId,
 }: UseChatInstanceParams) {
   const utils = api.useUtils();
@@ -146,7 +140,6 @@ export function useChatInstance({
 
   useEditorClientTools({
     activeNotebookIdRef,
-    websocketProviderRef,
     utils,
     addToolOutput,
     onToolCallRef,

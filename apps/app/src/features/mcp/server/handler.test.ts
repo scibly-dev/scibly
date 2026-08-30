@@ -1,10 +1,46 @@
 import type { Principal } from "@scibly/auth/session";
 import type { TrpcCaller } from "@/server/api/root";
 
-import { describe, expect, it, vi } from "vitest";
+import { AppError } from "@scibly/api/application-error";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { handleMcpRequest, jsonRpcError, mcpUnauthorized } from "./handler";
 import { MCP_TOOL_NAMES } from "./tool-surface";
+
+// The content tools are the one pair the registry cannot supply, so their
+// collaborators are doubled here: the scene content query, the collab room (its
+// own test file boots a real server against it) and the scene access policy.
+const getSceneContent = vi.hoisted(() => vi.fn());
+const writeSceneHtml = vi.hoisted(() => vi.fn());
+const requireDraftSceneContentAccess = vi.hoisted(() => vi.fn());
+
+vi.mock(
+  "@/features/course-authoring/scenes/editor/document-synchronization/server/scene-document",
+  () => ({ writeSceneHtml }),
+);
+
+vi.mock(
+  "@/features/course-authoring/scenes/server/scene-queries",
+  async (importOriginal) => ({
+    ...(await importOriginal<object>()),
+    getSceneContent,
+  }),
+);
+
+vi.mock(
+  "@/features/course-authoring/scenes/server/scene-access",
+  async (importOriginal) => ({
+    ...(await importOriginal<object>()),
+    requireDraftSceneContentAccess,
+  }),
+);
+
+/** A draft scene the author may write to. */
+function draftScene() {
+  requireDraftSceneContentAccess.mockResolvedValue({
+    lesson: { course: { organizationId: "org-1" } },
+  });
+}
 
 const COURSES = { items: [{ id: "course-1", title: "Spotting phishing" }] };
 
@@ -103,7 +139,7 @@ function fakeCaller() {
 }
 
 async function post(body: unknown, caller: TrpcCaller) {
-  const request = new Request("https://app.scibly.com/api/org/acme/mcp", {
+  const request = new Request("https://app.scibly.com/api/mcp", {
     method: "POST",
     headers: {
       "content-type": "application/json",
@@ -114,7 +150,6 @@ async function post(body: unknown, caller: TrpcCaller) {
 
   const response = await handleMcpRequest(request, {
     caller,
-    scope: { orgSlug: "acme", organizationId: "org-1" },
     session: { user: { id: "user-1" } as Principal["user"] },
   });
 
@@ -148,12 +183,15 @@ describe("the tool surface an external agent sees", () => {
     "getDashboardStats",
     "getEditorSchema",
     "getOrganization",
+    "getSceneContent",
+    "insertContent",
     "listCourses",
     "listEnrolledCourses",
     "listEnrollments",
     "listInvitations",
     "listLessons",
     "listMembers",
+    "listMyOrganizations",
     "listScenes",
     "loadSkill",
     "reorderLessons",
@@ -168,7 +206,10 @@ describe("the tool surface an external agent sees", () => {
     expect(
       body.result.tools.map((tool: { name: string }) => tool.name).sort(),
     ).toEqual(EXPECTED_SURFACE);
-    expect([...MCP_TOOL_NAMES].sort()).toEqual(EXPECTED_SURFACE);
+    // The content tools are registered beside the allow-list, not from it.
+    expect(
+      [...MCP_TOOL_NAMES, "getSceneContent", "insertContent"].sort(),
+    ).toEqual(EXPECTED_SURFACE);
   });
 
   it("MCP3: withholds the delete tools an author has to confirm in person", async () => {
@@ -180,7 +221,21 @@ describe("the tool surface an external agent sees", () => {
     expect(names).not.toContain("deleteLessons");
   });
 
-  it("MCP3: offers no way to write scene content or cite a source", async () => {
+  it("MCP4: takes scene content through the content tool and nowhere else", async () => {
+    const { body } = await post(rpc("tools/list"), fakeCaller().caller);
+
+    const takingHtml = body.result.tools
+      .filter((tool: { name: string; inputSchema: object }) =>
+        Object.keys(
+          (tool.inputSchema as { properties?: object }).properties ?? {},
+        ).includes("html"),
+      )
+      .map((tool: { name: string }) => tool.name);
+
+    expect(takingHtml).toEqual(["insertContent"]);
+  });
+
+  it("MCP3: offers no way to cite a source (ADR 0005)", async () => {
     const { body } = await post(rpc("tools/list"), fakeCaller().caller);
 
     const named = body.result.tools.flatMap((tool: { inputSchema: object }) =>
@@ -189,31 +244,36 @@ describe("the tool surface an external agent sees", () => {
       ),
     );
 
-    expect(named).not.toContain("html");
     expect(named).not.toContain("sourceIds");
   });
 
-  it("MCP1: never lets an agent name the organization it is acting in", async () => {
+  it("MCP1: lets an agent name the organization, and name the ones it may", async () => {
+    // The endpoint names no organization, so an agent passes one per call, the
+    // way the in-app agent does; the procedure behind each tool authorizes it.
     const { body } = await post(rpc("tools/list"), fakeCaller().caller);
 
-    const named = body.result.tools.flatMap((tool: { inputSchema: object }) =>
+    const tools: { name: string; inputSchema: { properties?: object } }[] =
+      body.result.tools;
+    const named = (name: string) =>
       Object.keys(
-        (tool.inputSchema as { properties?: object }).properties ?? {},
-      ),
-    );
+        tools.find((tool) => tool.name === name)?.inputSchema.properties ?? {},
+      );
 
-    expect(named).not.toContain("orgSlug");
-    expect(named).not.toContain("slug");
-    expect(named).not.toContain("organizationId");
+    expect(named("listCourses")).toContain("orgSlug");
+    expect(named("createCourse")).toContain("orgSlug");
+    expect(tools.map((tool) => tool.name)).toContain("listMyOrganizations");
   });
 });
 
 describe("calling a tool over MCP", () => {
-  it("MCP1: answers with the organization's real data, scoped to the endpoint's org", async () => {
+  it("MCP1: answers with the real data of the organization the agent named", async () => {
     const { caller, list } = fakeCaller();
 
     const { body } = await post(
-      rpc("tools/call", { name: "listCourses", arguments: { limit: 6 } }),
+      rpc("tools/call", {
+        name: "listCourses",
+        arguments: { orgSlug: "acme", limit: 6 },
+      }),
       caller,
     );
 
@@ -223,7 +283,7 @@ describe("calling a tool over MCP", () => {
     expect(JSON.parse(body.result.content[0].text)).toEqual(COURSES);
   });
 
-  it("MCP1: overrides an organization the agent names for itself", async () => {
+  it("MCP1: passes the named organization straight to the procedure that authorizes it", async () => {
     const { caller, list } = fakeCaller();
 
     await post(
@@ -234,8 +294,10 @@ describe("calling a tool over MCP", () => {
       caller,
     );
 
+    // Nothing is substituted on the way through: `course.list` refuses an
+    // organization this user is not a member of, exactly as it does in the app.
     expect(list).toHaveBeenCalledWith(
-      expect.objectContaining({ orgSlug: "acme" }),
+      expect.objectContaining({ orgSlug: "rival" }),
     );
   });
 
@@ -259,7 +321,7 @@ describe("calling a tool over MCP", () => {
     const { body: created } = await post(
       rpc("tools/call", {
         name: "createCourse",
-        arguments: { title: "Spotting phishing, part two" },
+        arguments: { orgSlug: "acme", title: "Spotting phishing, part two" },
       }),
       caller,
     );
@@ -414,8 +476,105 @@ describe("calling a tool over MCP", () => {
   });
 });
 
+describe("writing and reading scene content from outside", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    draftScene();
+    writeSceneHtml.mockResolvedValue({ success: true });
+    getSceneContent.mockResolvedValue({
+      sceneId: "scene-1",
+      html: "<p>Already there</p>",
+      sourceIds: ["source-1"],
+    });
+  });
+
+  it("MCP4: writes the agent's HTML into the scene, as the author", async () => {
+    const { body } = await post(
+      rpc("tools/call", {
+        name: "insertContent",
+        arguments: {
+          sceneId: "scene-1",
+          html: "<p>Written from outside</p>",
+          mode: "append",
+        },
+      }),
+      fakeCaller().caller,
+    );
+
+    expect(writeSceneHtml).toHaveBeenCalledWith({
+      sceneId: "scene-1",
+      html: "<p>Written from outside</p>",
+      mode: "append",
+      user: expect.objectContaining({ id: "user-1" }),
+    });
+    expect(JSON.parse(body.result.content[0].text)).toEqual({
+      sceneId: "scene-1",
+      success: true,
+    });
+  });
+
+  it("MCP4: reads back what the scene holds right now, and no lineage (ADR 0005)", async () => {
+    const { body } = await post(
+      rpc("tools/call", {
+        name: "getSceneContent",
+        arguments: { sceneId: "scene-1" },
+      }),
+      fakeCaller().caller,
+    );
+
+    expect(JSON.parse(body.result.content[0].text)).toEqual({
+      sceneId: "scene-1",
+      html: "<p>Already there</p>",
+    });
+  });
+
+  it("MCP4: refuses anything published, without reaching the document", async () => {
+    requireDraftSceneContentAccess.mockRejectedValue(
+      new AppError({
+        code: "BAD_REQUEST",
+        applicationCode: "api.bad_request",
+        message: "Cannot edit a published scene.",
+      }),
+    );
+
+    const { body } = await post(
+      rpc("tools/call", {
+        name: "insertContent",
+        arguments: { sceneId: "scene-1", html: "<p>Nope</p>" },
+      }),
+      fakeCaller().caller,
+    );
+
+    expect(body.result.isError).toBe(true);
+    expect(body.result.content[0].text).toContain("published");
+    expect(writeSceneHtml).not.toHaveBeenCalled();
+  });
+
+  it("MCP4: hands back the refusal naming what was wrong with the HTML", async () => {
+    writeSceneHtml.mockResolvedValue({
+      success: false,
+      refused: true,
+      error: 'Unknown node type "quiz".',
+    });
+
+    const { body } = await post(
+      rpc("tools/call", {
+        name: "insertContent",
+        arguments: {
+          sceneId: "scene-1",
+          html: '<div data-type="quiz"></div>',
+        },
+      }),
+      fakeCaller().caller,
+    );
+
+    expect(body.result.isError).toBe(true);
+    expect(body.result.content[0].text).toContain("quiz");
+  });
+});
+
 describe("refusing a request that never gets as far as a tool", () => {
-  const request = new Request("https://app.scibly.com/api/org/acme/mcp", {
+  const request = new Request("https://app.scibly.com/api/mcp", {
     method: "POST",
   });
 

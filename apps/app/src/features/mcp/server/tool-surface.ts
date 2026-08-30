@@ -20,6 +20,7 @@ export const MCP_TOOL_NAMES = [
   "listEnrollments",
   "getAvailableMembers",
   "getOrganization",
+  "listMyOrganizations",
   "listMembers",
   "listInvitations",
   "getDashboardStats",
@@ -29,13 +30,12 @@ export const MCP_TOOL_NAMES = [
   ReturnType<typeof buildToolRegistry>
 >)[];
 
-// `html` writes straight into the document the collaborative writer owns, and
-// `sourceIds` starts lineage no external scene ever gets (ADR 0005).
-const UNREACHABLE_KEYS = ["html", "sourceIds"];
+// `sourceIds` never crosses the boundary (ADR 0005), `html` goes through
+// `insertContent` instead, and `courseVersionId` names a published version
+// while this surface is draft-only.
+const UNREACHABLE_KEYS = ["html", "sourceIds", "courseVersionId"];
 
-export type OrgScope = { orgSlug: string; organizationId: string };
-
-export function scopeToolInput(inputSchema: unknown, scope: OrgScope) {
+export function mcpToolInput(inputSchema: unknown) {
   if (!(inputSchema instanceof z.ZodObject)) {
     throw new Error("An MCP tool must declare a zod object input schema.");
   }
@@ -43,23 +43,9 @@ export function scopeToolInput(inputSchema: unknown, scope: OrgScope) {
   // eslint-disable-next-line anti-slop/no-shape-in-symbol-names -- zod owns this property name; only our alias is ours to pick.
   const fields: Record<string, z.ZodType> = inputSchema.shape;
 
-  // Tools disagree on what to call the organization, hence three keys for one.
-  const inject = Object.fromEntries(
-    Object.entries({
-      orgSlug: scope.orgSlug,
-      slug: scope.orgSlug,
-      organizationId: scope.organizationId,
-    }).filter(([key]) => key in fields),
-  );
-
-  const dropped = new Set([...Object.keys(inject), ...UNREACHABLE_KEYS]);
-
-  return {
-    schema: z.object(
-      Object.fromEntries(
-        Object.entries(fields).filter(([key]) => !dropped.has(key)),
-      ),
+  return z.object(
+    Object.fromEntries(
+      Object.entries(fields).filter(([key]) => !UNREACHABLE_KEYS.includes(key)),
     ),
-    inject,
-  };
+  );
 }

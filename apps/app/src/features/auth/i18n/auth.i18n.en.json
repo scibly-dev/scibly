@@ -95,7 +95,7 @@
     },
     "mcpConsentPage": {
       "title": "Connect an agent to your account?",
-      "description": "This agent will act as you. It can read the courses, lessons, members and enrollments of every organization you belong to.",
+      "description": "This agent will act as you. It can read the courses, lessons, members and enrollments of every organization you belong to, and write content into your draft scenes — published courses stay untouched. Scenes it writes cite no sources, so they are never flagged as outdated when a source changes.",
       "destination": "Approving sends the access code to:",
       "warning": "Only continue if you started this yourself.",
       "approve": "Connect",

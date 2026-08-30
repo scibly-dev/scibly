@@ -12,6 +12,7 @@ import {
   reorderDraftScenes,
   setDraftSceneLineage,
   updateDraftScene,
+  writeSceneContent,
 } from "@/features/course-authoring/server";
 
 import {
@@ -24,6 +25,7 @@ import {
   reorderScenesSchema,
   setSceneLineageSchema,
   updateSceneSchema,
+  writeSceneContentSchema,
 } from "./scene.schema";
 
 export const sceneRouter = createTRPCRouter({
@@ -33,7 +35,7 @@ export const sceneRouter = createTRPCRouter({
 
   updateScene: protectedProcedure
     .input(updateSceneSchema)
-    .mutation(({ ctx, input }) => updateDraftScene(ctx.session.user.id, input)),
+    .mutation(({ ctx, input }) => updateDraftScene(ctx.session.user, input)),
 
   createScene: protectedProcedure
     .input(createSceneSchema)
@@ -69,10 +71,14 @@ export const sceneRouter = createTRPCRouter({
       setDraftSceneLineage(ctx.session.user.id, input),
     ),
 
+  writeSceneContent: protectedProcedure
+    .input(writeSceneContentSchema)
+    .mutation(({ ctx, input }) => writeSceneContent(ctx.session.user, input)),
+
   getSceneContent: protectedProcedure
     .input(getSceneContentSchema)
     .query(({ ctx, input }) =>
-      getSceneContent(ctx.session.user.id, input.sceneId),
+      getSceneContent(ctx.session.user, input.sceneId),
     ),
 
   getSceneLineage: protectedProcedure

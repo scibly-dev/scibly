@@ -3,10 +3,10 @@ import { describe, expect, it } from "vitest";
 import { stripLearnerStateFromQuestionBlocks } from "./learner-state";
 
 /**
- * Fixtures and assertions go through real DOM APIs for both attribute
- * encodings (the agent's raw single-quoted form and `editor.getHTML()`'s
- * escaped form) rather than hand-written strings, so the tests exercise
- * actual browser escaping instead of assumptions about it.
+ * Fixtures go through real DOM APIs for both attribute encodings (the agent's
+ * raw single-quoted form and `editor.getHTML()`'s escaped form) rather than
+ * hand-written strings, so the tests exercise actual browser escaping instead
+ * of assumptions about it.
  */
 
 const AUTHORED = {
@@ -29,9 +29,18 @@ function editorSerialised(data: unknown, type = "custom-input-field"): string {
   return element.outerHTML;
 }
 
-function blockData(html: string): { questionData?: unknown }[] {
-  const parsed = new DOMParser().parseFromString(html, "text/html");
-  return [...parsed.querySelectorAll("[questionblock-data]")].map(
+function parse(html: string): HTMLElement {
+  return new DOMParser().parseFromString(html, "text/html").body;
+}
+
+function strip(html: string): HTMLElement {
+  const body = parse(html);
+  stripLearnerStateFromQuestionBlocks(body);
+  return body;
+}
+
+function blockData(body: HTMLElement): { questionData?: unknown }[] {
+  return [...body.querySelectorAll("[questionblock-data]")].map(
     (element) =>
       JSON.parse(element.getAttribute("questionblock-data") ?? "") as {
         questionData?: unknown;
@@ -48,9 +57,7 @@ describe("an author's document keeps only what an author may set", () => {
   it.each(WRITINGS)(
     "keeps optional, questionData, maxPoints and sp when $name",
     ({ write }) => {
-      const [data] = blockData(
-        stripLearnerStateFromQuestionBlocks(write(AUTHORED)),
-      );
+      const [data] = blockData(strip(write(AUTHORED)));
 
       expect(data).toEqual(AUTHORED);
     },
@@ -61,11 +68,7 @@ describe("learner state never survives into an author's document", () => {
   it.each(WRITINGS)(
     "drops a recorded answer and an achieved score when $name",
     ({ write }) => {
-      const [data] = blockData(
-        stripLearnerStateFromQuestionBlocks(
-          write({ ...AUTHORED, ...LEARNER_STATE }),
-        ),
-      );
+      const [data] = blockData(strip(write({ ...AUTHORED, ...LEARNER_STATE })));
 
       expect(data).toEqual(AUTHORED);
     },
@@ -75,9 +78,7 @@ describe("learner state never survives into an author's document", () => {
 describe("a field the block type does not define is dropped", () => {
   it.each(WRITINGS)("drops an undeclared field when $name", ({ write }) => {
     const [data] = blockData(
-      stripLearnerStateFromQuestionBlocks(
-        write({ ...AUTHORED, hintForTheAnswer: "Paris", internalNote: 7 }),
-      ),
+      strip(write({ ...AUTHORED, hintForTheAnswer: "Paris", internalNote: 7 })),
     );
 
     expect(data).toEqual(AUTHORED);
@@ -89,9 +90,7 @@ describe("an absent field is not invented", () => {
     "leaves maxPoints absent rather than materialising it when $name",
     ({ write }) => {
       const { maxPoints: _omitted, ...withoutMaxPoints } = AUTHORED;
-      const [data] = blockData(
-        stripLearnerStateFromQuestionBlocks(write(withoutMaxPoints)),
-      );
+      const [data] = blockData(strip(write(withoutMaxPoints)));
 
       expect(Object.keys(data)).not.toContain("maxPoints");
       expect(data).toEqual(withoutMaxPoints);
@@ -112,7 +111,7 @@ describe("questionData passes through whole", () => {
       ],
     };
     const [data] = blockData(
-      stripLearnerStateFromQuestionBlocks(
+      strip(
         write(
           { ...AUTHORED, questionData: solution, ...LEARNER_STATE },
           "custom-cloze-text",
@@ -135,7 +134,7 @@ describe("every question block is treated", () => {
         write({ ...AUTHORED, ...LEARNER_STATE }, "custom-free-form-input"),
       ].join("");
 
-      const blocks = blockData(stripLearnerStateFromQuestionBlocks(html));
+      const blocks = blockData(strip(html));
 
       expect(blocks).toHaveLength(3);
       expect(blocks).toEqual([AUTHORED, AUTHORED, AUTHORED]);
@@ -144,13 +143,13 @@ describe("every question block is treated", () => {
 });
 
 describe("nothing but question block data is rewritten", () => {
-  it("returns a document with no question blocks byte-identical", () => {
+  it("leaves a document with no question blocks alone", () => {
     const html =
       "<h2>Phishing</h2><p>Read the <em>whole</em> message.</p>" +
       '<img data-media-attributes=\'{"src":"https://example.com/a.png","width":"400"}\' />' +
       "<blockquote><p>Slow down.</p></blockquote>";
 
-    expect(stripLearnerStateFromQuestionBlocks(html)).toBe(html);
+    expect(strip(html).innerHTML).toBe(parse(html).innerHTML);
   });
 
   it.each(WRITINGS)(
@@ -160,33 +159,25 @@ describe("nothing but question block data is rewritten", () => {
       const after =
         '<img data-media-attributes=\'{"src":"https://example.com/a.png"}\' />';
 
-      const output = stripLearnerStateFromQuestionBlocks(
-        `${before}${write({ ...AUTHORED, ...LEARNER_STATE })}${after}`,
-      );
+      const html = `${before}${write({ ...AUTHORED, ...LEARNER_STATE })}${after}`;
+      const body = strip(html);
 
-      expect(output.startsWith(before)).toBe(true);
-      expect(output.endsWith(after)).toBe(true);
+      expect(body.innerHTML.startsWith(parse(before).innerHTML)).toBe(true);
+      expect(body.innerHTML.endsWith(parse(after).innerHTML)).toBe(true);
     },
   );
-});
 
-describe("both writings of the attribute are read", () => {
-  it("strips a block the agent authored — single-quoted, unescaped", () => {
-    const html = agentAuthored({ ...AUTHORED, ...LEARNER_STATE });
-    expect(html).toContain(`questionblock-data='{"optional"`);
+  it("leaves prose that merely mentions the attribute as prose", () => {
+    const html =
+      "<p>Set questionblock-data=\"{'sp':10}\" on the block.</p>" +
+      agentAuthored({ ...AUTHORED, ...LEARNER_STATE });
 
-    expect(blockData(stripLearnerStateFromQuestionBlocks(html))).toEqual([
-      AUTHORED,
-    ]);
-  });
+    const body = strip(html);
 
-  it("strips a block the editor serialised — double-quoted, escaped", () => {
-    const html = editorSerialised({ ...AUTHORED, ...LEARNER_STATE });
-    expect(html).toContain("&quot;optional&quot;");
-
-    expect(blockData(stripLearnerStateFromQuestionBlocks(html))).toEqual([
-      AUTHORED,
-    ]);
+    expect(body.querySelector("p")?.textContent).toBe(
+      "Set questionblock-data=\"{'sp':10}\" on the block.",
+    );
+    expect(blockData(body)).toEqual([AUTHORED]);
   });
 });
 
@@ -200,7 +191,7 @@ describe("a block that cannot be read stops the insertion", () => {
   ])("$name is rejected rather than passed through", ({ raw }) => {
     const html = `<div data-type="custom-input-field" questionblock-data='${raw}'></div>`;
 
-    expect(() => stripLearnerStateFromQuestionBlocks(html)).toThrow();
+    expect(() => strip(html)).toThrow();
   });
 
   it("rejects the whole document, not just the bad block", () => {
@@ -209,7 +200,20 @@ describe("a block that cannot be read stops the insertion", () => {
       `<div data-type="custom-multiple-choice" questionblock-data='{"optional":'></div>`,
     ].join("");
 
-    expect(() => stripLearnerStateFromQuestionBlocks(html)).toThrow();
+    expect(() => strip(html)).toThrow();
+  });
+
+  it("an apostrophe inside the value is read, not treated as the end of it", () => {
+    const data = {
+      ...AUTHORED,
+      questionData: { answer: "the moon's phase" },
+      ...LEARNER_STATE,
+    };
+    const html = editorSerialised(data);
+
+    expect(blockData(strip(html))).toEqual([
+      { ...AUTHORED, questionData: { answer: "the moon's phase" } },
+    ]);
   });
 });
 
@@ -217,9 +221,7 @@ describe("the rejection is something the agent can act on", () => {
   it("names the attribute and quotes what it could not read", () => {
     const html = `<div data-type="custom-input-field" questionblock-data='{"optional":false,"oops'></div>`;
 
-    expect(() => stripLearnerStateFromQuestionBlocks(html)).toThrow(
-      /questionblock-data/,
-    );
-    expect(() => stripLearnerStateFromQuestionBlocks(html)).toThrow(/oops/);
+    expect(() => strip(html)).toThrow(/questionblock-data/);
+    expect(() => strip(html)).toThrow(/oops/);
   });
 });

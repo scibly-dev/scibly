@@ -1,9 +1,7 @@
 import type { HocuspocusProvider } from "@hocuspocus/provider";
 
-// Shared by the in-browser background editor and the headless server writer:
-// both need "the document is loaded" and "the server has my update" to be
-// awaitable, and a write that reports success on a dropped connection is a
-// silent data loss either way.
+// A write that reports success on a dropped connection is silent data loss,
+// so a close or timeout rejects rather than resolves.
 
 type CloseDetail = { event?: { reason?: string; code?: number } };
 
@@ -25,7 +23,9 @@ export function awaitSynced(
 
     const handleAuthFailed = ({ reason }: { reason: string }) => {
       cleanup();
-      reject(new Error(`Authentication failed for scene ${sceneId}: ${reason}`));
+      reject(
+        new Error(`Authentication failed for scene ${sceneId}: ${reason}`),
+      );
     };
 
     const handleClose = (detail: CloseDetail) => {

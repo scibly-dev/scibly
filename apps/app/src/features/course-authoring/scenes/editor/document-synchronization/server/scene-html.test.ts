@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 
 import { EDITOR_CHAR_LIMIT } from "@/shared/content/editor/runtime/editor-limits";
 
-import { parseSceneHtml, sceneSchema } from "./scene-html";
+import { parseSceneHtml, sceneHtml, sceneSchema } from "./scene-html";
 
 // Runs without a DOM environment on purpose: this is the transform the browser
 // performs inside the editor, and the server has no editor to perform it in.
@@ -18,12 +18,8 @@ it("has no DOM globals to fall back on", () => {
 
 describe("the schema the server validates against", () => {
   it("is the same schema the editor renders with", async () => {
-    // Node views are the only client-only half of a block definition. If one
-    // ever contributes a node or mark, the server would quietly reject content
-    // the editor accepts, so this fails instead.
-    const { getClientSchemaExtensions } = await import(
-      "@/shared/content/editor/blocks/registry/client"
-    );
+    const { getClientSchemaExtensions } =
+      await import("@/shared/content/editor/blocks/registry/client");
     const client = getSchema(getClientSchemaExtensions());
     const server = sceneSchema();
 
@@ -75,6 +71,22 @@ describe("HTML the editor schema does not accept", () => {
         `<div data-type='custom-multiple-choice' questionblock-data='{'></div>`,
       ),
     ).toThrow(/questionblock-data/);
+  });
+});
+
+describe("the document read back out as HTML", () => {
+  // What an agent reads it has to be able to write back unchanged, so anything
+  // the serializer drops is content an editing agent destroys.
+  it("survives a round trip through the parser", () => {
+    const original = parseSceneHtml(
+      `${GUIDE_CHARACTER}<h2>Heading</h2><p>Hello <strong>world</strong></p>` +
+        `<ul><li><p>One</p></li></ul>` +
+        `<div data-type='custom-multiple-choice' questionblock-data='{"maxPoints":3}'></div>`,
+    );
+
+    const returned = parseSceneHtml(sceneHtml(original));
+
+    expect(returned.toJSON()).toEqual(original.toJSON());
   });
 });
 

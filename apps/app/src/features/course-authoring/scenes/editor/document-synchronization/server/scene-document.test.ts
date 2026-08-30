@@ -23,13 +23,9 @@ import {
   awaitSynced,
 } from "@/shared/content/editor/collaboration/provider-handshake";
 
-// The writer seam: the headless writer against the real collab server, booted
-// in process. Merge correctness — an agent's write landing in a document an
-// author already has open — is unobservable anywhere else, and so is the fact
-// that the server accepts a token minted with no browser session behind it.
-//
-// Only the two edges the server reaches out to are doubled: the room policy
-// (the org/db stack, which has its own tests) and the scene table.
+// Runs against the real collab server booted in process — merge correctness is
+// unobservable anywhere else — doubling only the room policy and the scene
+// table, which have their own tests.
 
 const authorizeSceneEditorRoom = vi.hoisted(() => vi.fn());
 
@@ -63,12 +59,10 @@ vi.mock("@scibly/db", () => ({
 }));
 
 const { createCollabServer } = await import("@collab/server.js");
-const { shutdownPersistence } = await import("@collab/persistence.js");
-const { issueAuthorizedRoomToken } = await import(
-  "@/features/course-authoring/collaboration/server/issue-room-token"
-);
+const { issueAuthorizedRoomToken } =
+  await import("@/features/course-authoring/collaboration/server/issue-room-token");
 const { parseSceneHtml, sceneSchema } = await import("./scene-html");
-const { writeSceneHtml } = await import("./write-scene-html");
+const { readSceneHtml, writeSceneHtml } = await import("./scene-document");
 
 const AUTHOR = { id: "user_1", name: "Ada", username: null };
 const AGENT_HTML = "<p>Written by the agent</p>";
@@ -85,8 +79,6 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await collab.destroy();
-  // Stops the flush interval the server's persistence starts on first write.
-  await shutdownPersistence();
 });
 
 beforeEach(() => {
@@ -184,7 +176,13 @@ describe("a server-side caller authenticating without a browser session", () => 
       timeoutMs: 2000,
     });
 
-    expect(result).toEqual({ success: false, error: "Scene not found." });
+    // Not `refused`: the content was never the problem, so the caller reports
+    // this as a failed write rather than as content the author must fix.
+    expect(result).toEqual({
+      success: false,
+      error: "Scene not found.",
+      refused: false,
+    });
     expect(scenes.has(room)).toBe(false);
   });
 
@@ -203,11 +201,8 @@ describe("a server-side caller authenticating without a browser session", () => 
     expect(scenes.has(room)).toBe(false);
   });
 
-  // Unreachable today — the scene policy only ever grants authors write — but
-  // it is the server, not the writer, that refuses, so the writer learns of it
-  // by the delivery timeout expiring rather than by a message naming access.
-  // ponytail: fine while no role grants read; give the writer the access it was
-  // granted alongside the token if one ever does.
+  // The server, not the writer, refuses, so the writer learns of it by the
+  // delivery timeout expiring rather than by a message naming access.
   it("is refused a room the author was only granted read access to", async () => {
     const room = newRoom();
     authorizeSceneEditorRoom.mockResolvedValue({ access: "read" });
@@ -248,12 +243,37 @@ describe("writing while an author holds the same document open", () => {
     author.destroy();
   });
 
+  it("replaces, by default, everything that was there", async () => {
+    const room = newRoom();
+    const author = await openAsAuthor(room);
+    await type(author, room, "<p>The author was here</p>");
+    const arrived = nextUpdate(author.document);
+
+    // The destructive default: an agent that means to keep the scene has to
+    // read it first and write the whole thing back.
+    await writeSceneHtml({
+      sceneId: room,
+      html: AGENT_HTML,
+      user: AUTHOR,
+      url,
+    });
+
+    await arrived;
+    expect(text(author.document)).toBe("Written by the agent");
+    author.destroy();
+  });
+
   it("leaves the author's later edits intact", async () => {
     const room = newRoom();
     const author = await openAsAuthor(room);
     const arrived = nextUpdate(author.document);
 
-    await writeSceneHtml({ sceneId: room, html: AGENT_HTML, user: AUTHOR, url });
+    await writeSceneHtml({
+      sceneId: room,
+      html: AGENT_HTML,
+      user: AUTHOR,
+      url,
+    });
     await arrived;
     await type(author, room, "<p>Second thoughts</p>");
 
@@ -299,7 +319,36 @@ describe("a scene last saved before collaborative editing", () => {
     expect(result).toEqual({ success: true });
 
     await arrived;
-    expect(text(author.document)).toBe("Written years ago Written by the agent");
+    expect(text(author.document)).toBe(
+      "Written years ago Written by the agent",
+    );
     author.destroy();
+  });
+});
+
+describe("reading a scene the author has open", () => {
+  it("returns what they typed, before any of it reached the row", async () => {
+    const room = newRoom();
+    const author = await openAsAuthor(room);
+    await type(author, room, "<p>Not saved yet</p>");
+
+    const result = await readSceneHtml({ sceneId: room, user: AUTHOR, url });
+
+    // Serialized by the editor's own schema, styles and all.
+    expect(result).toEqual({
+      success: true,
+      html: '<p style="display: block;">Not saved yet</p>',
+    });
+    expect(parseSceneHtml(result.success ? result.html : "")).toBeTruthy();
+    author.destroy();
+  });
+
+  it("reads a scene last saved before collaborative editing", async () => {
+    const room = newRoom();
+    scenes.set(room, encodeHtmlBytes("<p>Written years ago</p>"));
+
+    const result = await readSceneHtml({ sceneId: room, user: AUTHOR, url });
+
+    expect(result).toEqual({ success: true, html: "<p>Written years ago</p>" });
   });
 });

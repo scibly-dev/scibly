@@ -29,7 +29,7 @@ import { chargeImageGeneration } from "../server/image-usage";
 
 type ImageNotebookToolContext = {
   notebookId?: string;
-  orgSlug: string;
+  orgSlug?: string;
   session: { user: { id: string } };
 };
 
@@ -42,12 +42,12 @@ function logImageGeneration(
 async function listNotebookMedia(
   notebookId: string | undefined,
   userId: string,
-  orgSlug: string,
+  orgSlug: string | undefined,
   input: ListNotebookMediaInput,
 ) {
   const parsed = listNotebookMediaInputSchema.parse(input);
 
-  if (!notebookId) {
+  if (!notebookId || !orgSlug) {
     throw new Error("listNotebookMedia requires an active notebook context.");
   }
 
@@ -133,14 +133,14 @@ async function createNewImage({
 async function generateImage(
   notebookId: string | undefined,
   userId: string,
-  orgSlug: string,
+  orgSlug: string | undefined,
   input: GenerateImageInput,
   toolCallId?: string,
 ) {
   const parsed = generateImageInputSchema.parse(input);
   const startedAt = Date.now();
 
-  if (!notebookId) {
+  if (!notebookId || !orgSlug) {
     throw new Error("generateImage requires an active notebook context.");
   }
 

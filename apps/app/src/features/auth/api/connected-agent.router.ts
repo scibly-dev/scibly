@@ -6,10 +6,17 @@ import { consentDestinations } from "../mcp-consent/origins";
 /** Listed from access tokens, not consent records: a token is what actually grants access, so an agent shows here exactly while it can still act as the user. */
 export const connectedAgentRouter = createTRPCRouter({
   list: protectedProcedure.query(async ({ ctx }) => {
+    const now = new Date();
     const grants = await ctx.db.oauthAccessToken.findMany({
       where: {
         userId: ctx.session.user.id,
-        refreshTokenExpiresAt: { gt: new Date() },
+        // Either token still live counts: the MCP endpoint admits on the access
+        // token alone, so listing only on the refresh token would hide an agent
+        // that can still act.
+        OR: [
+          { accessTokenExpiresAt: { gt: now } },
+          { refreshTokenExpiresAt: { gt: now } },
+        ],
       },
       select: {
         clientId: true,
