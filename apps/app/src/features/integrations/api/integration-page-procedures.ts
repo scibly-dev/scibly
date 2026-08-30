@@ -12,11 +12,7 @@ import {
 import { resolveOrg } from "@/features/organizations/server";
 
 import { isConnected } from "../server/connection-state";
-import {
-  linkPageSchema,
-  linkPagesSchema,
-  resyncSourceSchema,
-} from "./integration.schema";
+import { linkPagesSchema, resyncSourceSchema } from "./integration.schema";
 import { resolveConnectionRow } from "./integration-connection-procedures";
 
 async function resolveLinkedNotebook(
@@ -65,47 +61,6 @@ export const integrationPageProcedures = {
       return { sourceIds, skipped };
     }),
 
-  linkPage: protectedProcedure
-    .input(linkPageSchema)
-    .mutation(async ({ input, ctx }) => {
-      const userId = ctx.session.user.id;
-      const { organization } = await resolveLinkedNotebook(
-        input.orgSlug,
-        input.notebookId,
-        userId,
-      );
-      const { connection } = await resolveConnectionRow(
-        organization.id,
-        input.provider,
-      );
-      const result = await boundedLink(userId, () =>
-        linkNotebookPages({
-          notebookId: input.notebookId,
-          organizationId: organization.id,
-          actorId: userId,
-          provider: input.provider,
-          connectionId: connection.id,
-          pages: [
-            {
-              id: input.pageId,
-              title: input.pageTitle,
-              url: input.pageUrl,
-            },
-          ],
-        }),
-      );
-      const sourceId = result.sourceIds[0];
-      const ingestion = result.ingestions[0];
-      if (!sourceId || !ingestion) {
-        throw new AppError({
-          code: "CONFLICT",
-          applicationCode: "api.conflict",
-          message: "This page is already linked to this notebook.",
-        });
-      }
-      return { sourceId, ingestion };
-    }),
-
   resyncSource: protectedProcedure
     .input(resyncSourceSchema)
     .mutation(async ({ input, ctx }) => {
@@ -123,8 +78,7 @@ export const integrationPageProcedures = {
           message: "This source is not an external integration source.",
         });
       }
-      // The link survives a disconnect, so having one is not enough: the
-      // connection it points at has to still hold a credential.
+      // The link survives a disconnect, so having one is not enough: the connection it points at has to still hold a credential.
       const connection = source.integrationId
         ? await db.integrationConnection.findUnique({
             where: { id: source.integrationId },

@@ -32,9 +32,11 @@ export default async function RootLayout({
     redirect(routes.app.auth.clearSession);
   }
 
-  void api.organization.listMyOrgs.prefetch();
-
-  const dict = await getFullDictionary(lang);
+  // Awaited, not streamed: the shell reads this with `useQuery`, and a query still pending at dehydration is a hydration mismatch.
+  const [dict] = await Promise.all([
+    getFullDictionary(lang),
+    api.organization.listMyOrgs.prefetch(),
+  ]);
 
   return (
     <SciblyPostHogProvider surface="app" identity={{ userId: session.user.id }}>

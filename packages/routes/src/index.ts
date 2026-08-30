@@ -178,6 +178,9 @@ export const routes = {
           templates: {
             root: toAppUrl(`${baseOrgRoute}/templates`),
           },
+          knowledge: {
+            root: toAppUrl(`${baseOrgRoute}/knowledge`),
+          },
           members: {
             root: toAppUrl(`${baseOrgRoute}/members`),
           },
@@ -194,8 +197,7 @@ export const routes = {
     api: {
       oembed: toAppUrl(`${BASE_API_PATH}/oembed`),
       integrations: {
-        // A provider validates this byte for byte between the authorize call
-        // and the token exchange, so both sides must build it from here.
+        // A provider validates this byte for byte between the authorize call and the token exchange, so both sides must build it from here.
         callback: (provider: string) =>
           toAppUrl(
             `${BASE_API_PATH}/integrations/${provider.toLowerCase()}/callback`,

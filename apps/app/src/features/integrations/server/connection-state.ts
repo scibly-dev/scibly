@@ -1,7 +1,6 @@
 import type { Prisma } from "@scibly/db";
 
-// Holding neither credential column is the whole of what "disconnected" means: the row
-// stays so a reconnect can see which workspace its sources came from.
+// Holding neither credential column is the whole of what "disconnected" means: the row stays so a reconnect can see which workspace its sources came from.
 export const DISCONNECTED_CREDENTIAL = {
   accessTokenEncrypted: null,
   installationId: null,

@@ -22,6 +22,10 @@ import {
 // The SDK waits a minute by default and retries, which a four-minute sync hop cannot afford.
 const NOTION_TIMEOUT_MS = 30_000;
 
+// Bounds a walk back to the watermark that nothing else bounds; hitting it throws, because the caller advances its watermark on whatever comes back.
+const MAX_POLL_PAGES = 50;
+const POLL_PAGE_SIZE = 100;
+
 const notionClient = (auth?: string) =>
   new Client({ auth, timeoutMs: NOTION_TIMEOUT_MS });
 
@@ -86,11 +90,16 @@ export class NotionProvider extends PageIntegrationProvider {
     const sinceIso = since.toISOString();
     const pages: IntegrationPage[] = [];
     let cursor: string | undefined;
-    do {
+    for (let page = 0; ; page += 1) {
+      if (page === MAX_POLL_PAGES) {
+        throw new Error(
+          `Notion reported more than ${MAX_POLL_PAGES * POLL_PAGE_SIZE} pages changed since ${sinceIso}.`,
+        );
+      }
       const response = await notion.search({
         filter: { value: "page", property: "object" },
         sort: { direction: "descending", timestamp: "last_edited_time" },
-        page_size: 100,
+        page_size: POLL_PAGE_SIZE,
         start_cursor: cursor,
       });
       let reachedOlder = false;
@@ -108,9 +117,9 @@ export class NotionProvider extends PageIntegrationProvider {
           lastEdited: new Date(result.last_edited_time),
         });
       }
-      if (reachedOlder || !response.has_more) break;
-      cursor = response.next_cursor ?? undefined;
-    } while (cursor);
+      if (reachedOlder || !response.has_more || !response.next_cursor) break;
+      cursor = response.next_cursor;
+    }
     return pages;
   }
 

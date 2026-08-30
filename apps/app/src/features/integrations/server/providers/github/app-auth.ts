@@ -22,18 +22,11 @@ export interface GitHubInstallation {
   accountLogin: string;
 }
 
-export interface GitHubRepository {
-  id: number;
-  full_name: string;
-  html_url: string;
-}
-
 export function readGitHubAppConfig(): GitHubAppConfig {
   return {
     appSlug: env.GITHUB_APP_SLUG,
     appId: env.GITHUB_APP_ID,
-    // A PEM survives a .env file only with its newlines escaped, so both
-    // spellings are normalised to the one OpenSSL will parse.
+    // A PEM survives a .env file only with its newlines escaped, so both spellings are normalised to the one OpenSSL will parse.
     privateKey: env.GITHUB_APP_PRIVATE_KEY.replace(/\\n/g, "\n"),
     clientId: env.GITHUB_APP_CLIENT_ID,
     clientSecret: env.GITHUB_APP_CLIENT_SECRET,
@@ -95,8 +88,7 @@ async function githubRequest<T>(
   );
 
   if (!response.ok) {
-    // The request carried a JWT or a minted token, so nothing but GitHub's own
-    // status and message goes into an error a caller may log.
+    // The request carried a JWT or a minted token, so nothing but GitHub's own status and message goes into an error a caller may log.
     const message = await response
       .json()
       .then((body: { message?: string }) => body.message)
@@ -116,17 +108,17 @@ const installationResponse = z.object({
 
 const mintedTokenResponse = z.object({ token: z.string() });
 
+const installationRepositorySchema = z.object({
+  id: z.number(),
+  full_name: z.string(),
+  html_url: z.string(),
+});
+
+export type GitHubRepository = z.infer<typeof installationRepositorySchema>;
+
 const repositoriesResponse = z.object({
   total_count: z.number(),
-  repositories: z
-    .array(
-      z.object({
-        id: z.number(),
-        full_name: z.string(),
-        html_url: z.string(),
-      }),
-    )
-    .optional(),
+  repositories: z.array(installationRepositorySchema).optional(),
 });
 
 export async function fetchInstallation(
@@ -196,8 +188,7 @@ export async function exchangeUserToken(
   return body.access_token;
 }
 
-// Asked as the user, not as the app: the app can see every installation it has, so
-// only the user's own answer says whether they reach this one.
+// Asked as the user, not as the app: the app sees every installation it has, so only the user's own answer says whether they reach this one.
 export async function userCanAccessInstallation(
   userToken: string,
   installationId: string,
@@ -222,13 +213,90 @@ export async function userCanAccessInstallation(
 
 const REPOS_PER_PAGE = 100;
 
-// A large organisation can reach thousands of repositories, and listing them is a
-// settings-page nicety, so it stops early and says that it did.
+// A large organisation can reach thousands of repositories, and listing them is a settings-page nicety, so it stops early and says that it did.
 const MAX_REPOSITORY_PAGES = 10;
 
 export interface GitHubRepositoryList {
   repositories: GitHubRepository[];
   totalCount: number;
+}
+
+const repositoryResponse = z.object({
+  full_name: z.string(),
+  default_branch: z.string(),
+});
+
+const treeResponse = z.object({
+  tree: z
+    .array(z.object({ path: z.string(), type: z.string(), sha: z.string() }))
+    .optional(),
+});
+
+const MAX_FOLDER_DEPTH = 2;
+const MAX_FOLDERS = 200;
+// A level costs one request per folder on the level above it, and a monorepo's
+// root can hold hundreds.
+const MAX_TREE_REQUESTS = 32;
+
+export async function fetchRepositoryFolders(
+  token: string,
+  repositoryId: string,
+): Promise<string[]> {
+  const authorization = `Bearer ${token}`;
+  // Asked by id, not by name: a rename must not turn a scoped topic into a 404.
+  const repository = await githubRequest(
+    `/repositories/${encodeURIComponent(repositoryId)}`,
+    { method: "GET", authorization },
+    repositoryResponse,
+  );
+
+  const readSubtrees = async (parent: { path: string; sha: string }) => {
+    const { tree } = await githubRequest(
+      `/repos/${repository.full_name}/git/trees/${encodeURIComponent(parent.sha)}`,
+      { method: "GET", authorization },
+      treeResponse,
+    );
+    return (tree ?? [])
+      .filter((entry) => entry.type === "tree")
+      .map((entry) => ({
+        path: parent.path ? `${parent.path}/${entry.path}` : entry.path,
+        sha: entry.sha,
+      }));
+  };
+
+  const folders: string[] = [];
+  let level = [{ path: "", sha: repository.default_branch }];
+  let budget = MAX_TREE_REQUESTS;
+
+  for (let depth = 0; depth < MAX_FOLDER_DEPTH; depth += 1) {
+    const asked = level.slice(0, budget);
+    if (asked.length === 0 || folders.length >= MAX_FOLDERS) break;
+    budget -= asked.length;
+    level = (await Promise.all(asked.map(readSubtrees))).flat();
+    folders.push(...level.map((folder) => folder.path));
+  }
+
+  // Cut in the order they were walked, so a repository too wide to list keeps
+  // its top-level folders rather than everything up to the letter c.
+  return folders.slice(0, MAX_FOLDERS).sort();
+}
+
+// A repository the installation does not reach answers 404, so this settles reachability as well as the name.
+export async function fetchInstallationRepository(
+  token: string,
+  repositoryId: string,
+): Promise<GitHubRepository | null> {
+  try {
+    return await githubRequest(
+      `/repositories/${encodeURIComponent(repositoryId)}`,
+      { method: "GET", authorization: `Bearer ${token}` },
+      installationRepositorySchema,
+    );
+  } catch (error) {
+    if (error instanceof GitHubRequestError && error.status === 404)
+      return null;
+    throw error;
+  }
 }
 
 export async function fetchInstallationRepositories(

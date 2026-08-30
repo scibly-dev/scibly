@@ -1,9 +1,9 @@
-# Whole-monorepo image: simplest thing that reliably builds a workspace this
-# interlinked (i18n merge, generated editor schema, ee/ transpiled packages).
-# ponytail: no standalone-output/pruned node_modules, image is ~1-2GB heavier
-# than it needs to be. Upgrade path: `output: "standalone"` in next.config.js
-# once its file-tracing is verified against outputFileTracingIncludes.
-FROM node:24-alpine
+# ── Build stage ───────────────────────────────────────────────────────────────
+# The whole monorepo is copied in: the workspace is too interlinked (i18n merge,
+# generated editor schema, ee/ transpiled packages) to prune before the build.
+# The pruning is Next's file tracing instead — see `output: "standalone"` in
+# next.config.js, which the production stage below copies out on its own.
+FROM node:24-alpine AS builder
 
 RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
 
@@ -43,6 +43,27 @@ RUN pnpm --filter @scibly/app run i18n:merge \
     && pnpm --filter @scibly/db run generate \
     && pnpm --filter @scibly/app run build
 
-ENV NODE_ENV=production
+# ── Production stage ──────────────────────────────────────────────────────────
+FROM node:24-alpine AS runner
+
+WORKDIR /app
+
+# The standalone bundle carries its own server and its own node_modules, so
+# nothing is installed here. It leaves out `public` and `.next/static`, which
+# it serves once they are put back beside it.
+COPY --from=builder /app/apps/app/.next/standalone ./
+COPY --from=builder /app/apps/app/.next/static ./apps/app/.next/static
+COPY --from=builder /app/apps/app/public ./apps/app/public
+
+ENV NODE_ENV=production \
+    PORT=3001 \
+    HOSTNAME=0.0.0.0
+
+# Carried over from the build stage, where they used to persist into the single
+# image: env.js runs at startup too, and docker-compose supplies the real
+# DATABASE_URL.
+ENV DATABASE_URL="postgresql://localhost/build" \
+    SKIP_ENV_VALIDATION=true
+
 EXPOSE 3001
-CMD ["pnpm", "--filter", "@scibly/app", "run", "start"]
+CMD ["node", "apps/app/server.js"]

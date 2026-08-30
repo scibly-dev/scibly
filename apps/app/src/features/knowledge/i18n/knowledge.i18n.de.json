@@ -1,0 +1,83 @@
+{
+  "knowledge": {
+    "title": "Wissen",
+    "subtitle": "Lebende Dokumente, die mit den Repositories Schritt halten, die sie beschreiben.",
+    "newTopic": "Neues Thema",
+    "empty": {
+      "title": "Noch keine Themen",
+      "description": "Ein Thema benennt ein Dokument und die Repositories, denen es folgt."
+    },
+    "gate": {
+      "lockedTitle": "Wissen ist ab {plan} enthalten",
+      "lockedDescription": "Wechsle zu {plan}, um die Dokumentation mit euren Repositories Schritt halten zu lassen.",
+      "lapsedTitle": "Abonnement abgelaufen",
+      "lapsedDescription": "Reaktiviere das Abonnement, um Wissensthemen anzulegen oder zu ändern.",
+      "fallbackPlan": "einem bezahlten Tarif"
+    },
+    "health": {
+      "lastSync": "Letzter Abgleich",
+      "never": "Nie",
+      "pendingSuggestions": "{count} offene Vorschläge"
+    },
+    "card": {
+      "repositories": "Repositories",
+      "maintainers": "Verantwortliche",
+      "noMaintainers": "Keine",
+      "language": "Sprache",
+      "edit": "Bearbeiten",
+      "delete": "Löschen"
+    },
+    "form": {
+      "createTitle": "Neues Thema",
+      "editTitle": "Thema bearbeiten",
+      "description": "Worum es im Dokument geht und welchen Repositories es folgt.",
+      "optional": "optional",
+      "name": "Name",
+      "namePlaceholder": "Onboarding-Leitfaden",
+      "nameRequired": "Gib dem Thema einen Namen.",
+      "language": "Dokumentsprache",
+      "languageEn": "Englisch",
+      "languageDe": "Deutsch",
+      "repositories": "Repositories",
+      "repositoriesHint": "Das Thema folgt Änderungen in den gewählten Repositories – jeweils vollständig, außer du grenzt auf Ordner oder ein Muster ein.",
+      "repositoriesSelect": "Repositories wählen…",
+      "repositoriesRequired": "Wähle mindestens ein Repository.",
+      "repositoriesLoading": "Repositories werden geladen…",
+      "repositoriesEmpty": "Keine Repositories. Verbinde zuerst GitHub in den Integrationseinstellungen.",
+      "repositoriesUnreachable": "Markierte Repositories sind nicht mehr in der verbundenen GitHub-Installation. Entferne sie, um zu speichern.",
+      "maintainers": "Verantwortliche",
+      "maintainersHint": "Sie prüfen die Vorschläge des Abgleichs. Du kannst sie später ergänzen.",
+      "maintainersSelect": "Verantwortliche wählen…",
+      "maintainersEmpty": "Noch keine Mitglieder zur Auswahl.",
+      "maintainersLoading": "Mitglieder werden geladen…",
+      "maintainersUnavailable": "Mitglieder konnten nicht geladen werden. Lade die Seite neu.",
+      "foldersBrowse": "Ordner durchsuchen",
+      "foldersLoading": "Ordner werden geladen…",
+      "foldersEmpty": "Keine Ordner in diesem Repository.",
+      "pathsPlaceholder": "docs/**/*.md",
+      "pathsInvalid": "„{glob}“ ist kein Pfad im Repository. Lass den führenden Schrägstrich und jedes „..“ weg.",
+      "add": "Hinzufügen",
+      "remove": "{name} entfernen",
+      "filterPlaceholder": "Suchen…",
+      "noMatches": "Nichts passt zu dieser Suche.",
+      "selected": "{count} ausgewählt",
+      "cancel": "Abbrechen",
+      "save": "Speichern",
+      "saving": "Wird gespeichert…",
+      "created": "Thema angelegt",
+      "updated": "Thema aktualisiert",
+      "repositoriesUnavailable": "Repositories konnten nicht geladen werden. Lade die Seite neu.",
+      "repositoriesMax": "Ein Thema kann höchstens {max} Repositories folgen.",
+      "pathsMax": "Ein Repository lässt sich auf höchstens {max} Muster eingrenzen.",
+      "repositoriesInvalid": "Eines der Pfadmuster ist ungültig. Entferne es und versuche es erneut."
+    },
+    "deleteDialog": {
+      "title": "Thema löschen?",
+      "description": "„{name}“ und alles, was es gesammelt hat, wird entfernt.",
+      "confirm": "Löschen",
+      "cancel": "Abbrechen",
+      "deleted": "Thema gelöscht"
+    },
+    "loadFailed": "Themen konnten nicht geladen werden. Lade die Seite neu."
+  }
+}

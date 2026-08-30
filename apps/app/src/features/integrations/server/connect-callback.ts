@@ -27,6 +27,7 @@ import { requireOrgMember } from "@/features/organizations/server";
 import { encryptApiKey } from "@/lib/crypto/api-key";
 import { verifyOAuthState } from "@/lib/crypto/oauth-state";
 
+import { isConnected } from "./connection-state";
 import {
   clearDisconnectWarning,
   warnSourcesOfLostConnection,
@@ -82,8 +83,7 @@ function validateCallback(
       reason: IntegrationCallbackError;
     } {
   const { searchParams } = req.nextUrl;
-  // The provider sends the browser here directly, so these links carry their
-  // own locale prefix rather than relying on the middleware that adds one.
+  // The provider sends the browser here directly, so these links carry their own locale prefix instead of relying on the middleware.
   const fallback = {
     settingsUrl: localizedUrl(getLocale(null, true), routes.app.profile.root),
   };
@@ -210,11 +210,15 @@ async function completeAndPersistConnection(
   };
 
   await db.$transaction(async (tx) => {
-    // Read inside the transaction: two callbacks landing together would otherwise
-    // both see the pre-connect workspace.
+    // Read inside the transaction: two callbacks landing together would otherwise both see the pre-connect workspace.
     const existing = await tx.integrationConnection.findUnique({
       where,
-      select: { id: true, workspaceId: true },
+      select: {
+        id: true,
+        workspaceId: true,
+        accessTokenEncrypted: true,
+        installationId: true,
+      },
     });
 
     const movedWorkspace =
@@ -229,8 +233,9 @@ async function completeAndPersistConnection(
         "workspace_changed",
         tx,
       );
-    } else if (existing) {
-      await clearDisconnectWarning(existing.id, callback.provider, tx);
+    } else if (existing && !isConnected(existing)) {
+      // Only a reconnect after a disconnect may clear these — a truncation notice ingestion wrote is not this callback's to throw away.
+      await clearDisconnectWarning(existing.id, tx);
     }
 
     await tx.integrationConnection.upsert({
@@ -240,8 +245,7 @@ async function completeAndPersistConnection(
         provider: callback.provider,
         ...connectionData,
       },
-      // A different workspace shares none of the old one's history, so the
-      // watermark that decided what had already been seen goes with it.
+      // A different workspace shares none of the old one's history, so the watermark goes with it.
       update: movedWorkspace
         ? { ...connectionData, lastPolledAt: null }
         : connectionData,

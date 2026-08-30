@@ -51,7 +51,6 @@ export const env = createEnv({
     GITHUB_APP_ID: z.string().min(1),
     /** PEM private key; newlines may be escaped as \n for .env files. */
     GITHUB_APP_PRIVATE_KEY: z.string().min(1),
-    /** OAuth half of the same app: proves who installed it, at the callback. */
     GITHUB_APP_CLIENT_ID: z.string().min(1),
     GITHUB_APP_CLIENT_SECRET: z.string().min(1),
 

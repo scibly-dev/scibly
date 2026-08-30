@@ -33,6 +33,9 @@ export function backoffMs(consecutiveFailures: number): number {
   return SYNC_BACKOFF_MS[consecutiveFailures] ?? SYNC_BACKOFF_CAP_MS;
 }
 
+// One run's worth, oldest-attempt-first — and small enough that the event batch it feeds stays inside Inngest's size limit.
+const MAX_DUE_CONNECTIONS_PER_RUN = 500;
+
 export async function loadDueConnections(
   now: Date,
 ): Promise<{ id: string; provider: string }[]> {
@@ -48,6 +51,7 @@ export async function loadDueConnections(
     },
     select: { id: true, provider: true },
     orderBy: { lastAttemptedAt: { sort: "asc", nulls: "first" } },
+    take: MAX_DUE_CONNECTIONS_PER_RUN,
   });
 }
 
@@ -83,8 +87,13 @@ async function recordAttempt(
   });
 }
 
-// One batch: advancing the watermark without the marks would put those changes
-// permanently behind the window.
+// Cleared on the empty branch too: a connection that backed off and then lost its last source would otherwise keep the backoff forever.
+const pollSucceeded = (at: Date) => ({
+  lastAttemptedAt: at,
+  consecutiveFailures: 0,
+  nextPollAfter: null,
+});
+
 async function commitPollSuccess(
   connectionId: string,
   pollStartedAt: Date,
@@ -100,12 +109,9 @@ async function commitPollSuccess(
   const unchanged = sources.length - changedIds.length;
 
   const succeeded = {
-    // The watermark takes the instant the poll started, so an edit made while
-    // it ran is covered by the next poll rather than missed.
+    // The watermark takes the instant the poll started, so an edit made while it ran is covered by the next poll rather than missed.
     lastPolledAt: pollStartedAt,
-    lastAttemptedAt: new Date(),
-    consecutiveFailures: 0,
-    nextPollAfter: null,
+    ...pollSucceeded(new Date()),
   };
   if (changedIds.length === 0) {
     await recordAttempt(connectionId, succeeded);
@@ -149,7 +155,7 @@ export async function pollConnection(
 
   const sources = await loadSyncableSources(connection.id);
   if (sources.length === 0) {
-    await recordAttempt(connection.id, { lastAttemptedAt: now });
+    await recordAttempt(connection.id, pollSucceeded(now));
     return { status: "empty" };
   }
 
@@ -169,21 +175,20 @@ export async function pollConnection(
   return { status: "polled", ...counts };
 }
 
+// Incremented by the database, so two failures racing over one connection land on 2; the backoff then needs a second write against that settled count.
 export async function recordPollFailure(
   connectionId: string,
   now: Date,
 ): Promise<void> {
-  const connection = await db.integrationConnection.findUnique({
+  const [counted] = await db.integrationConnection.updateManyAndReturn({
     where: { id: connectionId },
+    data: { lastAttemptedAt: now, consecutiveFailures: { increment: 1 } },
     select: { consecutiveFailures: true },
   });
-  if (!connection) return;
+  if (!counted) return;
 
-  const failures = connection.consecutiveFailures + 1;
-  const delay = backoffMs(failures);
+  const delay = backoffMs(counted.consecutiveFailures);
   await recordAttempt(connectionId, {
-    lastAttemptedAt: now,
-    consecutiveFailures: failures,
     nextPollAfter: delay > 0 ? new Date(now.getTime() + delay) : null,
   });
 }

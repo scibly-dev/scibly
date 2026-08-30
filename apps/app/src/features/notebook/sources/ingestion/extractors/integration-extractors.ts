@@ -14,9 +14,22 @@ async function resolveSourceConnection(source: ExtractableSource) {
     );
   }
 
-  const connection = await db.integrationConnection.findUnique({
-    where: { id: source.integrationId },
-  });
+  const [connection, notebook] = await Promise.all([
+    db.integrationConnection.findUnique({
+      where: { id: source.integrationId },
+      select: {
+        id: true,
+        provider: true,
+        organizationId: true,
+        accessTokenEncrypted: true,
+        installationId: true,
+      },
+    }),
+    db.notebook.findUnique({
+      where: { id: source.notebookId },
+      select: { organizationId: true },
+    }),
+  ]);
 
   if (!connection) {
     throw new Error(
@@ -24,10 +37,6 @@ async function resolveSourceConnection(source: ExtractableSource) {
     );
   }
 
-  const notebook = await db.notebook.findUnique({
-    where: { id: source.notebookId },
-    select: { organizationId: true },
-  });
   if (!notebook || notebook.organizationId !== connection.organizationId) {
     throw new Error(
       `Integration connection ${connection.id} does not belong to source ${source.id}'s organization.`,

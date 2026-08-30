@@ -1,18 +1,15 @@
 import { describe, expect, it } from "vitest";
 
-import { linkPageSchema } from "./integration.schema";
+import { linkPagesSchema } from "./integration.schema";
 
-// The url is stored and later rendered as an `href`, so the schema has to reject a
-// scheme the browser would execute.
-describe("linkPageSchema pageUrl", () => {
-  const link = (pageUrl: string) =>
-    linkPageSchema.safeParse({
+// The url is stored and later rendered as an `href`, so the schema has to reject a scheme the browser would execute.
+describe("linkPagesSchema page url", () => {
+  const link = (url: string) =>
+    linkPagesSchema.safeParse({
       notebookId: "n1",
       orgSlug: "acme",
       provider: "NOTION",
-      pageId: "p1",
-      pageTitle: "Roadmap",
-      pageUrl,
+      pages: [{ id: "p1", title: "Roadmap", url }],
     }).success;
 
   it("takes an https page", () => {
@@ -24,7 +21,7 @@ describe("linkPageSchema pageUrl", () => {
     "data:text/html,<script>alert(1)</script>",
     "vbscript:msgbox(1)",
     "http://www.notion.so/Roadmap-abc123",
-  ])("refuses %s", (pageUrl) => {
-    expect(link(pageUrl)).toBe(false);
+  ])("refuses %s", (url) => {
+    expect(link(url)).toBe(false);
   });
 });

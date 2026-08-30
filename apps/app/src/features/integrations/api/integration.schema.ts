@@ -30,16 +30,7 @@ export const listGrantsSchema = orgSlugInput.extend({
 
 export const searchPagesSchema = orgSlugInput.extend({
   provider: pageProviderInput,
-  query: z.string().default(""),
-});
-
-export const linkPageSchema = z.object({
-  notebookId: z.string(),
-  orgSlug: z.string(),
-  provider: pageProviderInput,
-  pageId: z.string(),
-  pageTitle: z.string(),
-  pageUrl: httpsUrl(),
+  query: z.string().max(200).default(""),
 });
 
 export const linkPagesSchema = z.object({

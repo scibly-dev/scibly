@@ -30,8 +30,7 @@ export const ProviderGrants = ({
       provider,
     });
 
-  // The server has already dropped the connection by the time this error arrives,
-  // so refetching the list is what takes the row off the page.
+  // The server has already dropped the connection by the time this error arrives, so refetching the list is what takes the row off the page.
   const wasRevoked = error?.data?.applicationCode === "integration.revoked";
   const revokedNotice = t.revokedNotice.replace(
     "{provider}",

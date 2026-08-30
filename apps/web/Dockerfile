@@ -1,5 +1,6 @@
+# ── Build stage ───────────────────────────────────────────────────────────────
 # See apps/app/Dockerfile for the rationale (same monorepo, same trade-offs).
-FROM node:24-alpine
+FROM node:24-alpine AS builder
 
 RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
 
@@ -35,6 +36,27 @@ RUN pnpm --filter @scibly/web run i18n:merge \
     && pnpm --filter @scibly/db run generate \
     && pnpm --filter @scibly/web run build
 
-ENV NODE_ENV=production
+# ── Production stage ──────────────────────────────────────────────────────────
+FROM node:24-alpine AS runner
+
+WORKDIR /app
+
+# The standalone bundle carries its own server and its own node_modules, so
+# nothing is installed here. It leaves out `public` and `.next/static`, which
+# it serves once they are put back beside it.
+COPY --from=builder /app/apps/web/.next/standalone ./
+COPY --from=builder /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=builder /app/apps/web/public ./apps/web/public
+
+ENV NODE_ENV=production \
+    PORT=3000 \
+    HOSTNAME=0.0.0.0
+
+# Carried over from the build stage, where they used to persist into the single
+# image: env.js runs at startup too, and docker-compose supplies the real
+# DATABASE_URL.
+ENV DATABASE_URL="postgresql://localhost/build" \
+    SKIP_ENV_VALIDATION=true
+
 EXPOSE 3000
-CMD ["pnpm", "--filter", "@scibly/web", "run", "start"]
+CMD ["node", "apps/web/server.js"]

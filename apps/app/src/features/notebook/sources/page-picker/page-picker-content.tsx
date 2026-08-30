@@ -130,8 +130,7 @@ export function PagePickerContent({
     t,
     onLinked,
   };
-  // On a paid plan the source limit is effectively unlimited, so the per-request cap is
-  // what keeps "select all" from building a batch the server rejects whole.
+  // On a paid plan the source limit is effectively unlimited, so the per-request cap is what keeps "select all" from building a batch the server rejects whole.
   const remaining = Math.min(
     Math.max(0, sourceLimit - totalSourceCount),
     MAX_LINKED_PAGES_PER_REQUEST,

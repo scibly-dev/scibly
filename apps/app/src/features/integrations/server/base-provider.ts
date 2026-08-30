@@ -1,6 +1,7 @@
 import type {
   IntegrationCredential,
   IntegrationCredentialKind,
+  IntegrationGrant,
   IntegrationGrantList,
   IntegrationPage,
   IntegrationPageContent,
@@ -37,6 +38,13 @@ export abstract class IntegrationProvider {
   mintAccessToken?(installationId: string): Promise<string>;
 
   listGrants?(token: string): Promise<IntegrationGrantList>;
+
+  resolveGrant?(
+    token: string,
+    grantId: string,
+  ): Promise<IntegrationGrant | null>;
+
+  listFolders?(token: string, grantId: string): Promise<string[]>;
 }
 
 export abstract class PageIntegrationProvider extends IntegrationProvider {

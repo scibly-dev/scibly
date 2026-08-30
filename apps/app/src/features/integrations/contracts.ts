@@ -8,7 +8,6 @@ export const INTEGRATION_PROVIDERS = [
 
 export type IntegrationProviderId = IntegrationProvider;
 
-// Not every connectable provider offers pages to import.
 export const PAGE_INTEGRATION_PROVIDERS = [
   "NOTION",
 ] as const satisfies readonly IntegrationProviderId[];
@@ -55,7 +54,6 @@ export interface IntegrationPageRevision {
   lastEdited: Date;
 }
 
-// A named part of a workspace a connection reaches — a repository an installation was given.
 export interface IntegrationGrant {
   id: string;
   name: string;

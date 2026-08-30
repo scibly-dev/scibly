@@ -2,8 +2,7 @@ import type { ConnectionCredential } from "./connection-token";
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-// `$transaction` hands the same doubled client back, so both writes are still
-// observed individually.
+// `$transaction` hands the same doubled client back, so both writes are still observed individually.
 const db: {
   integrationConnection: { updateMany: ReturnType<typeof vi.fn> };
   notebookSource: { updateMany: ReturnType<typeof vi.fn> };

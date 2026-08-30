@@ -18,7 +18,6 @@ export function useOrgIntegrations({
   t: OrgSettingsPage["integrations"];
 }) {
   const utils = api.useUtils();
-  const [disconnectingId, setDisconnectingId] = useState<string | null>(null);
   const [pendingDisconnect, setPendingDisconnect] =
     useState<IntegrationProviderId | null>(null);
 
@@ -37,18 +36,16 @@ export function useOrgIntegrations({
       void utils.integration.list.invalidate({ orgSlug });
     },
     onError: (err) => toast.error(err.message),
-    onSettled: () => {
-      setDisconnectingId(null);
-      setPendingDisconnect(null);
-    },
+    onSettled: () => setPendingDisconnect(null),
   });
 
   return {
     connections: data?.connections ?? [],
     allProviders: data?.allProviders ?? [],
     isConnectPending: getAuthUrlMutation.isPending,
+    // Only the row being disconnected: one pending request must not put every other provider on the card into a spinner.
     isBusy: (provider: IntegrationProviderId) =>
-      disconnectingId === provider || disconnectMutation.isPending,
+      pendingDisconnect === provider && disconnectMutation.isPending,
     connect: (provider: IntegrationProviderId) =>
       getAuthUrlMutation.mutate({ orgSlug, provider, lang }),
     pendingDisconnect,
@@ -57,7 +54,6 @@ export function useOrgIntegrations({
     isConfirmingDisconnect: disconnectMutation.isPending,
     confirmDisconnect: () => {
       if (!pendingDisconnect) return;
-      setDisconnectingId(pendingDisconnect);
       disconnectMutation.mutate({ orgSlug, provider: pendingDisconnect });
     },
   };

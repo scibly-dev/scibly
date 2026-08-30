@@ -42,8 +42,7 @@ function useOAuthResultNotifications(
 ) {
   const router = useRouter();
   const trpcUtils = api.useUtils();
-  // The result is read once and then taken out of the url; the ref is what makes
-  // React's second development run a no-op.
+  // The result is read once and then taken out of the url; the ref is what makes React's second development run a no-op.
   const reported = useRef(false);
   useEffect(() => {
     if (reported.current) return;
