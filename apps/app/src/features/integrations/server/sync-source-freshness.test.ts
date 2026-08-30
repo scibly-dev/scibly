@@ -23,7 +23,6 @@ vi.mock("@/features/integrations/server/registry", () => registry);
 vi.mock("@/features/integrations/server/connection-token", () => token);
 
 const {
-  backoffMs,
   getPollingStart,
   loadDueConnections,
   pollConnection,
@@ -442,13 +441,6 @@ describe("KW1/KW2/KF2/KF3/KF4: what an attempt writes down", () => {
       });
     },
   );
-
-  it("KF3: the backoff table is what the counter indexes into", () => {
-    expect(backoffMs(0)).toBe(0);
-    expect(backoffMs(3)).toBe(6 * HOUR);
-
-    expect(backoffMs(99)).toBe(3 * DAY);
-  });
 
   it("KF4: any success clears the backoff and the failure count", async () => {
     sources({ id: "src-a", externalId: "page-a" });

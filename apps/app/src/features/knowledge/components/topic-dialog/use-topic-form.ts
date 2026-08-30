@@ -27,13 +27,13 @@ export function useTopicForm({
   orgSlug,
   defaultLanguage,
   topic,
-  onClose,
+  onSaved,
 }: {
   t: KnowledgeTranslations;
   orgSlug: string;
   defaultLanguage: TopicLanguage;
   topic: KnowledgeTopic | null;
-  onClose: () => void;
+  onSaved?: () => void;
 }) {
   const utils = api.useUtils();
   const {
@@ -72,27 +72,41 @@ export function useTopicForm({
     maintainerMemberIds,
     language,
   });
-  const [saved] = useState(fingerprint);
+  const [saved, setSaved] = useState(fingerprint);
 
-  const settle = () => {
+  // Read off the mutation's own variables: an edit made while the save was in flight must stay dirty.
+  const settle = (fields: TopicFormInput) => {
+    setSaved(
+      topicFingerprint({
+        name: fields.name,
+        repositories: fields.repositories.map(({ id, pathGlobs }) => ({
+          id,
+          pathGlobs: pathGlobs ?? [],
+        })),
+        maintainerMemberIds: fields.maintainerMemberIds ?? [],
+        language: fields.language,
+      }),
+    );
     void utils.knowledge.list.invalidate({ orgSlug });
-    onClose();
+    if (topic)
+      void utils.knowledge.get.invalidate({ orgSlug, topicId: topic.id });
+    onSaved?.();
   };
   const onError = (failure: { message: string }) =>
     setError("root", { message: failure.message });
 
   const create = api.knowledge.create.useMutation({
-    onSuccess: () => {
+    onSuccess: (_created, fields) => {
       toast.success(t.form.created);
-      settle();
+      settle(fields);
     },
     onError,
   });
   const update = api.knowledge.update.useMutation({
-    onSuccess: (saved) => {
+    onSuccess: (saved, fields) => {
       if (saved.externallyEditedAt) toast.warning(t.form.updatedDocumentLeft);
       else toast.success(t.form.updated);
-      settle();
+      settle(fields);
     },
     onError,
   });
@@ -102,7 +116,6 @@ export function useTopicForm({
     else create.mutate({ ...fields, orgSlug });
   });
 
-  // Manual errors are already translated; the schema's are mapped by what they can only mean.
   const repositoryRefusal =
     errors.repositories?.type === "manual"
       ? (errors.repositories.message ?? null)

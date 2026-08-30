@@ -5,7 +5,7 @@ import { db } from "@scibly/db";
 
 import { resolveRepositoryConnection } from "@/features/integrations/server";
 
-export const badScope = (message: string) =>
+const badScope = (message: string) =>
   new AppError({
     code: "BAD_REQUEST",
     applicationCode: "knowledge.invalid_scope",

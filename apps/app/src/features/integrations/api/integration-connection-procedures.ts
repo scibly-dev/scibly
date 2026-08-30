@@ -35,15 +35,18 @@ import {
   searchPagesSchema,
 } from "./integration.schema";
 
-const PROXY_LIMIT = {
-  endpoint: "integration.proxy",
-  maxPerWindow: 300,
-  tooManyRequestsMessage:
-    "Too many integration requests. Please try again in a bit.",
-} as const;
-
 const boundedProxy = <T>(userId: string, ask: () => Promise<T>) =>
-  withRateLimit({ db, identifier: userId, ...PROXY_LIMIT }, ask);
+  withRateLimit(
+    {
+      db,
+      identifier: userId,
+      endpoint: "integration.proxy",
+      maxPerWindow: 300,
+      tooManyRequestsMessage:
+        "Too many integration requests. Please try again in a bit.",
+    },
+    ask,
+  );
 
 export async function resolveConnectionRow(
   organizationId: string,

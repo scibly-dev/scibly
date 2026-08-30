@@ -23,6 +23,8 @@ model Organization {
   creditLedgerEntries  CreditLedgerEntry[]
   courseEnrollments    CourseEnrollment[]
   knowledgeTopics      KnowledgeTopic[]
+  knowledgeBundles     KnowledgeBundle[]
+  knowledgeCollectionRuns KnowledgeCollectionRun[]
 
   @@unique([slug])
   @@map("organization")

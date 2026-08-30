@@ -71,20 +71,18 @@ export interface IntegrationGrantList {
   totalCount: number;
 }
 
-export interface OAuthTokens {
-  accessToken: string;
-  workspaceId?: string;
-  workspaceName?: string;
-}
-
-export interface AppInstallation {
-  installationId: string;
-  workspaceId?: string;
-  workspaceName?: string;
-}
-
 export type IntegrationCredential =
-  | ({ kind: "oauth_tokens" } & OAuthTokens)
-  | ({ kind: "app_installation" } & AppInstallation);
+  | {
+      kind: "oauth_tokens";
+      accessToken: string;
+      workspaceId?: string;
+      workspaceName?: string;
+    }
+  | {
+      kind: "app_installation";
+      installationId: string;
+      workspaceId?: string;
+      workspaceName?: string;
+    };
 
 export type IntegrationCredentialKind = IntegrationCredential["kind"];

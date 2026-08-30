@@ -43,7 +43,7 @@ type PublishedColumns = {
   externallyEditedAt: null;
 };
 
-export type TopicDocumentResult =
+type TopicDocumentResult =
   | { outcome: "published"; columns: PublishedColumns }
   | {
       outcome: "externallyEdited";
@@ -148,8 +148,7 @@ export async function setDocumentDestination(
 }
 
 // ponytail: Notion truncates `last_edited_time` to the minute, so an outside
-// edit landing in the same minute as ours goes unseen. Compare the page's
-// markdown instead if that ever costs someone their words.
+// edit in the same minute as ours goes unseen — compare markdown if that ever costs someone their words.
 async function isOurs(
   provider: NotionConnection["provider"],
   token: string,

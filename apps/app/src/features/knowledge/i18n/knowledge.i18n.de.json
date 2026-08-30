@@ -15,19 +15,17 @@
       "fallbackPlan": "einem bezahlten Tarif"
     },
     "health": {
-      "lastSync": "Letzter Abgleich",
-      "never": "Nie",
       "pendingSuggestions": "{count} offene Vorschläge"
     },
     "card": {
       "repositories": "Repositories",
       "maintainers": "Verantwortliche",
       "noMaintainers": "Keine",
-      "edit": "Bearbeiten",
       "delete": "Löschen",
       "openDocument": "Dokument öffnen",
       "externallyEdited": "In Notion bearbeitet",
-      "externallyEditedHint": "Jemand hat diese Seite in Notion geändert. Scibly überschreibt sie nicht."
+      "externallyEditedHint": "Jemand hat diese Seite in Notion geändert. Scibly überschreibt sie nicht.",
+      "open": "Öffnen"
     },
     "destination": {
       "title": "Wo Dokumente liegen",
@@ -48,7 +46,6 @@
     },
     "form": {
       "createTitle": "Neues Thema",
-      "editTitle": "Thema bearbeiten",
       "description": "Worum es im Dokument geht und welchen Repositories es folgt.",
       "optional": "optional",
       "name": "Name",
@@ -93,11 +90,32 @@
     },
     "deleteDialog": {
       "title": "Thema löschen?",
-      "description": "„{name}“ und alles, was es gesammelt hat, wird entfernt.",
+      "description": "„{name}“ wird entfernt. Bereits gesammelte Pull Requests bleiben bei der Organisation, und die Notion-Seite bleibt unberührt.",
       "confirm": "Löschen",
       "cancel": "Abbrechen",
       "deleted": "Thema gelöscht"
     },
-    "loadFailed": "Themen konnten nicht geladen werden. Lade die Seite neu."
+    "loadFailed": "Themen konnten nicht geladen werden. Lade die Seite neu.",
+    "detail": {
+      "back": "Alle Themen",
+      "syncNow": "Jetzt synchronisieren",
+      "syncing": "Wird synchronisiert…",
+      "syncQueued": "Synchronisierung für {count} Repositories eingeplant",
+      "settings": "Einstellungen",
+      "loadFailed": "Dieses Thema konnte nicht geladen werden. Lade die Seite neu."
+    },
+    "feed": {
+      "title": "Aktivität",
+      "empty": "Es wurde noch nichts gesammelt. Starte eine Synchronisierung.",
+      "counts": "{collected} gesammelt · {discarded} verworfen",
+      "capped": "am Budget gestoppt",
+      "queued": "Eingeplant",
+      "running": "Läuft",
+      "succeeded": "Fertig",
+      "failed": "Fehlgeschlagen",
+      "bundles": "Gesammelte Pull Requests",
+      "noBundles": "Noch keine Pull Requests gesammelt. Das Sammeln beginnt mit der ersten Synchronisierung; ab dann zusammengeführte Pull Requests erscheinen hier.",
+      "truncated": "gekürzt"
+    }
   }
 }

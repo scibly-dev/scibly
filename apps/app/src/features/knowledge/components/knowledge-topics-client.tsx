@@ -14,9 +14,9 @@ import { toast } from "sonner";
 
 import { api } from "@/shared/api/trpc/client";
 import { ConfirmDeleteDialog } from "@/shared/ui/confirm-delete-dialog";
-import { FeatureGateNotice } from "@/shared/ui/feature-gate-notice";
 
 import { DocumentDestinationCard } from "./document-destination-card";
+import { KnowledgeGateNotice } from "./knowledge-gate-notice";
 import { TopicCard } from "./topic-card";
 import { TopicDialog } from "./topic-dialog";
 
@@ -31,9 +31,7 @@ export function KnowledgeTopicsClient({
 }) {
   const utils = api.useUtils();
   const { data, isError } = api.knowledge.list.useQuery({ orgSlug });
-  const [editing, setEditing] = useState<KnowledgeTopic | null | undefined>(
-    undefined,
-  );
+  const [creating, setCreating] = useState(false);
   const [pendingDelete, setPendingDelete] = useState<KnowledgeTopic | null>(
     null,
   );
@@ -58,30 +56,15 @@ export function KnowledgeTopicsClient({
   }
   if (!data) return null;
   const canWrite = data.canManage && data.access.allowed;
-  const lapsed = data.access.reason === "lapsed";
-  const plan = data.access.requiredPlan ?? t.gate.fallbackPlan;
 
   return (
     <div className="flex flex-col gap-5">
-      {data.access.allowed ? null : (
-        <FeatureGateNotice
-          title={
-            lapsed
-              ? t.gate.lapsedTitle
-              : t.gate.lockedTitle.replaceAll("{plan}", plan)
-          }
-          description={
-            lapsed
-              ? t.gate.lapsedDescription
-              : t.gate.lockedDescription.replaceAll("{plan}", plan)
-          }
-        />
-      )}
+      <KnowledgeGateNotice t={t} access={data.access} />
 
       {canWrite && data.destination ? (
         <div className="flex flex-wrap items-center justify-between gap-3">
           <Button
-            onClick={() => setEditing(null)}
+            onClick={() => setCreating(true)}
             disabled={!data.destination.destinationPageId}
           >
             <Plus className="h-4 w-4" />
@@ -112,9 +95,8 @@ export function KnowledgeTopicsClient({
             <TopicCard
               key={topic.id}
               topic={topic}
-              canEdit={canWrite}
+              orgSlug={orgSlug}
               canDelete={data.canManage}
-              onEdit={() => setEditing(topic)}
               onDelete={() => setPendingDelete(topic)}
               t={t}
             />
@@ -122,16 +104,15 @@ export function KnowledgeTopicsClient({
         </div>
       )}
 
-      {editing === undefined ? null : (
+      {creating ? (
         <TopicDialog
           t={t}
           orgSlug={orgSlug}
           orgId={data.organizationId}
           defaultLanguage={defaultLanguage}
-          topic={editing}
-          onClose={() => setEditing(undefined)}
+          onClose={() => setCreating(false)}
         />
-      )}
+      ) : null}
 
       <ConfirmDeleteDialog
         open={pendingDelete !== null}

@@ -29,7 +29,7 @@ const SYNC_BACKOFF_MS: readonly number[] = [
 // window that starts after the changes it slept through.
 const SYNC_BACKOFF_CAP_MS = TimeHelpers.IN_MS.DAY * 3;
 
-export function backoffMs(consecutiveFailures: number): number {
+function backoffMs(consecutiveFailures: number): number {
   return SYNC_BACKOFF_MS[consecutiveFailures] ?? SYNC_BACKOFF_CAP_MS;
 }
 
@@ -56,19 +56,6 @@ export async function loadDueConnections(
 }
 
 type SyncableSource = { id: string; externalId: string | null };
-
-async function loadSyncableSources(
-  integrationId: string,
-): Promise<SyncableSource[]> {
-  return db.notebookSource.findMany({
-    where: {
-      integrationId,
-      status: SOURCE_STATUS.READY,
-      externalId: { not: null },
-    },
-    select: { id: true, externalId: true },
-  });
-}
 
 export function getPollingStart(lastPolledAt: Date | null, now: Date): Date {
   const floor = now.getTime() - SYNC_WINDOW_FLOOR_MS;
@@ -153,7 +140,14 @@ export async function pollConnection(
   });
   if (!connection || !isConnected(connection)) return { status: "gone" };
 
-  const sources = await loadSyncableSources(connection.id);
+  const sources = await db.notebookSource.findMany({
+    where: {
+      integrationId: connection.id,
+      status: SOURCE_STATUS.READY,
+      externalId: { not: null },
+    },
+    select: { id: true, externalId: true },
+  });
   if (sources.length === 0) {
     await recordAttempt(connection.id, pollSucceeded(now));
     return { status: "empty" };

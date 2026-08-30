@@ -180,6 +180,8 @@ export const routes = {
           },
           knowledge: {
             root: toAppUrl(`${baseOrgRoute}/knowledge`),
+            topic: (topicId: string) =>
+              toAppUrl(`${baseOrgRoute}/knowledge/${topicId}`),
           },
           members: {
             root: toAppUrl(`${baseOrgRoute}/members`),
@@ -226,6 +228,7 @@ export const routes = {
     integrations: {
       github: {
         api: "https://api.github.com",
+        graphql: "https://api.github.com/graphql",
         oauthToken: `${GITHUB_URL}/login/oauth/access_token` as const,
         install: (appSlug: string) =>
           `${GITHUB_URL}/apps/${encodeURIComponent(appSlug)}/installations/new` as const,

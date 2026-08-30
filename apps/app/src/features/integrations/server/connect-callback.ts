@@ -1,12 +1,8 @@
 import type {
   IntegrationCallbackError,
-  IntegrationCredential,
   IntegrationProviderId,
 } from "../contracts";
-import type {
-  ConnectCallbackParams,
-  IntegrationProvider,
-} from "./base-provider";
+import type { ConnectCallbackParams } from "./base-provider";
 
 import { getSession } from "@scibly/auth/session";
 import { db } from "@scibly/db";
@@ -55,21 +51,6 @@ function errorRedirect(
 
 function providerError(oauthError: string): IntegrationCallbackError {
   return oauthError === "access_denied" ? "provider_denied" : "provider_error";
-}
-
-function readCallbackParams(
-  searchParams: URLSearchParams,
-  provider: IntegrationProvider,
-): ConnectCallbackParams | null {
-  const params: ConnectCallbackParams = {
-    code: searchParams.get("code"),
-    installationId: searchParams.get("installation_id"),
-  };
-  const required =
-    provider.credential === "app_installation"
-      ? params.installationId
-      : params.code;
-  return required ? params : null;
 }
 
 function validateCallback(
@@ -127,8 +108,15 @@ function validateCallback(
     return { ok: false, destination, reason: "state_mismatch" };
   }
 
-  const params = readCallbackParams(searchParams, getProvider(provider));
-  if (!params) {
+  const params: ConnectCallbackParams = {
+    code: searchParams.get("code"),
+    installationId: searchParams.get("installation_id"),
+  };
+  const required =
+    getProvider(provider).credential === "app_installation"
+      ? params.installationId
+      : params.code;
+  if (!required) {
     return { ok: false, destination, reason: "missing_params" };
   }
 
@@ -167,20 +155,6 @@ async function authorizeCallback(
   }
 }
 
-// The two shapes use disjoint columns, and each connect clears the other's.
-function credentialColumns(credential: IntegrationCredential) {
-  if (credential.kind === "app_installation") {
-    return {
-      accessTokenEncrypted: null,
-      installationId: credential.installationId,
-    };
-  }
-  return {
-    accessTokenEncrypted: encryptApiKey(credential.accessToken),
-    installationId: null,
-  };
-}
-
 async function completeAndPersistConnection(
   callback: ValidCallback,
   organizationId: string,
@@ -198,7 +172,16 @@ async function completeAndPersistConnection(
   };
 
   const connectionData = {
-    ...credentialColumns(credential),
+    // The two credential shapes use disjoint columns, and each connect clears the other's.
+    ...(credential.kind === "app_installation"
+      ? {
+          accessTokenEncrypted: null,
+          installationId: credential.installationId,
+        }
+      : {
+          accessTokenEncrypted: encryptApiKey(credential.accessToken),
+          installationId: null,
+        }),
     workspaceId: credential.workspaceId ?? null,
     workspaceName: credential.workspaceName ?? null,
 

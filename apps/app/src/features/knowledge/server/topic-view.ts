@@ -18,7 +18,7 @@ export const TOPIC_SELECT = {
   },
 } as const;
 
-export type StoredTopic = Prisma.KnowledgeTopicGetPayload<{
+type StoredTopic = Prisma.KnowledgeTopicGetPayload<{
   select: typeof TOPIC_SELECT;
 }>;
 

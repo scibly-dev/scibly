@@ -39,7 +39,6 @@ export default function LanguageSwitcher() {
     }, 150);
   };
 
-  // A locale switch is a full navigation, so a pending close would set state on a component that is already gone.
   useEffect(
     () => () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
