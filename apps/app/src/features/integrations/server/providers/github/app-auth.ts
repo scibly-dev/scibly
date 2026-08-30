@@ -82,13 +82,11 @@ async function githubRequest<T>(
         "x-github-api-version": "2022-11-28",
       },
       cache: "no-store",
-      // `fetch` waits forever by default, and one hung request must not spend a whole sync hop.
       signal: AbortSignal.timeout(GITHUB_TIMEOUT_MS),
     },
   );
 
   if (!response.ok) {
-    // The request carried a JWT or a minted token, so nothing but GitHub's own status and message goes into an error a caller may log.
     const message = await response
       .json()
       .then((body: { message?: string }) => body.message)
@@ -99,6 +97,58 @@ async function githubRequest<T>(
     );
   }
   return schema.parse(await response.json());
+}
+
+const graphqlEnvelope = z.object({
+  data: z.unknown().nullable().optional(),
+  errors: z
+    .array(z.object({ type: z.string().optional(), message: z.string() }))
+    .optional(),
+});
+
+export async function githubGraphQL<T>(
+  token: string,
+  query: string,
+  variables: Record<string, string | number | null>,
+  schema: z.ZodType<T>,
+): Promise<T> {
+  const response = await fetch(routes.external.integrations.github.graphql, {
+    method: "POST",
+    headers: {
+      accept: "application/vnd.github+json",
+      authorization: `Bearer ${token}`,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({ query, variables }),
+    cache: "no-store",
+    signal: AbortSignal.timeout(GITHUB_TIMEOUT_MS),
+  });
+
+  if (!response.ok) {
+    throw new GitHubRequestError(
+      `GitHub GraphQL failed: ${response.status}`,
+      response.status,
+    );
+  }
+
+  const body = graphqlEnvelope.parse(await response.json());
+  const [failure] = body.errors ?? [];
+  if (failure) {
+    // GraphQL answers 200 with an `errors` array; `type` is mapped onto a status so the REST callers' 404-means-unreachable rule still holds.
+    const status =
+      failure.type === "NOT_FOUND"
+        ? 404
+        : failure.type === "FORBIDDEN"
+          ? 403
+          : failure.type === "RATE_LIMITED"
+            ? 429
+            : 502;
+    throw new GitHubRequestError(
+      `GitHub GraphQL failed: ${failure.message}`,
+      status,
+    );
+  }
+  return schema.parse(body.data);
 }
 
 const installationResponse = z.object({
@@ -314,7 +364,6 @@ export async function fetchInstallationRepositories(
     totalCount = body.total_count;
     const returned = body.repositories ?? [];
     repositories.push(...returned);
-    // A short page is the last page, whatever the count claims.
     if (returned.length < REPOS_PER_PAGE) break;
     if (repositories.length >= totalCount) break;
   }

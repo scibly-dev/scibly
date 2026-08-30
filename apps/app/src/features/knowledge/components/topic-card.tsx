@@ -1,23 +1,23 @@
 import type { KnowledgeTopic, KnowledgeTranslations } from "../contracts";
 
+import { routes } from "@scibly/routes";
 import { Badge } from "@scibly/ui/components/badge";
 import { Button } from "@scibly/ui/components/button";
 import { Card, CardContent } from "@scibly/ui/components/card";
+import Link from "next/link";
 
 import { TopicCardField } from "./topic-card-field";
 
 export function TopicCard({
   topic,
-  canEdit,
+  orgSlug,
   canDelete,
-  onEdit,
   onDelete,
   t,
 }: {
   topic: KnowledgeTopic;
-  canEdit: boolean;
+  orgSlug: string;
   canDelete: boolean;
-  onEdit: () => void;
   onDelete: () => void;
   t: KnowledgeTranslations;
 }) {
@@ -44,20 +44,20 @@ export function TopicCard({
               </a>
             ) : null}
           </div>
-          {canEdit || canDelete ? (
-            <div className="flex gap-2">
-              {canEdit ? (
-                <Button variant="outline" size="sm" onClick={onEdit}>
-                  {t.card.edit}
-                </Button>
-              ) : null}
-              {canDelete ? (
-                <Button variant="ghost" size="sm" onClick={onDelete}>
-                  {t.card.delete}
-                </Button>
-              ) : null}
-            </div>
-          ) : null}
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" asChild>
+              <Link
+                href={routes.app.profile.org(orgSlug).knowledge.topic(topic.id)}
+              >
+                {t.card.open}
+              </Link>
+            </Button>
+            {canDelete ? (
+              <Button variant="ghost" size="sm" onClick={onDelete}>
+                {t.card.delete}
+              </Button>
+            ) : null}
+          </div>
         </div>
 
         <dl className="grid gap-3 sm:grid-cols-2">
@@ -83,10 +83,8 @@ export function TopicCard({
           </TopicCardField>
         </dl>
 
-        {/* The count is a placeholder until the sync tickets land. */}
+        {/* pendingSuggestions stays a placeholder until suggestions land. */}
         <p className="text-ink-faint text-[12px]">
-          {t.health.lastSync}: {t.health.never}
-          {" · "}
           {t.health.pendingSuggestions.replace(
             "{count}",
             String(topic.pendingSuggestions),

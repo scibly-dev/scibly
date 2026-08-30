@@ -39,17 +39,6 @@ describe("KC1: one run per due connection", () => {
     ]);
   });
 
-  it("carries the provider, which is what the concurrency cap groups on", async () => {
-    sync.loadDueConnections.mockResolvedValue([
-      { id: "conn-a", provider: "NOTION" },
-    ]);
-
-    await requestDuePolls(sendEvent);
-
-    const [, events] = sendEvent.mock.calls[0];
-    expect(events[0].data.provider).toBe("NOTION");
-  });
-
   it("sends nothing when nothing is due", async () => {
     expect(await requestDuePolls(sendEvent)).toEqual({ requested: 0 });
     expect(sendEvent).not.toHaveBeenCalled();

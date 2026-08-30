@@ -8,17 +8,15 @@ import { DisconnectIntegrationDialog } from "./disconnect-integration-dialog";
 import { ProviderRow } from "./provider-row";
 import { useOrgIntegrations } from "./use-org-integrations";
 
-interface OrgIntegrationsCardProps {
-  orgSlug: string;
-  lang: string;
-  t: OrgSettingsPage["integrations"];
-}
-
 export function OrgIntegrationsCard({
   orgSlug,
   lang,
   t,
-}: OrgIntegrationsCardProps) {
+}: {
+  orgSlug: string;
+  lang: string;
+  t: OrgSettingsPage["integrations"];
+}) {
   const {
     connections,
     allProviders,

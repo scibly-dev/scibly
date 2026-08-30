@@ -11,7 +11,7 @@ import { toast } from "sonner";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import knowledgeEn from "../i18n/knowledge.i18n.en.json";
-import { TopicDialog } from "./topic-dialog";
+import { TopicForm } from "./topic-dialog/topic-form";
 
 const listFolders = vi.hoisted(() => vi.fn());
 const listGrants = vi.hoisted(() => vi.fn());
@@ -22,7 +22,9 @@ const invalidate = vi.hoisted(() => vi.fn());
 
 vi.mock("@/shared/api/trpc/client", () => ({
   api: {
-    useUtils: () => ({ knowledge: { list: { invalidate } } }),
+    useUtils: () => ({
+      knowledge: { list: { invalidate }, get: { invalidate } },
+    }),
     knowledge: {
       listFolders: { useQuery: listFolders },
       create: { useMutation: createMutation },
@@ -39,12 +41,14 @@ vi.mock("sonner", () => ({
 const t = knowledgeEn.knowledge;
 
 type MutationOptions = {
-  onSuccess: (saved: { externallyEditedAt: Date | null }) => void;
+  onSuccess: (
+    saved: { externallyEditedAt: Date | null },
+    fields: unknown,
+  ) => void;
   onError: (failure: { message: string }) => void;
 };
 
 const mutate = vi.fn();
-// The dialog hands its callbacks to `useMutation`; holding on to them is how a test plays the server's answer back.
 let lastUpdateOptions: MutationOptions;
 
 const topic = {
@@ -88,13 +92,13 @@ beforeEach(() => {
 
 const open = (edited: KnowledgeTopic | null = topic) =>
   render(
-    <TopicDialog
+    <TopicForm
       t={t}
       orgSlug="acme"
       orgId="org-1"
       defaultLanguage="en"
       topic={edited}
-      onClose={() => {}}
+      onSaved={() => {}}
     />,
   );
 
@@ -268,7 +272,12 @@ describe("what the dialog says a save did", () => {
   it("says the topic was updated when the document went with it", async () => {
     await saveTopic();
 
-    act(() => lastUpdateOptions.onSuccess({ externallyEditedAt: null }));
+    act(() =>
+      lastUpdateOptions.onSuccess(
+        { externallyEditedAt: null },
+        mutate.mock.calls.at(-1)![0],
+      ),
+    );
 
     expect(toast.success).toHaveBeenCalledWith(t.form.updated);
     expect(toast.warning).not.toHaveBeenCalled();
@@ -277,7 +286,12 @@ describe("what the dialog says a save did", () => {
   it("says the page was left alone when someone else had edited it", async () => {
     await saveTopic();
 
-    act(() => lastUpdateOptions.onSuccess({ externallyEditedAt: new Date() }));
+    act(() =>
+      lastUpdateOptions.onSuccess(
+        { externallyEditedAt: new Date() },
+        mutate.mock.calls.at(-1)![0],
+      ),
+    );
 
     expect(toast.warning).toHaveBeenCalledWith(t.form.updatedDocumentLeft);
     expect(toast.success).not.toHaveBeenCalled();

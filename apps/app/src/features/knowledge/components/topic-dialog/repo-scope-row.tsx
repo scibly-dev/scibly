@@ -15,8 +15,10 @@ import { api } from "@/shared/api/trpc/client";
 
 import { isValidPathGlob, MAX_TOPIC_PATH_GLOBS } from "../../contracts";
 import { Chips } from "./chips";
-import { FOLDER_SUFFIX, toggle } from "./contracts";
+import { toggle } from "./contracts";
 import { Picker } from "./picker";
+
+const FOLDER_SUFFIX = "/**";
 
 export function RepoScopeRow({
   t,

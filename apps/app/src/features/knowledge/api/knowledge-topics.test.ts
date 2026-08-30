@@ -2,7 +2,6 @@ import { routes } from "@scibly/routes";
 import { rateLimitCounter } from "@test/mocks/rate-limit-counter";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-// Real tRPC caller over the real router, so the schema and the gate both run for real; only the database, the org lookup and the GitHub connection are doubled.
 const db = vi.hoisted(() => ({
   knowledgeTopic: {
     findMany: vi.fn(),
@@ -19,6 +18,10 @@ const db = vi.hoisted(() => ({
 const resolveOrg = vi.hoisted(() => vi.fn());
 const resolveRepositoryConnection = vi.hoisted(() => vi.fn());
 const resolvePageConnection = vi.hoisted(() => vi.fn());
+const collect = vi.hoisted(() => ({
+  requestCollections: vi.fn(),
+}));
+const inngestSend = vi.hoisted(() => vi.fn());
 
 vi.mock("@scibly/db", () => ({
   db,
@@ -33,6 +36,8 @@ vi.mock("@scibly/db", () => ({
   },
 }));
 vi.mock("@/features/organizations/server", () => ({ resolveOrg }));
+vi.mock("../server/collect/collection-sync", () => collect);
+vi.mock("@/lib/inngest/client", () => ({ inngest: { send: inngestSend } }));
 vi.mock("@/features/integrations/server", () => ({
   resolveRepositoryConnection,
   resolvePageConnection,
@@ -926,5 +931,62 @@ describe("deleting a topic leaves the document behind", () => {
 
     expect(resolvePageConnection).not.toHaveBeenCalled();
     expect(db.knowledgeTopic.deleteMany).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe("only an admin or a maintainer may sync a topic", () => {
+  const asMember = (role: string, memberId: string) => {
+    resolveOrg.mockResolvedValue({
+      organization: { id: ORG_ID, slug: ORG_SLUG },
+      membership: { id: memberId, role },
+    });
+    db.knowledgeTopic.findFirst.mockResolvedValue(STORED);
+  };
+
+  beforeEach(() => {
+    collect.requestCollections.mockResolvedValue({ requested: 1 });
+  });
+
+  it("refuses a member who maintains nothing, without queueing anything", async () => {
+    asMember("member", "mem-other");
+
+    const error = await refusal(() =>
+      caller().syncNow({ orgSlug: ORG_SLUG, topicId: STORED.id }),
+    );
+
+    expect(error.code).toBe("FORBIDDEN");
+    expect(error.applicationCode).toBe("organization.access_denied");
+    expect(collect.requestCollections).not.toHaveBeenCalled();
+    expect(inngestSend).not.toHaveBeenCalled();
+  });
+
+  it("lets a plain member sync the topic they maintain", async () => {
+    asMember("member", "mem-1");
+
+    expect(
+      await caller().syncNow({ orgSlug: ORG_SLUG, topicId: STORED.id }),
+    ).toEqual({ queued: 1 });
+    expect(collect.requestCollections).toHaveBeenCalledWith(
+      [[ORG_ID, "repo-1"]],
+      expect.any(Function),
+    );
+  });
+
+  it("lets an admin sync a topic they maintain no part of", async () => {
+    asMember("admin", "mem-other");
+
+    expect(
+      await caller().syncNow({ orgSlug: ORG_SLUG, topicId: STORED.id }),
+    ).toEqual({ queued: 1 });
+  });
+
+  it("asks only for membership, so reading the topic is not admin-only", async () => {
+    asMember("member", "mem-other");
+
+    await refusal(() =>
+      caller().syncNow({ orgSlug: ORG_SLUG, topicId: STORED.id }),
+    );
+
+    expect(resolveOrg).toHaveBeenCalledWith(ORG_SLUG, USER_ID, "member");
   });
 });

@@ -1,3 +1,4 @@
+import { AppError } from "@scibly/api/application-error";
 import {
   assertAllowed,
   decideKnowledgeSync,
@@ -9,7 +10,10 @@ import { db } from "@scibly/db";
 
 import { resolveRepositoryConnection } from "@/features/integrations/server";
 import { resolveOrg } from "@/features/organizations/server";
+import { inngest } from "@/lib/inngest/client";
 
+import { requestCollections } from "../server/collect/collection-sync";
+import { loadTopicFeed } from "../server/collect/topic-feed";
 import {
   createTopicDocument,
   readDocumentDestination,
@@ -29,10 +33,10 @@ import {
 } from "../server/topic-view";
 import {
   createTopicSchema,
-  deleteTopicSchema,
   listFoldersSchema,
   orgSlugInput,
   setDocumentDestinationSchema,
+  topicIdSchema,
   updateTopicSchema,
 } from "./knowledge.schema";
 
@@ -41,6 +45,12 @@ const FOLDERS_LIMIT = {
   maxPerWindow: 120,
   tooManyRequestsMessage:
     "Too many folder listings. Please try again in a bit.",
+} as const;
+
+const SYNC_LIMIT = {
+  endpoint: "knowledge.syncNow",
+  maxPerWindow: 20,
+  tooManyRequestsMessage: "Too many syncs. Please try again in a bit.",
 } as const;
 
 const WRITE_LIMIT = {
@@ -53,6 +63,33 @@ async function requireKnowledgeAdmin(orgSlug: string, userId: string) {
   const { organization } = await resolveOrg(orgSlug, userId, "admin_or_owner");
   assertAllowed(await decideKnowledgeSync(db, organization.id));
   return { organizationId: organization.id };
+}
+
+async function resolveTopicAccess(
+  orgSlug: string,
+  userId: string,
+  topicId: string,
+) {
+  const { organization, membership } = await resolveOrg(
+    orgSlug,
+    userId,
+    "member",
+  );
+  const topic = await db.knowledgeTopic.findFirst({
+    where: { id: topicId, organizationId: organization.id },
+    select: TOPIC_SELECT,
+  });
+  if (!topic) throw topicNotFound();
+
+  const canManage = membership.role === "admin" || membership.role === "owner";
+  return {
+    organizationId: organization.id,
+    topic,
+    canManage,
+    canSync:
+      canManage ||
+      topic.maintainers.some((maintainer) => maintainer.id === membership.id),
+  };
 }
 
 export const knowledgeTopicProcedures = {
@@ -83,6 +120,70 @@ export const knowledgeTopicProcedures = {
       canManage,
     };
   }),
+
+  get: protectedProcedure.input(topicIdSchema).query(async ({ input, ctx }) => {
+    const { organizationId, topic, canManage, canSync } =
+      await resolveTopicAccess(
+        input.orgSlug,
+        ctx.session.user.id,
+        input.topicId,
+      );
+    const view = toTopicView(topic);
+    const [feed, access] = await Promise.all([
+      loadTopicFeed(organizationId, view.repositories),
+      describeKnowledgeSyncAccess(db, organizationId),
+    ]);
+    // Raw provider error text is for those who can act on it; everyone else
+    // still sees the run as failed.
+    const runs = canManage
+      ? feed.runs
+      : feed.runs.map((run) => ({ ...run, failureReason: null }));
+    return {
+      organizationId,
+      topic: view,
+      runs,
+      bundles: feed.bundles,
+      access,
+      canManage,
+      canSync,
+    };
+  }),
+
+  syncNow: protectedProcedure
+    .input(topicIdSchema)
+    .mutation(async ({ input, ctx }) => {
+      const { organizationId, topic, canSync } = await resolveTopicAccess(
+        input.orgSlug,
+        ctx.session.user.id,
+        input.topicId,
+      );
+      if (!canSync) {
+        throw new AppError({
+          code: "FORBIDDEN",
+          applicationCode: "organization.access_denied",
+          message:
+            "Only an admin or one of this topic's maintainers can sync it.",
+        });
+      }
+      assertAllowed(await decideKnowledgeSync(db, organizationId));
+
+      // Keyed by organization: what a sync spends is the installation's GitHub
+      // quota, which every maintainer draws on together.
+      return withRateLimit(
+        { db, identifier: organizationId, ...SYNC_LIMIT },
+        async () => {
+          const { requested } = await requestCollections(
+            toTopicView(topic).repositories.map(
+              (repository): [string, string] => [organizationId, repository.id],
+            ),
+            async (events) => {
+              await inngest.send(events);
+            },
+          );
+          return { queued: requested };
+        },
+      );
+    }),
 
   listFolders: protectedProcedure
     .input(listFoldersSchema)
@@ -212,7 +313,7 @@ export const knowledgeTopicProcedures = {
     }),
 
   delete: protectedProcedure
-    .input(deleteTopicSchema)
+    .input(topicIdSchema)
     .mutation(async ({ input, ctx }) => {
       // No plan gate: an organization's own data stays theirs to remove.
       const { organization } = await resolveOrg(

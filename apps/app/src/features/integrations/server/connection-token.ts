@@ -33,24 +33,6 @@ function revoked(provider: string): AppError {
   });
 }
 
-async function forgetRevokedConnection(
-  connection: ConnectionCredential,
-  providerId: IntegrationProviderId,
-): Promise<void> {
-  await db.$transaction(async (tx) => {
-    await warnSourcesOfLostConnection(
-      connection.id,
-      providerId,
-      "disconnected",
-      tx,
-    );
-    await tx.integrationConnection.updateMany({
-      where: { id: connection.id },
-      data: DISCONNECTED_CREDENTIAL,
-    });
-  });
-}
-
 export async function resolveConnectionToken(
   connection: ConnectionCredential,
 ): Promise<string> {
@@ -62,7 +44,18 @@ export async function resolveConnectionToken(
       return await provider.mintAccessToken(connection.installationId);
     } catch (error) {
       if (!(error instanceof IntegrationRevokedError)) throw error;
-      await forgetRevokedConnection(connection, provider.providerId);
+      await db.$transaction(async (tx) => {
+        await warnSourcesOfLostConnection(
+          connection.id,
+          provider.providerId,
+          "disconnected",
+          tx,
+        );
+        await tx.integrationConnection.updateMany({
+          where: { id: connection.id },
+          data: DISCONNECTED_CREDENTIAL,
+        });
+      });
       throw revoked(provider.providerId);
     }
   }

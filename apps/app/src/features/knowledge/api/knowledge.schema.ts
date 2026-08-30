@@ -10,7 +10,7 @@ import {
 
 export { orgSlugInput };
 
-export const pathGlobInput = z
+const pathGlobInput = z
   .string()
   .trim()
   .refine(
@@ -48,7 +48,7 @@ export const listFoldersSchema = orgSlugInput.extend({
   repositoryId: z.string().min(1),
 });
 
-export const deleteTopicSchema = orgSlugInput.extend({
+export const topicIdSchema = orgSlugInput.extend({
   topicId: z.string().min(1),
 });
 
