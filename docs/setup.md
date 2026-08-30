@@ -7,11 +7,11 @@ steps, or [docker.md](docker.md) instead if you just want it running —
 
 ## Prerequisites
 
-| Tool       | Minimum       | Recommended                                                |
-| ---------- | ------------- | ----------------------------------------------------------- |
-| Node       | ≥22 ([`engines`](../package.json)) | 22 LTS — matches [CI](../.github/workflows/ci.yml); production images run 24 |
-| pnpm       | —             | 10.33.0, exact — pinned in [package.json](../package.json)'s `packageManager` field; `corepack enable` picks it up |
-| PostgreSQL | —             | any recent version — one database, shared by `apps/app`, `apps/web`, and `apps/collab` |
+| Tool       | Minimum                            | Recommended                                                                                                        |
+| ---------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Node       | ≥22 ([`engines`](../package.json)) | 22 LTS — matches [CI](../.github/workflows/ci.yml); production images run 24                                       |
+| pnpm       | —                                  | 10.33.0, exact — pinned in [package.json](../package.json)'s `packageManager` field; `corepack enable` picks it up |
+| PostgreSQL | —                                  | any recent version — one database, shared by `apps/app`, `apps/web`, and `apps/collab`                             |
 
 ## 1. Install
 
@@ -36,10 +36,22 @@ cp packages/db/.env.example packages/db/.env
 - `DATABASE_URL` in all four should point at the same database.
 - `apps/app/.env`'s schema (`apps/app/src/env.js`) validates required
   variables at build/dev time. For a minimal local run without every
-  third-party integration (AWS S3, Stripe, Notion, PostHog, ...), set
+  third-party integration (AWS S3, Stripe, Notion, GitHub, PostHog, ...), set
   `SKIP_ENV_VALIDATION=true` and leave those blank — the app boots, but
   features that depend on a missing credential (media uploads, billing,
   Notion import, ...) won't work until it's supplied.
+- `NOTION_CLIENT_ID` / `NOTION_CLIENT_SECRET` come from a Notion public
+  integration. Its **capabilities** must include _Insert content_ and _Update
+  content_, not only read — Knowledge writes each topic's document to a Notion
+  page. The capabilities live on the integration, not in the authorize URL, so
+  a workspace connected before they were enabled keeps working for reading and
+  must reconnect before Knowledge can write.
+- `GITHUB_APP_SLUG`, `GITHUB_APP_ID`, `GITHUB_APP_PRIVATE_KEY`,
+  `GITHUB_APP_CLIENT_ID` and `GITHUB_APP_CLIENT_SECRET` are
+  required by that schema, like Notion's credentials. They come from a GitHub
+  App you register once per environment — see
+  [runbooks/github-app.md](runbooks/github-app.md), which covers the dev and
+  prod registrations and where each credential comes from.
 - `COLLAB_TOKEN_SECRET` must be the **same value** in `apps/app/.env` and
   `apps/collab/.env` (min. 32 characters) — it signs the short-lived token
   each editor session uses to open a collab room. Generate one with
@@ -49,6 +61,15 @@ cp packages/db/.env.example packages/db/.env
 - `apps/web/.env` mounts the same better-auth handler as `apps/app`, so any
   Stripe vars you set (see [Optional integrations](#optional-integrations)
   below) need to be mirrored there too.
+- `INNGEST_BASE_URL`, `INNGEST_EVENT_KEY`, and `INNGEST_SIGNING_KEY` are all
+  required, and `apps/app/.env.example` ships values that work as-is against
+  the local dev server `pnpm dev:inngest` starts (see step 4). Development runs
+  Inngest in dev mode, where traffic is unsigned and the two keys are
+  ignored; they matter once the app points at a real self-hosted server
+  (`docker compose` does — see [docker.md](docker.md)), where they must match
+  the values that server was started with. Generate each with
+  `openssl rand -hex 32`. `INNGEST_DEV="false"` forces signed traffic from a
+  dev session, for working against a real server locally.
 
 ## Optional integrations
 
@@ -122,6 +143,20 @@ every app through Turborepo:
 To run a single app instead: `pnpm --filter @scibly/app run dev` (or
 `@scibly/web`, `@scibly/collab`).
 
+Background work needs a second terminal — nothing schedules or executes an
+Inngest function without it:
+
+```bash
+pnpm dev:inngest
+```
+
+That's the Inngest dev server, dashboard on http://localhost:8288, pointed at
+`apps/app`'s serve route (`/api/inngest`). It picks up whatever
+`apps/app/src/server/inngest.ts` registers, re-syncing on its own as you edit.
+Nothing waits for a cron to come round: the dashboard's event tester sends any
+event by hand, so `scibly/integration-poll.requested` with a `connectionId`
+runs one poll on the spot.
+
 ## Checks
 
 ```bash
@@ -140,6 +175,11 @@ pnpm validate      # check + test:unit + test:e2e
 - **Env validation fails on vars you don't have credentials for yet** — set
   `SKIP_ENV_VALIDATION=true` in `apps/app/.env` while you get the app
   running, then fill credentials in as you need the features behind them.
+- **Background functions never run** — `pnpm dev` does not start the Inngest
+  dev server; `pnpm dev:inngest` does, separately (see step 4). With it
+  running, http://localhost:8288 lists them under Functions; if it
+  doesn't, the app wasn't reachable at http://localhost:3001/api/inngest when
+  the server polled it.
 - **i18n or editor-schema errors on `dev`/`build`** — both `apps/app` and
   `apps/web` run `predev`/`prebuild` hooks (`pnpm i18n:merge`, and for
   `apps/app` also `pnpm schema:generate`) automatically; if you're invoking

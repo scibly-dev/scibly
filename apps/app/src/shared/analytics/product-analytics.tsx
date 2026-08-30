@@ -35,6 +35,11 @@ const TRACKED_MUTATIONS = {
   },
 
   "integration.linkPages": { event: "integration_pages_linked" },
+
+  "knowledge.create": { event: "knowledge_topic_created" },
+  "knowledge.update": { event: "knowledge_topic_updated" },
+  "knowledge.delete": { event: "knowledge_topic_deleted" },
+  "knowledge.setDocumentDestination": { event: "knowledge_destination_set" },
 } satisfies Partial<Record<RouterMutationPath, TrackedMutation>>;
 
 const TRACKED_BY_PATH = new Map<string, TrackedMutation>(

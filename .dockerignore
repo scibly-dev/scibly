@@ -17,6 +17,14 @@ build/
 # lockfile, and can be several GB.
 .pnpm-store/
 
+# Local secrets. The build stage sets its own stand-ins for what it needs, and
+# docker-compose supplies the real values at runtime through env_file — a
+# developer's .env has no business inside the image.
+.env
+**/.env
+.env.local
+**/.env.local
+
 # Version control, IDEs, and local agent state
 .git/
 .gitignore

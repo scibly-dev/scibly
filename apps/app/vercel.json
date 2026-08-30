@@ -1,9 +1,3 @@
 {
-  "installCommand": "cd ../.. && pnpm install --frozen-lockfile",
-  "crons": [
-    {
-      "path": "/api/cron/sync-integrations",
-      "schedule": "0 4 * * *"
-    }
-  ]
+  "installCommand": "cd ../.. && pnpm install --frozen-lockfile"
 }

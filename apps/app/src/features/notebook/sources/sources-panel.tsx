@@ -1,6 +1,6 @@
 "use client";
 
-import type { IntegrationProviderId } from "@/features/integrations/contracts";
+import type { PageIntegrationProviderId } from "@/features/integrations/contracts";
 import type { RouterOutputs } from "@/shared/api/trpc/client";
 import type { NotebookTranslations } from "../i18n/notebook.types";
 
@@ -41,9 +41,10 @@ function useIntegrationPicker(
   orgSlug: string,
   atLimit: boolean,
   ensureNotebook: () => Promise<string>,
+  entitlementCopy: NotebookTranslations["sources"]["entitlement"],
 ) {
   const [pickerState, setPickerState] = useState<{
-    provider: IntegrationProviderId;
+    provider: PageIntegrationProviderId;
     notebookId: string;
   } | null>(null);
   const { data } = api.integration.list.useQuery(
@@ -67,11 +68,17 @@ function useIntegrationPicker(
       ),
     );
   }, [pickerState, sources]);
-  const open = (provider: IntegrationProviderId) => {
+  const open = (provider: PageIntegrationProviderId) => {
     if (atLimit) return;
-    void ensureNotebook().then((notebookId) =>
-      setPickerState({ provider, notebookId }),
-    );
+    void ensureNotebook()
+      .then((notebookId) => setPickerState({ provider, notebookId }))
+      .catch((error) =>
+        reportSourceError(
+          "[SourcesPanel] Could not open the page picker:",
+          error,
+          entitlementCopy,
+        ),
+      );
   };
   return {
     pickerState,
@@ -156,6 +163,13 @@ export const SourcesPanelPresentation = (
                 .ensureNotebook()
                 .then((notebookId) =>
                   props.addText.mutate({ notebookId, name, content }),
+                )
+                .catch((error) =>
+                  reportSourceError(
+                    "[SourcesPanel] Add text failed:",
+                    error,
+                    props.t.sources.entitlement,
+                  ),
                 );
             }}
             isLoading={props.addText.isPending}
@@ -245,6 +259,7 @@ export function SourcesPanel({ t, notebookId, orgSlug }: SourcesPanelProps) {
     orgSlug,
     uploadsDisabled,
     ensureNotebook,
+    t.sources.entitlement,
   );
 
   return (

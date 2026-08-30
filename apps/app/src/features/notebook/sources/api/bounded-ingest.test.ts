@@ -16,9 +16,9 @@ vi.mock("@scibly/db", async (importOriginal) => ({
   ...(await importOriginal<object>()),
   db,
 }));
-vi.mock("@/features/notebook/server", () => ingestion);
+vi.mock("../ingestion/ingest-source", () => ingestion);
 
-const { boundedIngest } = await import("./bounded-ingest");
+const { boundedIngest, boundedLink } = await import("./bounded-ingest");
 
 const AUTHOR = "user-author";
 const SOURCE = "src-syllabus";
@@ -90,5 +90,29 @@ describe("what an indexing request costs its author", () => {
       "Too many indexing requests",
     );
     expect(ingestion.ingestOrRefreshSource).not.toHaveBeenCalled();
+  });
+});
+
+describe("what a page-link request costs its author", () => {
+  it("L1: one batch spends one slot, however many pages it linked", async () => {
+    await boundedLink(AUTHOR, () =>
+      Promise.resolve({ sourceIds: ["a", "b", "c"] }),
+    );
+
+    expect(spent()).toBe(1);
+  });
+
+  it("L2: a batch whose pages were all linked already hands its slot back", async () => {
+    await boundedLink(AUTHOR, () => Promise.resolve({ sourceIds: [] }));
+
+    expect(spent()).toBe(0);
+  });
+
+  it("L3: linking draws on the same hourly slots as indexing", async () => {
+    live.setSpent(AUTHOR, ENDPOINT, HOURLY_SLOTS);
+
+    await expect(
+      boundedLink(AUTHOR, () => Promise.resolve({ sourceIds: ["a"] })),
+    ).rejects.toThrow("Too many indexing requests");
   });
 });

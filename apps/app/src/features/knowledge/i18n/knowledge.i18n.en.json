@@ -1,0 +1,121 @@
+{
+  "knowledge": {
+    "title": "Knowledge",
+    "subtitle": "Living documents kept in step with the repositories they describe.",
+    "newTopic": "New topic",
+    "empty": {
+      "title": "No topics yet",
+      "description": "A topic names one document and the repositories it follows."
+    },
+    "gate": {
+      "lockedTitle": "Knowledge is included from {plan}",
+      "lockedDescription": "Upgrade to {plan} to keep documentation in step with your repositories.",
+      "lapsedTitle": "Subscription lapsed",
+      "lapsedDescription": "Reactivate the subscription to create or change knowledge topics.",
+      "fallbackPlan": "a paid plan"
+    },
+    "health": {
+      "pendingSuggestions": "{count} pending suggestions"
+    },
+    "card": {
+      "repositories": "Repositories",
+      "maintainers": "Maintainers",
+      "noMaintainers": "None",
+      "delete": "Delete",
+      "openDocument": "Open document",
+      "externallyEdited": "Edited in Notion",
+      "externallyEditedHint": "Someone changed this page in Notion. Scibly will not overwrite it.",
+      "open": "Open"
+    },
+    "destination": {
+      "title": "Where documents live",
+      "description": "Pick the Notion page that “Scibly Knowledge” should be created under. Every topic's document becomes a sub-page of it.",
+      "current": "Currently under:",
+      "currentUnknown": "not shared with Scibly",
+      "notConnected": "Connect Notion in integration settings first, and allow Scibly to insert and update content.",
+      "select": "Select a page…",
+      "loading": "Loading pages…",
+      "empty": "No pages are shared with Scibly. Share one in Notion, then reload.",
+      "save": "Create page",
+      "move": "Move page",
+      "change": "Change",
+      "saving": "Creating…",
+      "moving": "Moving…",
+      "created": "Scibly Knowledge created",
+      "moved": "Scibly Knowledge moved"
+    },
+    "form": {
+      "createTitle": "New topic",
+      "description": "What the document is about, and which repositories it follows.",
+      "optional": "optional",
+      "name": "Name",
+      "namePlaceholder": "Onboarding guide",
+      "nameRequired": "Give the topic a name.",
+      "language": "Document language",
+      "languageEn": "English",
+      "languageDe": "German",
+      "repositories": "Repositories",
+      "repositoriesHint": "The topic follows changes in the repositories you pick — each one fully, unless you narrow it to folders or a pattern.",
+      "repositoriesSelect": "Select repositories…",
+      "repositoriesRequired": "Pick at least one repository.",
+      "repositoriesLoading": "Loading repositories…",
+      "repositoriesEmpty": "No repositories. Connect GitHub in integration settings first.",
+      "repositoriesUnreachable": "Marked repositories are no longer in the connected GitHub installation. Remove them to save.",
+      "maintainers": "Maintainers",
+      "maintainersHint": "They review what the sync suggests. You can add them later.",
+      "maintainersSelect": "Select maintainers…",
+      "maintainersEmpty": "No members to pick yet.",
+      "maintainersLoading": "Loading members…",
+      "maintainersUnavailable": "Members could not be loaded. Reload the page to try again.",
+      "foldersBrowse": "Browse folders",
+      "foldersLoading": "Loading folders…",
+      "foldersEmpty": "No folders in this repository.",
+      "globPlaceholder": "docs/**/*.md",
+      "globInvalid": "“{glob}” is not a path inside the repository. Drop the leading slash and any “..”.",
+      "add": "Add",
+      "remove": "Remove {name}",
+      "filterPlaceholder": "Search…",
+      "noMatches": "Nothing matches that search.",
+      "selected": "{count} selected",
+      "cancel": "Cancel",
+      "save": "Save",
+      "saving": "Saving…",
+      "created": "Topic created",
+      "updated": "Topic updated",
+      "repositoriesUnavailable": "Repositories could not be loaded. Reload the page to try again.",
+      "repositoriesMax": "A topic can follow at most {max} repositories.",
+      "globMax": "A repository can be narrowed to at most {max} path globs.",
+      "repositoriesInvalid": "One of the path patterns is not valid. Remove it and try again.",
+      "updatedDocumentLeft": "Topic saved. Its Notion page was changed outside Scibly, so Scibly left it alone."
+    },
+    "deleteDialog": {
+      "title": "Delete topic?",
+      "description": "\"{name}\" will be removed. The pull requests already collected stay with the organization, and its Notion page is left alone.",
+      "confirm": "Delete",
+      "cancel": "Cancel",
+      "deleted": "Topic deleted"
+    },
+    "loadFailed": "Topics could not be loaded. Reload the page to try again.",
+    "detail": {
+      "back": "All topics",
+      "syncNow": "Sync now",
+      "syncing": "Syncing…",
+      "syncQueued": "Sync queued for {count} repositories",
+      "settings": "Settings",
+      "loadFailed": "This topic could not be loaded. Reload the page to try again."
+    },
+    "feed": {
+      "title": "Activity",
+      "empty": "Nothing has been collected yet. Run a sync to start.",
+      "counts": "{collected} collected · {discarded} discarded",
+      "capped": "stopped at its budget",
+      "queued": "Queued",
+      "running": "Running",
+      "succeeded": "Done",
+      "failed": "Failed",
+      "bundles": "Collected pull requests",
+      "noBundles": "No pull requests collected yet. Collection starts at the first sync, so pull requests merged from then on appear here.",
+      "truncated": "shortened"
+    }
+  }
+}

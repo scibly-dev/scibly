@@ -6,8 +6,7 @@ model CourseVersion {
   publishedAt       DateTime                 @default(now())
   publishedById     String?
   publishedBy       User?                    @relation(fields: [publishedById], references: [id], onDelete: SetNull)
-  /// A later publish retired this version. Set only when the author asks for it
-  /// at publish time — publishing on its own leaves earlier versions takeable.
+  /// Set only when the author asks at publish time; publishing alone leaves earlier versions takeable.
   superseded        Boolean                  @default(false)
   enrollments       CourseEnrollment[]
   lessons           Lesson[]

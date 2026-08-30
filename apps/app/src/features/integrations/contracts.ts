@@ -1,7 +1,26 @@
-// Kept dependency-free so the client bundle (input schemas, settings card) never pulls in a provider SDK.
-export const INTEGRATION_PROVIDERS = ["NOTION"] as const;
+// Kept dependency-free: the client bundle imports this, so it must never pull in a provider SDK.
+import type { IntegrationProvider } from "@scibly/db/enums";
 
-export type IntegrationProviderId = (typeof INTEGRATION_PROVIDERS)[number];
+export const INTEGRATION_PROVIDERS = [
+  "NOTION",
+  "GITHUB",
+] as const satisfies readonly IntegrationProvider[];
+
+export type IntegrationProviderId = IntegrationProvider;
+
+export const PAGE_INTEGRATION_PROVIDERS = [
+  "NOTION",
+] as const satisfies readonly IntegrationProviderId[];
+
+export type PageIntegrationProviderId =
+  (typeof PAGE_INTEGRATION_PROVIDERS)[number];
+
+export type RepositoryIntegrationProviderId = Extract<
+  IntegrationProviderId,
+  "GITHUB"
+>;
+
+export const MAX_LINKED_PAGES_PER_REQUEST = 20;
 
 // A provider's raw `?error=` is always mapped to `provider_denied` or `provider_error` first — it must never be echoed into the query string.
 export const INTEGRATION_CALLBACK_ERRORS = [
@@ -32,7 +51,6 @@ export interface IntegrationPage {
 export interface IntegrationPageContent {
   text: string;
   title: string;
-  pageCount?: number;
   lastEdited: Date;
 }
 
@@ -41,10 +59,30 @@ export interface IntegrationPageRevision {
   lastEdited: Date;
 }
 
-export interface OAuthTokens {
-  accessToken: string;
-  refreshToken?: string;
-  expiresAt?: Date;
-  workspaceId?: string;
-  workspaceName?: string;
+export interface IntegrationGrant {
+  id: string;
+  name: string;
+  url: string;
 }
+
+// Fewer grants than `totalCount` means the listing stopped at its page budget.
+export interface IntegrationGrantList {
+  grants: IntegrationGrant[];
+  totalCount: number;
+}
+
+export type IntegrationCredential =
+  | {
+      kind: "oauth_tokens";
+      accessToken: string;
+      workspaceId?: string;
+      workspaceName?: string;
+    }
+  | {
+      kind: "app_installation";
+      installationId: string;
+      workspaceId?: string;
+      workspaceName?: string;
+    };
+
+export type IntegrationCredentialKind = IntegrationCredential["kind"];

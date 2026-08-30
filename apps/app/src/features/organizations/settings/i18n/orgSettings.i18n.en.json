@@ -112,20 +112,41 @@
       "byoaiLockedRemovalNote": "Removing an endpoint or switching back to Scibly AI stays available."
     },
     "integrations": {
-      "title": "Knowledge Source Integrations",
-      "description": "Connect external knowledge bases so AI Creator notebooks can import pages as RAG sources.",
+      "title": "Integrations",
+      "description": "Connect external services to your organization — knowledge bases AI Creator notebooks can import pages from, and code hosts scibly can read.",
       "connectButton": "Connect",
       "disconnectButton": "Disconnect",
+      "cancelButton": "Cancel",
       "connectedStatus": "Connected",
       "notConnectedStatus": "Not connected",
-      "workspaceLabel": "Workspace",
-      "connectedBy": "Connected by",
       "confirmDisconnectTitle": "Disconnect integration?",
       "confirmDisconnectDescription": "Existing sources will remain in your notebooks, but re-sync will no longer work until you reconnect.",
       "disconnectedSuccessfully": "Integration disconnected.",
       "connectedSuccessfully": "Integration connected successfully.",
+      "grantsTitle": "Has access to",
+      "grantsLoading": "Loading access…",
+      "grantsEmpty": "This connection has not been given access to anything yet.",
+      "grantsError": "Couldn't load what this connection can reach.",
+      "grantsMore": "{count} more",
+      "grantsShown": "Showing {shown} of {total}.",
+      "noProvidersAvailable": "No integrations available.",
+      "callbackErrorFallback": "Connection failed. Please try again.",
+      "callbackErrors": {
+        "provider_denied": "Access denied. You cancelled the authorization.",
+        "provider_error": "The provider rejected the connection. Please try again.",
+        "missing_params": "The connection link was incomplete. Please try again.",
+        "invalid_state": "Invalid OAuth state. Please try again.",
+        "expired_state": "The connection link expired. Please try again.",
+        "state_mismatch": "OAuth state mismatch. Please try again.",
+        "session_mismatch": "You are signed in as a different user than the one who started the connection.",
+        "org_not_found": "Organization not found.",
+        "forbidden": "You need to be an admin or owner to connect an integration.",
+        "token_exchange_failed": "Connection failed. The provider rejected the credentials scibly sent."
+      },
+      "revokedNotice": "Disconnected on {provider}'s side. Connect again to resume.",
       "providers": {
-        "NOTION": "Notion"
+        "NOTION": "Notion",
+        "GITHUB": "GitHub"
       }
     }
   }

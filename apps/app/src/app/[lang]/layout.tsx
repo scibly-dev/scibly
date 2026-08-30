@@ -1,8 +1,11 @@
+import { getLocale } from "@scibly/i18n";
 import { ErrorBoundaryWrapper } from "@scibly/ui/components/error-boundary-wrapper";
 import { Toaster } from "@scibly/ui/components/sonner";
 
 import { getDictionary } from "@/i18n/dictionaries";
 import Providers from "@/shared/api/provider";
+
+import { HtmlLang } from "./html-lang";
 
 export async function generateStaticParams() {
   return [{ lang: "en" }, { lang: "de" }];
@@ -16,19 +19,16 @@ export default async function LangLayout({
   params: Promise<{ lang: string }>;
 }>) {
   const { lang } = await params;
+  // The proxy already redirects anything else away, but the route param is the boundary and nothing downstream should have to trust it.
+  const locale = getLocale(lang, true);
   const { errorBoundaryTitle, errorBoundaryRetryLabel } = await getDictionary(
-    lang,
+    locale,
     "appRoutes",
   );
 
   return (
-    <div data-locale={lang}>
-      {/* `<html>` is one segment above, where the locale isn't a param yet. */}
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `document.documentElement.lang=${JSON.stringify(lang)}`,
-        }}
-      />
+    <div data-locale={locale}>
+      <HtmlLang lang={locale} />
       <ErrorBoundaryWrapper
         title={errorBoundaryTitle}
         retryLabel={errorBoundaryRetryLabel}

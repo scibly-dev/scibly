@@ -1,49 +1,33 @@
 import { notLapsedSubscription } from "@scibly/api/entitlement";
-import { routes } from "@scibly/routes";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { SOURCE_STATUS } from "@/shared/content/sources/constants";
 
 const db = vi.hoisted(() => ({
-  integrationConnection: { findMany: vi.fn(), update: vi.fn() },
-  notebookSource: { findMany: vi.fn(), updateMany: vi.fn() },
-  integrationSyncLease: {
-    updateMany: vi.fn(),
-    create: vi.fn(),
+  integrationConnection: {
+    findMany: vi.fn(),
     findUnique: vi.fn(),
+    updateMany: vi.fn(),
+    updateManyAndReturn: vi.fn(),
   },
+  notebookSource: { findMany: vi.fn(), updateMany: vi.fn() },
+  $transaction: vi.fn(),
 }));
 
 const provider = vi.hoisted(() => ({ pollModifiedPages: vi.fn() }));
-const registry = vi.hoisted(() => ({ getProvider: vi.fn() }));
-const crypto = vi.hoisted(() => ({ decryptApiKey: vi.fn() }));
+const registry = vi.hoisted(() => ({ getPageProvider: vi.fn() }));
+const token = vi.hoisted(() => ({ resolveConnectionToken: vi.fn() }));
 
-vi.mock("@scibly/db", async () => {
-  const client = await import("@scibly/db/client");
-  return { db, Prisma: client.Prisma };
-});
+vi.mock("@scibly/db", () => ({ db }));
 vi.mock("@/features/integrations/server/registry", () => registry);
-vi.mock("@/lib/crypto/api-key", () => crypto);
-vi.mock("@/env", () => ({
-  env: {
-    CRON_SECRET: "test-cron-secret",
-    NEXT_PUBLIC_APP_URL: "https://app.test",
-  },
-}));
+vi.mock("@/features/integrations/server/connection-token", () => token);
 
-const prismaClient = await import("@scibly/db/client");
 const {
-  acquireSyncLease,
-  backoffMs,
-  continueSyncLease,
   getPollingStart,
-  loadOwedConnections,
-  MAX_SYNC_HOPS,
-  releaseSyncLease,
-  runSyncStep,
-  SYNC_BATCH_SIZE,
+  loadDueConnections,
+  pollConnection,
+  recordPollFailure,
   SYNC_CLOCK_SKEW_MS,
-  SYNC_HOP_DEADLINE_MS,
   SYNC_WINDOW_FLOOR_MS,
 } = await import("./sync-source-freshness");
 
@@ -51,38 +35,32 @@ const NOW = new Date("2026-07-27T03:00:00.000Z");
 const HOUR = 60 * 60 * 1000;
 const DAY = 24 * HOUR;
 
-const CHAIN_STARTED_AT = new Date("2026-07-27T02:59:00.000Z");
-const LEASE = {
-  token: "lease-token",
-  chainStartedAt: CHAIN_STARTED_AT,
-  hops: 0,
-};
-
 type Connection = {
   id: string;
   provider: string;
   accessTokenEncrypted: string;
   lastPolledAt: Date | null;
-  consecutiveFailures: number;
 };
-
-const fetchMock = vi.fn();
 
 function connection(overrides: Partial<Connection> = {}): Connection {
   return {
     id: "conn-1",
-    provider: "notion",
+    provider: "NOTION",
     accessTokenEncrypted: "encrypted-token",
     lastPolledAt: null,
-    consecutiveFailures: 0,
     ...overrides,
   };
 }
 
-function owed(batch: Connection[], remaining: Connection[] = []): void {
-  db.integrationConnection.findMany
-    .mockResolvedValueOnce(batch)
-    .mockResolvedValueOnce(remaining);
+function stored(row: Partial<Connection>) {
+  db.integrationConnection.findUnique.mockResolvedValue(row);
+}
+
+// The failure counter is incremented by the database, so a test says what the database settled on rather than what the row held beforehand.
+function counted(consecutiveFailures: number) {
+  db.integrationConnection.updateManyAndReturn.mockResolvedValue([
+    { consecutiveFailures },
+  ]);
 }
 
 function sources(...rows: { id: string; externalId: string | null }[]): void {
@@ -101,44 +79,36 @@ function markedStale(): string[] {
   );
 }
 
+// A failure writes twice — the counted increment, then the backoff it implies — so this is everything an attempt put on the row.
 function writtenTo(connectionId: string) {
-  const call = db.integrationConnection.update.mock.calls.find(
-    ([args]) => args.where.id === connectionId,
-  );
-  return call?.[0].data;
-}
-
-function uniqueViolation() {
-  return new prismaClient.Prisma.PrismaClientKnownRequestError(
-    "Unique constraint failed",
-    { code: "P2002", clientVersion: "7.8.0" },
-  );
+  const written = [
+    ...db.integrationConnection.updateMany.mock.calls,
+    ...db.integrationConnection.updateManyAndReturn.mock.calls,
+  ]
+    .filter(([args]) => args.where.id === connectionId)
+    .map(([args]) => args.data);
+  return written.length === 0 ? undefined : Object.assign({}, ...written);
 }
 
 beforeEach(() => {
   vi.resetAllMocks();
   vi.useFakeTimers({ now: NOW });
-  vi.spyOn(console, "error").mockImplementation(() => undefined);
-  vi.stubGlobal("fetch", fetchMock);
 
-  fetchMock.mockResolvedValue({ ok: true });
   db.integrationConnection.findMany.mockResolvedValue([]);
-  db.integrationConnection.update.mockResolvedValue({});
+  db.integrationConnection.findUnique.mockResolvedValue(connection());
+  db.integrationConnection.updateMany.mockResolvedValue({ count: 1 });
+  counted(1);
   db.notebookSource.findMany.mockResolvedValue([]);
   db.notebookSource.updateMany.mockImplementation(
     async ({ where }: { where: { id: { in: string[] } } }) => ({
       count: where.id.in.length,
     }),
   );
-  db.integrationSyncLease.updateMany.mockResolvedValue({ count: 1 });
-  db.integrationSyncLease.create.mockResolvedValue({ id: "singleton" });
-  db.integrationSyncLease.findUnique.mockResolvedValue({
-    token: LEASE.token,
-    chainStartedAt: CHAIN_STARTED_AT,
-    hops: 1,
-  });
-  registry.getProvider.mockReturnValue(provider);
-  crypto.decryptApiKey.mockReturnValue("plain-token");
+  db.$transaction.mockImplementation(async (ops: Promise<unknown>[]) =>
+    Promise.all(ops),
+  );
+  registry.getPageProvider.mockReturnValue(provider);
+  token.resolveConnectionToken.mockResolvedValue("plain-token");
   provider.pollModifiedPages.mockResolvedValue([]);
 });
 
@@ -176,10 +146,10 @@ describe("KW1/KW4/KW5: the interval a poll covers", () => {
 
   it("asks the provider for the window its own watermark implies", async () => {
     const lastPolledAt = new Date(NOW.getTime() - 6 * HOUR);
-    owed([connection({ lastPolledAt })]);
+    stored(connection({ lastPolledAt }));
     sources({ id: "src-a", externalId: "page-a" });
 
-    await runSyncStep(LEASE);
+    await pollConnection("conn-1");
 
     expect(provider.pollModifiedPages).toHaveBeenCalledWith(
       "plain-token",
@@ -188,118 +158,84 @@ describe("KW1/KW4/KW5: the interval a poll covers", () => {
   });
 
   it("KW5: never reads a source's own sync timestamp to decide the window", async () => {
-    owed([connection({ lastPolledAt: new Date(NOW.getTime() - HOUR) })]);
+    stored(connection({ lastPolledAt: new Date(NOW.getTime() - HOUR) }));
     sources({ id: "src-a", externalId: "page-a" });
 
-    await runSyncStep(LEASE);
+    await pollConnection("conn-1");
 
     const [args] = db.notebookSource.findMany.mock.calls[0];
     expect(args.select).toEqual({ id: true, externalId: true });
   });
 });
 
-describe("KS1/KS2/KC1/KC4: which connections a hop is accountable for", () => {
-  it("takes the least-recently-attempted first, bounded by the batch", async () => {
-    await loadOwedConnections(LEASE, NOW);
+describe("KS1/KS2/KF3/KB1/KB2/KB4: which connections a sync is due to poll", () => {
+  it("KS2: takes the least-recently-attempted first", async () => {
+    await loadDueConnections(NOW);
 
     const [args] = db.integrationConnection.findMany.mock.calls[0];
-
     expect(args.orderBy).toEqual({
       lastAttemptedAt: { sort: "asc", nulls: "first" },
     });
-    expect(args.take).toBe(SYNC_BATCH_SIZE);
   });
 
-  it("KC4: owes only connections not yet attempted in this chain", async () => {
-    await loadOwedConnections(LEASE, NOW);
+  it("takes one run's worth, so the event batch it feeds has a ceiling", async () => {
+    await loadDueConnections(NOW);
 
     const [args] = db.integrationConnection.findMany.mock.calls[0];
-    expect(args.where.OR).toEqual([
-      { lastAttemptedAt: null },
-      { lastAttemptedAt: { lt: CHAIN_STARTED_AT } },
-    ]);
+    expect(args.take).toBeGreaterThan(0);
   });
 
   it("KF3: excludes a connection still inside its backoff", async () => {
-    await loadOwedConnections(LEASE, NOW);
+    await loadDueConnections(NOW);
 
     const [args] = db.integrationConnection.findMany.mock.calls[0];
-
-    expect(args.where.AND).toEqual([
-      { OR: [{ nextPollAfter: null }, { nextPollAfter: { lte: NOW } }] },
-    ]);
+    expect(args.where.AND).toContainEqual({
+      OR: [{ nextPollAfter: null }, { nextPollAfter: { lte: NOW } }],
+    });
   });
-});
 
-describe("KB1/KB2/KB3/KB4: organizations that can pay for what a poll leads to", () => {
-  it("KB1/KB2: owes only connections of an organization with a live subscription", async () => {
-    await loadOwedConnections(LEASE, NOW);
+  it("KF3: excludes a connection left without a credential by a disconnect", async () => {
+    await loadDueConnections(NOW);
 
     const [args] = db.integrationConnection.findMany.mock.calls[0];
+    expect(args.where.AND).toContainEqual({
+      OR: [
+        { accessTokenEncrypted: { not: null } },
+        { installationId: { not: null } },
+      ],
+    });
+  });
 
+  it("KB1/KB2: owes only connections of an organization with a live subscription", async () => {
+    await loadDueConnections(NOW);
+
+    const [args] = db.integrationConnection.findMany.mock.calls[0];
     expect(args.where.organization).toEqual({
       subscription: notLapsedSubscription(NOW),
     });
   });
 
   it("KB4: does not restate the affordability rule the debit already owns", async () => {
-    await loadOwedConnections(LEASE, NOW);
+    await loadDueConnections(NOW);
 
     const [args] = db.integrationConnection.findMany.mock.calls[0];
-
     expect(Object.keys(args.where.organization)).toEqual(["subscription"]);
   });
 
-  it("KB4: charges nothing itself — marking is the whole of what a poll does", async () => {
-    owed([connection()]);
-    sources({ id: "src-a", externalId: "page-a" });
-    modified("page-a");
+  it("hands out an id and a provider, never a credential", async () => {
+    await loadDueConnections(NOW);
 
-    const { totals } = await runSyncStep(LEASE);
-
-    expect(totals).toMatchObject({ marked: 1 });
-    expect(db.notebookSource.updateMany).toHaveBeenCalledWith({
-      where: { id: { in: ["src-a"] } },
-      data: { staleAt: NOW },
-    });
-  });
-
-  it("KB1: a hop whose only connections lapsed polls nothing and ends the chain", async () => {
-    owed([]);
-
-    const { totals, continued } = await runSyncStep(LEASE);
-
-    expect(provider.pollModifiedPages).not.toHaveBeenCalled();
-    expect(totals).toMatchObject({ polled: 0, connectionsFailed: 0 });
-    expect(continued).toBe(false);
-  });
-
-  it("KB3: a restored subscription resumes from the watermark it was skipped with", async () => {
-    const lastPolledAt = new Date(NOW.getTime() - 3 * DAY);
-    owed([connection({ id: "conn-restored", lastPolledAt })]);
-    sources({ id: "src-a", externalId: "page-a" });
-    modified("page-a");
-
-    await runSyncStep(LEASE);
-
-    expect(provider.pollModifiedPages).toHaveBeenCalledWith(
-      "plain-token",
-      new Date(lastPolledAt.getTime() - SYNC_CLOCK_SKEW_MS),
-    );
-    expect(writtenTo("conn-restored")).toMatchObject({
-      lastPolledAt: NOW,
-      consecutiveFailures: 0,
-      nextPollAfter: null,
-    });
+    const [args] = db.integrationConnection.findMany.mock.calls[0];
+    expect(args.select).toEqual({ id: true, provider: true });
   });
 });
 
 describe("KS3/KS4: which sources a connection contributes", () => {
   it("takes only READY sources with an external page behind them", async () => {
-    owed([connection({ id: "conn-7" })]);
+    stored(connection({ id: "conn-7" }));
     sources({ id: "src-a", externalId: "page-a" });
 
-    await runSyncStep(LEASE);
+    await pollConnection("conn-7");
 
     const [args] = db.notebookSource.findMany.mock.calls[0];
     expect(args.where).toEqual({
@@ -310,204 +246,29 @@ describe("KS3/KS4: which sources a connection contributes", () => {
   });
 
   it("does not poll a connection with nothing syncable behind it", async () => {
-    owed([connection()]);
     sources();
 
-    const { totals } = await runSyncStep(LEASE);
+    const outcome = await pollConnection("conn-1");
 
     expect(provider.pollModifiedPages).not.toHaveBeenCalled();
-    expect(totals.connectionsEmpty).toBe(1);
-    expect(totals.connectionsFailed).toBe(0);
+    expect(outcome).toEqual({ status: "empty" });
   });
 
-  it("still records the attempt, so an empty connection cannot stall the chain", async () => {
-    owed([connection()]);
+  it("records the attempt as the success it is, so an emptied connection leaves its backoff", async () => {
     sources();
 
-    await runSyncStep(LEASE);
-
-    expect(writtenTo("conn-1")).toEqual({ lastAttemptedAt: NOW });
-  });
-});
-
-describe("KF1: one broken integration", () => {
-  const broken = connection({ id: "conn-broken" });
-  const healthy = connection({ id: "conn-healthy" });
-
-  it.each([
-    {
-      case: "a provider the registry does not know",
-      break: () =>
-        registry.getProvider.mockImplementation((name: string) => {
-          if (name === "gone") throw new Error("Unknown provider: gone");
-          return provider;
-        }),
-      brokenConnection: connection({ id: "conn-broken", provider: "gone" }),
-    },
-    {
-      case: "a credential that will not decrypt",
-      break: () =>
-        crypto.decryptApiKey.mockImplementation((token: string) => {
-          if (token === "rotated-key") throw new Error("bad ciphertext");
-          return "plain-token";
-        }),
-      brokenConnection: connection({
-        id: "conn-broken",
-        accessTokenEncrypted: "rotated-key",
-      }),
-    },
-    {
-      case: "a poll the provider rejects",
-      break: () => {
-        crypto.decryptApiKey.mockImplementation((token: string) =>
-          token === "revoked" ? "revoked" : "plain-token",
-        );
-        const pages = [{ id: "page-a" }];
-        provider.pollModifiedPages.mockImplementation(async (token: string) => {
-          if (token === "revoked") throw new Error("401 from provider");
-          return pages;
-        });
-      },
-      brokenConnection: connection({
-        id: "conn-broken",
-        accessTokenEncrypted: "revoked",
-      }),
-    },
-  ])("$case costs that connection and nothing else", async (scenario) => {
-    owed([scenario.brokenConnection, healthy]);
-    sources({ id: "src-a", externalId: "page-a" });
-    modified("page-a");
-
-    scenario.break();
-
-    const { totals } = await runSyncStep(LEASE);
-
-    expect(totals.connectionsFailed).toBe(1);
-    expect(totals.polled).toBe(1);
-    expect(totals.marked).toBe(1);
-    expect(writtenTo("conn-healthy")).toMatchObject({ lastPolledAt: NOW });
-  });
-
-  it("KF5: names the connection and its provider in the log", async () => {
-    provider.pollModifiedPages.mockRejectedValue(
-      new Error("401 from provider"),
-    );
-    owed([connection({ id: "conn-broken", provider: "notion" })]);
-    sources({ id: "src-a", externalId: "page-a" });
-
-    await runSyncStep(LEASE);
-
-    expect(console.error).toHaveBeenCalledWith(
-      expect.stringContaining("conn-broken"),
-      expect.any(Error),
-    );
-    expect(console.error).toHaveBeenCalledWith(
-      expect.stringContaining("notion"),
-      expect.any(Error),
-    );
-  });
-
-  it("does not count a failed poll's sources as anything", async () => {
-    provider.pollModifiedPages.mockRejectedValue(
-      new Error("401 from provider"),
-    );
-    owed([broken]);
-    sources({ id: "src-a", externalId: "page-a" });
-
-    const { totals } = await runSyncStep(LEASE);
-
-    expect(db.notebookSource.updateMany).not.toHaveBeenCalled();
-    expect(totals).toMatchObject({ marked: 0, unchanged: 0 });
-  });
-});
-
-describe("KW2/KF2/KF3/KF4: what an attempt writes down", () => {
-  it("KW2: a failed poll leaves the watermark where it was", async () => {
-    provider.pollModifiedPages.mockRejectedValue(new Error("provider down"));
-    owed([connection({ lastPolledAt: new Date(NOW.getTime() - 3 * DAY) })]);
-    sources({ id: "src-a", externalId: "page-a" });
-
-    await runSyncStep(LEASE);
-
-    expect(writtenTo("conn-1")).not.toHaveProperty("lastPolledAt");
-  });
-
-  it("KF2: a failed poll still moves the attempt timestamp", async () => {
-    provider.pollModifiedPages.mockRejectedValue(new Error("provider down"));
-    owed([connection()]);
-    sources({ id: "src-a", externalId: "page-a" });
-
-    await runSyncStep(LEASE);
-
-    expect(writtenTo("conn-1")).toMatchObject({
-      lastAttemptedAt: NOW,
-      consecutiveFailures: 1,
-    });
-  });
-
-  it.each([
-    { failures: 0, case: "nothing for the first failure", expected: 0 },
-    { failures: 1, case: "nothing for the second", expected: 0 },
-    { failures: 2, case: "6h once the third lands", expected: 6 * HOUR },
-    { failures: 3, case: "24h for the fourth", expected: DAY },
-    { failures: 4, case: "72h for the fifth", expected: 3 * DAY },
-    {
-      failures: 8,
-      case: "capped at 7 days however long it stays broken",
-      expected: 7 * DAY,
-    },
-  ])(
-    "KF3: backs a failing connection off — $case",
-    async ({ failures, expected }) => {
-      provider.pollModifiedPages.mockRejectedValue(new Error("provider down"));
-      owed([connection({ consecutiveFailures: failures })]);
-      sources({ id: "src-a", externalId: "page-a" });
-
-      await runSyncStep(LEASE);
-
-      expect(writtenTo("conn-1")).toMatchObject({
-        consecutiveFailures: failures + 1,
-        nextPollAfter:
-          expected === 0 ? null : new Date(NOW.getTime() + expected),
-      });
-    },
-  );
-
-  it("KF3: the backoff table is what the counter indexes into", () => {
-    expect(backoffMs(0)).toBe(0);
-    expect(backoffMs(3)).toBe(6 * HOUR);
-
-    expect(backoffMs(99)).toBe(7 * DAY);
-  });
-
-  it("KF4: any success clears the backoff and the failure count", async () => {
-    owed([connection({ consecutiveFailures: 4 })]);
-    sources({ id: "src-a", externalId: "page-a" });
-
-    await runSyncStep(LEASE);
+    await pollConnection("conn-1");
 
     expect(writtenTo("conn-1")).toEqual({
-      lastPolledAt: NOW,
       lastAttemptedAt: NOW,
       consecutiveFailures: 0,
       nextPollAfter: null,
     });
   });
-
-  it("KW3: a connection the hop never reached keeps its watermark", async () => {
-    const unreached = connection({ id: "conn-later" });
-    owed([connection()], [unreached]);
-    sources({ id: "src-a", externalId: "page-a" });
-
-    await runSyncStep(LEASE);
-
-    expect(writtenTo("conn-later")).toBeUndefined();
-  });
 });
 
-describe("KR1/KR3: what the run marks and what it reports", () => {
+describe("KR1/KR3: what a poll marks and what it reports", () => {
   beforeEach(() => {
-    owed([connection()]);
     sources(
       { id: "src-a", externalId: "page-a" },
       { id: "src-b", externalId: "page-b" },
@@ -518,206 +279,179 @@ describe("KR1/KR3: what the run marks and what it reports", () => {
   it("KR1: marks only the sources the provider reported as modified", async () => {
     modified("page-b");
 
-    const { totals } = await runSyncStep(LEASE);
+    const outcome = await pollConnection("conn-1");
 
     expect(markedStale()).toEqual(["src-b"]);
-    expect(totals).toMatchObject({ marked: 1, unchanged: 2 });
+    expect(outcome).toEqual({ status: "polled", marked: 1, unchanged: 2 });
   });
 
   it("KR1: marks nothing when the provider reports no changes", async () => {
     modified();
 
-    const { totals } = await runSyncStep(LEASE);
+    const outcome = await pollConnection("conn-1");
 
     expect(db.notebookSource.updateMany).not.toHaveBeenCalled();
-    expect(totals).toMatchObject({ polled: 1, marked: 0, unchanged: 3 });
+    expect(outcome).toEqual({ status: "polled", marked: 0, unchanged: 3 });
   });
 
   it("KR3: marks a connection's whole changed set in one write", async () => {
     modified("page-a", "page-b", "page-c");
 
-    const { totals } = await runSyncStep(LEASE);
+    const outcome = await pollConnection("conn-1");
 
     expect(db.notebookSource.updateMany).toHaveBeenCalledTimes(1);
     expect(markedStale()).toEqual(["src-a", "src-b", "src-c"]);
-    expect(totals).toMatchObject({ marked: 3, unchanged: 0 });
+    expect(outcome).toEqual({ status: "polled", marked: 3, unchanged: 0 });
   });
 
-  it("KR3: leaves the mark for the ingest to clear, changing nothing else", async () => {
+  it("KB4: leaves the mark for the ingest to clear, changing nothing else", async () => {
     modified("page-a");
 
-    await runSyncStep(LEASE);
+    await pollConnection("conn-1");
 
     const [args] = db.notebookSource.updateMany.mock.calls[0];
     expect(args.data).toEqual({ staleAt: NOW });
   });
 });
 
-describe("KC2/KC3: the singleton lease", () => {
-  it("takes the lease when the one on record is stale", async () => {
-    db.integrationSyncLease.updateMany.mockResolvedValue({ count: 1 });
-
-    const lease = await acquireSyncLease();
-
-    expect(lease).toMatchObject({ hops: 0, token: expect.any(String) });
-    expect(db.integrationSyncLease.create).not.toHaveBeenCalled();
-    const [args] = db.integrationSyncLease.updateMany.mock.calls[0];
-    expect(args.where.heartbeatAt.lt).toBeInstanceOf(Date);
-  });
-
-  it("takes the lease when no chain has ever run", async () => {
-    db.integrationSyncLease.updateMany.mockResolvedValue({ count: 0 });
-
-    expect(await acquireSyncLease()).toMatchObject({ hops: 0 });
-    expect(db.integrationSyncLease.create).toHaveBeenCalledTimes(1);
-  });
-
-  it("refuses a second trigger while a live chain holds the lease", async () => {
-    db.integrationSyncLease.updateMany.mockResolvedValue({ count: 0 });
-    db.integrationSyncLease.create.mockRejectedValue(uniqueViolation());
-
-    expect(await acquireSyncLease()).toBeNull();
-  });
-
-  it("surfaces a database failure rather than silently declining to run", async () => {
-    db.integrationSyncLease.updateMany.mockResolvedValue({ count: 0 });
-    db.integrationSyncLease.create.mockRejectedValue(
-      new Error("connection lost"),
-    );
-
-    await expect(acquireSyncLease()).rejects.toThrow("connection lost");
-  });
-
-  it("KC4: a hop reads the chain's start instant from the row, not from its caller", async () => {
-    db.integrationSyncLease.updateMany.mockResolvedValue({ count: 1 });
-
-    const lease = await continueSyncLease("lease-token");
-
-    expect(lease).toEqual({
-      token: "lease-token",
-      chainStartedAt: CHAIN_STARTED_AT,
-      hops: 1,
-    });
-    const [args] = db.integrationSyncLease.updateMany.mock.calls[0];
-    expect(args.data.hops).toEqual({ increment: 1 });
-  });
-
+describe("KF1: a poll that cannot run", () => {
   it.each([
     {
-      case: "its token was taken over or released",
-      held: { count: 0 },
-      row: null,
+      case: "a provider the registry does not know",
+      break: () =>
+        registry.getPageProvider.mockImplementation(() => {
+          throw new Error("Unknown provider: gone");
+        }),
+      message: "Unknown provider: gone",
     },
     {
-      case: "another chain took the row between the update and the read",
-      held: { count: 1 },
-      row: {
-        token: "someone-elses",
-        chainStartedAt: CHAIN_STARTED_AT,
-        hops: 1,
-      },
+      case: "a credential that will not decrypt",
+      break: () =>
+        token.resolveConnectionToken.mockRejectedValue(
+          new Error("bad ciphertext"),
+        ),
+      message: "bad ciphertext",
     },
-  ])("stops a hop whose $case", async ({ held, row }) => {
-    db.integrationSyncLease.updateMany.mockResolvedValue(held);
-    db.integrationSyncLease.findUnique.mockResolvedValue(row);
+    {
+      case: "a poll the provider rejects",
+      break: () =>
+        provider.pollModifiedPages.mockRejectedValue(
+          new Error("401 from provider"),
+        ),
+      message: "401 from provider",
+    },
+  ])(
+    "$case throws, so Inngest is the one that retries it",
+    async (scenario) => {
+      sources({ id: "src-a", externalId: "page-a" });
+      scenario.break();
 
-    expect(await continueSyncLease("lease-token")).toBeNull();
+      await expect(pollConnection("conn-1")).rejects.toThrow(scenario.message);
+    },
+  );
+
+  it("KW2: a throwing poll writes nothing at all — not the watermark, not the attempt", async () => {
+    stored(connection({ lastPolledAt: new Date(NOW.getTime() - 3 * DAY) }));
+    sources({ id: "src-a", externalId: "page-a" });
+    provider.pollModifiedPages.mockRejectedValue(new Error("provider down"));
+
+    await expect(pollConnection("conn-1")).rejects.toThrow();
+
+    expect(db.integrationConnection.updateMany).not.toHaveBeenCalled();
+    expect(db.notebookSource.updateMany).not.toHaveBeenCalled();
   });
 
-  it("KC3: releasing expires the lease rather than deleting the row", async () => {
-    await releaseSyncLease(LEASE);
+  it("a connection disconnected before its turn is not polled and not backed off", async () => {
+    db.integrationConnection.findUnique.mockResolvedValue(null);
+    db.integrationConnection.updateManyAndReturn.mockResolvedValue([]);
 
-    expect(db.integrationSyncLease.updateMany).toHaveBeenCalledWith({
-      where: { id: "singleton", token: LEASE.token },
-      data: { heartbeatAt: new Date(0) },
-    });
+    expect(await pollConnection("conn-gone")).toEqual({ status: "gone" });
+    expect(db.integrationConnection.updateMany).not.toHaveBeenCalled();
+
+    await recordPollFailure("conn-gone", NOW);
+    expect(db.integrationConnection.updateMany).not.toHaveBeenCalled();
   });
 });
 
-describe("KC1/KC5/KC6: how a chain ends", () => {
-  it("hands the lease to a fresh invocation while a connection is still owed", async () => {
-    owed([connection()], [connection({ id: "conn-later" })]);
-    sources({ id: "src-a", externalId: "page-a" });
-
-    const { continued } = await runSyncStep(LEASE);
-
-    expect(continued).toBe(true);
-    expect(fetchMock).toHaveBeenCalledWith(
-      routes.app.api.cron.syncIntegrations,
-      expect.objectContaining({
-        method: "POST",
-        body: JSON.stringify({ token: LEASE.token }),
-      }),
-    );
-  });
-
-  it.each([
-    { case: "nothing was owed when it started", batch: [] },
-    { case: "it reached the last connection owed", batch: [connection()] },
-  ])("KC5: stops and releases the lease when $case", async ({ batch }) => {
-    owed(batch, []);
-    sources({ id: "src-a", externalId: "page-a" });
-
-    const { continued } = await runSyncStep(LEASE);
-
-    expect(continued).toBe(false);
-    expect(fetchMock).not.toHaveBeenCalled();
-    expect(db.integrationSyncLease.updateMany).toHaveBeenCalledWith({
-      where: { id: "singleton", token: LEASE.token },
-      data: { heartbeatAt: new Date(0) },
-    });
-  });
-
-  it("KC6: hands off mid-batch when a connection turns out to be pathologically slow", async () => {
-    owed([connection({ id: "conn-slow" }), connection({ id: "conn-next" })]);
+describe("KW1/KW2/KF2/KF3/KF4: what an attempt writes down", () => {
+  it("KW1: the watermark takes the instant the poll started, not the one it ended", async () => {
     sources({ id: "src-a", externalId: "page-a" });
     provider.pollModifiedPages.mockImplementation(async () => {
-      vi.advanceTimersByTime(SYNC_HOP_DEADLINE_MS + 1_000);
+      vi.advanceTimersByTime(30_000);
       return [];
     });
 
-    const { continued } = await runSyncStep(LEASE);
+    await pollConnection("conn-1");
 
-    expect(continued).toBe(true);
-    expect(writtenTo("conn-next")).toBeUndefined();
-
-    expect(db.integrationConnection.findMany).toHaveBeenCalledTimes(1);
-  });
-
-  it("KC5: stops loudly at the runaway backstop rather than chaining forever", async () => {
-    const { totals, continued } = await runSyncStep({
-      ...LEASE,
-      hops: MAX_SYNC_HOPS,
-    });
-
-    expect(continued).toBe(false);
-    expect(totals.polled).toBe(0);
-    expect(db.integrationConnection.findMany).not.toHaveBeenCalled();
-    expect(console.error).toHaveBeenCalledWith(
-      expect.stringContaining("MAX_SYNC_HOPS"),
-    );
-  });
-
-  it("drops the lease when the hop itself fails, rather than letting it expire", async () => {
-    db.integrationConnection.findMany.mockRejectedValue(new Error("db gone"));
-
-    const { continued } = await runSyncStep(LEASE);
-
-    expect(continued).toBe(false);
-    expect(db.integrationSyncLease.updateMany).toHaveBeenCalledWith({
-      where: { id: "singleton", token: LEASE.token },
-      data: { heartbeatAt: new Date(0) },
+    expect(writtenTo("conn-1")).toMatchObject({
+      lastPolledAt: NOW,
+      lastAttemptedAt: new Date(NOW.getTime() + 30_000),
     });
   });
 
-  it("does not lose the remaining connections when the handoff cannot be delivered", async () => {
-    owed([connection()], [connection({ id: "conn-later" })]);
+  it("KF2: a failure moves the attempt timestamp and has the database count", async () => {
+    counted(1);
+
+    await recordPollFailure("conn-1", NOW);
+
+    expect(writtenTo("conn-1")).toMatchObject({
+      lastAttemptedAt: NOW,
+      consecutiveFailures: { increment: 1 },
+    });
+  });
+
+  it("KF2: two failures racing over one connection land on two, not one", async () => {
+    counted(2);
+
+    await recordPollFailure("conn-1", NOW);
+
+    expect(db.integrationConnection.findUnique).not.toHaveBeenCalled();
+    expect(writtenTo("conn-1")).toMatchObject({ nextPollAfter: null });
+  });
+
+  it("KW2: a failure leaves the watermark where it was", async () => {
+    counted(1);
+
+    await recordPollFailure("conn-1", NOW);
+
+    expect(writtenTo("conn-1")).not.toHaveProperty("lastPolledAt");
+  });
+
+  it.each([
+    { settled: 1, case: "nothing for the first failure", expected: 0 },
+    { settled: 2, case: "nothing for the second", expected: 0 },
+    { settled: 3, case: "6h once the third lands", expected: 6 * HOUR },
+    { settled: 4, case: "24h for the fourth", expected: DAY },
+    { settled: 5, case: "72h for the fifth", expected: 3 * DAY },
+    {
+      settled: 9,
+      case: "capped at 3 days however long it stays broken",
+      expected: 3 * DAY,
+    },
+  ])(
+    "KF3: backs a failing connection off — $case",
+    async ({ settled, expected }) => {
+      counted(settled);
+
+      await recordPollFailure("conn-1", NOW);
+
+      expect(writtenTo("conn-1")).toMatchObject({
+        nextPollAfter:
+          expected === 0 ? null : new Date(NOW.getTime() + expected),
+      });
+    },
+  );
+
+  it("KF4: any success clears the backoff and the failure count", async () => {
     sources({ id: "src-a", externalId: "page-a" });
-    fetchMock.mockRejectedValue(new Error("ECONNREFUSED"));
 
-    const { continued } = await runSyncStep(LEASE);
+    await pollConnection("conn-1");
 
-    expect(continued).toBe(true);
-    expect(writtenTo("conn-later")).toBeUndefined();
+    expect(writtenTo("conn-1")).toEqual({
+      lastPolledAt: NOW,
+      lastAttemptedAt: NOW,
+      consecutiveFailures: 0,
+      nextPollAfter: null,
+    });
   });
 });

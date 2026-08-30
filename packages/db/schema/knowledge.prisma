@@ -1,0 +1,135 @@
+/// The language a topic's document is written in. Lower-cased to match the
+/// `Locale` the app already passes around, so no mapping is needed either way.
+enum KnowledgeTopicLanguage {
+  en
+  de
+
+  @@map("knowledge_topic_language")
+}
+
+/// One living document: what it is about, which repositories it watches, and
+/// who reviews what the sync proposes for it.
+model KnowledgeTopic {
+  id                 String                 @id @default(cuid())
+  organizationId     String
+  organization       Organization           @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name               String
+  /// `{ id, fullName, pathGlobs }[]`, resolved from the GitHub installation at
+  /// write time: the id survives a rename, the name is what a maintainer reads,
+  /// and the globs narrow that one repository — empty means all of it.
+  repositories       Json
+  language           KnowledgeTopicLanguage
+  /// The canonical document; Notion holds a projection, never the other way round.
+  markdown           String                 @default("")
+  /// Deleting the topic leaves the page: documents belong to the organization.
+  notionPageId       String?
+  notionRevisionAt   DateTime?
+  /// Of the markdown last published, so a later synthesis can tell a real change from a re-save.
+  documentHash       String?
+  publishedAt        DateTime?
+  /// When the page's revision was last compared against `notionRevisionAt`.
+  verifiedAt         DateTime?
+  /// A revision this side did not write; a flagged document is never overwritten.
+  externallyEditedAt DateTime?
+  /// Members, not users: someone who leaves the organization stops maintaining.
+  maintainers        Member[]               @relation("KnowledgeTopicMaintainers")
+  createdAt          DateTime               @default(now())
+  updatedAt          DateTime               @updatedAt
+
+  @@unique([organizationId, name])
+  @@map("knowledge_topic")
+}
+
+/// Why the structural filter refused a pull request. Kept on the discarded row
+/// so the counts in a feed can be explained and the thresholds tuned against
+/// what actually happened rather than against a guess.
+enum KnowledgeDiscardReason {
+  BOT_AUTHOR
+  CHORE_TITLE
+  NO_DISCUSSION
+  LOW_DENSITY
+
+  @@map("knowledge_discard_reason")
+}
+
+enum KnowledgeCollectionRunStatus {
+  QUEUED
+  RUNNING
+  SUCCEEDED
+  FAILED
+
+  @@map("knowledge_collection_run_status")
+}
+
+/// One repository's turn at collecting, for one organization. Also the
+/// watermark: the newest run that succeeded says how far collection has got,
+/// so a failed run cannot advance it.
+///
+/// A partial unique index — (organizationId, repositoryId) WHERE status =
+/// 'QUEUED' — guards against stacking waiting turns. Prisma cannot express it;
+/// it lives in the migration SQL only. Keep the two in step by hand.
+model KnowledgeCollectionRun {
+  id                 String                       @id @default(cuid())
+  organizationId     String
+  organization       Organization                 @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  repositoryId       String
+  status             KnowledgeCollectionRunStatus @default(QUEUED)
+  /// Written by the trigger, before the worker has picked the run up.
+  startedAt          DateTime                     @default(now())
+  finishedAt         DateTime?
+  collected          Int                          @default(0)
+  discarded          Int                          @default(0)
+  /// How recently a pull request had to have been touched to be seen by this
+  /// run. Only ever read off a SUCCEEDED run — that is what makes the watermark
+  /// advance on success alone.
+  collectedThrough   DateTime?
+  /// The run stopped on its detail budget, not on running out of pull requests.
+  /// The next run continues from `collectedThrough`.
+  capped             Boolean                      @default(false)
+  /// GitHub's own message, never a credential — see the provider's error handling.
+  failureReason      String?
+
+  @@index([organizationId, repositoryId, status, startedAt], map: "knowledge_collection_run_org_repo_status_idx")
+  @@map("knowledge_collection_run")
+}
+
+/// One merged pull request worth learning from, held for the organization
+/// against the repository it came from — never for one topic, since the same
+/// pull request feeds every topic watching that repository.
+model KnowledgeBundle {
+  id             String                  @id @default(cuid())
+  organizationId String
+  organization   Organization            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  repositoryId   String
+  /// GitHub's node id for the pull request. With the repository it is what
+  /// makes a re-run a no-op.
+  externalId     String
+  number         Int
+  /// GitHub's `updatedAt`, which is what the watermark is measured in.
+  githubUpdatedAt DateTime
+  /// Null on a discarded row: nothing about a refused pull request is kept
+  /// beyond what proves it was judged.
+  mergedAt       DateTime?
+  /// The structural filter's discussion-density score. Set on a survivor, and
+  /// on a LOW_DENSITY discard so the threshold can be tuned against real numbers.
+  score          Int?
+  /// Set exactly when `content` is null.
+  discardReason  KnowledgeDiscardReason?
+  /// `{ title, body, labels, filePaths, linkedIssues, threads }` — sanitized and
+  /// token-capped before it is written. Pruned back to null by the extraction
+  /// stage once the bundle has been read.
+  content        Json?
+  /// What the feed shows, lifted out of `content` so reading it never means
+  /// hauling the whole conversation. Null exactly when `content` is.
+  title          String?
+  url            String?
+  filePaths      String[]                @default([])
+  /// The token cap dropped something, so nothing downstream may claim the
+  /// bundle is the whole conversation.
+  truncated      Boolean                 @default(false)
+  collectedAt    DateTime                @default(now())
+
+  @@unique([organizationId, repositoryId, externalId], map: "knowledge_bundle_org_repo_external_key")
+  @@index([organizationId, repositoryId, collectedAt], map: "knowledge_bundle_org_repo_collected_idx")
+  @@map("knowledge_bundle")
+}

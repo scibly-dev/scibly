@@ -64,7 +64,20 @@ already provides is a finding.
 - Multi-write invariants (e.g. create + counter update) belong in
   `prisma.$transaction`.
 - Connection handling was deliberately tuned for serverless — flag new
-  `PrismaClient` instantiations outside `packages/db`.
+  `PrismaClient` instantiations outside `packages/db`. In particular, never
+  hold a `$transaction` open across an external HTTP call: the pool is sized
+  for serverless, and a multi-second provider round-trip inside a transaction
+  is an outage under concurrency. Keep the external call outside and wrap only
+  the database statements.
+- **Check whether a migration has shipped before planning around it.** A
+  migration still absent from `origin/main` has never been applied to a
+  production database, so a column rename is an edit to that migration's SQL in
+  place — no second migration, no backfill, no data risk. Confirm with
+  `git cat-file -e origin/main:packages/db/migrations/<name>/migration.sql`
+  (non-zero exit = branch-local). This inverts the usual advice, so state the
+  check in the plan rather than the conclusion: the window closes the moment
+  the branch merges, and a plan that says "renaming is free" without saying why
+  becomes wrong silently.
 
 ## TipTap / ProseMirror / Yjs
 
@@ -102,6 +115,23 @@ already provides is a finding.
   stale-closure bugs are classic issues in the editor-adjacent code.
 - User-generated HTML must go through `dompurify` before any
   `dangerouslySetInnerHTML`.
+- **The middleware is `apps/app/src/proxy.ts`, not `middleware.ts`.** This
+  version renamed it. `grep`ing for `middleware.ts` returns nothing and does
+  **not** mean the app is unguarded. `proxy.ts` exports `config.matcher` plus
+  `proxy = createAppProxy()` → `createSciblyProxy(baseProxy())` in
+  `packages/next-proxy/`. `baseProxy` ends every unmatched request at
+  `createRedirectWithLocale`, which prepends a locale when the first segment is
+  not one — so `[lang]` is always a real `Locale` by the time a layout sees it.
+  The one bypass is `checkStaticFiles` (`static-assets.ts`): `/_next/*` and any
+  pathname ending in a media/text extension return `NextResponse.next()`
+  untouched.
+- **Route params are still untrusted input.** `generateStaticParams` does not
+  restrict which params render — `dynamicParams` defaults to `true`, so the
+  proxy is the only thing narrowing them, and it is one `matcher` or
+  `skipPathPrefixes` edit away from not being. Narrow a route param to its
+  domain type at the layout boundary (`getLocale(lang, true)`) before passing it
+  on, and never interpolate one into `dangerouslySetInnerHTML`: `JSON.stringify`
+  does not escape `<`, so it cannot stop a `</script>` breakout.
 
 ### Feature component folders
 
@@ -211,6 +241,14 @@ const items = orderItemsSchema.parse(data);
   messages; API messages via `packages/api/src/i18n`. Hardcoded user-facing
   English strings in components or procedures are findings. `pnpm check`
   includes an i18n consistency check — new keys must pass it.
+- A feature's `*.types.ts` should be **derived from the English JSON**, not
+  hand-transcribed: `export type XTranslations = (typeof xEn)["a"]["b"];` (3-4
+  lines — see the seven files under `apps/app/src/features/notebook/*/i18n/`).
+  The hand-written style is still the majority (17 files, 9-152 lines each) and
+  is where dead keys hide: nothing ties the interface to the JSON, so removing a
+  key means editing three files by hand and a stale key never fails to compile.
+  Deriving also removes the `as XTranslations` casts such files force on tests.
+  Worth proposing whenever a refactor touches a feature's i18n anyway.
 
 ## Observability (`packages/observability`, `apps/web`)
 
@@ -230,6 +268,29 @@ const items = orderItemsSchema.parse(data);
 - Proxy matcher literals stay inline in each app's `proxy.ts`; alignment tested
   against `PROXY_MATCHER` from `@scibly/observability/proxy/matcher`.
 
+## Domain vocabulary (`CONTEXT.md`)
+
+- A feature folder's `CONTEXT.md` is binding on **identifiers**, not just prose:
+  module, file, type, function, and constant names must use its terms, and must
+  not use anything on an `_Avoid_` list. Diff the names in a feature against its
+  `CONTEXT.md` before reviewing anything else about naming — drift there is a
+  maintainability finding with a citable source, not a matter of taste.
+- When a refactor names a concept the `CONTEXT.md` does not have, add the term
+  there in the same change (create the file lazily if the feature has none).
+
+## Third-party HTTP responses
+
+- Any JSON coming back from a provider or external API is parsed with a Zod
+  schema before use — never `as T`, never an interface asserted over
+  `response.json()`. The repo idiom is
+  `someSchema.parse(await response.json())` (see
+  `apps/app/src/features/organizations/settings/server/endpoint-probe.ts`).
+- A `// SAFETY:` comment claiming the shape is documented, or that callers check
+  the fields, is not a substitute for a parse — it is a finding in its own
+  right, because nothing keeps the comment true.
+- A shared request helper takes the schema as a parameter rather than a type
+  argument, so parsing cannot be forgotten at a call site.
+
 ## Misc conventions
 
 - Zod is v4 (pinned via pnpm override) — flag v3-only idioms.
@@ -239,6 +300,30 @@ const items = orderItemsSchema.parse(data);
   rather than re-wrapping Radix directly.
 - Env access goes through the typed env (`@t3-oss/env-nextjs`, `apps/app/env.js`)
   — raw `process.env` reads in app code are findings.
+- URLs are built by `@scibly/routes`, never string-concatenated or
+  template-literalled at the call site. The package already loads the base URLs
+  through `loadPackageEnv`, so routing a URL through it usually removes a raw
+  `process.env` read as well. A URL assembled inline — especially one an
+  external service will redirect to — is a finding.
+- A registry keyed by a known id union must be exhaustive over it:
+  `satisfies Record<SomeId, Config>`, so adding a member fails to compile until
+  every registry is updated. `Map<string, Config>` plus a default entry is a
+  finding — it turns a missing case into a silent wrong-looking UI, and parallel
+  registries drift apart without anything failing.
+- **Optional methods on a base class are how a capability seam rots.** When
+  only some implementations of a provider/adapter base support a capability,
+  the repo's pattern is a narrowed subclass plus a narrowed resolver, not
+  `someMethod?()` on the base — see `PageIntegrationProvider` /
+  `getPageProvider` / `resolvePageConnection` in
+  `apps/app/src/features/integrations/`, which declare the page methods
+  `abstract` and non-optional so no call site needs `?.` or a fallback. Optional
+  methods push the capability check to every call site as `await p.m?.(x) ?? F`,
+  and the fallback `F` is unreachable in practice, so it is never exercised and
+  drifts into being wrong — in one live case the "empty" fallback made a
+  downstream `listedEverything` check compute as `true`, inverting the intent of
+  the very fallback it came from. Treat an optional method with more than one
+  call site as a finding, and check what each fallback value does downstream
+  rather than assuming a dead branch is a harmless one.
 
 ## Refactor plan and execution requirements
 

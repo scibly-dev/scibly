@@ -4,34 +4,38 @@ import { AppError } from "@scibly/api/application-error";
 import { createCallerFactory } from "@scibly/api/trpc";
 // The context's `db` is the same doubled object, borrowed for its Prisma type.
 import { db as contextDb } from "@scibly/db";
+import { rateLimitCounter } from "@test/mocks/rate-limit-counter";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { INTEGRATION_PROVIDERS } from "../contracts";
 import {
   disconnectIntegrationSchema,
   getAuthUrlSchema,
-  linkPageSchema,
   linkPagesSchema,
   listPageChildrenSchema,
   providerInput,
   searchPagesSchema,
 } from "./integration.schema";
 
-// Real tRPC caller over the real router, so input validation runs for real.
-// `db` and `resolveOrg` are mocked; `detachSourcesFromConnection` is not.
+// Real tRPC caller over the real router, so input validation runs for real; `db` and `resolveOrg` are mocked, `warnSourcesOfLostConnection` is not.
 
-const db = vi.hoisted(() => ({
-  integrationConnection: {
-    findUnique: vi.fn(),
-    findMany: vi.fn(),
-    delete: vi.fn(),
-    create: vi.fn(),
-    upsert: vi.fn(),
-  },
-  notebookSource: { updateMany: vi.fn(), deleteMany: vi.fn() },
-  notebookSourceChunk: { deleteMany: vi.fn() },
-  scene: { deleteMany: vi.fn() },
-}));
+const db = vi.hoisted(() => {
+  const client = {
+    integrationConnection: {
+      findUnique: vi.fn(),
+      findMany: vi.fn(),
+      update: vi.fn(),
+      create: vi.fn(),
+      upsert: vi.fn(),
+    },
+    notebookSource: { updateMany: vi.fn(), deleteMany: vi.fn() },
+    notebookSourceChunk: { deleteMany: vi.fn() },
+    rateLimit: { updateMany: vi.fn(), create: vi.fn(), findUnique: vi.fn() },
+    scene: { deleteMany: vi.fn() },
+    $transaction: vi.fn((run: (tx: unknown) => unknown) => run(client)),
+  };
+  return client;
+});
 const resolveOrg = vi.hoisted(() => vi.fn());
 
 vi.mock("@scibly/db", () => ({ db }));
@@ -40,7 +44,8 @@ vi.mock("@/features/organizations/server", () => ({
   resolveOrg,
 }));
 vi.mock("@/features/notebook/server", () => ({
-  ingestOrRefreshSource: vi.fn(),
+  boundedIngest: vi.fn(),
+  boundedLink: vi.fn((_userId: string, link: () => unknown) => link()),
   linkNotebookPages: vi.fn(),
   resolveNotebook: vi.fn(),
   resolveOwnedNotebookSource: vi.fn(),
@@ -95,12 +100,18 @@ async function refusalCode(call: () => Promise<unknown>): Promise<string> {
   return "resolved";
 }
 
+const limiter = rateLimitCounter();
+
 beforeEach(() => {
   vi.clearAllMocks();
+  limiter.clear();
+  db.rateLimit.updateMany.mockImplementation(limiter.model.updateMany);
+  db.rateLimit.create.mockImplementation(limiter.model.create);
+  db.rateLimit.findUnique.mockImplementation(limiter.model.findUnique);
   resolveOrg.mockResolvedValue({ organization: { id: "org-resolved" } });
   db.integrationConnection.findMany.mockResolvedValue([]);
   db.integrationConnection.findUnique.mockResolvedValue({ id: "conn-1" });
-  db.integrationConnection.delete.mockResolvedValue({});
+  db.integrationConnection.update.mockResolvedValue({});
   db.notebookSource.updateMany.mockResolvedValue({ count: 2 });
 });
 
@@ -109,9 +120,9 @@ describe("LA1 one door only", () => {
     expect(Object.keys(integrationRouter._def.procedures).sort()).toEqual([
       "disconnect",
       "getAuthUrl",
-      "linkPage",
       "linkPages",
       "list",
+      "listGrants",
       "listPageChildren",
       "resyncSource",
       "searchPages",
@@ -188,7 +199,7 @@ describe("LR who may see, who may change", () => {
       );
 
       expect(await refusalCode(() => call(caller()))).toBe("FORBIDDEN");
-      expect(db.integrationConnection.delete).not.toHaveBeenCalled();
+      expect(db.integrationConnection.update).not.toHaveBeenCalled();
       expect(db.notebookSource.updateMany).not.toHaveBeenCalled();
     },
   );
@@ -197,7 +208,24 @@ describe("LR who may see, who may change", () => {
     await caller().list({ orgSlug: "acme" });
 
     expect(db.integrationConnection.findMany).toHaveBeenCalledWith(
-      expect.objectContaining({ where: { organizationId: "org-resolved" } }),
+      expect.objectContaining({
+        where: expect.objectContaining({ organizationId: "org-resolved" }),
+      }),
+    );
+  });
+
+  it("LR2 lists only the connections that still hold a credential", async () => {
+    await caller().list({ orgSlug: "acme" });
+
+    expect(db.integrationConnection.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: expect.objectContaining({
+          OR: [
+            { accessTokenEncrypted: { not: null } },
+            { installationId: { not: null } },
+          ],
+        }),
+      }),
     );
   });
 
@@ -208,6 +236,7 @@ describe("LR who may see, who may change", () => {
       INTEGRATION_PROVIDERS.map((providerId) => ({
         providerId,
         displayName: expect.any(String),
+        listsGrants: expect.any(Boolean),
       })),
     );
   });
@@ -231,27 +260,25 @@ describe("LR who may see, who may change", () => {
 });
 
 describe("LD what a disconnect leaves behind", () => {
-  it("LD1 deletes the row that holds the tokens", async () => {
+  it("LD1 wipes the credential off the row and keeps the row", async () => {
     const result = await caller().disconnect({
       orgSlug: "acme",
       provider: "NOTION",
     });
 
-    expect(db.integrationConnection.delete).toHaveBeenCalledWith({
+    expect(db.integrationConnection.update).toHaveBeenCalledWith({
       where: { id: "conn-1" },
+      data: { accessTokenEncrypted: null, installationId: null },
     });
     expect(result).toEqual({ success: true });
   });
 
-  it("LD2 detaches the sources it pulled in and tells the author why", async () => {
+  it("LD2 warns the sources it pulled in and leaves them linked", async () => {
     await caller().disconnect({ orgSlug: "acme", provider: "NOTION" });
 
     expect(db.notebookSource.updateMany).toHaveBeenCalledWith({
       where: { integrationId: "conn-1" },
-      data: {
-        integrationId: null,
-        warning: expect.stringContaining("disconnected"),
-      },
+      data: { warning: expect.stringContaining("disconnected") },
     });
   });
 
@@ -263,13 +290,13 @@ describe("LD what a disconnect leaves behind", () => {
     expect(db.scene.deleteMany).not.toHaveBeenCalled();
   });
 
-  it("LD2 detaches before the row the sources point at is gone", async () => {
+  it("LD2 warns before the credential the warning is about is gone", async () => {
     await caller().disconnect({ orgSlug: "acme", provider: "NOTION" });
 
     expect(
       db.notebookSource.updateMany.mock.invocationCallOrder[0],
     ).toBeLessThan(
-      db.integrationConnection.delete.mock.invocationCallOrder[0] ?? 0,
+      db.integrationConnection.update.mock.invocationCallOrder[0] ?? 0,
     );
   });
 
@@ -282,7 +309,7 @@ describe("LD what a disconnect leaves behind", () => {
     });
 
     expect(result).toEqual({ success: true });
-    expect(db.integrationConnection.delete).not.toHaveBeenCalled();
+    expect(db.integrationConnection.update).not.toHaveBeenCalled();
     expect(db.notebookSource.updateMany).not.toHaveBeenCalled();
   });
 
@@ -308,7 +335,6 @@ describe("LP provider identity", () => {
     ["disconnect", disconnectIntegrationSchema],
     ["searchPages", searchPagesSchema],
     ["listPageChildren", listPageChildrenSchema],
-    ["linkPage", linkPageSchema],
     ["linkPages", linkPagesSchema],
   ];
 
@@ -339,5 +365,37 @@ describe("LP provider identity", () => {
     for (const providerId of INTEGRATION_PROVIDERS) {
       expect(providerInput.parse(providerId)).toBe(providerId);
     }
+  });
+});
+
+describe("LP the three provider proxies share one ceiling", () => {
+  it.each([
+    [
+      "listGrants",
+      () => caller().listGrants({ orgSlug: "acme", provider: "NOTION" }),
+    ],
+    [
+      "searchPages",
+      () =>
+        caller().searchPages({
+          orgSlug: "acme",
+          provider: "NOTION",
+          query: "x",
+        }),
+    ],
+    [
+      "listPageChildren",
+      () =>
+        caller().listPageChildren({
+          orgSlug: "acme",
+          provider: "NOTION",
+          pageId: "page-1",
+        }),
+    ],
+  ] as const)("%s is refused once the window is spent", async (_name, call) => {
+    limiter.setSpent("admin-1", "integration.proxy", 1_000);
+
+    expect(await refusalCode(call)).toBe("TOO_MANY_REQUESTS");
+    expect(db.integrationConnection.findUnique).not.toHaveBeenCalled();
   });
 });

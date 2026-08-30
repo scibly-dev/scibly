@@ -21,6 +21,8 @@ export type PlanLimits = {
 
   byoai: boolean;
 
+  knowledgeSync: boolean;
+
   publishAndEnroll: boolean;
 
   publicCourses: number;
@@ -40,6 +42,7 @@ export const CORE_PLANS = {
     extraLearnerSeatCents: null,
     sourcesPerNotebook: 10,
     byoai: false,
+    knowledgeSync: false,
     publishAndEnroll: true,
     publicCourses: 200,
     anonymousSessionsPerPeriod: 10_000,
@@ -53,6 +56,7 @@ export const CORE_PLANS = {
     extraLearnerSeatCents: null,
     sourcesPerNotebook: EFFECTIVELY_UNLIMITED,
     byoai: true,
+    knowledgeSync: true,
     publishAndEnroll: true,
     publicCourses: EFFECTIVELY_UNLIMITED,
     anonymousSessionsPerPeriod: EFFECTIVELY_UNLIMITED,

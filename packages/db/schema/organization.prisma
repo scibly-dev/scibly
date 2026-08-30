@@ -5,10 +5,9 @@ model Organization {
   logo                 String?
   createdAt            DateTime
   metadata             String?
-  /// Owned by the Better Auth Stripe plugin; the domain copy read by the rest
-  /// of the app lives on `OrganizationSubscription.stripeCustomerId`.
+  /// Owned by the Better Auth Stripe plugin; the app reads `OrganizationSubscription.stripeCustomerId` instead.
   stripeCustomerId     String?                   @unique
-  /// Default chat model for AI Creator (`null` = Scibly AI).
+  /// `null` = Scibly AI.
   defaultChatModelId   String?
   defaultChatModel     OrganizationAIModel?      @relation("OrgDefaultChatModel", fields: [defaultChatModelId], references: [id], onDelete: SetNull)
   members              Member[]
@@ -23,6 +22,9 @@ model Organization {
   credit               OrganizationCredit?
   creditLedgerEntries  CreditLedgerEntry[]
   courseEnrollments    CourseEnrollment[]
+  knowledgeTopics      KnowledgeTopic[]
+  knowledgeBundles     KnowledgeBundle[]
+  knowledgeCollectionRuns KnowledgeCollectionRun[]
 
   @@unique([slug])
   @@map("organization")
@@ -36,6 +38,7 @@ model Member {
   user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   role           String       @default("member")
   createdAt      DateTime
+  maintainedTopics KnowledgeTopic[] @relation("KnowledgeTopicMaintainers")
 
   @@index([organizationId])
   @@index([userId])

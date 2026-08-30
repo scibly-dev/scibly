@@ -1,20 +1,19 @@
 import { AppError } from "@scibly/api/application-error";
 import { protectedProcedure } from "@scibly/api/trpc";
+import { db } from "@scibly/db";
 
 import {
-  ingestOrRefreshSource,
+  boundedIngest,
+  boundedLink,
   linkNotebookPages,
   resolveNotebook,
   resolveOwnedNotebookSource,
 } from "@/features/notebook/server";
 import { resolveOrg } from "@/features/organizations/server";
 
-import {
-  linkPageSchema,
-  linkPagesSchema,
-  resyncSourceSchema,
-} from "./integration.schema";
-import { resolveConnection } from "./integration-connection-procedures";
+import { isConnected } from "../server/connection-state";
+import { linkPagesSchema, resyncSourceSchema } from "./integration.schema";
+import { resolveConnectionRow } from "./integration-connection-procedures";
 
 async function resolveLinkedNotebook(
   orgSlug: string,
@@ -45,57 +44,21 @@ export const integrationPageProcedures = {
         input.notebookId,
         userId,
       );
-      const { connection } = await resolveConnection(
+      const { connection } = await resolveConnectionRow(
         organization.id,
         input.provider,
       );
-      const { sourceIds, skipped } = await linkNotebookPages({
-        notebookId: input.notebookId,
-        organizationId: organization.id,
-        actorId: userId,
-        provider: input.provider,
-        connectionId: connection.id,
-        pages: input.pages,
-      });
+      const { sourceIds, skipped } = await boundedLink(userId, () =>
+        linkNotebookPages({
+          notebookId: input.notebookId,
+          organizationId: organization.id,
+          actorId: userId,
+          provider: input.provider,
+          connectionId: connection.id,
+          pages: input.pages,
+        }),
+      );
       return { sourceIds, skipped };
-    }),
-
-  linkPage: protectedProcedure
-    .input(linkPageSchema)
-    .mutation(async ({ input, ctx }) => {
-      const { organization } = await resolveLinkedNotebook(
-        input.orgSlug,
-        input.notebookId,
-        ctx.session.user.id,
-      );
-      const { connection } = await resolveConnection(
-        organization.id,
-        input.provider,
-      );
-      const result = await linkNotebookPages({
-        notebookId: input.notebookId,
-        organizationId: organization.id,
-        actorId: ctx.session.user.id,
-        provider: input.provider,
-        connectionId: connection.id,
-        pages: [
-          {
-            id: input.pageId,
-            title: input.pageTitle,
-            url: input.pageUrl,
-          },
-        ],
-      });
-      const sourceId = result.sourceIds[0];
-      const ingestion = result.ingestions[0];
-      if (!sourceId || !ingestion) {
-        throw new AppError({
-          code: "CONFLICT",
-          applicationCode: "api.conflict",
-          message: "This page is already linked to this notebook.",
-        });
-      }
-      return { sourceId, ingestion };
     }),
 
   resyncSource: protectedProcedure
@@ -115,17 +78,23 @@ export const integrationPageProcedures = {
           message: "This source is not an external integration source.",
         });
       }
-      if (!source.integrationId) {
+      // The link survives a disconnect, so having one is not enough: the connection it points at has to still hold a credential.
+      const connection = source.integrationId
+        ? await db.integrationConnection.findUnique({
+            where: { id: source.integrationId },
+            select: { accessTokenEncrypted: true, installationId: true },
+          })
+        : null;
+      if (!connection || !isConnected(connection)) {
         throw new AppError({
           code: "BAD_REQUEST",
           applicationCode: "api.bad_request",
-          message:
-            "This source's integration was disconnected. Reconnect the integration and re-link the page to resume syncing.",
+          message: source.integrationId
+            ? "This source's integration is disconnected. Reconnect it to resume syncing."
+            : "This source's integration was disconnected. Reconnect the integration and re-link the page to resume syncing.",
         });
       }
-      const ingestion = await ingestOrRefreshSource(source.id, {
-        actorId: userId,
-      });
+      const ingestion = await boundedIngest(userId, source.id);
       return { sourceId: source.id, ingestion };
     }),
 };

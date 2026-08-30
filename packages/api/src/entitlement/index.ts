@@ -40,6 +40,10 @@ export {
   decideEnrollment,
   describeEnrollmentAccess,
 } from "./policies/enrollment";
+export {
+  decideKnowledgeSync,
+  describeKnowledgeSyncAccess,
+} from "./policies/knowledge-sync";
 export { decideNotebookSourceCap } from "./policies/notebook-source-cap";
 export { decidePublicCourseCap } from "./policies/public-course-cap";
 

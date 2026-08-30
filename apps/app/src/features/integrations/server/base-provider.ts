@@ -1,57 +1,111 @@
 import type {
+  IntegrationCredential,
+  IntegrationCredentialKind,
+  IntegrationGrant,
+  IntegrationGrantList,
   IntegrationPage,
   IntegrationPageContent,
   IntegrationPageRevision,
   IntegrationProviderId,
-  OAuthTokens,
+  PageIntegrationProviderId,
+  RepositoryIntegrationProviderId,
 } from "../contracts";
 
-export abstract class BaseIntegrationProvider {
+export interface ConnectCallbackParams {
+  code: string | null;
+  installationId: string | null;
+}
+
+export class IntegrationRevokedError extends Error {
+  constructor(readonly providerId: IntegrationProviderId) {
+    super(`The ${providerId} connection no longer exists on the provider.`);
+    this.name = "IntegrationRevokedError";
+  }
+}
+
+export abstract class IntegrationProvider {
   abstract readonly providerId: IntegrationProviderId;
   abstract readonly displayName: string;
+
+  abstract readonly credential: IntegrationCredentialKind;
+
+  abstract getAuthUrl(state: string, redirectUri: string): string;
+
+  abstract completeConnect(
+    params: ConnectCallbackParams,
+    redirectUri: string,
+  ): Promise<IntegrationCredential>;
+
+  mintAccessToken?(installationId: string): Promise<string>;
+
+  listGrants?(token: string): Promise<IntegrationGrantList>;
+}
+
+export abstract class RepositoryIntegrationProvider extends IntegrationProvider {
+  abstract readonly providerId: RepositoryIntegrationProviderId;
+
+  abstract listGrants(token: string): Promise<IntegrationGrantList>;
+
+  abstract resolveGrant(
+    token: string,
+    grantId: string,
+  ): Promise<IntegrationGrant | null>;
+
+  abstract listFolders(token: string, grantId: string): Promise<string[]>;
+}
+
+export abstract class PageIntegrationProvider extends IntegrationProvider {
+  abstract readonly providerId: PageIntegrationProviderId;
 
   abstract searchPages(
     token: string,
     query: string,
   ): Promise<IntegrationPage[]>;
 
-  listChildren(_token: string, _pageId: string): Promise<IntegrationPage[]> {
-    return Promise.resolve([]);
-  }
-
-  listDatabasePages(
-    _token: string,
-    _databaseId: string,
-  ): Promise<IntegrationPage[]> {
-    return Promise.resolve([]);
-  }
-
   abstract fetchPageContent(
     token: string,
     pageId: string,
   ): Promise<IntegrationPageContent>;
 
-  getPageRevision(
-    _token: string,
-    _pageId: string,
-  ): Promise<IntegrationPageRevision | null> {
-    return Promise.resolve(null);
-  }
+  abstract listChildren(
+    token: string,
+    pageId: string,
+  ): Promise<IntegrationPage[]>;
 
-  abstract getAuthUrl(state: string, redirectUri: string): string;
+  abstract listDatabasePages(
+    token: string,
+    databaseId: string,
+  ): Promise<IntegrationPage[]>;
 
-  abstract exchangeCode(
-    code: string,
-    redirectUri: string,
-  ): Promise<OAuthTokens>;
+  abstract getPageRevision(
+    token: string,
+    pageId: string,
+  ): Promise<IntegrationPageRevision | null>;
 
-  async refreshToken(_refreshToken: string): Promise<OAuthTokens> {
-    throw new Error(
-      `${this.providerId} does not support token refresh. Reconnect the integration.`,
-    );
-  }
+  abstract pollModifiedPages(
+    token: string,
+    since: Date,
+  ): Promise<IntegrationPage[]>;
 
-  pollModifiedPages(_token: string, _since: Date): Promise<IntegrationPage[]> {
-    return Promise.resolve([]);
-  }
+  abstract createPage(
+    token: string,
+    input: { parentPageId: string; title: string; markdown?: string },
+  ): Promise<{ id: string; revision: Date }>;
+
+  abstract writePage(
+    token: string,
+    pageId: string,
+    input: { title: string; markdown: string },
+  ): Promise<{ revision: Date }>;
+
+  abstract movePage(
+    token: string,
+    pageId: string,
+    parentPageId: string,
+  ): Promise<void>;
+
+  abstract getParentPageId(
+    token: string,
+    pageId: string,
+  ): Promise<string | null>;
 }

@@ -4,8 +4,7 @@ model CourseEnrollment {
   user            User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
   courseId        String
   course          Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  /// Denormalised from the course so the billable learner count is an indexed
-  /// distinct-count over [organizationId, userId] instead of a join.
+  /// Denormalised from the course so the billable learner count is an indexed distinct-count, not a join.
   organizationId  String
   organization    Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   courseVersionId String
@@ -14,9 +13,9 @@ model CourseEnrollment {
   lastActive      DateTime?
   completedAt     DateTime?
   dueDate         DateTime?
-  /// Final score percentage, frozen at the moment of finishing. Never recomputed on read.
+  /// Frozen at the moment of finishing; never recomputed on read.
   scorePct        Int?
-  /// How many times this enrollment has been completed (pass or fail).
+  /// Counts completions, pass or fail.
   triesUsed       Int              @default(0)
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt

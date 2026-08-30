@@ -1,5 +1,3 @@
-import type React from "react";
-
 import {
   BookOpen,
   FileQuestion,
@@ -14,16 +12,6 @@ import {
   Video,
   Volume2,
 } from "lucide-react";
-
-// Interface only — the actual map + logos live in provider-display.tsx (JSX cannot be in a .ts file).
-
-export interface ProviderDisplayConfig {
-  readonly name: string;
-
-  readonly subtitle: string;
-
-  readonly Logo: React.ComponentType<{ className?: string }>;
-}
 
 interface StudioToolConfig {
   readonly id: string;
@@ -138,22 +126,6 @@ const SOURCE_DISPLAY_MAP = new Map<string, SourceDisplayConfig>([
       icon: "FileText",
       theme:
         "bg-neutral-50 text-neutral-800 border-neutral-200 dark:bg-neutral-900/40 dark:text-neutral-200 dark:border-neutral-700/50",
-    },
-  ],
-  [
-    "confluence_page",
-    {
-      icon: "ExternalLink",
-      theme:
-        "bg-blue-50 text-blue-600 border-blue-100 dark:bg-blue-950/20 dark:text-blue-400 dark:border-blue-900/30",
-    },
-  ],
-  [
-    "sharepoint_page",
-    {
-      icon: "FileText",
-      theme:
-        "bg-teal-50 text-teal-600 border-teal-100 dark:bg-teal-950/20 dark:text-teal-400 dark:border-teal-900/30",
     },
   ],
 ]);

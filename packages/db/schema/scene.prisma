@@ -12,9 +12,6 @@ enum SceneAnimation {
   BLUR
 }
 
-/// Why a draft scene was flagged as outdated. The author needs to tell
-/// "the source moved on" from "the source is gone" — the second cannot be
-/// resolved by re-reading the source.
 enum SceneOutdatedReason {
   SOURCE_CHANGED
   SOURCE_REMOVED
@@ -36,24 +33,23 @@ model Scene {
 
   /// Collaborative authoring state. Never returned by learner APIs.
   documentState   Bytes?
-  /// Immutable, solution-sanitized TipTap JSON rendered by learners.
+  /// Solution-sanitized TipTap JSON; this is what learners are served.
   learnerContent  Json?
-  /// Immutable answer key generated with learnerContent at publish time.
+  /// Answer key, frozen with learnerContent at publish time.
   gradingManifest Json?
-  /// Published summary: true when gradingManifest contains question blocks.
+  /// True when gradingManifest contains question blocks.
   hasQuestions    Boolean              @default(false)
-  /// Maximum achievable SP (basis SP + question-block SP) at publish time.
+  /// Basis SP + question-block SP, at publish time.
   maxSp           Int?
   sp              Int                  @default(0)
-  /// True when a cited source has changed since this scene was generated (draft scenes only).
+  /// Draft scenes only.
   isOutdated      Boolean              @default(false)
-  /// Why the flag was raised. Null exactly when isOutdated is false.
+  /// Null exactly when isOutdated is false.
   outdatedReason  SceneOutdatedReason?
 
-  // Set when this is a published copy belonging to a version; null for draft scenes
+  // Set on a published copy; null on a draft scene.
   courseVersionId String?
   courseVersion   CourseVersion? @relation(fields: [courseVersionId], references: [id], onDelete: Cascade)
-  // Original draft scene this was copied from; null for draft scenes
   sourceSceneId   String?
   sourceScene     Scene?         @relation("SceneSource", fields: [sourceSceneId], references: [id], onDelete: SetNull)
   publishedCopies Scene[]        @relation("SceneSource")
@@ -68,9 +64,7 @@ model Scene {
   @@index([lessonId])
   @@index([courseVersionId])
   @@index([sourceSceneId])
-  // INV-12: partial index `scene_outdated_draft_idx` (WHERE isOutdated AND
-  // courseVersionId IS NULL) exists via raw migration — Prisma's schema DSL
-  // cannot express partial indexes, so it isn't declared here.
+  // Partial index `scene_outdated_draft_idx` (WHERE isOutdated AND courseVersionId IS NULL) exists via raw migration; the DSL cannot express it.
   @@map("scene")
 }
 

@@ -1,0 +1,267 @@
+import type {
+  IntegrationCallbackError,
+  IntegrationProviderId,
+} from "../contracts";
+import type { ConnectCallbackParams } from "./base-provider";
+
+import { getSession } from "@scibly/auth/session";
+import { db } from "@scibly/db";
+import { getLocale } from "@scibly/i18n";
+import {
+  INTEGRATION_CONNECTED_QUERY_PARAM,
+  INTEGRATION_ERROR_QUERY_PARAM,
+  localizedUrl,
+  routes,
+} from "@scibly/routes";
+import { type NextRequest, NextResponse } from "next/server";
+
+import {
+  getProvider,
+  isIntegrationProvider,
+} from "@/features/integrations/server/registry";
+import { requireOrgMember } from "@/features/organizations/server";
+import { encryptApiKey } from "@/lib/crypto/api-key";
+import { verifyOAuthState } from "@/lib/crypto/oauth-state";
+
+import { isConnected } from "./connection-state";
+import {
+  clearDisconnectWarning,
+  warnSourcesOfLostConnection,
+} from "./detach-sources";
+
+type CallbackDestination = {
+  settingsUrl: string;
+};
+
+type ValidCallback = CallbackDestination & {
+  provider: IntegrationProviderId;
+  params: ConnectCallbackParams;
+  orgSlug: string;
+  connectedByUserId: string;
+};
+
+function errorRedirect(
+  destination: CallbackDestination,
+  reason: IntegrationCallbackError,
+) {
+  return NextResponse.redirect(
+    `${destination.settingsUrl}?${INTEGRATION_ERROR_QUERY_PARAM}=${reason}`,
+  );
+}
+
+function providerError(oauthError: string): IntegrationCallbackError {
+  return oauthError === "access_denied" ? "provider_denied" : "provider_error";
+}
+
+function validateCallback(
+  req: NextRequest,
+  providerParam: string,
+):
+  | { ok: true; callback: ValidCallback }
+  | {
+      ok: false;
+      destination: CallbackDestination;
+      reason: IntegrationCallbackError;
+    } {
+  const { searchParams } = req.nextUrl;
+  // The provider sends the browser here directly, so these links carry their own locale prefix instead of relying on the middleware.
+  const fallback = {
+    settingsUrl: localizedUrl(getLocale(null, true), routes.app.profile.root),
+  };
+
+  const oauthError = searchParams.get("error");
+  const state = searchParams.get("state");
+
+  if (!state) {
+    return {
+      ok: false,
+      destination: fallback,
+      reason: oauthError ? providerError(oauthError) : "missing_params",
+    };
+  }
+
+  const verified = verifyOAuthState(state);
+  if (!verified.ok) {
+    return {
+      ok: false,
+      destination: fallback,
+      reason: verified.reason === "expired" ? "expired_state" : "invalid_state",
+    };
+  }
+
+  const { orgSlug, provider, userId, lang } = verified.payload;
+  const destination = {
+    settingsUrl: localizedUrl(
+      getLocale(lang, true),
+      routes.app.profile.org(orgSlug).settings,
+    ),
+  };
+
+  if (oauthError) {
+    return { ok: false, destination, reason: providerError(oauthError) };
+  }
+  if (!orgSlug || !userId || !isIntegrationProvider(provider)) {
+    return { ok: false, destination, reason: "invalid_state" };
+  }
+
+  if (provider !== providerParam.toUpperCase()) {
+    return { ok: false, destination, reason: "state_mismatch" };
+  }
+
+  const params: ConnectCallbackParams = {
+    code: searchParams.get("code"),
+    installationId: searchParams.get("installation_id"),
+  };
+  const required =
+    getProvider(provider).credential === "app_installation"
+      ? params.installationId
+      : params.code;
+  if (!required) {
+    return { ok: false, destination, reason: "missing_params" };
+  }
+
+  return {
+    ok: true,
+    callback: {
+      ...destination,
+      provider,
+      params,
+      orgSlug,
+      connectedByUserId: userId,
+    },
+  };
+}
+
+async function authorizeCallback(
+  req: NextRequest,
+  callback: ValidCallback,
+): Promise<{ organizationId: string } | IntegrationCallbackError> {
+  const session = await getSession(req.headers);
+  if (!session?.user || session.user.id !== callback.connectedByUserId) {
+    return "session_mismatch";
+  }
+
+  const organization = await db.organization.findUnique({
+    where: { slug: callback.orgSlug },
+    select: { id: true },
+  });
+  if (!organization) return "org_not_found";
+
+  try {
+    await requireOrgMember(organization.id, session.user.id, "admin_or_owner");
+    return { organizationId: organization.id };
+  } catch {
+    return "forbidden";
+  }
+}
+
+async function completeAndPersistConnection(
+  callback: ValidCallback,
+  organizationId: string,
+) {
+  const redirectUri = routes.app.api.integrations.callback(callback.provider);
+
+  // Outside the transaction: no row lock is held for as long as the provider takes.
+  const credential = await getProvider(callback.provider).completeConnect(
+    callback.params,
+    redirectUri,
+  );
+
+  const where = {
+    organizationId_provider: { organizationId, provider: callback.provider },
+  };
+
+  const connectionData = {
+    // The two credential shapes use disjoint columns, and each connect clears the other's.
+    ...(credential.kind === "app_installation"
+      ? {
+          accessTokenEncrypted: null,
+          installationId: credential.installationId,
+        }
+      : {
+          accessTokenEncrypted: encryptApiKey(credential.accessToken),
+          installationId: null,
+        }),
+    workspaceId: credential.workspaceId ?? null,
+    workspaceName: credential.workspaceName ?? null,
+
+    connectedByUserId: callback.connectedByUserId,
+
+    // A reconnect answers whatever the polls were failing on, so its backoff does not outlive it.
+    consecutiveFailures: 0,
+    nextPollAfter: null,
+  };
+
+  await db.$transaction(async (tx) => {
+    // Read inside the transaction: two callbacks landing together would otherwise both see the pre-connect workspace.
+    const existing = await tx.integrationConnection.findUnique({
+      where,
+      select: {
+        id: true,
+        workspaceId: true,
+        accessTokenEncrypted: true,
+        installationId: true,
+      },
+    });
+
+    const movedWorkspace =
+      existing?.workspaceId &&
+      credential.workspaceId &&
+      existing.workspaceId !== credential.workspaceId;
+
+    if (movedWorkspace) {
+      await warnSourcesOfLostConnection(
+        existing.id,
+        callback.provider,
+        "workspace_changed",
+        tx,
+      );
+    } else if (existing && !isConnected(existing)) {
+      // Only a reconnect after a disconnect may clear these — a truncation notice ingestion wrote is not this callback's to throw away.
+      await clearDisconnectWarning(existing.id, tx);
+    }
+
+    await tx.integrationConnection.upsert({
+      where,
+      create: {
+        organizationId,
+        provider: callback.provider,
+        ...connectionData,
+      },
+      // A different workspace shares none of the old one's history, so the watermark goes with it.
+      update: movedWorkspace
+        ? { ...connectionData, lastPolledAt: null }
+        : connectionData,
+    });
+  });
+}
+
+export async function handleIntegrationConnectCallback(
+  req: NextRequest,
+  { params }: { params: Promise<{ provider: string }> },
+) {
+  const { provider: providerParam } = await params;
+  const validation = validateCallback(req, providerParam);
+  if (!validation.ok) {
+    return errorRedirect(validation.destination, validation.reason);
+  }
+
+  const { callback } = validation;
+  const authorization = await authorizeCallback(req, callback);
+  if (typeof authorization === "string") {
+    return errorRedirect(callback, authorization);
+  }
+
+  try {
+    await completeAndPersistConnection(callback, authorization.organizationId);
+    return NextResponse.redirect(
+      `${callback.settingsUrl}?${INTEGRATION_CONNECTED_QUERY_PARAM}=${callback.provider.toLowerCase()}`,
+    );
+  } catch (err) {
+    console.error(
+      `[IntegrationCallback] ${callback.provider} connect failed:`,
+      err,
+    );
+    return errorRedirect(callback, "token_exchange_failed");
+  }
+}

@@ -1,6 +1,4 @@
-/// How far a user got through first-run onboarding. `null` means they have not
-/// taken an onboarding action yet — which screen they see is then derived from
-/// current data (a pending invitation, an existing membership), not stored.
+/// `null` means no onboarding action yet; the screen shown is then derived from current data, not stored.
 enum OnboardingStep {
   PLANS
   COMPLETED

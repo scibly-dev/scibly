@@ -2,8 +2,6 @@ enum NotebookSourceType {
   PDF
   TEXT
   NOTION_PAGE
-  CONFLUENCE_PAGE
-  SHAREPOINT_PAGE
 
   @@map("notebook_source_type")
 }
@@ -35,9 +33,7 @@ model Notebook {
   course                      Course?                  @relation(fields: [courseId], references: [id], onDelete: SetNull)
   promptTemplateId            String?
   promptTemplate              PromptTemplate?          @relation(fields: [promptTemplateId], references: [id], onDelete: SetNull)
-  /// Rolling LLM summary standing in for every message up to
-  /// `chatSummaryThroughMessageId`. Only the model's context shrinks — the
-  /// stored chat keeps every message.
+  /// Stands in for every message up to `chatSummaryThroughMessageId` in the model's context; the stored chat keeps every message.
   chatSummary                 String?                  @db.Text
   chatSummaryThroughMessageId String?
   createdAt                   DateTime                 @default(now())
@@ -61,40 +57,30 @@ model NotebookSource {
   name                String
   type                NotebookSourceType
   url                 String? // S3 key
-  content             String? // Full extracted text — inlined verbatim into the chat prompt in Tier 1
-  /// Estimated model tokens for `content` (chars / 4). 0 means the row predates
-  /// full-text storage: its `content` is still the old 10k-char truncation, so
-  /// it must never be inlined as if it were the whole source.
+  content             String? // Full extracted text, inlined verbatim into the chat prompt
+  /// Estimated model tokens for `content` (chars / 4). 0 means the row predates full-text storage and its `content` is still the old 10k-char truncation.
   tokenCount          Int                  @default(0)
-  /// Digest part 1, in the source's own language: what it covers and is for.
+  /// In the source's own language: what it covers and is for.
   summary             String?
-  /// Digest part 2, in the source's own language: flat list of its sections.
+  /// In the source's own language: flat list of its sections.
   outline             String?
   status              NotebookSourceStatus @default(PENDING)
-  error               String? // Error message if processing failed
-  warning             String? // Non-fatal notice (e.g. content was truncated)
-  fileSize            Int? // File size in bytes
-  pageCount           Int? // Number of pages (for documents)
-  /// Provider-specific page ID (e.g. Notion page UUID)
+  error               String?
+  warning             String?
+  fileSize            Int? // bytes
+  pageCount           Int?
   externalId          String?
-  /// Human-readable URL to the original external page
   externalUrl         String?
-  /// FK to IntegrationConnection — nullable so sources survive disconnected integrations
+  /// FK to IntegrationConnection, nullable so sources survive a disconnected integration.
   integrationId       String?
-  /// When content was last fetched from the provider (for re-sync tracking)
   lastSyncedAt        DateTime?
-  /// SHA-256 content hash (first 16 hex chars) of full extracted text — used for change detection
+  /// SHA-256 of the extracted text, first 16 hex chars.
   contentHash         String?
-  /// Set by the freshness poll when the provider reports the page changed, and
-  /// cleared by the ingestion that opening the notebook triggers. The poll
-  /// itself never extracts, so this is the whole record that it noticed.
+  /// Set by the freshness poll, cleared by the ingestion that opening the notebook triggers; the poll never extracts.
   staleAt             DateTime?
-  /// Set when a claim moves the source into PROCESSING. An expired lease makes
-  /// the source explicitly retryable by the normal awaited ingestion use case.
+  /// Lease start; once it expires the source is retryable by the normal awaited ingestion.
   processingStartedAt DateTime?
-  /// Fencing token minted by the claim that owns the current PROCESSING run.
-  /// Every write a run makes is conditional on it, so a run whose claim was
-  /// taken over or reset underneath it lands nothing.
+  /// Fencing token: every write a run makes is conditional on it, so a run whose claim was taken over lands nothing.
   processingToken     String?
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
@@ -102,9 +88,7 @@ model NotebookSource {
 
   @@unique([notebookId, integrationId, externalId])
   @@index([notebookId])
-  // KS5: the scheduled refresh selects one integration's syncable sources.
-  // Without this it sequentially scans the largest table in the product, every
-  // run, for every connection.
+  // Without this the freshness poll sequentially scans the largest table in the product, once per connection per run.
   @@index([integrationId, status])
   @@map("notebook_source")
 }
@@ -136,8 +120,6 @@ model NotebookChat {
   parts      Json
   createdAt  DateTime @default(now())
 
-  // Every read of this table is a notebook's messages in timeline order — the
-  // chat path's tail after the compaction cutoff, the transcript's newest page.
   @@index([notebookId, createdAt(sort: Desc)])
   @@map("notebook_chat")
 }
@@ -159,8 +141,7 @@ model PromptTemplate {
 
 enum OrganizationAIModelType {
   CHAT
-  /// Inert. The embedding pipeline is gone and nothing loads a model of this
-  /// type; the value stays only because dropping it would rewrite the type.
+  /// Inert: the embedding pipeline is gone, and the value stays only because dropping it would rewrite the type.
   EMBEDDING
   IMAGE
 
@@ -178,24 +159,17 @@ model OrganizationAIModel {
   id              String                         @id @default(cuid())
   organizationId  String
   organization    Organization                   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  /// CHAT = language model for the AI Creator chat, IMAGE = image generation
   type            OrganizationAIModelType        @default(CHAT)
-  /// User-visible name shown in the model selector (e.g. "Ollama Gemma 4")
   name            String
-  /// OpenAI-compatible base URL (e.g. http://localhost:11434/v1)
+  /// Must be OpenAI-compatible.
   baseUrl         String
-  /// AES-256-GCM encrypted API key — never returned to the client
+  /// Never returned to the client.
   apiKeyEncrypted String
-  /// Provider-specific model ID passed to the API (e.g. "gemma4", "gpt-4o")
   modelId         String
-  /// Optional short description shown in the model selector (e.g. "Fast local inference")
   description     String?
-  /// Tokens this endpoint accepts. Unlike gateway models it cannot be introspected,
-  /// so it is asked for; null means assume the conservative default.
+  /// Asked for, because a self-hosted endpoint cannot be introspected; null means the conservative default.
   contextWindow   Int?
-  /// IMAGE only: which of the configured image endpoints generation runs on.
-  /// A CHAT row is chosen by `organizationsAsDefault` or by explicit id, so
-  /// nothing reads this flag for one.
+  /// IMAGE only; a CHAT row is chosen by `organizationsAsDefault` or by id, so nothing reads this flag for one.
   isActive        Boolean                        @default(true)
   lastTestStatus  OrganizationAIModelTestStatus?
   lastTestedAt    DateTime?

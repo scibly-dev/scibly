@@ -2,6 +2,7 @@ import type { PageObjectResponse } from "@notionhq/client/build/src/api-endpoint
 import type { IntegrationPage } from "../../contracts";
 
 import { type Client, isFullDatabase, isFullPage } from "@notionhq/client";
+import { routes } from "@scibly/routes";
 
 const CONTAINER_BLOCK_TYPES = new Set([
   "column_list",
@@ -49,7 +50,7 @@ async function paginateNotion<T>(
 }
 
 function notionPageUrl(id: string): string {
-  return `https://www.notion.so/${id.replace(/-/g, "")}`;
+  return routes.external.integrations.notion.page(id);
 }
 
 function blockLastEdited(block: {

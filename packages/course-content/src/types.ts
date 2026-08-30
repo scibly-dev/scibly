@@ -28,9 +28,7 @@ export type GroundTruthCourse = {
 export type GroundTruthSourceType =
   | "PDF"
   | "TEXT"
-  | "NOTION_PAGE"
-  | "CONFLUENCE_PAGE"
-  | "SHAREPOINT_PAGE";
+  | "NOTION_PAGE";
 
 export type GroundTruthDemoSource = {
   key: string;

@@ -7,6 +7,9 @@
 - [Integrations](./apps/app/src/features/integrations/CONTEXT.md) — how
   documents living in someone else's system become material, and how a change
   made over there is noticed back here
+- [Knowledge](./apps/app/src/features/knowledge/CONTEXT.md) — what an
+  organization wants written down about its own code, and kept true as that code
+  moves
 - [Notebook](./apps/app/src/features/notebook/CONTEXT.md) — where an author
   turns their own documents into a course, with the AI learning designer
 - [Course authoring](./apps/app/src/features/course-authoring/CONTEXT.md) —
@@ -26,6 +29,19 @@
 - **Integrations → Notebook**: a picked page becomes a source, and a poll that
   finds it changed marks that source _stale_. Marking is where integrations
   stops — what a stale source then does to a course is the notebook's.
+- **Knowledge → Integrations**: a topic's scope is stated as repository ids but
+  settled against the live installation, so _grant_ is integrations' word used
+  unchanged — knowledge stores the id and the name the installation gave, and
+  never decides for itself what a repository is called.
+- **Knowledge → Integrations**: a topic's document is projected onto a Notion
+  _page_ through the same connection notebook sources are picked from, so
+  knowledge needs that connection to write, not only to read. Where the page
+  goes is knowledge's (_destination_); reaching Notion at all is integrations'.
+- **Knowledge → Organizations**: a maintainer is a _member_, so leaving the
+  organization ends maintainership without knowledge being told.
+- **Knowledge → Entitlement**: creating, editing, or deleting a topic is
+  entitlement's to permit against the plan. Reading the list never is — the gate
+  decides what the area offers, not whether it renders.
 - **Notebook → Course authoring**: the notebook's agent writes into the draft
   and nothing else, and records which sources each scene came from. That
   lineage is what later turns a changed source into an outdated scene, so the

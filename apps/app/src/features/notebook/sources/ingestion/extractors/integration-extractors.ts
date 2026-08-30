@@ -2,19 +2,34 @@ import type { ExtractableSource, SourceExtractor } from "./types";
 
 import { db } from "@scibly/db";
 
-import { getProvider } from "@/features/integrations/server";
-import { decryptApiKey } from "@/lib/crypto/api-key";
+import {
+  getPageProvider,
+  resolveConnectionToken,
+} from "@/features/integrations/server";
 
-async function resolveIntegration(source: ExtractableSource) {
+async function resolveSourceConnection(source: ExtractableSource) {
   if (!source.integrationId || !source.externalId) {
     throw new Error(
       `Integration source ${source.type} missing integrationId or externalId.`,
     );
   }
 
-  const connection = await db.integrationConnection.findUnique({
-    where: { id: source.integrationId },
-  });
+  const [connection, notebook] = await Promise.all([
+    db.integrationConnection.findUnique({
+      where: { id: source.integrationId },
+      select: {
+        id: true,
+        provider: true,
+        organizationId: true,
+        accessTokenEncrypted: true,
+        installationId: true,
+      },
+    }),
+    db.notebook.findUnique({
+      where: { id: source.notebookId },
+      select: { organizationId: true },
+    }),
+  ]);
 
   if (!connection) {
     throw new Error(
@@ -22,10 +37,6 @@ async function resolveIntegration(source: ExtractableSource) {
     );
   }
 
-  const notebook = await db.notebook.findUnique({
-    where: { id: source.notebookId },
-    select: { organizationId: true },
-  });
   if (!notebook || notebook.organizationId !== connection.organizationId) {
     throw new Error(
       `Integration connection ${connection.id} does not belong to source ${source.id}'s organization.`,
@@ -33,8 +44,8 @@ async function resolveIntegration(source: ExtractableSource) {
   }
 
   return {
-    provider: getProvider(connection.provider),
-    token: decryptApiKey(connection.accessTokenEncrypted),
+    provider: getPageProvider(connection.provider),
+    token: await resolveConnectionToken(connection),
     externalId: source.externalId,
   };
 }
@@ -43,17 +54,19 @@ export const notionPageExtractor: SourceExtractor = {
   isIntegration: true,
 
   async getRevision(source) {
-    const { provider, token, externalId } = await resolveIntegration(source);
+    const { provider, token, externalId } =
+      await resolveSourceConnection(source);
     return provider.getPageRevision(token, externalId);
   },
 
   async extract(source) {
-    const { provider, token, externalId } = await resolveIntegration(source);
+    const { provider, token, externalId } =
+      await resolveSourceConnection(source);
     const content = await provider.fetchPageContent(token, externalId);
 
+    // No `pageCount`: it counts the pages of a parsed file, and a provider's page is one page.
     return {
       text: content.text,
-      pageCount: content.pageCount,
       title: content.title,
       lastEdited: content.lastEdited,
     };
