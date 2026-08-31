@@ -10,10 +10,6 @@ import { requireOrgMember } from "@/features/organizations/server";
 import { DEFAULT_SCENE_SP } from "@/shared/content/learning/scene-sp";
 
 import { getNextDraftSceneOrder } from "../../ordering/server/ordering";
-import {
-  parseSceneHtml,
-  SceneHtmlError,
-} from "../editor/document-synchronization/server/scene-html";
 import { requireDraftLesson } from "./scene-access";
 import { mapAuthoringScene } from "./scene-mapping";
 
@@ -22,12 +18,10 @@ export async function createDraftScene(
   input: {
     lessonId: string;
     title?: string;
-    html?: string;
     sourceIds?: string[];
   },
 ) {
   const lesson = await requireDraftLesson(db, input.lessonId, userId);
-  if (input.html !== undefined) assertSceneHtml(input.html);
   const newScene = await db.$transaction(async (tx) => {
     const order = await getNextDraftSceneOrder(tx, input.lessonId);
     return tx.scene.create({
@@ -38,7 +32,7 @@ export async function createDraftScene(
         vibe: SceneVibe.NEUTRAL,
         animation: SceneAnimation.FADE,
         sp: DEFAULT_SCENE_SP,
-        documentState: Buffer.from(encodeHtmlBytes(input.html ?? "<p></p>")),
+        documentState: Buffer.from(encodeHtmlBytes("<p></p>")),
       },
     });
   });
@@ -47,23 +41,6 @@ export async function createDraftScene(
     await sceneLineageService.replaceLineage(newScene.id, input.sourceIds);
   }
   return { ...mapAuthoringScene(newScene), courseId: lesson.courseId };
-}
-
-/**
- * The stored HTML is the seed the collab room parses on first open, and that
- * parse silently drops whatever the schema does not accept — refuse it here instead.
- */
-function assertSceneHtml(html: string) {
-  try {
-    parseSceneHtml(html);
-  } catch (error) {
-    if (!(error instanceof SceneHtmlError)) throw error;
-    throw new AppError({
-      code: "BAD_REQUEST",
-      applicationCode: "api.bad_request",
-      message: error.message,
-    });
-  }
 }
 
 async function loadCloneSource(sceneId: string) {

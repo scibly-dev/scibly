@@ -1,12 +1,11 @@
 import { AppError } from "@scibly/api/application-error";
-import { db, toMemberRole } from "@scibly/db";
+import { db } from "@scibly/db";
 import { isRawHtmlState } from "@scibly/lib/collab-yjs";
 
 import { sceneLineageService } from "@/features/course-authoring/scenes/server/scene-lineage";
 import { requireOrgMember } from "@/features/organizations/server";
 import { normalizeAuthorTipTapContent } from "@/shared/content/editor/server";
 
-import { requireCourseEnrollment } from "../../access/server/policy";
 import {
   readSceneHtml,
   type SceneUser,
@@ -20,7 +19,7 @@ import { mapAuthoringScene } from "./scene-mapping";
 
 export async function listLessonScenes(
   userId: string,
-  input: { lessonId: string; courseVersionId?: string },
+  input: { lessonId: string },
 ) {
   const lesson = await db.lesson.findUnique({
     where: { id: input.lessonId },
@@ -33,28 +32,15 @@ export async function listLessonScenes(
       message: "Lesson not found.",
     });
   }
-  if (input.courseVersionId) {
-    const membership = await requireOrgMember(
-      lesson.course.organizationId,
-      userId,
-      "member",
-    );
-    await requireCourseEnrollment(
-      lesson.courseId,
-      userId,
-      toMemberRole(membership.role),
-    );
-  } else {
-    await requireOrgMember(
-      lesson.course.organizationId,
-      userId,
-      "admin_or_owner",
-    );
-  }
+  await requireOrgMember(
+    lesson.course.organizationId,
+    userId,
+    "admin_or_owner",
+  );
   const scenes = await db.scene.findMany({
     where: {
       lessonId: input.lessonId,
-      courseVersionId: input.courseVersionId ?? null,
+      courseVersionId: null,
     },
     orderBy: { order: "asc" },
     include: {

@@ -2,6 +2,8 @@ import type { buildToolRegistry } from "@/features/notebook/server";
 
 import { z } from "zod";
 
+import { createSceneSchema } from "@/features/course-authoring/server";
+
 /** Deletes never join this list: the in-app confirmation gate has no MCP equivalent. */
 export const MCP_TOOL_NAMES = [
   "createCourse",
@@ -30,22 +32,17 @@ export const MCP_TOOL_NAMES = [
   ReturnType<typeof buildToolRegistry>
 >)[];
 
-// `sourceIds` never crosses the boundary (ADR 0005), `html` goes through
-// `insertContent` instead, and `courseVersionId` names a published version
-// while this surface is draft-only.
-const UNREACHABLE_KEYS = ["html", "sourceIds", "courseVersionId"];
-
-export function mcpToolInput(inputSchema: unknown) {
+export function mcpToolInput(
+  name: (typeof MCP_TOOL_NAMES)[number],
+  inputSchema: unknown,
+): z.ZodObject {
   if (!(inputSchema instanceof z.ZodObject)) {
     throw new Error("An MCP tool must declare a zod object input schema.");
   }
-
-  // eslint-disable-next-line anti-slop/no-shape-in-symbol-names -- zod owns this property name; only our alias is ours to pick.
-  const fields: Record<string, z.ZodType> = inputSchema.shape;
-
-  return z.object(
-    Object.fromEntries(
-      Object.entries(fields).filter(([key]) => !UNREACHABLE_KEYS.includes(key)),
-    ),
-  );
+  // An external agent has no notebook, so any lineage it cited would be
+  // fiction (ADR 0005). `.omit` is checked against the schema, so renaming the
+  // field breaks the build instead of silently re-opening it.
+  return name === "createScene"
+    ? createSceneSchema.omit({ sourceIds: true })
+    : inputSchema;
 }
