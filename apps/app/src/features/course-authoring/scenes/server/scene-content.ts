@@ -26,18 +26,9 @@ export async function updateDraftScene(
       sp?: number;
       integration?: SceneIntegration | null;
     };
-    html?: string;
   },
 ) {
   const scene = await requireDraftSceneContentAccess(input.sceneId, user.id);
-
-  // While an author has the scene open the live collab document is
-  // authoritative and `documentState` only its stale flush target, so writing
-  // the row directly would lose either this write or the author's.
-  if (input.html !== undefined) {
-    await applySceneHtml(user, input.sceneId, input.html, "replace");
-  }
-
   const { integration, ...scalarUpdates } = input.updates ?? {};
   const updated = await db.scene.update({
     where: { id: input.sceneId },

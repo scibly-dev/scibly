@@ -82,44 +82,17 @@ describe("writing scene content", () => {
 });
 
 describe("updating a scene", () => {
-  it("sends content through the writer rather than writing the row behind the open editor", async () => {
-    await updateDraftScene(USER, {
-      sceneId: "scene_1",
-      html: "<p>Drafted.</p>",
-      updates: { title: "Intro" },
-    });
-
-    expect(writeSceneHtml).toHaveBeenCalledOnce();
-    expect(db.scene.update).toHaveBeenCalledWith({
-      where: { id: "scene_1" },
-      data: { title: "Intro", integration: undefined },
-    });
-  });
-
-  it("leaves the metadata untouched when the content is refused", async () => {
-    writeSceneHtml.mockResolvedValue({
-      success: false,
-      error: "Unknown block type(s): quiz.",
-      refused: true,
-    });
-
-    await expect(
-      updateDraftScene(USER, {
-        sceneId: "scene_1",
-        html: "<div/>",
-        updates: { title: "Intro" },
-      }),
-    ).rejects.toThrow();
-    expect(db.scene.update).not.toHaveBeenCalled();
-  });
-
-  it("a metadata-only update touches no content at all", async () => {
+  it("writes metadata and never content — that is writeSceneContent's job", async () => {
     await updateDraftScene(USER, {
       sceneId: "scene_1",
       updates: { title: "Intro" },
     });
 
     expect(writeSceneHtml).not.toHaveBeenCalled();
+    expect(db.scene.update).toHaveBeenCalledWith({
+      where: { id: "scene_1" },
+      data: { title: "Intro", integration: undefined },
+    });
   });
 
   it("clearing an integration writes a database null, not a missing field", async () => {

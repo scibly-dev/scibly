@@ -73,7 +73,7 @@ export async function handleMcpRequest(
       {
         description:
           typeof tool.description === "string" ? tool.description : undefined,
-        inputSchema: mcpToolInput(tool.inputSchema),
+        inputSchema: mcpToolInput(name, tool.inputSchema),
       },
       async (args) => {
         const output = await execute(args, {
