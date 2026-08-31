@@ -14,6 +14,7 @@ import { inngest } from "@/lib/inngest/client";
 
 import { requestCollections } from "../server/collect/collection-sync";
 import { loadTopicFeed } from "../server/collect/topic-feed";
+import { triageEvents, unreadBundles } from "../server/extract/funnel";
 import {
   createTopicDocument,
   readDocumentDestination,
@@ -130,7 +131,7 @@ export const knowledgeTopicProcedures = {
       );
     const view = toTopicView(topic);
     const [feed, access] = await Promise.all([
-      loadTopicFeed(organizationId, view.repositories),
+      loadTopicFeed(organizationId, view.id, view.repositories),
       describeKnowledgeSyncAccess(db, organizationId),
     ]);
     // Raw provider error text is for those who can act on it; everyone else
@@ -138,11 +139,15 @@ export const knowledgeTopicProcedures = {
     const runs = canManage
       ? feed.runs
       : feed.runs.map((run) => ({ ...run, failureReason: null }));
+    const failed = canManage ? feed.failed : { ...feed.failed, reason: null };
     return {
       organizationId,
       topic: view,
       runs,
       bundles: feed.bundles,
+      insights: feed.insights,
+      reading: feed.reading,
+      failed,
       access,
       canManage,
       canSync,
@@ -172,15 +177,27 @@ export const knowledgeTopicProcedures = {
       return withRateLimit(
         { db, identifier: organizationId, ...SYNC_LIMIT },
         async () => {
+          const repositoryIds = toTopicView(topic).repositories.map(
+            (repository) => repository.id,
+          );
           const { requested } = await requestCollections(
-            toTopicView(topic).repositories.map(
-              (repository): [string, string] => [organizationId, repository.id],
-            ),
+            repositoryIds.map((repositoryId): [string, string] => [
+              organizationId,
+              repositoryId,
+            ]),
             async (events) => {
               await inngest.send(events);
             },
           );
-          return { queued: requested };
+          // Collecting is only half a sync. A pull request already collected but
+          // never read — the funnel failed, an event was dropped — is what
+          // someone pressing this again is usually trying to fix, and waiting
+          // for the nightly sweep is not an answer.
+          const waiting = await unreadBundles(organizationId, repositoryIds);
+          if (waiting.length > 0) {
+            await inngest.send(triageEvents(organizationId, waiting));
+          }
+          return { queued: requested, retried: waiting.length };
         },
       );
     }),
@@ -240,6 +257,7 @@ export const knowledgeTopicProcedures = {
               data: {
                 organizationId,
                 name: input.name,
+                description: input.description,
                 repositories,
                 language: input.language,
                 markdown,
@@ -287,6 +305,7 @@ export const knowledgeTopicProcedures = {
               where: { id: existing.id },
               data: {
                 name: input.name,
+                description: input.description,
                 repositories,
                 language: input.language,
                 maintainers: { set: maintainers },

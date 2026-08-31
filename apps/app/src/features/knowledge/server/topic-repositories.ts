@@ -1,3 +1,4 @@
+import { matchesGlob } from "path";
 import { z } from "zod";
 
 const storedRepository = z.object({
@@ -14,3 +15,10 @@ export const parseStoredRepositories = (value: unknown): TopicRepository[] =>
     .catch([])
     .parse(value)
     .filter((repository) => repository !== null);
+
+/** Empty globs means the topic watches the whole repository. */
+export const touchesScope = (filePaths: string[], pathGlobs: string[]) =>
+  pathGlobs.length === 0 ||
+  filePaths.some((filePath) =>
+    pathGlobs.some((glob) => matchesGlob(filePath, glob)),
+  );

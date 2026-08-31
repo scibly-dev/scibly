@@ -52,7 +52,8 @@
       "actions": {
         "CHAT_MESSAGE": "Chat messages",
         "IMAGE_GENERATION": "Image generation",
-        "SOURCE_INGEST": "Source indexing"
+        "SOURCE_INGEST": "Source indexing",
+        "KNOWLEDGE_EXTRACT": "Knowledge extraction"
       }
     },
     "seats": {

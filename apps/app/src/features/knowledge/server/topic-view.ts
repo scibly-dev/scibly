@@ -7,6 +7,7 @@ import { parseStoredRepositories } from "./topic-repositories";
 export const TOPIC_SELECT = {
   id: true,
   name: true,
+  description: true,
   repositories: true,
   language: true,
   notionPageId: true,

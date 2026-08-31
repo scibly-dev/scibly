@@ -4,11 +4,12 @@ What an organization wants written down about its own code, and kept true as
 that code moves. A topic states the intent — this document, about this much of
 these repositories — and names who is trusted to judge what the sync later
 proposes for it. A topic also has a document: markdown held here, projected onto
-a Notion page the organization can read and edit. The sync now collects too: a
-merged pull request worth learning from becomes a bundle. This context decides
-scope, stewardship, where the projection lands, and what is worth keeping;
-reading a bundle, drafting a suggestion, and metering the cost belong to the
-tickets that follow.
+a Notion page the organization can read and edit. The sync now collects and
+reads too: a merged pull request worth learning from becomes a bundle, and a
+bundle worth documenting becomes cited insights. This context decides scope,
+stewardship, where the projection lands, what is worth keeping, and what was
+learned; drafting a suggestion into a document belongs to the ticket that
+follows.
 
 ## Language
 
@@ -98,7 +99,7 @@ without a model: a bot's pull request, or a chore with nothing said on it, is
 refused outright, and the rest are ranked on how much was argued. It costs
 nothing but the listing, which is the point — the model stages downstream are
 what the funnel is narrow for.
-_Avoid_: triage (the model stage in the ticket that follows), heuristic, rules
+_Avoid_: triage (the model stage below), heuristic, rules
 
 **Collection run**:
 One repository's turn at collecting, for one organization. It says how far it
@@ -114,8 +115,54 @@ was touched, not when it merged — GitHub will not order by the merge, and a
 merged pull request that is argued over afterwards should come back.
 
 **Activity feed**:
-What a topic can show for itself: its recent collection runs, and the bundles
-they kept from the repositories it watches, narrowed to its path globs. It is
-read, not stored — nothing binds a bundle to a topic until the tickets that
-follow do.
+What a topic can show for itself: its recent collection runs, the bundles they
+kept from the repositories it watches, narrowed to its path globs, and the
+insights read out of them. The runs and bundles are read, not stored — only an
+insight is actually bound to a topic. A finished run is not a finished sync: a
+collected bundle with no outcome yet is still in the funnel, and the feed says
+so rather than letting a succeeded run read as the end of the work.
 _Avoid_: history, log, timeline
+
+## What the sync reads
+
+**Triage**:
+The cheap model pass that sorts a batch of bundles at once: which topics cover
+each one, and how worth documenting its discussion is. It reads summaries, not
+arguments, and it may only route to topics the structural scope already
+allowed — a topic the model names but the globs never matched is not a
+candidate. What it refuses is settled, never surfaced.
+_Avoid_: classification, routing, filter (the structural one above)
+
+**Extraction**:
+The capable model pass that reads one bundle whole and re-authors its argument
+into insights. One extraction is one bundle, one generation, and one charge —
+which is what makes the cost of a night's sync countable.
+_Avoid_: summarization, mining, analysis
+
+**Insight**:
+One durable claim, in prose this side wrote, filed against the topic it belongs
+to. Deliberately untyped: a decision, a convention and a gotcha are all just
+claims that cite where they came from. A claim that only makes sense next to
+the diff is not one.
+_Avoid_: finding, fact, note, suggestion (the reviewed thing in the ticket that
+follows), quote
+
+**Citation**:
+A link on an insight back to the pull request or comment the claim was read
+from. Checked against the bundle before it is stored, so a model cannot invent
+one — a claim left with no citation it can prove is dropped rather than filed.
+_Avoid_: source (notebooks' word), reference, link
+
+**Confidence**:
+How sure the extraction is that a claim is true, durable, and worth keeping.
+Below the floor nothing is written and nothing is shown; the floor and every
+other number the funnel judges by live in one place.
+_Avoid_: score (the structural filter's word for discussion density), rating
+
+**Outcome**:
+Where the funnel left a bundle — off topic, low value, extracted, nothing
+found, or unfunded. Written with the moment the funnel finished, and the raw
+content is pruned in the same write: what proves a bundle was judged survives,
+the conversation does not. Unfunded is the exception and not terminal, so an
+organization that tops up gets its bundles read.
+_Avoid_: status, result, verdict

@@ -1,6 +1,18 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 
+/**
+ * Optional locally, required in production. `pnpm dev` has to start on a fresh
+ * clone; a key missing from a deploy must still stop it.
+ */
+const devOptional = (schema, name) =>
+  schema
+    .optional()
+    .refine(
+      (value) => process.env.NODE_ENV !== "production" || value !== undefined,
+      { message: `${name} is required in production` },
+    );
+
 export const env = createEnv({
   server: {
     DATABASE_URL: z.string().url(),
@@ -24,15 +36,7 @@ export const env = createEnv({
     STRIPE_SECRET_KEY: z.string(),
     STRIPE_WEBHOOK_SECRET: z.string(),
 
-    OPENAI_API_KEY: z
-      .string()
-      .optional()
-      .refine(
-        (val) => process.env.NODE_ENV !== "production" || val !== undefined,
-        {
-          message: "OPENAI_API_KEY is required in production",
-        },
-      ),
+    OPENAI_API_KEY: devOptional(z.string(), "OPENAI_API_KEY"),
     /** 64 hex chars (32 bytes) — used for AES-256-GCM encryption of BYOAI API keys */
     ENCRYPTION_KEY: z
       .string()
@@ -60,6 +64,12 @@ export const env = createEnv({
       .string()
       .min(1)
       .default("deepseek/deepseek-v4-flash-0731"),
+    /** Gateway model ID for knowledge triage — a cheap tier, since triage only
+     * reads pull-request summaries. BYOAI orgs run their one model instead. */
+    SCIBLY_KNOWLEDGE_TRIAGE_MODEL: z
+      .string()
+      .min(1)
+      .default("deepseek/deepseek-v4-flash-0731"),
     /** Gateway image model ID for notebook agent image generation */
     SCIBLY_DEFAULT_IMAGE_MODEL: z
       .string()
@@ -69,14 +79,19 @@ export const env = createEnv({
     /** HMAC key shared only by the app token issuer and collab verifier. */
     COLLAB_TOKEN_SECRET: z.string().min(32),
 
-    INNGEST_BASE_URL: z.string().url(),
-    INNGEST_EVENT_KEY: z.string().min(1),
-    INNGEST_SIGNING_KEY: z
-      .string()
-      .regex(
-        /^(?:[0-9a-f]{2})+$/i,
-        "INNGEST_SIGNING_KEY must be bare hex with an even number of characters and no `signkey-` prefix",
-      ),
+    // Unset locally, Inngest talks to its own dev server on localhost:8288 and
+    // signs nothing — which is exactly what `pnpm dev` wants.
+    INNGEST_BASE_URL: devOptional(z.string().url(), "INNGEST_BASE_URL"),
+    INNGEST_EVENT_KEY: devOptional(z.string().min(1), "INNGEST_EVENT_KEY"),
+    INNGEST_SIGNING_KEY: devOptional(
+      z
+        .string()
+        .regex(
+          /^(?:[0-9a-f]{2})+$/i,
+          "INNGEST_SIGNING_KEY must be bare hex with an even number of characters and no `signkey-` prefix",
+        ),
+      "INNGEST_SIGNING_KEY",
+    ),
     /** `z.enum`, not `z.coerce.boolean()`, which reads the string `"false"` as true. */
     INNGEST_DEV: z.enum(["true", "false"]).optional(),
   },
@@ -134,6 +149,7 @@ export const env = createEnv({
     AI_GATEWAY_API_KEY: process.env.AI_GATEWAY_API_KEY,
     SCIBLY_DEFAULT_CHAT_MODEL: process.env.SCIBLY_DEFAULT_CHAT_MODEL,
     SCIBLY_DEFAULT_IMAGE_MODEL: process.env.SCIBLY_DEFAULT_IMAGE_MODEL,
+    SCIBLY_KNOWLEDGE_TRIAGE_MODEL: process.env.SCIBLY_KNOWLEDGE_TRIAGE_MODEL,
     COLLAB_TOKEN_SECRET:
       process.env.COLLAB_TOKEN_SECRET ?? process.env.BETTER_AUTH_SECRET,
 

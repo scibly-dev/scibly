@@ -22,6 +22,7 @@ enum CreditAction {
   CHAT_MESSAGE
   IMAGE_GENERATION
   SOURCE_INGEST
+  KNOWLEDGE_EXTRACT
   TOPUP_PURCHASE
 
   @@map("credit_action")

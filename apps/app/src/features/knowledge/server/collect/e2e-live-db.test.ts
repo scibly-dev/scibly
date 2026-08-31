@@ -149,6 +149,7 @@ describe.runIf(live)("a repository collected against the real database", () => {
       collected: 0,
       discarded: 0,
       capped: false,
+      bundleIds: [],
     });
     expect(github.listMergedPullRequests).not.toHaveBeenCalled();
 
@@ -184,11 +185,14 @@ describe.runIf(live)("a repository collected against the real database", () => {
     github.fetchPullRequestDetail.mockResolvedValue(richDetail());
 
     const id = await newRun();
-    expect(await run(id)).toEqual({
+    const collected = await run(id);
+    expect(collected).toMatchObject({
       collected: 1,
       discarded: 2,
       capped: false,
     });
+    // The funnel's work list: only what was kept, never a discarded row.
+    expect(collected.bundleIds).toHaveLength(1);
 
     expect(github.fetchPullRequestDetail).toHaveBeenCalledTimes(1);
 
@@ -241,6 +245,7 @@ describe.runIf(live)("a repository collected against the real database", () => {
       collected: 0,
       discarded: 0,
       capped: false,
+      bundleIds: [],
     });
     expect(github.fetchPullRequestDetail).not.toHaveBeenCalled();
 
@@ -278,7 +283,7 @@ describe.runIf(live)("a repository collected against the real database", () => {
     });
 
     const id = await newRun();
-    expect(await run(id)).toEqual({
+    expect(await run(id)).toMatchObject({
       collected: 1,
       discarded: 0,
       capped: false,

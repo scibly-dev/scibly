@@ -48,6 +48,7 @@ export function useTopicForm({
     resolver: zodResolver(topicFormSchema),
     defaultValues: {
       name: topic?.name ?? "",
+      description: topic?.description ?? "",
       // `pathGlobs` is spelled out because the schema's default only fills in on the way through the parser, never in form state.
       repositories:
         topic?.repositories.map(({ id, pathGlobs }) => ({ id, pathGlobs })) ??
@@ -59,6 +60,7 @@ export function useTopicForm({
   });
 
   const name = useWatch({ control, name: "name" });
+  const description = useWatch({ control, name: "description" }) ?? "";
   const repositories = useWatch({ control, name: "repositories" }).map(
     ({ id, pathGlobs }) => ({ id, pathGlobs: pathGlobs ?? [] }),
   );
@@ -68,6 +70,7 @@ export function useTopicForm({
 
   const fingerprint = topicFingerprint({
     name,
+    description,
     repositories,
     maintainerMemberIds,
     language,
@@ -79,6 +82,7 @@ export function useTopicForm({
     setSaved(
       topicFingerprint({
         name: fields.name,
+        description: fields.description ?? "",
         repositories: fields.repositories.map(({ id, pathGlobs }) => ({
           id,
           pathGlobs: pathGlobs ?? [],

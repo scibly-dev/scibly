@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@scibly/ui/components/select";
+import { Textarea } from "@scibly/ui/components/textarea";
 import { AlertCircle } from "lucide-react";
 import { Controller } from "react-hook-form";
 
@@ -118,6 +119,20 @@ export function TopicForm({
               )}
             />
           </div>
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <FieldLabel htmlFor="topic-description" optional={t.form.optional}>
+            {t.form.about}
+          </FieldLabel>
+          <p className="text-ink-faint text-[12px]">{t.form.aboutHint}</p>
+          <Textarea
+            id="topic-description"
+            rows={3}
+            maxLength={600}
+            placeholder={t.form.aboutPlaceholder}
+            {...register("description")}
+          />
         </div>
 
         <div className="flex flex-col gap-2">

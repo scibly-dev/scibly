@@ -14,6 +14,10 @@ model KnowledgeTopic {
   organizationId     String
   organization       Organization           @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   name               String
+  /// What the topic is about, in the maintainer's own words. A name alone tells
+  /// the triage model nothing to judge a pull request against; this is what it
+  /// reads. Optional, because scope is settled structurally either way.
+  description        String                 @default("")
   /// `{ id, fullName, pathGlobs }[]`, resolved from the GitHub installation at
   /// write time: the id survives a rename, the name is what a maintainer reads,
   /// and the globs narrow that one repository — empty means all of it.
@@ -33,6 +37,7 @@ model KnowledgeTopic {
   externallyEditedAt DateTime?
   /// Members, not users: someone who leaves the organization stops maintaining.
   maintainers        Member[]               @relation("KnowledgeTopicMaintainers")
+  insights           KnowledgeInsight[]
   createdAt          DateTime               @default(now())
   updatedAt          DateTime               @updatedAt
 
@@ -128,8 +133,82 @@ model KnowledgeBundle {
   /// bundle is the whole conversation.
   truncated      Boolean                 @default(false)
   collectedAt    DateTime                @default(now())
+  /// Where the funnel left the bundle. Set with `processedAt` on a terminal
+  /// outcome; set alone when the funnel stopped short and will try again.
+  outcome        KnowledgeBundleOutcome?
+  /// Why the funnel stopped, set only alongside a `FAILED` outcome. The
+  /// provider's own message, truncated — never a credential.
+  failureReason  String?
+  /// The funnel is done with it: `content` is pruned in the same write, and
+  /// only what proves the bundle was judged survives. A pull request that moves
+  /// on GitHub is re-collected, which clears this and puts it back in the funnel.
+  processedAt    DateTime?
+  insights       KnowledgeInsight[]
 
   @@unique([organizationId, repositoryId, externalId], map: "knowledge_bundle_org_repo_external_key")
   @@index([organizationId, repositoryId, collectedAt], map: "knowledge_bundle_org_repo_collected_idx")
+  /// Finds what the funnel never finished — a dropped event, an organization
+  /// that ran out of credits — so the nightly retry can pick it up.
+  @@index([organizationId, processedAt, collectedAt], map: "knowledge_bundle_org_unprocessed_idx")
   @@map("knowledge_bundle")
+}
+
+/// Where the funnel left a bundle. Every value but `UNFUNDED` is terminal.
+enum KnowledgeBundleOutcome {
+  /// No topic watches what this pull request touched.
+  OFF_TOPIC
+  /// Triage scored it below the documentation-worthiness threshold.
+  LOW_VALUE
+  /// Extraction ran and at least one claim cleared the confidence floor.
+  EXTRACTED
+  /// Extraction ran and everything it produced fell below the floor.
+  NO_INSIGHTS
+  /// The organization could not pay for the extraction. Not terminal: the
+  /// content is kept and the nightly retry sends it round again.
+  UNFUNDED
+  /// Triage or extraction exhausted its retries. Not terminal either, and the
+  /// only outcome that carries `failureReason` — a stopped funnel is not a
+  /// verdict, so the content is kept and the nightly retry sends it round again.
+  FAILED
+
+  @@map("knowledge_bundle_outcome")
+}
+
+/// Where a claim is in its life. Only `PROPOSED` is written here; the review
+/// queue moves it on.
+enum KnowledgeInsightStatus {
+  PROPOSED
+  ACCEPTED
+  REJECTED
+  SUPERSEDED
+
+  @@map("knowledge_insight_status")
+}
+
+/// One durable claim, re-authored out of a pull request's argument and filed
+/// against the topic it belongs to. Deliberately untyped: a decision, a
+/// convention and a gotcha are all just claims that cite where they came from.
+model KnowledgeInsight {
+  id             String                 @id @default(cuid())
+  organizationId String
+  organization   Organization           @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  topicId        String
+  topic          KnowledgeTopic         @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  /// The bundle it was read out of. Nulled rather than cascaded, so a claim
+  /// outlives the pull request row it came from.
+  bundleId       String?
+  bundle         KnowledgeBundle?       @relation(fields: [bundleId], references: [id], onDelete: SetNull)
+  /// Prose the extraction wrote, never a quote of the conversation.
+  claim          String
+  /// `{ url, label }[]`, at least one, every url checked against the bundle
+  /// before it was written — a model cannot invent a link into this column.
+  citations      Json
+  /// 0-100, as the extraction judged it. Below the floor it is never stored.
+  confidence     Int
+  status         KnowledgeInsightStatus @default(PROPOSED)
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+
+  @@index([topicId, status, createdAt(sort: Desc)], map: "knowledge_insight_topic_status_idx")
+  @@map("knowledge_insight")
 }

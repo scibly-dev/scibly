@@ -20,6 +20,7 @@ const pathGlobInput = z
 
 const topicFields = {
   name: z.string().trim().min(1).max(120),
+  description: z.string().trim().max(600).default(""),
   repositories: z
     .array(
       z.object({

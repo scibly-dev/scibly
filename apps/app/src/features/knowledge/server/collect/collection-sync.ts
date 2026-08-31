@@ -4,6 +4,7 @@ import { z } from "zod";
 
 import { inngest } from "@/lib/inngest/client";
 
+import { triageEvents } from "../extract/funnel";
 import { parseStoredRepositories } from "../topic-repositories";
 import { collectRepository, recordFailedCollection } from "./collect-run";
 
@@ -147,5 +148,16 @@ export const knowledgeCollect = inngest.createFunction(
         event.data.error,
       ),
   },
-  ({ event }) => collectRepository(collectRequest.parse(event.data)),
+  async ({ event, step }) => {
+    const request = collectRequest.parse(event.data);
+    const { bundleIds, ...result } = await collectRepository(request);
+    // Hands the funnel its work; triage batches the events back together.
+    if (bundleIds.length > 0) {
+      await step.sendEvent(
+        "request-triage",
+        triageEvents(request.organizationId, bundleIds),
+      );
+    }
+    return result;
+  },
 );

@@ -3,17 +3,20 @@ import type { TopicLanguage } from "../../contracts";
 // Order is not part of a scope, so re-picking the same things must not cost a write.
 export function topicFingerprint({
   name,
+  description,
   repositories,
   maintainerMemberIds,
   language,
 }: {
   name: string;
+  description: string;
   repositories: { id: string; pathGlobs: string[] }[];
   maintainerMemberIds: string[];
   language: TopicLanguage;
 }): string {
   return JSON.stringify([
     name.trim(),
+    description.trim(),
     [...repositories]
       .sort((a, b) => a.id.localeCompare(b.id))
       .map((repo) => [repo.id, [...repo.pathGlobs].sort()]),
