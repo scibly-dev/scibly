@@ -12,8 +12,6 @@ const sourceIdsSchema = z
 
 export const getLessonScenesSchema = z.object({
   lessonId: z.string(),
-
-  courseVersionId: z.string().optional(),
 });
 
 export const updateSceneSchema = z.object({
@@ -21,12 +19,6 @@ export const updateSceneSchema = z.object({
   updates: updateSceneUpdatesSchema
     .optional()
     .describe("Metadata updates like title, vibe, animation, sp, etc."),
-  html: z
-    .string()
-    .optional()
-    .describe(
-      "Optional HTML string to replace the scene content. Must conform to the editor schema (call get_editor_schema first). Fully replaces existing content.",
-    ),
 });
 
 export const createSceneSchema = z.object({
@@ -36,12 +28,6 @@ export const createSceneSchema = z.object({
     .optional()
     .describe(
       "The title of the scene. Defaults to 'New Scene' if not provided.",
-    ),
-  html: z
-    .string()
-    .optional()
-    .describe(
-      "Optional HTML string to initialize the scene content. Must conform to the editor schema (call get_editor_schema first). Replaces any existing content.",
     ),
   sourceIds: sourceIdsSchema.optional(),
 });
@@ -56,6 +42,21 @@ export const setSceneLineageSchema = z.object({
     .optional()
     .describe(
       "Active notebook context. When the course is not yet linked to this notebook, linking is performed automatically before recording lineage.",
+    ),
+});
+
+export const writeSceneContentSchema = z.object({
+  sceneId: z.string().describe("The ID of the draft scene to write to."),
+  html: z
+    .string()
+    .describe(
+      "HTML conforming to the editor schema (call get_editor_schema first).",
+    ),
+  mode: z
+    .enum(["replace", "append"])
+    .default("replace")
+    .describe(
+      "Whether the HTML replaces the scene's content or is added after it.",
     ),
 });
 

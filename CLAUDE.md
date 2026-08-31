@@ -6,7 +6,7 @@ Version-matched docs ship inside the package: read `apps/app/node_modules/next/d
 
 ### Issue tracker
 
-Issues live in this repo's GitHub Issues (`NiclasDev63/scibly-lms`), via the `gh` CLI. See `docs/agents/issue-tracker.md`.
+Issues live in GitHub Issues under [`scibly-dev/scibly`](https://github.com/scibly-dev/scibly), via the `gh` CLI (`-R scibly-dev/scibly`). See `docs/agents/issue-tracker.md`.
 
 ### Triage labels
 

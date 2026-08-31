@@ -32,6 +32,16 @@ export const getUtcBucketStart = (
   return new Date(bucketStart);
 };
 
+/**
+ * Behind a proxy the socket address is the proxy's, so the forwarded header is
+ * what varies per client; an unreadable one falls into one shared bucket rather
+ * than escaping the limit.
+ */
+export const clientIp = (headers: Headers): string =>
+  headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+  headers.get("x-real-ip") ??
+  "unknown";
+
 type RateLimitIdentifier = {
   db: PrismaClient;
   identifier: string;

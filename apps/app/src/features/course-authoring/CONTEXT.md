@@ -74,6 +74,13 @@ A draft scene whose source moved on beneath it, defined in
 [notebook](../notebook/CONTEXT.md). Never said of a version — a version that is
 no longer current is _superseded_.
 
+**External agent**:
+An AI agent outside Scibly working the draft on an author's behalf, with the
+author's own permissions and nothing more. It edits the way a second author
+would — never anything published, never the notebook's conversation — and what
+it writes cites no sources, so freshness never watches it.
+_Avoid_: MCP client, bot, integration, service account
+
 ### What a published scene is made of
 
 **Author document**:

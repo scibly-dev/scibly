@@ -1,6 +1,6 @@
 import { AppError } from "@scibly/api/application-error";
 import { type GenerationCharge } from "@scibly/api/entitlement";
-import { type Session } from "@scibly/auth/session";
+import { type Principal } from "@scibly/auth/session";
 import { db } from "@scibly/db";
 import {
   createAgentUIStream,
@@ -198,7 +198,7 @@ type TurnModel = {
 type TurnRequest = {
   userId: string;
   orgSlug: string;
-  session: Session;
+  session: Principal;
   caller: ReturnType<typeof createCaller>;
   correlationId: string;
 

@@ -1,15 +1,12 @@
 "use client";
 
-import type { HocuspocusProvider } from "@hocuspocus/provider";
 import type { api } from "@/shared/api/trpc/client";
 import type { ImageInsertTarget } from "./insert-target-storage";
 import type { InsertGeneratedImageLabels } from "./use-generated-image-actions";
 
 import { toast } from "sonner";
 
-import { performBackgroundInsertMediaNode } from "@/features/course-authoring/client";
-import { useQuestionBlockStore } from "@/shared/content/editor/assessment/grading/question-block-store";
-import { insertMediaNodeAtEnd } from "@/shared/content/editor/media/utils/media";
+import { vanillaApi } from "@/shared/api/trpc/client";
 
 import { useCourseBuilderStore } from "../../course-builder/course-builder-store";
 import { openSceneInCourseBuilder } from "../../course-builder/hooks/open-scene-in-course-builder";
@@ -20,9 +17,6 @@ import {
 } from "./insert-target-storage";
 
 type Utils = ReturnType<typeof api.useUtils>;
-
-type WebsocketProvider =
-  HocuspocusProvider["configuration"]["websocketProvider"];
 
 export function resolveInsertTarget(
   notebookId: string | undefined,
@@ -62,25 +56,20 @@ export function clearInsertTargetIfSceneChanged(
 
 export async function performImageInsert({
   url,
-  alt,
   target,
   utils,
   insertLabels,
   notebookId,
-  websocketProvider,
   invalidateMediaLibrary,
 }: {
   url: string;
-  alt: string;
   target: ImageInsertTarget;
   utils: Utils;
   insertLabels: InsertGeneratedImageLabels;
   notebookId: string | undefined;
-  websocketProvider: WebsocketProvider | null | undefined;
   invalidateMediaLibrary: () => void;
 }): Promise<boolean> {
-  const { course: activeCourse, activeScene: currentScene } =
-    useCourseBuilderStore.getState();
+  const { course: activeCourse } = useCourseBuilderStore.getState();
 
   if (!activeCourse) {
     toast.error(insertLabels.noCourseLinked);
@@ -94,28 +83,18 @@ export async function performImageInsert({
     scene: { id: target.sceneId, title: target.sceneTitle },
   });
 
-  const editor = useQuestionBlockStore.getState().editor;
-  const isActiveScene = currentScene?.id === target.sceneId;
-
-  if (editor && isActiveScene) {
-    insertMediaNodeAtEnd(editor, url, alt);
-  } else {
-    if (!websocketProvider) {
-      toast.error(insertLabels.insertError);
-      return false;
-    }
-
-    const result = await performBackgroundInsertMediaNode({
+  // No `alt`: the editor's image block has no such attribute, so it would be dropped.
+  try {
+    await vanillaApi.scene.writeSceneContent.mutate({
       sceneId: target.sceneId,
-      url,
-      alt,
-      websocketProvider,
+      html: `<img src="${url.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}">`,
+      mode: "append",
     });
-
-    if (!result.success) {
-      toast.error(result.error ?? insertLabels.insertError);
-      return false;
-    }
+  } catch (error) {
+    toast.error(
+      error instanceof Error ? error.message : insertLabels.insertError,
+    );
+    return false;
   }
 
   if (notebookId) {

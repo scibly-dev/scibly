@@ -116,3 +116,17 @@ describe("baseProxy embed handling", () => {
     }
   });
 });
+
+describe("baseProxy auth handling", () => {
+  it("sends a signed-in visitor of an auth page to the dashboard", async () => {
+    const response = await proxy(request("/de/auth/login"));
+
+    expect(response.headers.get("location")).toContain("/profile/onboarding");
+  });
+
+  it("lets a signed-in visitor through to the MCP consent screen", async () => {
+    const response = await proxy(request("/de/auth/mcp-consent?code=abc"));
+
+    expect(response.headers.get("location")).toBeNull();
+  });
+});

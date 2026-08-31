@@ -30,7 +30,6 @@ process.env.STRIPE_PORTAL_CONFIGURATION_ID = "bpc_test_stub";
 // Collab server env vars (needed when importing from apps/collab/src)
 process.env.COLLAB_PORT = "3001";
 process.env.COLLAB_TRUST_PROXY = "false";
-process.env.COLLAB_FLUSH_INTERVAL_MS = "500";
 process.env.COLLAB_CLEANUP_INTERVAL_MS = "300000";
 process.env.COLLAB_TOKEN_SECRET = "test-collab-token-secret-32-bytes-minimum";
 

@@ -26,8 +26,6 @@ model Session {
   userId               String
   user                 User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   activeOrganizationId String?
-  oauthrefreshtokens   OauthRefreshToken[]
-  oauthaccesstokens    OauthAccessToken[]
 
   @@unique([token])
   @@index([userId])

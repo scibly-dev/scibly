@@ -8,6 +8,8 @@ import { auth } from "./auth-config";
 
 export type Session = typeof auth.$Infer.Session;
 
+export type Principal = { user: Session["user"] };
+
 export const getSession = cache(
   async (
     headers?: Headers,

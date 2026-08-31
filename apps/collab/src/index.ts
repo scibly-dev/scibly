@@ -1,7 +1,6 @@
 import "dotenv/config";
 
 import { config } from "./config.js";
-import { shutdownPersistence } from "./persistence.js";
 import { purgeExpired } from "./rate-limiter.js";
 import { createCollabServer } from "./server.js";
 
@@ -12,9 +11,6 @@ async function shutdown() {
   console.log("[collab] Shutting down server...");
   clearInterval(cleanupTimer);
   await server.destroy();
-
-  await shutdownPersistence();
-
   process.exit(0);
 }
 

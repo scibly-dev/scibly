@@ -103,6 +103,7 @@ export const routes = {
       signIn: toAppUrl(`${BASE_AUTH_PATH}/login`),
       signUp: toAppUrl(`${BASE_AUTH_PATH}/register`),
       resetPassword: toAppUrl(`${BASE_AUTH_PATH}/reset-password`),
+      mcpConsent: toAppUrl(`${BASE_AUTH_PATH}/mcp-consent`),
       clearSession: toAppUrl(
         `${BASE_API_PATH}/${BASE_AUTH_PATH}/clear-session`,
       ),

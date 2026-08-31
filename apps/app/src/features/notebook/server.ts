@@ -10,6 +10,7 @@ export {
   persistMessages,
 } from "./chat/server/messages";
 export { buildImageNotebookTools } from "./media/tools/image-notebook-tools";
+export { getNotebookSkills } from "./skills";
 export { assertOrgCanAffordIngest } from "./sources/ingestion/ingest-funding";
 export {
   ingestOrRefreshSource,
@@ -33,6 +34,7 @@ export {
   type NotebookSourceWrite,
   resolveOwnedNotebookSource,
 } from "./sources/server/sources";
+export { buildToolRegistry } from "./tools/registry.server";
 export type { NotebookRuntimeContext } from "./tools/runtime-context";
 export {
   assertNotebookOwner,

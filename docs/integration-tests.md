@@ -1,8 +1,9 @@
 # Integration tests
 
-Four test files prove behaviour no mocked Prisma client can witness — `ts_headline`
-fragments and `substring` paging in Postgres, row locking, guarded updates, and
-concurrent callers racing for the same rate-limit slot:
+Five test files prove behaviour no mocked Prisma client can witness — `ts_headline`
+fragments and `substring` paging in Postgres, row locking, guarded updates,
+concurrent callers racing for the same rate-limit slot, and an external agent's
+MCP tool call reaching real tables through the real procedures:
 
 | File                                                                               | Variable                            |
 | ---------------------------------------------------------------------------------- | ----------------------------------- |
@@ -10,9 +11,10 @@ concurrent callers racing for the same rate-limit slot:
 | `apps/app/src/app/api/chat/generation-debit.integration.test.ts`                   | `ENTITLEMENT_INT_TEST_DATABASE_URL` |
 | `apps/app/src/features/organizations/server/plan-upgrade.integration.test.ts`      | `ENTITLEMENT_INT_TEST_DATABASE_URL` |
 | `packages/api/src/rate-limit.integration.test.ts`                                  | `RATE_LIMIT_INT_TEST_DATABASE_URL`  |
+| `apps/app/src/features/mcp/server/create-course.integration.test.ts`               | `MCP_INT_TEST_DATABASE_URL`         |
 
-The last one lives in `packages/api`, so vitest resolves its config from there, not
-from `apps/app`. It is the only file whose subject is a race: `reserveSlot` claims
+The rate-limit one lives in `packages/api`, so vitest resolves its config from
+there, not from `apps/app`. It is the only file whose subject is a race: `reserveSlot` claims
 that the *database* decides who gets the last slot, and a fake that runs one
 statement at a time is exactly the interleaving that never disagrees.
 
@@ -32,7 +34,7 @@ test can reach real data.
 pnpm test:int
 ```
 
-That applies the migrations and runs all four files, in both packages. It defaults
+That applies the migrations and runs all five files, in both packages. It defaults
 to `postgres://$(whoami)@localhost:5433/scibly_int` and refuses any `INT_DB` that
 is not on localhost, so a stray copy-paste cannot aim it at the hosted database.
 

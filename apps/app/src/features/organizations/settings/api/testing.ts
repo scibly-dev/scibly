@@ -61,14 +61,6 @@ export function caller() {
     correlationId: "corr-1",
     actor: { userId: USER_ID },
     session: {
-      session: {
-        id: "sess-1",
-        createdAt: now,
-        updatedAt: now,
-        userId: USER_ID,
-        expiresAt: new Date("2026-12-31T00:00:00Z"),
-        token: "token",
-      },
       user: {
         id: USER_ID,
         name: "Owner",

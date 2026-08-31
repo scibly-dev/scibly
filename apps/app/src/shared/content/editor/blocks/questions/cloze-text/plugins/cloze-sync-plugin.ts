@@ -1,6 +1,6 @@
-import type { Editor } from "@tiptap/core";
 import type { Attrs, Node as PMNode } from "@tiptap/pm/model";
 import type { Transaction } from "@tiptap/pm/state";
+import type { AuthorDocumentEditor } from "@/shared/content/editor/documents/author-document-editor";
 
 import { isChangeOrigin } from "@tiptap/extension-collaboration";
 import { Fragment } from "@tiptap/pm/model";
@@ -97,7 +97,7 @@ function dedupGapIds(tr: Transaction, clozePos: number, node: PMNode): boolean {
 }
 
 function syncClozeNode(
-  editor: Editor,
+  editor: AuthorDocumentEditor,
   tr: Transaction,
   pos: number,
   previouslyGappyIds: Set<string>,
@@ -144,7 +144,7 @@ function syncClozeNode(
   return modified;
 }
 
-export function createClozeSyncPlugin(editor: Editor): Plugin {
+export function createClozeSyncPlugin(editor: AuthorDocumentEditor): Plugin {
   return new Plugin({
     key: clozeSyncPluginKey,
     appendTransaction: (transactions, oldState, newState) => {

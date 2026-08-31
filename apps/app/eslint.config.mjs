@@ -17,6 +17,26 @@ const config = [
     },
   },
   {
+    // `tsconfig.json` maps `@collab/*` only so tests can boot a real collab
+    // server; shipped code importing it would pull Hocuspocus into the Next.js bundle.
+    files: ["src/**/*.{js,jsx,ts,tsx}"],
+    ignores: ["src/**/*.test.{ts,tsx}"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              group: ["@collab/*"],
+              message:
+                "The collab server is a separate app; only its tests may import it.",
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     files: ["src/demo-notebook/**/*.{ts,tsx}"],
     rules: {
       "no-restricted-imports": [

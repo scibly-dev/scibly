@@ -30,6 +30,17 @@ export type UserSettingsPage = {
     description: string;
     footer: string;
   };
+  connectedAgents: {
+    title: string;
+    description: string;
+    empty: string;
+    /** Carries a `{date}` placeholder. */
+    connectedOn: string;
+    disconnect: string;
+    /** Carries a `{name}` placeholder. */
+    disconnected: string;
+    error: string;
+  };
   deleteAccount: {
     title: string;
     description: string;

@@ -8,20 +8,19 @@ import { QUESTION_BLOCK_AUTHORING_FIELDS } from "@/shared/content/contracts";
  * `userAnswers`/`achievedPoints` — solutions are a separate boundary, stripped
  * at publish time instead.
  */
-export function stripLearnerStateFromQuestionBlocks(html: string): string {
-  return html.replace(
-    /questionblock-data=(['"])([\s\S]*?)\1/g,
-    (_match, quote: string, rawValue: string) => {
-      const data = readQuestionBlockData(rawValue);
+export function stripLearnerStateFromQuestionBlocks(body: Element): void {
+  for (const block of body.querySelectorAll("[questionblock-data]")) {
+    const data = readQuestionBlockData(
+      block.getAttribute("questionblock-data") ?? "",
+    );
 
-      const authoringData = Object.fromEntries(
-        QUESTION_BLOCK_AUTHORING_FIELDS.filter((field) => data.has(field)).map(
-          (field) => [field, data.get(field)],
-        ),
-      );
-      return `questionblock-data=${quote}${encodeAttributeValue(JSON.stringify(authoringData), quote)}${quote}`;
-    },
-  );
+    const authoringData = Object.fromEntries(
+      QUESTION_BLOCK_AUTHORING_FIELDS.filter((field) => data.has(field)).map(
+        (field) => [field, data.get(field)],
+      ),
+    );
+    block.setAttribute("questionblock-data", JSON.stringify(authoringData));
+  }
 }
 
 const questionBlockData = z.record(z.string(), z.unknown());
@@ -29,7 +28,7 @@ const questionBlockData = z.record(z.string(), z.unknown());
 function readQuestionBlockData(rawValue: string): Map<string, unknown> {
   let parsed: unknown;
   try {
-    parsed = JSON.parse(decodeAttributeValue(rawValue));
+    parsed = JSON.parse(rawValue);
   } catch {
     throw unreadable(rawValue);
   }
@@ -42,29 +41,4 @@ function unreadable(rawValue: string): Error {
   return new Error(
     `A questionblock-data attribute could not be read, so no content was inserted: ${rawValue.slice(0, 200)}`,
   );
-}
-
-/**
- * Handles both encodings this value arrives in — the agent's raw
- * single-quoted JSON and the editor's double-quoted, escaped form — decoding
- * `&amp;` last so a literal `&amp;quot;` doesn't turn into a stray quote.
- */
-function decodeAttributeValue(rawValue: string): string {
-  return rawValue
-    .replace(/&quot;/g, '"')
-    .replace(/&apos;/g, "'")
-    .replace(/&#0*39;/g, "'")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&amp;/g, "&");
-}
-
-function encodeAttributeValue(value: string, quote: string): string {
-  const escaped = value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;");
-  return quote === '"'
-    ? escaped.replace(/"/g, "&quot;")
-    : escaped.replace(/'/g, "&#39;");
 }

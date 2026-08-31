@@ -31,6 +31,15 @@
       "description": "Erhalte E-Mails über neue Funktionen, Updates und Angebote.",
       "footer": "Wir schicken keinen Spam."
     },
+    "connectedAgents": {
+      "title": "Verbundene Agenten",
+      "description": "Externe Agenten, die in deinem Namen handeln dürfen. Eine Trennung wirkt sofort.",
+      "empty": "Mit deinem Konto ist kein Agent verbunden.",
+      "connectedOn": "Verbunden am {date}",
+      "disconnect": "Trennen",
+      "disconnected": "{name} kann nicht mehr in deinem Namen handeln.",
+      "error": "Der Agent konnte nicht getrennt werden. Versuche es erneut."
+    },
     "deleteAccount": {
       "title": "Konto löschen",
       "description": "Löschen Sie Ihr Konto und alle zugehörigen Daten endgültig. Diese Aktion kann nicht rückgängig gemacht werden - bitte gehen Sie mit Vorsicht vor.",

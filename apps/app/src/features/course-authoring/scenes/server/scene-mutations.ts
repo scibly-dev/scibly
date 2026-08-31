@@ -18,7 +18,6 @@ export async function createDraftScene(
   input: {
     lessonId: string;
     title?: string;
-    html?: string;
     sourceIds?: string[];
   },
 ) {
@@ -33,7 +32,7 @@ export async function createDraftScene(
         vibe: SceneVibe.NEUTRAL,
         animation: SceneAnimation.FADE,
         sp: DEFAULT_SCENE_SP,
-        documentState: Buffer.from(encodeHtmlBytes(input.html ?? "<p></p>")),
+        documentState: Buffer.from(encodeHtmlBytes("<p></p>")),
       },
     });
   });

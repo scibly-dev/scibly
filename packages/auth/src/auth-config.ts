@@ -18,7 +18,7 @@ import { updateUserSchema } from "@scibly/schemas/user";
 import { betterAuth } from "better-auth";
 import { APIError } from "better-auth";
 import { createAuthMiddleware } from "better-auth/api";
-import { jwt, organization } from "better-auth/plugins";
+import { jwt, mcp, organization } from "better-auth/plugins";
 import { headers } from "next/headers.js";
 
 const env = loadPackageEnv("@scibly/auth", {
@@ -161,6 +161,17 @@ export const auth = betterAuth({
   },
   plugins: [
     jwt({ jwt: { issuer: env.NEXT_PUBLIC_APP_URL } }),
+    mcp({
+      loginPage: routes.app.auth.signIn,
+      oidcConfig: {
+        // Overwritten by the outer `loginPage`, but `OIDCOptions` requires it.
+        loginPage: routes.app.auth.signIn,
+        consentPage: routes.app.auth.mcpConsent,
+        // The plugin leaves PKCE optional, so a code could be redeemed with any
+        // verifier at all.
+        requirePKCE: true,
+      },
+    }),
     organization({
       organizationLimit: 1,
       organizationHooks: {

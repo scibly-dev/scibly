@@ -1,5 +1,5 @@
 import { assertAllowed, decideAnonymousSession } from "@scibly/api/entitlement";
-import { withRateLimit } from "@scibly/api/rate-limit";
+import { clientIp, withRateLimit } from "@scibly/api/rate-limit";
 import { db, type Prisma } from "@scibly/db";
 import { type AnonymousSessionSource } from "@scibly/db/enums";
 
@@ -29,14 +29,6 @@ export const ANONYMOUS_GRADING_RATE_LIMIT_PER_IP_PER_HOUR = 2_000;
 
 export const ANONYMOUS_GRADING_RATE_LIMIT_PER_LEARNER_PER_HOUR = 200;
 
-function getClientIp(headers: Headers): string {
-  return (
-    headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    headers.get("x-real-ip") ??
-    "unknown"
-  );
-}
-
 export function withAnonymousLearningRateLimit<T>(
   headers: Headers,
   endpoint: string,
@@ -46,7 +38,7 @@ export function withAnonymousLearningRateLimit<T>(
   return withRateLimit(
     {
       db,
-      identifier: getClientIp(headers),
+      identifier: clientIp(headers),
       endpoint,
       maxPerWindow,
       tooManyRequestsMessage: "Too many requests. Please try again later.",
