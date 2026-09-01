@@ -13,6 +13,7 @@ import {
   resolveRepositoryConnection,
 } from "@/features/integrations/server";
 
+import { failureMessage } from "../failure-message";
 import { requireReachableRepository } from "../topic-scope";
 import { buildBundleContent } from "./bundle";
 import {
@@ -29,6 +30,8 @@ const COLLECT_BUDGET = {
   maxDetails: 50,
   /** GitHub's secondary limits punish concurrency, not volume — keep this small. */
   detailConcurrency: 5,
+  /** Walking the whole history is its own ticket, scibly-dev/scibly#16. */
+  firstRunLookbackDays: 14,
 } as const;
 
 export interface CollectionResult {
@@ -76,8 +79,7 @@ async function listSinceWatermark(
     if (!listing.nextCursor) return { fresh, capped: false };
     cursor = listing.nextCursor;
   }
-  // Pages exhausted before the watermark: keep the newest slice and own the
-  // gap via `capped` — failing here would wedge the repository forever.
+  // Failing here would wedge the repository forever, so own the gap via `capped`.
   return { fresh, capped: true };
 }
 
@@ -111,12 +113,16 @@ type BundleRow = {
   score: number | null;
   discardReason: KnowledgeDiscardReason | null;
   content: Prisma.InputJsonValue | typeof Prisma.DbNull;
-  /// Denormalized from `content` so the feed never loads the whole conversation.
+  // Denormalized from `content` so the feed never loads the whole conversation.
   title: string | null;
   url: string | null;
   filePaths: string[];
   truncated: boolean;
   collectedAt: Date;
+  // Cleared on every write: a pull request that moved on GitHub is judged
+  // again, so a re-collected bundle re-enters the funnel.
+  outcome: null;
+  processedAt: null;
 };
 
 const discardRow = (
@@ -136,6 +142,8 @@ const discardRow = (
   filePaths: [],
   truncated: false,
   collectedAt: new Date(),
+  outcome: null,
+  processedAt: null,
 });
 
 const bundleRow = (
@@ -155,6 +163,8 @@ const bundleRow = (
   filePaths: content.filePaths,
   truncated,
   collectedAt: new Date(),
+  outcome: null,
+  processedAt: null,
 });
 
 const finish = (runId: string, result: CollectionResult, through: Date) =>
@@ -177,7 +187,7 @@ export async function collectRepository({
   runId: string;
   organizationId: string;
   repositoryId: string;
-}): Promise<CollectionResult> {
+}): Promise<CollectionResult & { bundleIds: string[] }> {
   const startedAt = new Date();
   await db.knowledgeCollectionRun.update({
     where: { id: runId },
@@ -195,17 +205,12 @@ export async function collectRepository({
     repositoryId,
   );
 
-  const watermark = await readWatermark(organizationId, repositoryId);
-  // The first run only plants the watermark — backfilling a repository's
-  // history is its own ticket, scibly-dev/scibly#16.
-  if (!watermark) {
-    await finish(
-      runId,
-      { collected: 0, discarded: 0, capped: false },
-      startedAt,
+  const watermark =
+    (await readWatermark(organizationId, repositoryId)) ??
+    new Date(
+      startedAt.getTime() -
+        COLLECT_BUDGET.firstRunLookbackDays * 24 * 60 * 60 * 1_000,
     );
-    return { collected: 0, discarded: 0, capped: false };
-  }
 
   const { fresh, capped: listingCapped } = await listSinceWatermark(
     connection.token,
@@ -247,6 +252,7 @@ export async function collectRepository({
   let details = 0;
   let capped = listingCapped;
   let collectedThrough = watermark;
+  const bundleIds: string[] = [];
 
   for (const pullRequest of fresh) {
     if (unchanged(pullRequest)) {
@@ -277,7 +283,7 @@ export async function collectRepository({
         : discardRow(pullRequest, "LOW_DENSITY", score);
     }
 
-    await db.knowledgeBundle.upsert({
+    const upserted = await db.knowledgeBundle.upsert({
       where: {
         organizationId_repositoryId_externalId: {
           organizationId,
@@ -292,16 +298,20 @@ export async function collectRepository({
         ...row,
       },
       update: row,
+      select: { id: true },
     });
 
     if (row.discardReason) discarded++;
-    else collected++;
+    else {
+      collected++;
+      bundleIds.push(upserted.id);
+    }
     collectedThrough = pullRequest.updatedAt;
   }
 
   const result = { collected, discarded, capped };
   await finish(runId, result, collectedThrough);
-  return result;
+  return { ...result, bundleIds };
 }
 
 /** GitHub's own message, truncated — never a credential, which the provider strips. */
@@ -309,18 +319,12 @@ export async function recordFailedCollection(
   runId: string,
   error: unknown,
 ): Promise<void> {
-  // Inngest serializes the error to a plain object `String()` would render
-  // "[object Object]".
-  const reason =
-    typeof error === "object" && error !== null && "message" in error
-      ? String(error.message)
-      : String(error);
   await db.knowledgeCollectionRun.updateMany({
     where: { id: runId, status: { in: ["QUEUED", "RUNNING"] } },
     data: {
       status: "FAILED",
       finishedAt: new Date(),
-      failureReason: reason.slice(0, 500),
+      failureReason: failureMessage(error),
     },
   });
 }

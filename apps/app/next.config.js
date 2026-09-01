@@ -71,6 +71,7 @@ const config = {
       "./node_modules/pdfjs-dist/cmaps/**",
       "../../node_modules/.pnpm/@napi-rs+canvas@*/node_modules/@napi-rs/canvas-*/*",
       "./notebook-skills/**",
+      "./knowledge-prompts/**",
     ],
   },
 

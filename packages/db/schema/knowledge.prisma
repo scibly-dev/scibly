@@ -1,5 +1,4 @@
-/// The language a topic's document is written in. Lower-cased to match the
-/// `Locale` the app already passes around, so no mapping is needed either way.
+/// Lower-cased to match the `Locale` the app already passes around.
 enum KnowledgeTopicLanguage {
   en
   de
@@ -7,16 +6,14 @@ enum KnowledgeTopicLanguage {
   @@map("knowledge_topic_language")
 }
 
-/// One living document: what it is about, which repositories it watches, and
-/// who reviews what the sync proposes for it.
 model KnowledgeTopic {
   id                 String                 @id @default(cuid())
   organizationId     String
   organization       Organization           @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   name               String
-  /// `{ id, fullName, pathGlobs }[]`, resolved from the GitHub installation at
-  /// write time: the id survives a rename, the name is what a maintainer reads,
-  /// and the globs narrow that one repository — empty means all of it.
+  /// Read by the triage model; a name alone gives it nothing to judge against.
+  description        String                 @default("")
+  /// `{ id, fullName, pathGlobs }[]`, resolved at write time; no globs means the whole repository.
   repositories       Json
   language           KnowledgeTopicLanguage
   /// The canonical document; Notion holds a projection, never the other way round.
@@ -24,15 +21,15 @@ model KnowledgeTopic {
   /// Deleting the topic leaves the page: documents belong to the organization.
   notionPageId       String?
   notionRevisionAt   DateTime?
-  /// Of the markdown last published, so a later synthesis can tell a real change from a re-save.
+  /// Of the markdown last published, so a re-save is not read as a change.
   documentHash       String?
   publishedAt        DateTime?
   /// When the page's revision was last compared against `notionRevisionAt`.
   verifiedAt         DateTime?
   /// A revision this side did not write; a flagged document is never overwritten.
   externallyEditedAt DateTime?
-  /// Members, not users: someone who leaves the organization stops maintaining.
   maintainers        Member[]               @relation("KnowledgeTopicMaintainers")
+  insights           KnowledgeInsight[]
   createdAt          DateTime               @default(now())
   updatedAt          DateTime               @updatedAt
 
@@ -40,9 +37,6 @@ model KnowledgeTopic {
   @@map("knowledge_topic")
 }
 
-/// Why the structural filter refused a pull request. Kept on the discarded row
-/// so the counts in a feed can be explained and the thresholds tuned against
-/// what actually happened rather than against a guess.
 enum KnowledgeDiscardReason {
   BOT_AUTHOR
   CHORE_TITLE
@@ -61,75 +55,113 @@ enum KnowledgeCollectionRunStatus {
   @@map("knowledge_collection_run_status")
 }
 
-/// One repository's turn at collecting, for one organization. Also the
-/// watermark: the newest run that succeeded says how far collection has got,
-/// so a failed run cannot advance it.
-///
-/// A partial unique index — (organizationId, repositoryId) WHERE status =
-/// 'QUEUED' — guards against stacking waiting turns. Prisma cannot express it;
-/// it lives in the migration SQL only. Keep the two in step by hand.
+/// A partial unique index — (organizationId, repositoryId) WHERE status = 'QUEUED' — lives in the migration SQL only, because Prisma cannot express it.
 model KnowledgeCollectionRun {
-  id                 String                       @id @default(cuid())
-  organizationId     String
-  organization       Organization                 @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  repositoryId       String
-  status             KnowledgeCollectionRunStatus @default(QUEUED)
+  id               String                       @id @default(cuid())
+  organizationId   String
+  organization     Organization                 @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  repositoryId     String
+  status           KnowledgeCollectionRunStatus @default(QUEUED)
   /// Written by the trigger, before the worker has picked the run up.
-  startedAt          DateTime                     @default(now())
-  finishedAt         DateTime?
-  collected          Int                          @default(0)
-  discarded          Int                          @default(0)
-  /// How recently a pull request had to have been touched to be seen by this
-  /// run. Only ever read off a SUCCEEDED run — that is what makes the watermark
-  /// advance on success alone.
-  collectedThrough   DateTime?
-  /// The run stopped on its detail budget, not on running out of pull requests.
-  /// The next run continues from `collectedThrough`.
-  capped             Boolean                      @default(false)
-  /// GitHub's own message, never a credential — see the provider's error handling.
-  failureReason      String?
+  startedAt        DateTime                     @default(now())
+  finishedAt       DateTime?
+  collected        Int                          @default(0)
+  discarded        Int                          @default(0)
+  /// Only read off a SUCCEEDED run, so a failed run cannot advance the watermark.
+  collectedThrough DateTime?
+  /// Stopped on the detail budget, not on running out of pull requests.
+  capped           Boolean                      @default(false)
+  /// GitHub's own message, never a credential.
+  failureReason    String?
 
   @@index([organizationId, repositoryId, status, startedAt], map: "knowledge_collection_run_org_repo_status_idx")
   @@map("knowledge_collection_run")
 }
 
-/// One merged pull request worth learning from, held for the organization
-/// against the repository it came from — never for one topic, since the same
-/// pull request feeds every topic watching that repository.
+/// Held per repository, not per topic: one pull request feeds every topic watching it.
 model KnowledgeBundle {
-  id             String                  @id @default(cuid())
-  organizationId String
-  organization   Organization            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  repositoryId   String
-  /// GitHub's node id for the pull request. With the repository it is what
-  /// makes a re-run a no-op.
-  externalId     String
-  number         Int
-  /// GitHub's `updatedAt`, which is what the watermark is measured in.
+  id              String                  @id @default(cuid())
+  organizationId  String
+  organization    Organization            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  repositoryId    String
+  /// GitHub's node id for the pull request.
+  externalId      String
+  number          Int
   githubUpdatedAt DateTime
-  /// Null on a discarded row: nothing about a refused pull request is kept
-  /// beyond what proves it was judged.
-  mergedAt       DateTime?
-  /// The structural filter's discussion-density score. Set on a survivor, and
-  /// on a LOW_DENSITY discard so the threshold can be tuned against real numbers.
-  score          Int?
+  mergedAt        DateTime?
+  /// The structural filter's density score, kept on a LOW_DENSITY discard too so the threshold can be tuned.
+  score           Int?
   /// Set exactly when `content` is null.
-  discardReason  KnowledgeDiscardReason?
-  /// `{ title, body, labels, filePaths, linkedIssues, threads }` — sanitized and
-  /// token-capped before it is written. Pruned back to null by the extraction
-  /// stage once the bundle has been read.
-  content        Json?
-  /// What the feed shows, lifted out of `content` so reading it never means
-  /// hauling the whole conversation. Null exactly when `content` is.
-  title          String?
-  url            String?
-  filePaths      String[]                @default([])
-  /// The token cap dropped something, so nothing downstream may claim the
-  /// bundle is the whole conversation.
-  truncated      Boolean                 @default(false)
-  collectedAt    DateTime                @default(now())
+  discardReason   KnowledgeDiscardReason?
+  /// `{ title, body, labels, filePaths, linkedIssues, threads }`, pruned to null once the bundle has been read.
+  content         Json?
+  /// Denormalized from `content` so the feed never loads the whole conversation.
+  title           String?
+  url             String?
+  filePaths       String[]                @default([])
+  /// The token cap dropped something: this is not the whole conversation.
+  truncated       Boolean                 @default(false)
+  collectedAt     DateTime                @default(now())
+  /// Set with `processedAt` on a terminal outcome; set alone when the funnel stopped short.
+  outcome         KnowledgeBundleOutcome?
+  /// The provider's own message, never a credential.
+  failureReason   String?
+  /// The nightly sweep gives up at `FUNNEL.maxAttempts` rather than re-charging forever.
+  attempts        Int                     @default(0)
+  /// `content` is pruned in the same write; a pull request that moves on GitHub is re-collected, which clears this.
+  processedAt     DateTime?
+  insights        KnowledgeInsight[]
 
   @@unique([organizationId, repositoryId, externalId], map: "knowledge_bundle_org_repo_external_key")
   @@index([organizationId, repositoryId, collectedAt], map: "knowledge_bundle_org_repo_collected_idx")
+  @@index([organizationId, processedAt, collectedAt], map: "knowledge_bundle_org_unprocessed_idx")
   @@map("knowledge_bundle")
+}
+
+/// `UNFUNDED` and `FAILED` are not terminal: the content is kept and the nightly retry sends it round again.
+enum KnowledgeBundleOutcome {
+  OFF_TOPIC
+  LOW_VALUE
+  EXTRACTED
+  NO_INSIGHTS
+  UNFUNDED
+  FAILED
+
+  @@map("knowledge_bundle_outcome")
+}
+
+/// Only `PROPOSED` is written here; the review queue moves it on.
+enum KnowledgeInsightStatus {
+  PROPOSED
+  ACCEPTED
+  REJECTED
+  SUPERSEDED
+
+  @@map("knowledge_insight_status")
+}
+
+/// Deliberately untyped: a decision, a convention and a gotcha are all just claims that cite where they came from.
+model KnowledgeInsight {
+  id             String                 @id @default(cuid())
+  organizationId String
+  organization   Organization           @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  topicId        String
+  topic          KnowledgeTopic         @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  /// A claim outlives the bundle it was read out of.
+  bundleId       String?
+  bundle         KnowledgeBundle?       @relation(fields: [bundleId], references: [id], onDelete: SetNull)
+  /// Prose the extraction wrote, never a quote of the conversation.
+  claim          String
+  /// `{ url, label }[]`, at least one, every url checked against the bundle before it was written.
+  citations      Json
+  /// 0-100; below the extraction floor it is never stored.
+  confidence     Int
+  status         KnowledgeInsightStatus @default(PROPOSED)
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+
+  @@index([topicId, status, createdAt(sort: Desc)], map: "knowledge_insight_topic_status_idx")
+  /// Every extraction clears the bundle's previous claims, and Postgres does not index a foreign key on its own.
+  @@index([bundleId], map: "knowledge_insight_bundle_idx")
+  @@map("knowledge_insight")
 }

@@ -54,6 +54,7 @@ let lastUpdateOptions: MutationOptions;
 const topic = {
   id: "topic-1",
   name: "Onboarding guide",
+  description: "How a new engineer gets running.",
   language: "en",
   repositories: [
     { id: "repo-a", fullName: "acme/docs", pathGlobs: ["docs/**", "src/**"] },
@@ -177,6 +178,7 @@ describe("required fields are refused before the network", () => {
         orgSlug: "acme",
         topicId: "topic-1",
         name: "Onboarding",
+        description: "How a new engineer gets running.",
         repositories: [
           { id: "repo-a", pathGlobs: ["docs/**", "src/**"] },
           { id: "repo-b", pathGlobs: [] },

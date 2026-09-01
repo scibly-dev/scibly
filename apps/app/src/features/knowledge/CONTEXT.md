@@ -4,19 +4,28 @@ What an organization wants written down about its own code, and kept true as
 that code moves. A topic states the intent — this document, about this much of
 these repositories — and names who is trusted to judge what the sync later
 proposes for it. A topic also has a document: markdown held here, projected onto
-a Notion page the organization can read and edit. The sync now collects too: a
-merged pull request worth learning from becomes a bundle. This context decides
-scope, stewardship, where the projection lands, and what is worth keeping;
-reading a bundle, drafting a suggestion, and metering the cost belong to the
-tickets that follow.
+a Notion page the organization can read and edit. The sync now collects and
+reads too: a merged pull request worth learning from becomes a bundle, and a
+bundle worth documenting becomes cited insights. This context decides scope,
+stewardship, where the projection lands, what is worth keeping, and what was
+learned; drafting a suggestion into a document belongs to the ticket that
+follows.
 
 ## Language
 
 **Topic**:
-One living document: its name, the [grants](../integrations/CONTEXT.md) it
-watches, how far into them it looks, and who reviews what is proposed for it.
-The topic is the definition, not the prose — the prose is its _document_.
+One living document: its name, its _description_, the
+[grants](../integrations/CONTEXT.md) it watches, how far into them it looks, and
+who reviews what is proposed for it. The topic is the definition, not the
+prose — the prose is its _document_.
 _Avoid_: page, article, doc
+
+**Description**:
+The few sentences a maintainer writes saying what belongs in a topic. Not
+decoration: triage is shown it verbatim and routes by it, so it is the one field
+a reader edits to change what the topic collects. Optional, and its silence is
+read as "no preference", never as "nothing belongs here".
+_Avoid_: about, summary, prompt, instructions
 
 **Document**:
 A topic's markdown, held here. This side is canonical: the Notion page is a
@@ -98,7 +107,7 @@ without a model: a bot's pull request, or a chore with nothing said on it, is
 refused outright, and the rest are ranked on how much was argued. It costs
 nothing but the listing, which is the point — the model stages downstream are
 what the funnel is narrow for.
-_Avoid_: triage (the model stage in the ticket that follows), heuristic, rules
+_Avoid_: triage (the model stage below), heuristic, rules
 
 **Collection run**:
 One repository's turn at collecting, for one organization. It says how far it
@@ -114,8 +123,88 @@ was touched, not when it merged — GitHub will not order by the merge, and a
 merged pull request that is argued over afterwards should come back.
 
 **Activity feed**:
-What a topic can show for itself: its recent collection runs, and the bundles
-they kept from the repositories it watches, narrowed to its path globs. It is
-read, not stored — nothing binds a bundle to a topic until the tickets that
-follow do.
+What a topic can show for itself: its recent collection runs, the bundles they
+kept from the repositories it watches, narrowed to its path globs, and the
+insights read out of them. The runs and bundles are read, not stored — only an
+insight is actually bound to a topic. A finished run is not a finished sync: a
+collected bundle with no outcome yet is still in the funnel, and the feed says
+so rather than letting a succeeded run read as the end of the work.
 _Avoid_: history, log, timeline
+
+## What the sync reads
+
+**Triage**:
+The cheap model pass that sorts a batch of bundles at once: which topics cover
+each one, and how worth documenting its discussion is. It reads summaries, not
+arguments, and it may only route to topics the structural scope already
+allowed — a topic the model names but the globs never matched is not a
+candidate. What it refuses is settled, never surfaced.
+_Avoid_: classification, routing, filter (the structural one above)
+
+**Extraction**:
+The capable model pass that reads one bundle whole and re-authors its argument
+into insights. One extraction is one bundle, one generation, and one charge —
+which is what makes the cost of a night's sync countable.
+_Avoid_: summarization, mining, analysis
+
+**Insight**:
+One durable claim, in prose this side wrote, filed against the topic it belongs
+to. Deliberately untyped: a decision, a convention and a gotcha are all just
+claims that cite where they came from. A claim that only makes sense next to
+the diff is not one.
+_Avoid_: finding, fact, note, suggestion (the reviewed thing in the ticket that
+follows), quote
+
+**Citation**:
+A link on an insight back to the pull request or comment the claim was read
+from. Checked against the bundle before it is stored, so a model cannot invent
+one — a claim left with no citation it can prove is dropped rather than filed.
+_Avoid_: source (notebooks' word), reference, link
+
+**Confidence**:
+How sure the extraction is that a claim is true, durable, and worth keeping.
+Below the floor nothing is written and nothing is shown; the floor and every
+other number the funnel judges by live in one place.
+_Avoid_: score (the structural filter's word for discussion density), rating
+
+**Outcome**:
+Where the funnel left a bundle — off topic, low value, extracted, nothing
+found, or unfunded. Written with the moment the funnel finished, and the raw
+content is pruned in the same write: what proves a bundle was judged survives,
+the conversation does not. Unfunded is the exception and not terminal, so an
+organization that tops up gets its bundles read.
+_Avoid_: status, result, verdict
+
+**Funnel**:
+The path a bundle takes after collection — triage, then extraction — and the
+nightly sweep that pushes back in whatever fell out of it. Named as one thing
+because a bundle is only finished when it leaves the far end: a succeeded
+collection run says nothing about it.
+_Avoid_: pipeline, queue, workflow, processing
+
+**Worth**:
+Triage's 0-100 answer to "is this discussion worth documenting at all?" Below
+the floor the bundle is settled low value and never costs an extraction. It
+judges the argument, not the diff — a large refactor nobody debated scores low
+on purpose.
+_Avoid_: score (the structural filter's word), priority, relevance, quality
+
+**Digest**:
+The cut-down rendering of a bundle triage is shown: its claim, the shape of its
+conversation, and a budgeted excerpt of the comments. Fifteen fit in one prompt,
+which is the whole reason it exists — extraction reads the bundle whole instead.
+_Avoid_: summary, preview, snippet
+
+**Settled**:
+A bundle the funnel has reached its last word on: it carries an outcome and the
+moment it was written. Failed and unfunded bundles are not settled — both are
+waiting to be sent round again — which is why neither counts as read on the
+topic page.
+_Avoid_: done, complete, processed, closed
+
+**Stranded**:
+A bundle that was collected, still holds its conversation, and has sat unsettled
+long enough that whatever was going to pick it up already has. What the nightly
+sweep looks for. The age cutoff is load-bearing: without it a manual sync paid
+for triage twice.
+_Avoid_: stuck, orphaned, pending, stale

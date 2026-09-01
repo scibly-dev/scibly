@@ -23,7 +23,6 @@ export {
   refreshStaleNotebookSources,
 } from "./sources/ingestion/refresh-stale-sources";
 export { buildSourceNotebookTools } from "./sources/server/source-notebook-tools";
-export { toSourcePassage } from "./sources/server/source-passage";
 export {
   addTextSource,
   type CreateAndIngestInput,

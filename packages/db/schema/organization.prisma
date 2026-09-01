@@ -25,6 +25,7 @@ model Organization {
   knowledgeTopics      KnowledgeTopic[]
   knowledgeBundles     KnowledgeBundle[]
   knowledgeCollectionRuns KnowledgeCollectionRun[]
+  knowledgeInsights    KnowledgeInsight[]
 
   @@unique([slug])
   @@map("organization")

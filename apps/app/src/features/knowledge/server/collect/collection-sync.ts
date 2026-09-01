@@ -1,9 +1,10 @@
-import { decideKnowledgeSync } from "@scibly/api/entitlement";
+import { allowedToKnowledgeSync } from "@scibly/api/entitlement";
 import { db, Prisma } from "@scibly/db";
 import { z } from "zod";
 
 import { inngest } from "@/lib/inngest/client";
 
+import { triageEvents } from "../extract/funnel";
 import { parseStoredRepositories } from "../topic-repositories";
 import { collectRepository, recordFailedCollection } from "./collect-run";
 
@@ -18,10 +19,7 @@ const collectRequest = z.object({
 
 type CollectRequest = z.infer<typeof collectRequest>;
 
-/**
- * One QUEUED run per repository: a partial unique index backs the check, so two
- * callers racing past the read both land on the one row.
- */
+/** One QUEUED run per repository, backed by a partial unique index against racing callers. */
 async function queueCollection(
   organizationId: string,
   repositoryId: string,
@@ -52,10 +50,7 @@ async function queueCollection(
   return { runId: run.id, organizationId, repositoryId };
 }
 
-/**
- * Every trigger goes through here: run rows first, then the events, so the feed
- * always has something to show for a request that was made.
- */
+/** Run rows before events, so the feed always shows a request that was made. */
 export async function requestCollections(
   pairs: [organizationId: string, repositoryId: string][],
   send: (events: { name: string; data: CollectRequest }[]) => Promise<void>,
@@ -71,7 +66,6 @@ export async function requestCollections(
       requests.map((data) => ({ name: KNOWLEDGE_COLLECT_EVENT, data })),
     );
   } catch (error) {
-    // A failed send marks the queued rows FAILED — nothing would ever finish them.
     await Promise.all(
       requests.map(({ runId }) => recordFailedCollection(runId, error)),
     );
@@ -94,11 +88,13 @@ async function dueRepositories(): Promise<[string, string][]> {
     byOrg.set(topic.organizationId, repositories);
   }
 
+  // Asked for every organization at once, so one unresolvable subscription
+  // is refused rather than aborting the whole nightly sync.
+  const allowed = await allowedToKnowledgeSync(db, [...byOrg.keys()]);
+
   const due: [string, string][] = [];
   for (const [organizationId, repositories] of byOrg) {
-    // A lapsed or downgraded organization keeps its topics and stops collecting.
-    const { refusal } = await decideKnowledgeSync(db, organizationId);
-    if (refusal) continue;
+    if (!allowed.has(organizationId)) continue;
     for (const repositoryId of repositories)
       due.push([organizationId, repositoryId]);
   }
@@ -147,5 +143,15 @@ export const knowledgeCollect = inngest.createFunction(
         event.data.error,
       ),
   },
-  ({ event }) => collectRepository(collectRequest.parse(event.data)),
+  async ({ event, step }) => {
+    const request = collectRequest.parse(event.data);
+    const { bundleIds, ...result } = await collectRepository(request);
+    if (bundleIds.length > 0) {
+      await step.sendEvent(
+        "request-triage",
+        triageEvents(request.organizationId, bundleIds),
+      );
+    }
+    return result;
+  },
 );

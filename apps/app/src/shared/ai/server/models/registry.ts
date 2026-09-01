@@ -238,7 +238,10 @@ async function resolveByoaiLanguageModel(
   return (await createByoaiOpenAI(orgModel)).chat(orgModel.modelId);
 }
 
-function resolveSciblyLanguageModel(id: string): LanguageModel {
+function resolveSciblyLanguageModel(
+  id: string,
+  gatewayModel: string,
+): LanguageModel {
   if (!isOfferedSciblyModelId(id)) {
     throw new ChatError(
       "bad_request:model",
@@ -246,7 +249,15 @@ function resolveSciblyLanguageModel(id: string): LanguageModel {
     );
   }
 
-  return gateway.languageModel(env.SCIBLY_DEFAULT_CHAT_MODEL);
+  // `SKIP_ENV_VALIDATION` hands back raw `process.env`, so the schema's
+  // `.default()` never runs and an unset var arrives here as undefined.
+  if (!gatewayModel) {
+    throw new Error(
+      "No gateway model configured: set SCIBLY_DEFAULT_CHAT_MODEL and SCIBLY_KNOWLEDGE_TRIAGE_MODEL.",
+    );
+  }
+
+  return gateway.languageModel(gatewayModel);
 }
 
 async function orgDefaultChatModelId(orgSlug: string): Promise<string> {
@@ -259,9 +270,12 @@ async function orgDefaultChatModelId(orgSlug: string): Promise<string> {
     : DEFAULT_MODEL_ID;
 }
 
+// `gatewayModel` only picks a cheaper tier behind Scibly AI; a BYOAI org has one
+// endpoint and keeps it, which is why the caller must read `isByoai` back.
 export async function getLanguageModel(
   modelId: string | undefined,
   orgSlug: string,
+  gatewayModel: string = env.SCIBLY_DEFAULT_CHAT_MODEL,
 ): Promise<{ id: string; model: LanguageModel; isByoai: boolean }> {
   const id = modelId ?? (await orgDefaultChatModelId(orgSlug));
   const byoaiId = parseByoaiId(id);
@@ -269,7 +283,7 @@ export async function getLanguageModel(
   const model =
     byoaiId !== null
       ? await resolveByoaiLanguageModel(byoaiId, id, orgSlug)
-      : resolveSciblyLanguageModel(id);
+      : resolveSciblyLanguageModel(id, gatewayModel);
 
   return { id, model, isByoai: byoaiId !== null };
 }

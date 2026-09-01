@@ -5,6 +5,9 @@ import {
 import {
   knowledgeCollect,
   knowledgeCollectionSync,
+  knowledgeExtract,
+  knowledgeFunnelRetry,
+  knowledgeTriage,
 } from "@/features/knowledge/server";
 
 export const inngestFunctions = [
@@ -12,4 +15,7 @@ export const inngestFunctions = [
   integrationPoll,
   knowledgeCollectionSync,
   knowledgeCollect,
+  knowledgeTriage,
+  knowledgeExtract,
+  knowledgeFunnelRetry,
 ];

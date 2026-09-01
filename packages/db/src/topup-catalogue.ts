@@ -5,6 +5,7 @@ export const SPEND_ACTIONS = [
   CreditAction.CHAT_MESSAGE,
   CreditAction.IMAGE_GENERATION,
   CreditAction.SOURCE_INGEST,
+  CreditAction.KNOWLEDGE_EXTRACT,
 ] as const;
 
 export type SpendAction = (typeof SPEND_ACTIONS)[number];

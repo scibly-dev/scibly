@@ -5,6 +5,7 @@ export const GENERATION_COST = {
   CHAT_MESSAGE: 1,
   IMAGE_GENERATION: 1,
   SOURCE_INGEST: 1,
+  KNOWLEDGE_EXTRACT: 1,
 } as const satisfies Record<SpendAction, number>;
 
 export const quoteGenerations = (action: SpendAction, runs: number): number =>

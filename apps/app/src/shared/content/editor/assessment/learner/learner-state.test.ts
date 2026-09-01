@@ -2,12 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { stripLearnerStateFromQuestionBlocks } from "./learner-state";
 
-/**
- * Fixtures and assertions go through real DOM APIs for both attribute
- * encodings (the agent's raw single-quoted form and `editor.getHTML()`'s
- * escaped form) rather than hand-written strings, so the tests exercise
- * actual browser escaping instead of assumptions about it.
- */
+/** Fixtures go through real DOM APIs, so the tests exercise actual browser escaping. */
 
 const AUTHORED = {
   optional: false,

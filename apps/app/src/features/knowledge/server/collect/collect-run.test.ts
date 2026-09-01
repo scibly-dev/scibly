@@ -71,16 +71,18 @@ describe("the watermark advances on success alone", () => {
     expect(where.status).toBe("SUCCEEDED");
   });
 
-  it("plants it and collects nothing on the first run", async () => {
+  it("looks a fortnight back when a repository has none yet", async () => {
     db.knowledgeCollectionRun.findFirst.mockResolvedValue(null);
 
-    expect(await collectRepository(request)).toEqual({
-      collected: 0,
-      discarded: 0,
-      capped: false,
-    });
-    expect(github.listMergedPullRequests).not.toHaveBeenCalled();
-    expect(succeededWith()?.collectedThrough).toBeInstanceOf(Date);
+    // A first sync that collected nothing reads as broken, so it asks GitHub
+    // rather than only planting the watermark and returning.
+    await collectRepository(request);
+
+    expect(github.listMergedPullRequests).toHaveBeenCalled();
+    const planted = succeededWith()?.collectedThrough as Date;
+    const daysBack = (Date.now() - planted.getTime()) / 86_400_000;
+    expect(daysBack).toBeGreaterThan(13);
+    expect(daysBack).toBeLessThan(15);
   });
 
   it("writes no successful run when the repository is out of reach", async () => {
@@ -103,6 +105,7 @@ describe("the watermark advances on success alone", () => {
       collected: 0,
       discarded: 0,
       capped: true,
+      bundleIds: [],
     });
     expect(succeededWith()?.capped).toBe(true);
   });
@@ -144,6 +147,7 @@ describe("a re-run over pull requests nothing has happened to", () => {
       collected: 0,
       discarded: 0,
       capped: false,
+      bundleIds: [],
     });
     expect(github.fetchPullRequestDetail).not.toHaveBeenCalled();
     expect(db.knowledgeBundle.upsert).not.toHaveBeenCalled();
@@ -160,6 +164,7 @@ describe("a re-run over pull requests nothing has happened to", () => {
       collected: 0,
       discarded: 1,
       capped: false,
+      bundleIds: [],
     });
     expect(github.fetchPullRequestDetail).not.toHaveBeenCalled();
     const [{ create }] = db.knowledgeBundle.upsert.mock.calls[0];

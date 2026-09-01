@@ -10,6 +10,7 @@ const db = vi.hoisted(() => ({
     update: vi.fn(),
     deleteMany: vi.fn(),
   },
+  knowledgeBundle: { findMany: vi.fn() },
   member: { findMany: vi.fn() },
   integrationConnection: { update: vi.fn() },
   organizationSubscription: { findUnique: vi.fn() },
@@ -37,7 +38,11 @@ vi.mock("@scibly/db", () => ({
 }));
 vi.mock("@/features/organizations/server", () => ({ resolveOrg }));
 vi.mock("../server/collect/collection-sync", () => collect);
-vi.mock("@/lib/inngest/client", () => ({ inngest: { send: inngestSend } }));
+// `createFunction` too: the procedures reach into the funnel module for its
+// retry helpers, and that module defines its Inngest functions at import time.
+vi.mock("@/lib/inngest/client", () => ({
+  inngest: { send: inngestSend, createFunction: vi.fn() },
+}));
 vi.mock("@/features/integrations/server", () => ({
   resolveRepositoryConnection,
   resolvePageConnection,
@@ -176,6 +181,8 @@ const limiter = rateLimitCounter();
 beforeEach(() => {
   vi.clearAllMocks();
   limiter.clear();
+  // Nothing left waiting on the funnel unless a test says otherwise.
+  db.knowledgeBundle.findMany.mockResolvedValue([]);
   db.rateLimit.updateMany.mockImplementation(limiter.model.updateMany);
   db.rateLimit.create.mockImplementation(limiter.model.create);
   db.rateLimit.findUnique.mockImplementation(limiter.model.findUnique);
@@ -965,7 +972,7 @@ describe("only an admin or a maintainer may sync a topic", () => {
 
     expect(
       await caller().syncNow({ orgSlug: ORG_SLUG, topicId: STORED.id }),
-    ).toEqual({ queued: 1 });
+    ).toEqual({ queued: 1, retried: 0 });
     expect(collect.requestCollections).toHaveBeenCalledWith(
       [[ORG_ID, "repo-1"]],
       expect.any(Function),
@@ -977,7 +984,22 @@ describe("only an admin or a maintainer may sync a topic", () => {
 
     expect(
       await caller().syncNow({ orgSlug: ORG_SLUG, topicId: STORED.id }),
-    ).toEqual({ queued: 1 });
+    ).toEqual({ queued: 1, retried: 0 });
+  });
+
+  it("sends bundles the funnel never read round again", async () => {
+    asMember("member", "mem-1");
+    db.knowledgeBundle.findMany.mockResolvedValue([{ id: "bundle-1" }]);
+
+    expect(
+      await caller().syncNow({ orgSlug: ORG_SLUG, topicId: STORED.id }),
+    ).toEqual({ queued: 1, retried: 1 });
+    expect(inngestSend).toHaveBeenCalledWith([
+      expect.objectContaining({
+        name: "scibly/knowledge-triage.requested",
+        data: { organizationId: ORG_ID, bundleId: "bundle-1" },
+      }),
+    ]);
   });
 
   it("asks only for membership, so reading the topic is not admin-only", async () => {
