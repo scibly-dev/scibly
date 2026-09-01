@@ -123,14 +123,14 @@ export function TopicForm({
 
         <div className="flex flex-col gap-1.5">
           <FieldLabel htmlFor="topic-description" optional={t.form.optional}>
-            {t.form.about}
+            {t.form.description}
           </FieldLabel>
-          <p className="text-ink-faint text-[12px]">{t.form.aboutHint}</p>
+          <p className="text-ink-faint text-[12px]">{t.form.descriptionHint}</p>
           <Textarea
             id="topic-description"
             rows={3}
             maxLength={600}
-            placeholder={t.form.aboutPlaceholder}
+            placeholder={t.form.descriptionPlaceholder}
             {...register("description")}
           />
         </div>

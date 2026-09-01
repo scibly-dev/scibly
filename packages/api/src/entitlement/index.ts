@@ -41,6 +41,7 @@ export {
   describeEnrollmentAccess,
 } from "./policies/enrollment";
 export {
+  allowedToKnowledgeSync,
   decideKnowledgeSync,
   describeKnowledgeSyncAccess,
 } from "./policies/knowledge-sync";

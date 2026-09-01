@@ -14,10 +14,18 @@ follows.
 ## Language
 
 **Topic**:
-One living document: its name, the [grants](../integrations/CONTEXT.md) it
-watches, how far into them it looks, and who reviews what is proposed for it.
-The topic is the definition, not the prose — the prose is its _document_.
+One living document: its name, its _description_, the
+[grants](../integrations/CONTEXT.md) it watches, how far into them it looks, and
+who reviews what is proposed for it. The topic is the definition, not the
+prose — the prose is its _document_.
 _Avoid_: page, article, doc
+
+**Description**:
+The few sentences a maintainer writes saying what belongs in a topic. Not
+decoration: triage is shown it verbatim and routes by it, so it is the one field
+a reader edits to change what the topic collects. Optional, and its silence is
+read as "no preference", never as "nothing belongs here".
+_Avoid_: about, summary, prompt, instructions
 
 **Document**:
 A topic's markdown, held here. This side is canonical: the Notion page is a
@@ -166,3 +174,37 @@ content is pruned in the same write: what proves a bundle was judged survives,
 the conversation does not. Unfunded is the exception and not terminal, so an
 organization that tops up gets its bundles read.
 _Avoid_: status, result, verdict
+
+**Funnel**:
+The path a bundle takes after collection — triage, then extraction — and the
+nightly sweep that pushes back in whatever fell out of it. Named as one thing
+because a bundle is only finished when it leaves the far end: a succeeded
+collection run says nothing about it.
+_Avoid_: pipeline, queue, workflow, processing
+
+**Worth**:
+Triage's 0-100 answer to "is this discussion worth documenting at all?" Below
+the floor the bundle is settled low value and never costs an extraction. It
+judges the argument, not the diff — a large refactor nobody debated scores low
+on purpose.
+_Avoid_: score (the structural filter's word), priority, relevance, quality
+
+**Digest**:
+The cut-down rendering of a bundle triage is shown: its claim, the shape of its
+conversation, and a budgeted excerpt of the comments. Fifteen fit in one prompt,
+which is the whole reason it exists — extraction reads the bundle whole instead.
+_Avoid_: summary, preview, snippet
+
+**Settled**:
+A bundle the funnel has reached its last word on: it carries an outcome and the
+moment it was written. Failed and unfunded bundles are not settled — both are
+waiting to be sent round again — which is why neither counts as read on the
+topic page.
+_Avoid_: done, complete, processed, closed
+
+**Stranded**:
+A bundle that was collected, still holds its conversation, and has sat unsettled
+long enough that whatever was going to pick it up already has. What the nightly
+sweep looks for. The age cutoff is load-bearing: without it a manual sync paid
+for triage twice.
+_Avoid_: stuck, orphaned, pending, stale

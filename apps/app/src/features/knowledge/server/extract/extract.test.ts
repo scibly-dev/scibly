@@ -4,25 +4,26 @@ import { AppError } from "@scibly/api/application-error";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const db = vi.hoisted(() => ({
-  knowledgeBundle: { findFirst: vi.fn(), update: vi.fn() },
+  knowledgeBundle: { findFirst: vi.fn(), updateMany: vi.fn() },
   knowledgeTopic: { findMany: vi.fn() },
   knowledgeInsight: { createMany: vi.fn(), deleteMany: vi.fn() },
   organization: { findUniqueOrThrow: vi.fn() },
   $transaction: vi.fn(),
 }));
 const ai = vi.hoisted(() => ({ generateText: vi.fn() }));
-const registry = vi.hoisted(() => ({ getLanguageModel: vi.fn() }));
-const organizations = vi.hoisted(() => ({ fundGeneration: vi.fn() }));
+const organizations = vi.hoisted(() => ({ meteredGenerateText: vi.fn() }));
 
 vi.mock("@scibly/db", () => ({ db, Prisma: { DbNull: "DbNull" } }));
-// Partial: `prompts.ts` reads `toSourcePassage` off the notebook barrel, which
-// also carries tool definitions built with the real `ai`.
+// Partial: the notebook barrel the prompts import builds real `ai` tools.
 vi.mock("ai", async (importOriginal) => ({
   ...(await importOriginal<typeof Ai>()),
   ...ai,
 }));
-vi.mock("@/shared/ai/server/models/registry", () => registry);
-vi.mock("@/features/organizations/server", () => organizations);
+// The metering wrapper is tested on its own; doubled here to isolate the reply handling.
+vi.mock("@/features/organizations/server", () => ({
+  assertNotTruncated: () => undefined,
+  ...organizations,
+}));
 
 const { extractInsights } = await import("./extract");
 
@@ -72,7 +73,7 @@ const insight = (
 });
 
 const stored = () => db.knowledgeInsight.createMany.mock.calls[0]?.[0].data;
-const settled = () => db.knowledgeBundle.update.mock.calls[0]?.[0].data;
+const settled = () => db.knowledgeBundle.updateMany.mock.calls[0]?.[0].data;
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -81,15 +82,17 @@ beforeEach(() => {
     { id: "topic-1", name: "Scheduler", repositories: [] },
   ]);
   db.organization.findUniqueOrThrow.mockResolvedValue({ slug: "acme" });
-  db.knowledgeBundle.update.mockResolvedValue({});
+  db.knowledgeBundle.updateMany.mockResolvedValue({ count: 1 });
   db.$transaction.mockResolvedValue([]);
-  registry.getLanguageModel.mockResolvedValue({
-    model: "capable",
-    isByoai: false,
-  });
-  organizations.fundGeneration.mockImplementation(
-    (_params: unknown, operation: (charge: null) => Promise<string>) =>
-      operation(null),
+  organizations.meteredGenerateText.mockImplementation(
+    async (
+      _spend: unknown,
+      options: { prompt: string; maxOutputTokens?: number },
+      read?: (reply: { text: string }) => unknown,
+    ) => {
+      const reply = await ai.generateText({ model: "capable", ...options });
+      return read ? read(reply) : reply.text;
+    },
   );
 });
 
@@ -146,27 +149,24 @@ describe("confidence and topic are both floors, not hints", () => {
 });
 
 describe("every extraction is metered", () => {
-  it("charges the knowledge action, and never for an organization's own endpoint", async () => {
-    registry.getLanguageModel.mockResolvedValue({
-      model: "byoai",
-      isByoai: true,
-    });
+  it("bills the reading to the organization whose pull request it was", async () => {
     replies([insight()]);
 
     await extractInsights(request);
 
-    expect(organizations.fundGeneration).toHaveBeenCalledWith(
+    expect(organizations.meteredGenerateText).toHaveBeenCalledWith(
       expect.objectContaining({
         organizationId: "org-1",
         action: "KNOWLEDGE_EXTRACT",
-        ownEndpoint: true,
+        orgSlug: "acme",
       }),
+      expect.any(Object),
       expect.any(Function),
     );
   });
 
   it("records an org out of credits without pruning what it could not read", async () => {
-    organizations.fundGeneration.mockRejectedValue(
+    organizations.meteredGenerateText.mockRejectedValue(
       new AppError({
         code: "PAYMENT_REQUIRED",
         applicationCode: "entitlement.credits_exhausted",
@@ -180,19 +180,21 @@ describe("every extraction is metered", () => {
   });
 
   it("lets any other failure through so Inngest retries it", async () => {
-    organizations.fundGeneration.mockRejectedValue(new Error("gateway down"));
+    organizations.meteredGenerateText.mockRejectedValue(
+      new Error("gateway down"),
+    );
 
     await expect(extractInsights(request)).rejects.toThrow("gateway down");
-    expect(db.knowledgeBundle.update).not.toHaveBeenCalled();
+    expect(db.knowledgeBundle.updateMany).not.toHaveBeenCalled();
   });
 });
 
-describe("an unreadable reply is a failure, not a verdict", () => {
+describe("an unreadable reply is a failure, not an outcome", () => {
   it("throws rather than pruning the conversation it could not parse", async () => {
     ai.generateText.mockResolvedValue({ text: "I'm afraid I can't do that." });
 
     await expect(extractInsights(request)).rejects.toThrow(/usable JSON/);
-    expect(db.knowledgeBundle.update).not.toHaveBeenCalled();
+    expect(db.knowledgeBundle.updateMany).not.toHaveBeenCalled();
   });
 });
 
@@ -213,6 +215,6 @@ describe("a bundle already settled has nothing left to read", () => {
     db.knowledgeBundle.findFirst.mockResolvedValue(null);
 
     expect(await extractInsights(request)).toEqual({ insights: 0 });
-    expect(organizations.fundGeneration).not.toHaveBeenCalled();
+    expect(organizations.meteredGenerateText).not.toHaveBeenCalled();
   });
 });

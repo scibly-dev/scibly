@@ -7,11 +7,10 @@ import path from "node:path";
 import { z } from "zod";
 
 import "server-only";
-import { toSourcePassage } from "@/features/notebook/server";
+import { toSourcePassage } from "@/shared/ai/server/source-passage";
 
 import { FUNNEL } from "./thresholds";
 
-/** On disk, next to the notebook skills, for the same reason: prose belongs in prose files. */
 const PROMPT_ROOT = "knowledge-prompts";
 
 const cache = new Map<string, string>();
@@ -66,11 +65,7 @@ const bundleContent = z.object({
 export const parseBundleContent = (value: unknown): BundleContent | null =>
   bundleContent.safeParse(value).data ?? null;
 
-/**
- * Every URL a claim about this bundle is allowed to cite. Citations are checked
- * against this set, which is what stops a model inventing a link — the linked
- * issues are deliberately out, since they are references, not the discussion.
- */
+/** Linked issues are deliberately out: they are references, not the discussion. */
 export function citableUrls(content: BundleContent): Set<string> {
   return new Set(
     [
@@ -88,8 +83,7 @@ export type PromptTopic = {
   repositories: TopicRepository[];
 };
 
-/** `number` is the topic's position in this prompt — see `triageReply`. */
-export const renderTopic = (topic: PromptTopic, number: number): string =>
+const renderTopic = (topic: PromptTopic, number: number): string =>
   toSourcePassage(
     "topic",
     { id: number, name: topic.name },
@@ -107,6 +101,17 @@ export const renderTopic = (topic: PromptTopic, number: number): string =>
       .join("\n\n"),
   );
 
+/**
+ * A topic is addressed by its 1-based position, never its cuid: a cheap model
+ * miscopies a cuid, and 0 then reads as "none" rather than the first topic.
+ */
+export function numberTopics(topics: PromptTopic[]) {
+  return {
+    rendered: topics.map((topic, at) => renderTopic(topic, at + 1)),
+    topicAt: new Map(topics.map((topic, at) => [at + 1, topic.id])),
+  };
+}
+
 const cut = (text: string, chars: number) =>
   text.length <= chars ? text : `${text.slice(0, chars)}…`;
 
@@ -118,11 +123,6 @@ const excerpt = (c: DigestComment) =>
 const authorsOf = (comments: DigestComment[]) =>
   new Set(comments.map((c) => c.author ?? "unknown"));
 
-/**
- * The shape of the conversation, which is what separates a discussion from a
- * rubber stamp: how many people spoke, and how many review threads more than
- * one of them spoke in.
- */
 const renderStructure = (content: BundleContent): string => {
   const all = [
     ...content.comments,
@@ -140,16 +140,6 @@ const renderStructure = (content: BundleContent): string => {
 };
 
 /**
- * The part of the conversation triage has to read to score it. The body says
- * what was built; whether it was argued about lives in the comments, and a
- * digest carrying fifteen pull requests cannot hold all of them.
- *
- * Everything fits → everything goes in and no selection runs. Over budget:
- * review threads several people spoke in first, taking each one's opening and
- * closing comment, which is where a disagreement is raised and where it lands;
- * then top-level comments one per author in turn, so a single long-winded
- * reviewer cannot crowd out the person who objected once.
- *
  * ponytail: distinct authors stands in for disagreement — it cannot tell "+1"
  * from a rebuttal. Score the comments with a model if `worth` starts missing
  * discussions that mattered.
@@ -196,7 +186,6 @@ export function pickDigestComments(content: BundleContent): string[] {
   return picked;
 }
 
-/** What triage needs to sort by: the claim of the pull request, and the argument it drew. */
 export const renderBundleDigest = (
   id: number,
   content: BundleContent,
@@ -231,7 +220,7 @@ const renderComment = (c: {
     .filter(Boolean)
     .join("\n");
 
-/** The whole conversation: extraction re-authors it, so it has to read it all. */
+/** The raw cuid is safe here: an extraction prompt carries exactly one bundle. */
 export const renderBundle = (id: string, content: BundleContent): string =>
   toSourcePassage(
     "pull-request",
@@ -255,15 +244,3 @@ export const renderBundle = (id: string, content: BundleContent): string =>
       .filter(Boolean)
       .join("\n\n"),
   );
-
-/** Every model reply here is one JSON object; nothing else is expected. */
-export function parseJsonReply<T>(raw: string, schema: z.ZodType<T>): T | null {
-  const start = raw.indexOf("{");
-  const end = raw.lastIndexOf("}");
-  if (start < 0 || end <= start) return null;
-  try {
-    return schema.safeParse(JSON.parse(raw.slice(start, end + 1))).data ?? null;
-  } catch {
-    return null;
-  }
-}

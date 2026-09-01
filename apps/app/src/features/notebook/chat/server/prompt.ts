@@ -1,5 +1,5 @@
 import { APPROVAL_GATED_TOOLS_SYSTEM_PROMPT } from "@/features/notebook/chat/tools/approval-tools";
-import { quoteSourceName } from "@/features/notebook/sources/server/source-passage";
+import { quoteSourceName } from "@/shared/ai/server/source-passage";
 
 export const CORE_SYSTEM_PROMPT = `# Scibly Course Creation Expert
 

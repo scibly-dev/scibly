@@ -3,15 +3,14 @@ import type * as Ai from "ai";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const db = vi.hoisted(() => ({
-  knowledgeBundle: { findMany: vi.fn(), update: vi.fn() },
+  knowledgeBundle: { findMany: vi.fn(), updateMany: vi.fn() },
   knowledgeTopic: { findMany: vi.fn() },
   organization: { findUniqueOrThrow: vi.fn() },
 }));
 const ai = vi.hoisted(() => ({ generateText: vi.fn() }));
 
 vi.mock("@scibly/db", () => ({ db, Prisma: { DbNull: "DbNull" } }));
-// Partial: `prompts.ts` reads `toSourcePassage` off the notebook barrel, which
-// also carries tool definitions built with the real `ai`.
+// Partial: the notebook barrel the prompts import builds real `ai` tools.
 vi.mock("ai", async (importOriginal) => ({
   ...(await importOriginal<typeof Ai>()),
   ...ai,
@@ -21,6 +20,21 @@ vi.mock("@/shared/ai/server/models/registry", () => ({
     .fn()
     .mockResolvedValue({ model: "cheap", isByoai: false }),
 }));
+// The metering wrapper is tested on its own; doubled here to isolate the reply handling.
+vi.mock("@/features/organizations/server", async () => {
+  const { generateText } = await import("ai");
+  return {
+    assertNotTruncated: () => undefined,
+    meteredGenerateText: async (
+      _spend: unknown,
+      options: { prompt: string; maxOutputTokens?: number },
+      read?: (reply: { text: string }) => unknown,
+    ) => {
+      const reply = await generateText({ model: "cheap", ...options } as never);
+      return read ? read(reply) : reply.text;
+    },
+  };
+});
 
 const { triageBundles } = await import("./triage");
 
@@ -48,12 +62,12 @@ const topic = {
   repositories: [{ id: "42", fullName: "acme/api", pathGlobs: ["src/**"] }],
 };
 
-const replies = (verdict: unknown) =>
-  ai.generateText.mockResolvedValue({ text: JSON.stringify(verdict) });
+const replies = (reply: unknown) =>
+  ai.generateText.mockResolvedValue({ text: JSON.stringify(reply) });
 
 const outcomeOf = (bundleId: string) =>
-  db.knowledgeBundle.update.mock.calls.find(
-    ([call]) => call.where.id === bundleId,
+  db.knowledgeBundle.updateMany.mock.calls.find(([call]) =>
+    call.where.id.in.includes(bundleId),
   )?.[0].data;
 
 beforeEach(() => {
@@ -61,7 +75,7 @@ beforeEach(() => {
   db.knowledgeBundle.findMany.mockResolvedValue([bundle]);
   db.knowledgeTopic.findMany.mockResolvedValue([topic]);
   db.organization.findUniqueOrThrow.mockResolvedValue({ slug: "acme" });
-  db.knowledgeBundle.update.mockResolvedValue({});
+  db.knowledgeBundle.updateMany.mockResolvedValue({ count: 1 });
 });
 
 describe("structural narrowing happens before the model is asked", () => {
@@ -96,14 +110,11 @@ describe("the model answers in positions, never in ids", () => {
   it("leaves a bundle alone when the model names a number nobody offered", async () => {
     replies({ bundles: [{ id: 1, topicIds: [7], worth: 95 }] });
 
-    // A broken reply, not a verdict: settling would file it off-topic for good.
     expect(await triageBundles("org-1", ["bundle-1"])).toEqual([]);
-    expect(db.knowledgeBundle.update).not.toHaveBeenCalled();
+    expect(db.knowledgeBundle.updateMany).not.toHaveBeenCalled();
   });
 
   it("drops a topic that does not cover this pull request", async () => {
-    // Two bundles, one topic each — so topic 2 is offered to the model (it
-    // covers the second bundle) but is no candidate for the first.
     db.knowledgeBundle.findMany.mockResolvedValue([
       bundle,
       { ...bundle, id: "bundle-2", repositoryId: "43" },
@@ -120,21 +131,18 @@ describe("the model answers in positions, never in ids", () => {
     ]);
     replies({ bundles: [{ id: 1, topicIds: [2], worth: 95 }] });
 
-    // Topic 2 is dropped; the topic whose scope does cover it still stands.
     expect(await triageBundles("org-1", ["bundle-1", "bundle-2"])).toEqual([
       { organizationId: "org-1", bundleId: "bundle-1", topicIds: ["topic-1"] },
     ]);
   });
 
   it("keeps the maintainer's scope when the model names no topic", async () => {
-    // A topic is a bare name to the model. Reading nothing into it is not a
-    // verdict, and settling on one would drop the pull request for good.
     replies({ bundles: [{ id: 1, topicIds: [], worth: 80 }] });
 
     expect(await triageBundles("org-1", ["bundle-1"])).toEqual([
       { organizationId: "org-1", bundleId: "bundle-1", topicIds: ["topic-1"] },
     ]);
-    expect(db.knowledgeBundle.update).not.toHaveBeenCalled();
+    expect(db.knowledgeBundle.updateMany).not.toHaveBeenCalled();
   });
 
   it("routes a worthwhile bundle to the topic that covers it", async () => {
@@ -145,7 +153,7 @@ describe("the model answers in positions, never in ids", () => {
     expect(await triageBundles("org-1", ["bundle-1"])).toEqual([
       { organizationId: "org-1", bundleId: "bundle-1", topicIds: ["topic-1"] },
     ]);
-    expect(db.knowledgeBundle.update).not.toHaveBeenCalled();
+    expect(db.knowledgeBundle.updateMany).not.toHaveBeenCalled();
   });
 });
 
@@ -166,13 +174,13 @@ describe("weak results are dropped quietly", () => {
     replies({ bundles: [] });
 
     expect(await triageBundles("org-1", ["bundle-1"])).toEqual([]);
-    expect(db.knowledgeBundle.update).not.toHaveBeenCalled();
+    expect(db.knowledgeBundle.updateMany).not.toHaveBeenCalled();
   });
 
   it("keeps the whole batch retryable when the reply is unusable", async () => {
     ai.generateText.mockResolvedValue({ text: "sorry, no" });
 
     await expect(triageBundles("org-1", ["bundle-1"])).rejects.toThrow();
-    expect(db.knowledgeBundle.update).not.toHaveBeenCalled();
+    expect(db.knowledgeBundle.updateMany).not.toHaveBeenCalled();
   });
 });

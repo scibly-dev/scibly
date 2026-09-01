@@ -3,10 +3,8 @@ import { z } from "zod";
 import { QUESTION_BLOCK_AUTHORING_FIELDS } from "@/shared/content/contracts";
 
 /**
- * Strips `questionblock-data` down to the author-settable fields before
- * AI-agent-authored HTML reaches the editor, so the agent can't smuggle in
- * `userAnswers`/`achievedPoints` — solutions are a separate boundary, stripped
- * at publish time instead.
+ * Strips `questionblock-data` to the author-settable fields so agent-authored
+ * HTML cannot smuggle in `userAnswers`/`achievedPoints`.
  */
 export function stripLearnerStateFromQuestionBlocks(html: string): string {
   return html.replace(
@@ -44,11 +42,7 @@ function unreadable(rawValue: string): Error {
   );
 }
 
-/**
- * Handles both encodings this value arrives in — the agent's raw
- * single-quoted JSON and the editor's double-quoted, escaped form — decoding
- * `&amp;` last so a literal `&amp;quot;` doesn't turn into a stray quote.
- */
+/** `&amp;` is decoded last, so a literal `&amp;quot;` does not become a stray quote. */
 function decodeAttributeValue(rawValue: string): string {
   return rawValue
     .replace(/&quot;/g, '"')

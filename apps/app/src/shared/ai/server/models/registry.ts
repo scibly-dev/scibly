@@ -250,11 +250,7 @@ function resolveSciblyLanguageModel(
   }
 
   // `SKIP_ENV_VALIDATION` hands back raw `process.env`, so the schema's
-  // `.default()` never runs and an unset var arrives here as undefined. The
-  // gateway's own answer to that is a 400 saying "Missing or empty model
-  // identifier", which names neither the variable nor the app that dropped it.
-  // A plain Error, not a ChatError: those carry a canned "pick another model"
-  // for the caller, and nobody can pick their way out of an unset variable.
+  // `.default()` never runs and an unset var arrives here as undefined.
   if (!gatewayModel) {
     throw new Error(
       "No gateway model configured: set SCIBLY_DEFAULT_CHAT_MODEL and SCIBLY_KNOWLEDGE_TRIAGE_MODEL.",

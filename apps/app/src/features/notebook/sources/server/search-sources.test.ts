@@ -405,7 +405,9 @@ describe("passage text on its way to a model", () => {
 
       expect(passage.match(/<\/\s*source-passage>/gi)).toHaveLength(1);
       expect(passage.trimEnd().endsWith("</source-passage>")).toBe(true);
-      expect(passage).toContain("&lt;/source-passage");
+      // Case preserved: only the `<` is defused, so the document is still
+      // quoted as its author wrote it.
+      expect(passage).toMatch(/&lt;\/\s*source-passage/i);
     },
   );
 });

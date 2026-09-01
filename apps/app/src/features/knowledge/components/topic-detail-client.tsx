@@ -21,10 +21,11 @@ import { api } from "@/shared/api/trpc/client";
 import { KnowledgeGateNotice } from "./knowledge-gate-notice";
 import { TopicForm } from "./topic-dialog/topic-form";
 import {
+  TabCount,
   TopicActivity,
+  TopicBundleList,
   TopicInsights,
   TopicOverview,
-  TopicSources,
 } from "./topic-panels";
 
 const REFETCH_WHILE_RUNNING_MS = 5_000;
@@ -36,12 +37,6 @@ const GIVE_UP_ON_PENDING_MS = 15 * 60_000;
 
 const recent = (at: Date | string) =>
   Date.now() - new Date(at).getTime() < GIVE_UP_ON_PENDING_MS;
-
-const TabCount = ({ children }: { children: number }) => (
-  <span className="text-ink-faint ml-1.5 text-[11px] tabular-nums">
-    {children}
-  </span>
-);
 
 export function TopicDetailClient({
   t,
@@ -204,7 +199,7 @@ export function TopicDetailClient({
           />
         </TabsContent>
         <TabsContent value="sources" className="pt-3">
-          <TopicSources t={t} bundles={data.bundles} failed={data.failed} />
+          <TopicBundleList t={t} bundles={data.bundles} failed={data.failed} />
         </TabsContent>
         <TabsContent value="activity" className="pt-3">
           <TopicActivity t={t} runs={data.runs} bundles={data.bundles} />

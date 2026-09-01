@@ -2,6 +2,12 @@ import "server-only";
 
 export { organizationRouter } from "./api/organization.router";
 export { fundGeneration } from "./server/charge-generation";
+export {
+  assertNotTruncated,
+  meteredGenerateText,
+  type MeteredReply,
+  type MeteredSpend,
+} from "./server/metered-text";
 export { buildOrganizationNotebookTools } from "./server/notebook-tools";
 export { notifyAfterResponding, notifyOwners } from "./server/notify-owners";
 export {

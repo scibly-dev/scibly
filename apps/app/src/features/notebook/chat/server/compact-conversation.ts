@@ -3,7 +3,7 @@ import type { NotebookMessage } from "@/features/notebook/chat/contracts";
 import { db } from "@scibly/db";
 import { generateText, getToolName, isToolUIPart } from "ai";
 
-import { toSourcePassage } from "@/features/notebook/sources/server/source-passage";
+import { toSourcePassage } from "@/shared/ai/server/source-passage";
 import { estimateTokens } from "@/shared/ai/token-estimate";
 
 const KEEP_LAST_MESSAGES = 10;

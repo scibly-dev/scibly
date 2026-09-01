@@ -33,7 +33,7 @@ export function TopicDialog({
       >
         <DialogHeader>
           <DialogTitle>{t.form.createTitle}</DialogTitle>
-          <DialogDescription>{t.form.description}</DialogDescription>
+          <DialogDescription>{t.form.createHint}</DialogDescription>
         </DialogHeader>
         <TopicForm
           t={t}

@@ -1,6 +1,5 @@
 // @vitest-environment node
 /**
- * End-to-end against the real dev Postgres; only GitHub's network boundary is doubled.
  *   E2E_DATABASE_URL=postgres://… pnpm vitest run src/features/knowledge/server/collect/e2e-live-db.test.ts
  */
 const live = process.env.E2E_DATABASE_URL;
@@ -26,6 +25,7 @@ const { collectRepository, recordFailedCollection } =
 const { KNOWLEDGE_COLLECT_EVENT, requestCollections, requestDueCollections } =
   await import("./collection-sync");
 const { parseStoredRepositories } = await import("../topic-repositories");
+const { loadTopicFeed } = await import("./topic-feed");
 
 const ORG = "org_dummy_dev_id";
 const REPO = "e2e-collect-repo";
@@ -142,7 +142,11 @@ afterAll(async () => {
 });
 
 describe.runIf(live)("a repository collected against the real database", () => {
-  it("plants the watermark on the first run and asks GitHub for nothing", async () => {
+  it("reaches back a fixed window on the first run and plants the watermark", async () => {
+    github.listMergedPullRequests.mockResolvedValue({
+      pullRequests: [],
+      nextCursor: null,
+    });
     const id = await newRun();
 
     expect(await run(id)).toEqual({
@@ -151,7 +155,11 @@ describe.runIf(live)("a repository collected against the real database", () => {
       capped: false,
       bundleIds: [],
     });
-    expect(github.listMergedPullRequests).not.toHaveBeenCalled();
+    expect(github.listMergedPullRequests).toHaveBeenCalledWith(
+      "ghs_double",
+      FULL_NAME,
+      expect.objectContaining({ cursor: null }),
+    );
 
     const row = await runRow(id);
     expect(row.status).toBe("SUCCEEDED");
@@ -191,7 +199,6 @@ describe.runIf(live)("a repository collected against the real database", () => {
       discarded: 2,
       capped: false,
     });
-    // The funnel's work list: only what was kept, never a discarded row.
     expect(collected.bundleIds).toHaveLength(1);
 
     expect(github.fetchPullRequestDetail).toHaveBeenCalledTimes(1);
@@ -432,3 +439,72 @@ describe.runIf(live)("the nightly fan-out", () => {
     }
   });
 });
+
+describe.runIf(live)(
+  "a topic's feed narrows to its scope in the database",
+  () => {
+    const FILES = {
+      inside: ["src/scheduler/lock.ts", "README.md"],
+      edge: ["src/scheduler.ts"],
+      outside: ["docs/adr/0001.md"],
+    };
+
+    const seed = (key: keyof typeof FILES, number: number) =>
+      db.knowledgeBundle.create({
+        data: {
+          organizationId: ORG,
+          repositoryId: REPO,
+          externalId: `PR_feed_${key}`,
+          number,
+          githubUpdatedAt: at(0),
+          mergedAt: at(0),
+          title: key,
+          url: `https://github.com/acme/api/pull/${number}`,
+          filePaths: FILES[key],
+          content: { title: key },
+        },
+        select: { id: true },
+      });
+
+    const repository = (pathGlobs: string[]) => [
+      { id: REPO, fullName: FULL_NAME, pathGlobs },
+    ];
+
+    const titles = async (pathGlobs: string[]) =>
+      (await loadTopicFeed(ORG, "topic-none", repository(pathGlobs))).bundles
+        .map((bundle) => bundle.title)
+        .sort();
+
+    beforeAll(async () => {
+      await wipe();
+      await Promise.all([
+        seed("inside", 101),
+        seed("edge", 102),
+        seed("outside", 103),
+      ]);
+    });
+    afterAll(wipe);
+
+    it("returns only what the glob's prefix could match", async () => {
+      expect(await titles(["src/scheduler/**"])).toEqual(["inside"]);
+    });
+
+    it("hands the whole repository over when the topic watches all of it", async () => {
+      expect(await titles([])).toEqual(["edge", "inside", "outside"]);
+    });
+
+    it("still applies the glob to what a bare prefix let through", async () => {
+      // `src/` is all the database can filter on here, so both `src/…` bundles
+      // come back and `touchesScope` is what drops the one the glob rejects.
+      expect(await titles(["src/**/lock.ts"])).toEqual(["inside"]);
+    });
+
+    it("falls back to the whole repository when the glob has no prefix at all", async () => {
+      expect(await titles(["**/*.md"])).toEqual(["inside", "outside"]);
+    });
+
+    it("does not let a path with a LIKE wildcard in the glob match everything", async () => {
+      expect(await titles(["src/scheduler/100%_certain/**"])).toEqual([]);
+    });
+  },
+);

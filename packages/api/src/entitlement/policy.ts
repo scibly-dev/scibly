@@ -94,6 +94,42 @@ export const resolveSubscribedPlan = async (
 
 export type ResolvedPlan = Awaited<ReturnType<typeof resolveSubscribedPlan>>;
 
+/**
+ * Unlike `resolveSubscribedPlan`, this cannot fail closed by throwing: one
+ * unresolvable organization would abort a sweep over hundreds. It is absent
+ * from the map instead, which every caller reads as "not entitled".
+ */
+export const resolveSubscribedPlans = async (
+  db: Prisma.TransactionClient,
+  organizationIds: string[],
+): Promise<Map<string, ResolvedPlan>> => {
+  if (organizationIds.length === 0) return new Map();
+  const subscriptions = await db.organizationSubscription.findMany({
+    where: { organizationId: { in: organizationIds } },
+    select: {
+      organizationId: true,
+      plan: true,
+      purchasedLearnerSeats: true,
+      status: true,
+      pastDueSince: true,
+      currentPeriodStart: true,
+    },
+  });
+
+  const resolved = new Map<string, ResolvedPlan>();
+  for (const { organizationId, ...subscription } of subscriptions) {
+    const plan = PLAN_CATALOGUE[subscription.plan];
+    if (!plan) continue;
+    resolved.set(organizationId, {
+      plan,
+      subscription,
+      lapsed: hasLapsed(subscription),
+    });
+  }
+  return resolved;
+};
+
+
 export type ResolvedSubscription = ResolvedPlan["subscription"];
 
 type PaymentState = {

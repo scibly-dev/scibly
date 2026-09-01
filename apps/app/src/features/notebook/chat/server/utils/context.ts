@@ -3,7 +3,7 @@ import { db } from "@scibly/db";
 import {
   quoteSourceName,
   toSourcePassage,
-} from "@/features/notebook/sources/server/source-passage";
+} from "@/shared/ai/server/source-passage";
 import { estimateTokens } from "@/shared/ai/token-estimate";
 import { outdatedDraftSceneWhere } from "@/shared/content/course/course-outdated";
 import {
@@ -155,9 +155,8 @@ function noticeLines(
   return lines.join("\n\n");
 }
 
-// Tier 1 inlines every source verbatim when it fits — cheaper than retrieval
-// since the provider's prompt cache makes the second turn nearly free; tier 2
-// is the fallback that turns on the search/read tools.
+// Tier 1 inlines every source verbatim when it fits — the prompt cache makes
+// the second turn nearly free. Tier 2 falls back to the search/read tools.
 async function buildSourceContext({
   notebookId,
   contextWindow,

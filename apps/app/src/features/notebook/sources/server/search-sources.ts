@@ -1,11 +1,10 @@
 import { db } from "@scibly/db";
 
+import { toSourcePassage } from "@/shared/ai/server/source-passage";
 import {
   INGESTING_STATUSES,
   SOURCE_STATUS,
 } from "@/shared/content/sources/constants";
-
-import { toSourcePassage } from "./source-passage";
 
 export interface SourceMatch {
   content: string;
@@ -155,9 +154,8 @@ export type ReadSourceResult =
   | { status: "READ"; passage: string };
 
 /**
- * Sliced in Postgres so large documents don't cross the wire whole.
- * `notebookId` is part of the WHERE clause, not a check afterwards, so a
- * source in another notebook reads as absent rather than forbidden.
+ * `notebookId` is part of the WHERE clause, not a check afterwards, so a source
+ * in another notebook reads as absent rather than forbidden.
  */
 export async function readNotebookSource(
   notebookId: string,

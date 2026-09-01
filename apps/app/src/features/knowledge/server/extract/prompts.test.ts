@@ -70,7 +70,6 @@ describe("pickDigestComments", () => {
     expect(joined.length).toBeLessThanOrEqual(FUNNEL.triage.commentBudget);
     expect(joined).toContain("objection");
     expect(joined).toContain("settled");
-    // The opening and the close, never the middle of a thread.
     expect(joined).not.toContain("middle");
   });
 
@@ -83,8 +82,8 @@ describe("pickDigestComments", () => {
           comment("grace", long("only ")),
           comment("ada", "+1"),
         ],
-        // One voice, so the thread never enters the queue — it is here only to
-        // push the conversation over budget, so selection actually runs.
+        // One voice, so it never enters the queue — it is here to push the
+        // conversation over budget so selection actually runs.
         threads: [
           {
             path: null,
@@ -99,7 +98,6 @@ describe("pickDigestComments", () => {
 
     const joined = picked.join("\n");
     expect(joined.indexOf("only")).toBeLessThan(joined.indexOf("second"));
-    // A "+1" is an acknowledgement, not an argument.
     expect(joined).not.toContain("+1");
   });
 });

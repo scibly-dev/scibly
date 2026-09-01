@@ -22,3 +22,13 @@ export const touchesScope = (filePaths: string[], pathGlobs: string[]) =>
   filePaths.some((filePath) =>
     pathGlobs.some((glob) => matchesGlob(filePath, glob)),
   );
+
+/**
+ * Everything in a glob before its first metacharacter — a loose filter the
+ * database can apply. It may let through paths the glob rejects, never the
+ * opposite, so the metacharacter set is deliberately wide.
+ */
+export const globPrefix = (glob: string): string => {
+  const at = glob.search(/[*?[\]{}!+@()|]/);
+  return at < 0 ? glob : glob.slice(0, at);
+};

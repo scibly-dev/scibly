@@ -30,12 +30,7 @@ const COLLECT_BUDGET = {
   maxDetails: 50,
   /** GitHub's secondary limits punish concurrency, not volume — keep this small. */
   detailConcurrency: 5,
-  /**
-   * How far back a repository with no watermark looks. A first sync that
-   * collected nothing is indistinguishable from one that found nothing, so a
-   * new topic reaches back far enough to show its work. Walking the whole
-   * history is its own ticket, scibly-dev/scibly#16.
-   */
+  /** Walking the whole history is its own ticket, scibly-dev/scibly#16. */
   firstRunLookbackDays: 14,
 } as const;
 
@@ -84,8 +79,7 @@ async function listSinceWatermark(
     if (!listing.nextCursor) return { fresh, capped: false };
     cursor = listing.nextCursor;
   }
-  // Pages exhausted before the watermark: keep the newest slice and own the
-  // gap via `capped` — failing here would wedge the repository forever.
+  // Failing here would wedge the repository forever, so own the gap via `capped`.
   return { fresh, capped: true };
 }
 
@@ -119,14 +113,14 @@ type BundleRow = {
   score: number | null;
   discardReason: KnowledgeDiscardReason | null;
   content: Prisma.InputJsonValue | typeof Prisma.DbNull;
-  /// Denormalized from `content` so the feed never loads the whole conversation.
+  // Denormalized from `content` so the feed never loads the whole conversation.
   title: string | null;
   url: string | null;
   filePaths: string[];
   truncated: boolean;
   collectedAt: Date;
-  /// Cleared on every write: a pull request that moved on GitHub is judged
-  /// again, so a re-collected bundle re-enters the funnel.
+  // Cleared on every write: a pull request that moved on GitHub is judged
+  // again, so a re-collected bundle re-enters the funnel.
   outcome: null;
   processedAt: null;
 };

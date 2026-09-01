@@ -26,11 +26,7 @@ import {
 } from "@/shared/content/editor/blocks/questions/cloze-text/utils/cloze-doc-sync";
 import { normalizeAuthorSegments } from "@/shared/content/editor/blocks/questions/cloze-text/utils/segment-normalize";
 
-/**
- * Keeps each cloze block's `questionData`/`userAnswers` attrs in sync with its
- * ProseMirror content in the same transaction as the edit, skipping remote
- * y-sync transactions and its own appended transaction to avoid infinite loops.
- */
+/** Skips remote y-sync transactions and its own appended one, to avoid infinite loops. */
 
 const CLOZE_SYNC_META = "clozeSync$applied";
 const clozeSyncPluginKey = new PluginKey("clozeSync");

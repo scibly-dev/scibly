@@ -64,8 +64,7 @@ export const env = createEnv({
       .string()
       .min(1)
       .default("deepseek/deepseek-v4-flash-0731"),
-    /** Gateway model ID for knowledge triage — a cheap tier, since triage only
-     * reads pull-request summaries. BYOAI orgs run their one model instead. */
+    /** A cheaper tier for triage; a BYOAI org runs its one model instead. */
     SCIBLY_KNOWLEDGE_TRIAGE_MODEL: z
       .string()
       .min(1)

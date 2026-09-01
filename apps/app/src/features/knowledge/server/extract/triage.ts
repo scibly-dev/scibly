@@ -1,96 +1,104 @@
-import type { KnowledgeBundleOutcome } from "@scibly/db/enums";
+import type { BundleContent } from "../collect/bundle";
+import type { ExtractRequest } from "./bundle-lifecycle";
 
 import { db, Prisma } from "@scibly/db";
-import { generateText } from "ai";
 import { z } from "zod";
 
 import { env } from "@/env";
-import { getLanguageModel } from "@/shared/ai/server/models/registry";
+import {
+  assertNotTruncated,
+  meteredGenerateText,
+} from "@/features/organizations/server";
+import { parseJsonReply } from "@/shared/ai/json-reply";
 
-import { failureMessage } from "../failure-message";
 import { parseStoredRepositories, touchesScope } from "../topic-repositories";
+import { settleBundles } from "./bundle-lifecycle";
 import {
   loadPrompt,
+  numberTopics,
   parseBundleContent,
-  parseJsonReply,
   type PromptTopic,
   renderBundleDigest,
-  renderTopic,
 } from "./prompts";
 import { FUNNEL } from "./thresholds";
 
-export type TriageRequest = { organizationId: string; bundleId: string };
+const triageRow = z.object({
+  id: z.coerce.number().int(),
+  topicIds: z.array(z.coerce.number().int()).catch([]),
+  worth: z.coerce.number(),
+});
 
-export type ExtractRequest = {
-  organizationId: string;
-  bundleId: string;
+const triageReply = z.object({
+  bundles: z.array(triageRow.nullable().catch(null)),
+});
+
+type StoredBundle = {
+  id: string;
+  repositoryId: string;
+  filePaths: string[];
+  content: unknown;
+};
+
+type ReadableBundle = {
+  id: string;
+  content: BundleContent;
   topicIds: string[];
 };
 
-/**
- * Terminal: the content goes, the verdict stays. `title`/`url` survive so the
- * feed can still name a pull request nothing was learned from.
- */
-export async function settleBundle(
-  bundleId: string,
-  outcome: KnowledgeBundleOutcome,
-): Promise<void> {
-  await db.knowledgeBundle.update({
-    where: { id: bundleId },
-    data: {
-      outcome,
-      processedAt: new Date(),
-      content: Prisma.DbNull,
-      // A retry that got through clears what the attempt before it recorded.
-      failureReason: null,
-    },
-  });
+export function narrowByScope(bundles: StoredBundle[], topics: PromptTopic[]) {
+  const readable: ReadableBundle[] = [];
+  const offTopic: string[] = [];
+  for (const bundle of bundles) {
+    const content = parseBundleContent(bundle.content);
+    const topicIds = content
+      ? topics
+          .filter((topic) =>
+            topic.repositories.some(
+              (repository) =>
+                repository.id === bundle.repositoryId &&
+                touchesScope(bundle.filePaths, repository.pathGlobs),
+            ),
+          )
+          .map((topic) => topic.id)
+      : [];
+    if (content && topicIds.length > 0) {
+      readable.push({ id: bundle.id, content, topicIds });
+    } else {
+      offTopic.push(bundle.id);
+    }
+  }
+  return { readable, offTopic };
 }
 
-/**
- * The funnel stopped rather than reached a verdict, so this is not terminal:
- * `content` and `processedAt` are left alone and the nightly sweep sends the
- * bundle round again. Recorded so the feed can say a pull request could not be
- * read instead of leaving it looking like one still being read.
- */
-export async function recordFunnelFailure(
-  bundleIds: string[],
-  error: unknown,
-): Promise<void> {
-  await db.knowledgeBundle.updateMany({
-    where: { id: { in: bundleIds }, processedAt: null },
-    data: { outcome: "FAILED", failureReason: failureMessage(error) },
-  });
+export function readTriageReply(
+  organizationId: string,
+  readable: ReadableBundle[],
+  rows: z.infer<typeof triageRow>[],
+  topicAt: Map<number, string>,
+) {
+  const byPosition = new Map(rows.map((row) => [row.id, row]));
+  const extract: ExtractRequest[] = [];
+  const lowValue: string[] = [];
+
+  for (const [at, bundle] of readable.entries()) {
+    const triaged = byPosition.get(at + 1);
+    if (!triaged) continue;
+
+    const named = triaged.topicIds.map((number) => topicAt.get(number));
+    if (named.includes(undefined)) continue;
+
+    // The maintainer's scope stands when the model names no topic of its own.
+    const picked = named.filter(
+      (id): id is string => id !== undefined && bundle.topicIds.includes(id),
+    );
+    const topicIds = picked.length > 0 ? picked : bundle.topicIds;
+
+    if (triaged.worth < FUNNEL.triage.minWorth) lowValue.push(bundle.id);
+    else extract.push({ organizationId, bundleId: bundle.id, topicIds });
+  }
+  return { extract, lowValue };
 }
 
-/**
- * Positions in the prompt, not database ids. A cheap model miscopies a
- * 25-character cuid about a third of the time, and every slip landed as a
- * verdict: a wrong topic id settled the bundle OFF_TOPIC for good, a wrong
- * bundle id left it unread forever. Small integers it can copy.
- *
- * `coerce`, because a model that was shown `id="3"` may well answer `"3"`.
- */
-const triageReply = z.object({
-  bundles: z
-    .array(
-      z.object({
-        id: z.coerce.number().int(),
-        topicIds: z.array(z.coerce.number().int()).catch([]),
-        worth: z.number().catch(0),
-      }),
-    )
-    .catch([]),
-});
-
-/**
- * Sorts a batch of bundles into the topics that cover them and scores how worth
- * documenting each discussion is. One model call for the whole batch, on the
- * cheap tier — triage reads summaries, extraction reads arguments.
- *
- * Returns the bundles worth extracting; everything else is settled here.
- * A bundle the model left out is left alone for the nightly sweep to retry.
- */
 export async function triageBundles(
   organizationId: string,
   bundleIds: string[],
@@ -120,97 +128,53 @@ export async function triageBundles(
     }),
   );
 
-  // Structural narrowing first: a topic that does not watch the repository, or
-  // whose globs the pull request never touched, is not a judgement call.
-  const candidates = new Map<string, string[]>();
-  const readable = [];
-  for (const bundle of bundles) {
-    const content = parseBundleContent(bundle.content);
-    if (!content) {
-      await settleBundle(bundle.id, "OFF_TOPIC");
-      continue;
-    }
-    const matching = topics
-      .filter((topic) =>
-        topic.repositories.some(
-          (repository) =>
-            repository.id === bundle.repositoryId &&
-            touchesScope(bundle.filePaths, repository.pathGlobs),
-        ),
-      )
-      .map((topic) => topic.id);
-
-    if (matching.length === 0) {
-      await settleBundle(bundle.id, "OFF_TOPIC");
-      continue;
-    }
-    candidates.set(bundle.id, matching);
-    readable.push({ id: bundle.id, content });
-  }
+  const { readable, offTopic } = narrowByScope(bundles, topics);
+  await settleBundles(offTopic, "OFF_TOPIC");
   if (readable.length === 0) return [];
 
-  const inScope = new Set([...candidates.values()].flat());
+  const inScope = new Set(readable.flatMap((bundle) => bundle.topicIds));
+  const { rendered, topicAt } = numberTopics(
+    topics.filter((topic) => inScope.has(topic.id)),
+  );
+
   const organization = await db.organization.findUniqueOrThrow({
     where: { id: organizationId },
     select: { slug: true },
   });
-  const { model } = await getLanguageModel(
-    undefined,
-    organization.slug,
-    env.SCIBLY_KNOWLEDGE_TRIAGE_MODEL,
+
+  return meteredGenerateText(
+    {
+      organizationId,
+      actorId: null,
+      // Triage and extraction are two stages of one feature at one price.
+      action: "KNOWLEDGE_EXTRACT",
+      orgSlug: organization.slug,
+      gatewayModel: env.SCIBLY_KNOWLEDGE_TRIAGE_MODEL,
+    },
+    {
+      system: await loadPrompt("triage"),
+      prompt: [
+        ...rendered,
+        ...readable.map((bundle, at) =>
+          renderBundleDigest(at + 1, bundle.content),
+        ),
+      ].join("\n\n"),
+      maxOutputTokens: FUNNEL.triage.maxOutputTokens,
+    },
+    async (generated) => {
+      assertNotTruncated(generated, "Knowledge triage");
+      const reply = parseJsonReply(generated.text, triageReply);
+      // Transient failure, not an outcome: throwing leaves every bundle unprocessed.
+      if (!reply) throw new Error("Knowledge triage returned no usable JSON.");
+
+      const { extract, lowValue } = readTriageReply(
+        organizationId,
+        readable,
+        reply.bundles.filter((row) => row !== null),
+        topicAt,
+      );
+      await settleBundles(lowValue, "LOW_VALUE");
+      return extract;
+    },
   );
-
-  // 1-based: the prompt reads as a list, and a model that answers 0 for "none"
-  // then names nothing rather than the first topic.
-  const offered = topics.filter((topic) => inScope.has(topic.id));
-  const topicAt = new Map(offered.map((topic, at) => [at + 1, topic.id]));
-
-  const { text } = await generateText({
-    model,
-    system: await loadPrompt("triage"),
-    prompt: [
-      ...offered.map((topic, at) => renderTopic(topic, at + 1)),
-      ...readable.map((bundle, at) =>
-        renderBundleDigest(at + 1, bundle.content),
-      ),
-    ].join("\n\n"),
-  });
-
-  const reply = parseJsonReply(text, triageReply);
-  // No usable reply is a transient failure, not a verdict: throwing keeps every
-  // bundle unprocessed so the Inngest retry sees them again.
-  if (!reply) throw new Error("Knowledge triage returned no usable JSON.");
-
-  const verdicts = new Map(reply.bundles.map((row) => [row.id, row]));
-  const extract: ExtractRequest[] = [];
-  for (const [at, bundle] of readable.entries()) {
-    const verdict = verdicts.get(at + 1);
-    if (!verdict) continue;
-
-    const named = verdict.topicIds.map((number) => topicAt.get(number));
-    // A number nobody offered is a broken reply, not a judgement. Settling on it
-    // would file the pull request as off-topic for good; skipping leaves it for
-    // the retry, which is the only honest reading of a reply we cannot parse.
-    if (named.includes(undefined)) continue;
-
-    // Coverage was settled structurally, by a maintainer pointing this topic at
-    // this repository and these paths. The model only narrows among those
-    // candidates — the pick is dropped when it reaches for a topic that scopes
-    // another repository, and the maintainer's scope stands when it names none:
-    // a description is optional, so silence may only mean there was nothing to
-    // read, which is not a verdict worth filing a pull request away on for
-    // good. Routine work is filtered by `worth`, which the model can judge.
-    const allowed = candidates.get(bundle.id) ?? [];
-    const picked = named.filter(
-      (id): id is string => id !== undefined && allowed.includes(id),
-    );
-    const topicIds = picked.length > 0 ? picked : allowed;
-
-    if (verdict.worth < FUNNEL.triage.minWorth) {
-      await settleBundle(bundle.id, "LOW_VALUE");
-    } else {
-      extract.push({ organizationId, bundleId: bundle.id, topicIds });
-    }
-  }
-  return extract;
 }

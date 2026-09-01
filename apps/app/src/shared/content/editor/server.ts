@@ -48,10 +48,6 @@ export function buildPublishedSceneArtifacts(
   });
 }
 
-/**
- * A document that cannot be read means completeness cannot be checked, so
- * the submission is refused rather than graded on a guess.
- */
 export function readPublishedSceneQuestions(
   learnerContent: unknown,
 ): QuestionBlockSnapshot[] {
@@ -72,11 +68,7 @@ export function readPublishedSceneQuestions(
   }
 }
 
-/**
- * Unlike the course builder's preview, which returns an empty document for
- * unreadable content, this is the player and must refuse rather than
- * silently show an author a lie about what a learner will see.
- */
+/** Unlike the builder's preview, the player refuses rather than grade on a guess. */
 function readDraftSceneQuestions(
   documentState: Buffer | Uint8Array | null,
 ): QuestionBlockSnapshot[] {
@@ -93,11 +85,7 @@ function readDraftSceneQuestions(
   }
 }
 
-/**
- * Held to the learner's completeness rule: preview exists so an author sees
- * what a learner gets, and an author who can submit here but a learner
- * couldn't has been shown a lie.
- */
+/** Held to the learner's completeness rule: preview must not accept what a learner cannot. */
 export function gradeSceneBlocks(
   blocks: BlockSubmission[] | undefined,
   documentState: Buffer | Uint8Array | null,

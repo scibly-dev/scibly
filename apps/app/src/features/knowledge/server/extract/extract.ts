@@ -1,41 +1,44 @@
 import type { BundleContent } from "../collect/bundle";
-import type { ExtractRequest } from "./triage";
+import type { ExtractRequest } from "./bundle-lifecycle";
 
 import { hasAppErrorCode } from "@scibly/api/application-error";
-import { db, Prisma } from "@scibly/db";
-import { generateText } from "ai";
+import { db } from "@scibly/db";
 import { z } from "zod";
 
-import { fundGeneration } from "@/features/organizations/server";
-import { getLanguageModel } from "@/shared/ai/server/models/registry";
+import {
+  assertNotTruncated,
+  meteredGenerateText,
+} from "@/features/organizations/server";
+import { parseJsonReply } from "@/shared/ai/json-reply";
 
 import { parseStoredRepositories } from "../topic-repositories";
 import {
+  markUnfunded,
+  settleBundles,
+  settleBundlesOp,
+} from "./bundle-lifecycle";
+import {
   citableUrls,
   loadPrompt,
+  numberTopics,
   parseBundleContent,
-  parseJsonReply,
   type PromptTopic,
   renderBundle,
-  renderTopic,
 } from "./prompts";
 import { FUNNEL } from "./thresholds";
-import { settleBundle } from "./triage";
+
+const extractInsight = z.object({
+  // A position in the prompt, not a cuid — see `numberTopics`.
+  topicId: z.coerce.number().int(),
+  claim: z.string(),
+  citations: z
+    .array(z.object({ url: z.string(), label: z.string().catch("") }))
+    .catch([]),
+  confidence: z.coerce.number(),
+});
 
 const extractReply = z.object({
-  insights: z
-    .array(
-      z.object({
-        // A position in the prompt, not a cuid — see `triageReply`.
-        topicId: z.coerce.number().int(),
-        claim: z.string(),
-        citations: z
-          .array(z.object({ url: z.string(), label: z.string().catch("") }))
-          .catch([]),
-        confidence: z.number().catch(0),
-      }),
-    )
-    .catch([]),
+  insights: z.array(extractInsight.nullable().catch(null)),
 });
 
 type Insight = {
@@ -45,20 +48,13 @@ type Insight = {
   confidence: number;
 };
 
-/**
- * Keeps only what the bundle can back: a topic that was offered, prose, a
- * confidence above the floor, and at least one citation the bundle actually
- * contains. Dropping an unciteable claim is what makes the `citations` column
- * trustworthy — the model never gets to write a URL that was not already in
- * front of it.
- */
 export function keepableInsights(
-  reply: z.infer<typeof extractReply>,
+  insights: z.infer<typeof extractInsight>[],
   content: BundleContent,
   topicAt: Map<number, string>,
 ): Insight[] {
   const allowed = citableUrls(content);
-  return reply.insights
+  return insights
     .flatMap((insight) => {
       const topicId = topicAt.get(insight.topicId);
       if (
@@ -86,14 +82,6 @@ export function keepableInsights(
     .slice(0, FUNNEL.extract.maxInsights);
 }
 
-/**
- * Re-authors one bundle's discussion into cited claims, metered as one
- * generation. Idempotent: a bundle already settled has no content left to read.
- *
- * Running out of credits is recorded, not swallowed and not retried into the
- * ground — `UNFUNDED` keeps the content so the nightly sweep tries again once
- * the organization has topped up.
- */
 export async function extractInsights({
   organizationId,
   bundleId,
@@ -119,95 +107,72 @@ export async function extractInsights({
       repositories: parseStoredRepositories(topic.repositories),
     }),
   );
-  // Every topic was deleted between triage and now.
   if (topics.length === 0) {
-    await settleBundle(bundleId, "OFF_TOPIC");
+    await settleBundles([bundleId], "OFF_TOPIC");
     return { insights: 0 };
   }
 
-  // 1-based positions, the same contract triage answers in.
-  const topicAt = new Map(topics.map((topic, at) => [at + 1, topic.id]));
+  const { rendered, topicAt } = numberTopics(topics);
 
   const organization = await db.organization.findUniqueOrThrow({
     where: { id: organizationId },
     select: { slug: true },
   });
-  const { model, isByoai } = await getLanguageModel(
-    undefined,
-    organization.slug,
-  );
 
-  let raw: string;
   try {
-    raw = await fundGeneration(
+    return await meteredGenerateText(
       {
-        db,
         organizationId,
         actorId: null,
         action: "KNOWLEDGE_EXTRACT",
-        // An organization on its own endpoint pays its provider, not us — the
-        // same carve-out chat and ingestion make.
-        ownEndpoint: isByoai,
+        orgSlug: organization.slug,
       },
-      async () => {
-        const { text } = await generateText({
-          model,
-          system: await loadPrompt("extract"),
-          prompt: [
-            ...topics.map((topic, at) => renderTopic(topic, at + 1)),
-            renderBundle(bundleId, content),
-          ].join("\n\n"),
-          maxOutputTokens: FUNNEL.extract.maxOutputTokens,
-        });
-        return text;
+      {
+        system: await loadPrompt("extract"),
+        prompt: [...rendered, renderBundle(bundleId, content)].join("\n\n"),
+        maxOutputTokens: FUNNEL.extract.maxOutputTokens,
+      },
+      async (generated) => {
+        assertNotTruncated(generated, "Knowledge extraction");
+        const reply = parseJsonReply(generated.text, extractReply);
+        // Transient failure, not an outcome: settling would prune the conversation.
+        if (!reply) {
+          throw new Error("Knowledge extraction returned no usable JSON.");
+        }
+        const keepable = keepableInsights(
+          reply.insights.filter((insight) => insight !== null),
+          content,
+          topicAt,
+        );
+
+        await db.$transaction([
+          ...(keepable.length > 0
+            ? [
+                db.knowledgeInsight.deleteMany({ where: { bundleId } }),
+                db.knowledgeInsight.createMany({
+                  data: keepable.map((insight) => ({
+                    organizationId,
+                    bundleId,
+                    topicId: insight.topicId,
+                    claim: insight.claim,
+                    citations: insight.citations,
+                    confidence: insight.confidence,
+                  })),
+                }),
+              ]
+            : []),
+          settleBundlesOp(
+            [bundleId],
+            keepable.length > 0 ? "EXTRACTED" : "NO_INSIGHTS",
+          ),
+        ]);
+
+        return { insights: keepable.length };
       },
     );
   } catch (error) {
     if (!hasAppErrorCode(error, "PAYMENT_REQUIRED")) throw error;
-    // Not terminal, so no prune and no `processedAt`.
-    await db.knowledgeBundle.update({
-      where: { id: bundleId },
-      data: { outcome: "UNFUNDED", failureReason: null },
-    });
+    await markUnfunded(bundleId);
     return { insights: 0 };
   }
-
-  const reply = parseJsonReply(raw, extractReply);
-  // Same call as triage makes: an unreadable reply is a transient failure, not
-  // a verdict. Settling it would prune the conversation over a stray token.
-  if (!reply) throw new Error("Knowledge extraction returned no usable JSON.");
-  const keepable = keepableInsights(reply, content, topicAt);
-
-  // One transaction: content is only pruned once the claims read out of it are
-  // safely stored, and a re-collected pull request replaces its own claims
-  // rather than filing them twice.
-  await db.$transaction([
-    ...(keepable.length > 0
-      ? [
-          db.knowledgeInsight.deleteMany({ where: { bundleId } }),
-          db.knowledgeInsight.createMany({
-            data: keepable.map((insight) => ({
-              organizationId,
-              bundleId,
-              topicId: insight.topicId,
-              claim: insight.claim,
-              citations: insight.citations,
-              confidence: insight.confidence,
-            })),
-          }),
-        ]
-      : []),
-    db.knowledgeBundle.update({
-      where: { id: bundleId },
-      data: {
-        outcome: keepable.length > 0 ? "EXTRACTED" : "NO_INSIGHTS",
-        processedAt: new Date(),
-        content: Prisma.DbNull,
-        // A retry that got through clears what the attempt before it recorded.
-        failureReason: null,
-      },
-    }),
-  ]);
-
-  return { insights: keepable.length };
 }

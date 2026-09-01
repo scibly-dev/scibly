@@ -11,7 +11,7 @@ import {
   type FetchWebPageResult,
   LOG_PREFIX,
 } from "@/features/integrations/server/fetch-web-page";
-import { toSourcePassage } from "@/features/notebook/server";
+import { toSourcePassage } from "@/shared/ai/server/source-passage";
 
 const fetchWebPageInputSchema = z.object({
   url: z.string().url().describe("The public HTTP or HTTPS URL to fetch."),

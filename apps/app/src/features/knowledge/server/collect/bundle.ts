@@ -53,10 +53,7 @@ const overshootChars = (content: BundleContent) =>
 const cutTo = (text: string, chars: number) =>
   text.length <= chars ? text : `${text.slice(0, Math.max(chars - 1, 0))}…`;
 
-/**
- * Cut order when over the cap: body first, then shallowest threads, then
- * comments — the deep back-and-forth is the material being mined.
- */
+/** Cut order: body, then shallowest threads — the deep back-and-forth is the material. */
 export function buildBundleContent(detail: PullRequestDetail) {
   const threads = detail.threads.map((thread) => ({
     path: thread.path,
@@ -74,7 +71,6 @@ export function buildBundleContent(detail: PullRequestDetail) {
     threads,
   };
 
-  // The query caps the file listing, so the provider is the one who knows.
   let truncated = detail.filesTruncated;
 
   const bodyOvershoot = overshootChars(content);

@@ -189,10 +189,8 @@ export const knowledgeTopicProcedures = {
               await inngest.send(events);
             },
           );
-          // Collecting is only half a sync. A pull request already collected but
-          // never read — the funnel failed, an event was dropped — is what
-          // someone pressing this again is usually trying to fix, and waiting
-          // for the nightly sweep is not an answer.
+          // A pull request collected but never read is what pressing this again
+          // is usually trying to fix; the nightly sweep is not an answer.
           const waiting = await unreadBundles(organizationId, repositoryIds);
           if (waiting.length > 0) {
             await inngest.send(triageEvents(organizationId, waiting));

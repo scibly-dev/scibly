@@ -38,6 +38,11 @@ CREATE INDEX "knowledge_bundle_org_unprocessed_idx" ON "knowledge_bundle"("organ
 -- CreateIndex
 CREATE INDEX "knowledge_insight_topic_status_idx" ON "knowledge_insight"("topicId", "status", "createdAt" DESC);
 
+-- CreateIndex
+-- Every extraction clears the bundle's previous claims before writing new ones,
+-- and Postgres does not index a foreign key on its own.
+CREATE INDEX "knowledge_insight_bundle_idx" ON "knowledge_insight"("bundleId");
+
 -- AddForeignKey
 ALTER TABLE "knowledge_insight" ADD CONSTRAINT "knowledge_insight_organizationId_fkey" FOREIGN KEY ("organizationId") REFERENCES "organization"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
