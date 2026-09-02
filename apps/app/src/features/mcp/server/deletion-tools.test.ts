@@ -139,6 +139,7 @@ type ToolArgs = {
   sceneIds?: string[];
   lessonIds?: string[];
   reason?: string;
+  confirmationToken?: string;
 };
 
 type Tool = (args: never, ctx: unknown) => Promise<ToolResult>;
@@ -173,12 +174,23 @@ function call(
   });
 }
 
+/** A 2025-era client: no capability envelope reaches the handler at all. */
+function callLegacy(name: string, args: ToolArgs) {
+  const tool = tools.get(name);
+  if (!tool) throw new Error(`${name} was never registered`);
+  return tool(args as never, {
+    mcpReq: { inputResponses: undefined, requestState: () => undefined },
+  });
+}
+
 function output(result: ToolResult) {
   return JSON.parse(result.content![0]!.text) as {
     success: boolean;
     message: string;
     missingSceneIds?: string[];
     missingLessonIds?: string[];
+    needsConfirmation?: boolean;
+    confirmationToken?: string;
   };
 }
 
@@ -285,8 +297,8 @@ describe("deleteScenes", () => {
     expect(output(result)).toEqual({
       success: false,
       message:
-        "This approval was given for a different set of items, so nothing was deleted. " +
-        "Call the tool again with what you actually mean to remove, and the author will be asked about that.",
+        "This approval was given for a different request, so nothing was deleted. " +
+        "Call the tool again with what you actually mean, and the author will be asked about that.",
     });
   });
 
@@ -489,8 +501,8 @@ describe("deleteCourse", () => {
     expect(output(result)).toEqual({
       success: false,
       message:
-        "This approval was given for a different set of items, so nothing was deleted. " +
-        "Call the tool again with what you actually mean to remove, and the author will be asked about that.",
+        "This approval was given for a different request, so nothing was deleted. " +
+        "Call the tool again with what you actually mean, and the author will be asked about that.",
     });
   });
 
@@ -503,5 +515,77 @@ describe("deleteCourse", () => {
 
     expect(deleteCourse).not.toHaveBeenCalled();
     expect(output(result).success).toBe(false);
+  });
+});
+
+describe("a client that cannot be elicited", () => {
+  const args = { courseId: "course-1", sceneIds: ["scene-1", "scene-2"] };
+
+  it("D9: gets the same summary to put in front of the author, and nothing is deleted yet", async () => {
+    const answer = output(await callLegacy("deleteScenes", args));
+
+    expect(deleteDraftScenes).not.toHaveBeenCalled();
+    expect(answer.success).toBe(false);
+    expect(answer.needsConfirmation).toBe(true);
+    expect(answer.message).toContain(
+      'Permanently delete 2 scenes from "Photosynthesis"?',
+    );
+    expect(answer.confirmationToken).toBeTruthy();
+  });
+
+  it("D9: deletes on the second call, once the token comes back", async () => {
+    const first = output(await callLegacy("deleteScenes", args));
+    const second = await callLegacy("deleteScenes", {
+      ...args,
+      confirmationToken: first.confirmationToken,
+    });
+
+    expect(output(second).success).toBe(true);
+    expect(deleteDraftScenes).toHaveBeenCalledWith("user-1", [
+      "scene-1",
+      "scene-2",
+    ]);
+  });
+
+  it("D10: a token approved for two scenes does not delete a third", async () => {
+    const first = output(await callLegacy("deleteScenes", args));
+    const result = await callLegacy("deleteScenes", {
+      courseId: "course-1",
+      sceneIds: ["scene-1", "scene-2", "scene-3"],
+      confirmationToken: first.confirmationToken,
+    });
+
+    expect(deleteDraftScenes).not.toHaveBeenCalled();
+    expect(output(result).success).toBe(false);
+    expect(output(result).message).toContain("a different request");
+  });
+
+  it("D10: nor does one minted for another tool", async () => {
+    const first = output(await callLegacy("deleteScenes", args));
+    const result = await callLegacy("deleteLessons", {
+      courseId: "course-1",
+      lessonIds: ["lesson-1"],
+      confirmationToken: first.confirmationToken,
+    });
+
+    expect(deleteDraftLessons).not.toHaveBeenCalled();
+    expect(output(result).success).toBe(false);
+  });
+
+  it("D11: the whole-course delete is gated the same way", async () => {
+    const first = output(
+      await callLegacy("deleteCourse", { courseId: "course-1" }),
+    );
+    expect(deleteCourse).not.toHaveBeenCalled();
+    expect(first.needsConfirmation).toBe(true);
+    expect(first.message).toContain("12 enrolled learners");
+
+    const second = await callLegacy("deleteCourse", {
+      courseId: "course-1",
+      confirmationToken: first.confirmationToken,
+    });
+
+    expect(output(second).success).toBe(true);
+    expect(deleteCourse).toHaveBeenCalledWith("user-1", "course-1");
   });
 });

@@ -638,16 +638,34 @@ describe("asking the author for approval over the wire", () => {
     expect(updateCourse).not.toHaveBeenCalled();
   });
 
-  it("PUB5: answers a 2025-era client in words, since it can never be asked", async () => {
-    const { body } = await post(
+  it("PUB5: walks a 2025-era client through two calls, since it can never be elicited", async () => {
+    const first = await post(
       rpc("tools/call", SET_PUBLIC),
       fakeCaller().caller,
     );
 
-    const output = JSON.parse(body.result.content[0].text);
-    expect(output.success).toBe(false);
-    expect(output.message).toContain("cannot be asked");
+    const asked = JSON.parse(first.body.result.content[0].text);
+    expect(asked.success).toBe(false);
+    expect(asked.needsConfirmation).toBe(true);
+    expect(asked.message).toContain("public");
+    expect(asked.confirmationToken).toBe(
+      JSON.stringify(["setCoursePublic", "course-1", ["true"]]),
+    );
     expect(updateCourse).not.toHaveBeenCalled();
+
+    const second = await post(
+      rpc("tools/call", {
+        ...SET_PUBLIC,
+        arguments: {
+          ...SET_PUBLIC.arguments,
+          confirmationToken: asked.confirmationToken,
+        },
+      }),
+      fakeCaller().caller,
+    );
+
+    expect(JSON.parse(second.body.result.content[0].text).success).toBe(true);
+    expect(updateCourse).toHaveBeenCalledTimes(1);
   });
 });
 

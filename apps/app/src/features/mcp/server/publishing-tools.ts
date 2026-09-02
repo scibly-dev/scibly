@@ -15,19 +15,10 @@ import {
   EMBED_LANGUAGE_AUTO,
 } from "@/features/learning/contracts";
 
-import { approval, type ApprovalRefusals, approvalToken } from "./approval";
+import { registerApprovedTool } from "./approval";
 import { readable, text } from "./tool-response";
 
 const courseIdSchema = z.string().describe("The ID of the course.");
-
-const REFUSALS: ApprovalRefusals = {
-  cancelled:
-    "The author did not answer; nothing changed. Ask again if this still needs doing.",
-  declined: "The author declined. Nothing changed.",
-  mismatched:
-    "This approval was given for a different change, so nothing changed. " +
-    "Call the tool again with what you actually mean, and the author will be asked about that.",
-};
 
 export function registerPublishingTools(server: McpServer, userId: string) {
   server.registerTool(
@@ -119,14 +110,13 @@ export function registerPublishingTools(server: McpServer, userId: string) {
     },
   );
 
-  server.registerTool(
-    "setCoursePublic",
+  registerApprovedTool(
+    server,
     {
+      name: "setCoursePublic",
       description:
         "Turn public access to a course on or off. Public means anyone holding the link — or visiting a page carrying the embed — can open the course without signing in or being enrolled. " +
-        "This is what makes a getCourseEmbed snippet actually render, so it is the last step of publishing a course to the outside world. " +
-        "The calling client asks the author to approve before anything changes; never ask for that approval in plain text. " +
-        "A declined call comes back as success:false with nothing changed — an answer, not a failure, so do not call again.",
+        "This is what makes a getCourseEmbed snippet actually render, so it is the last step of publishing a course to the outside world.",
       inputSchema: z.object({
         courseId: courseIdSchema,
         isPublic: z
@@ -136,8 +126,9 @@ export function registerPublishingTools(server: McpServer, userId: string) {
           ),
       }),
       annotations: { idempotentHint: true },
+      undone: "nothing changed",
     },
-    async ({ courseId, isPublic }, ctx) => {
+    async ({ courseId, isPublic }) => {
       const course = await readable("setCoursePublic", () =>
         getCourse(userId, courseId),
       );
@@ -151,19 +142,19 @@ export function registerPublishingTools(server: McpServer, userId: string) {
         });
       }
 
-      const gate = approval(ctx, {
-        token: approvalToken("setCoursePublic", courseId, [String(isPublic)]),
-        refusals: REFUSALS,
+      return {
+        courseId,
+        ids: [String(isPublic)],
         message: isPublic
           ? `Make "${course.title}" public? Anyone with the link, and anyone visiting a page that embeds it, will be able to open the course without signing in or enrolling. This can be turned off again.`
           : `Make "${course.title}" private again? The public link will stop working, and any page already embedding this course will show "not publicly accessible" instead.`,
-      });
-      if (gate) return gate;
-
-      await readable("setCoursePublic", () =>
-        updateCourse(userId, { courseId, allowAnonymous: isPublic }),
-      );
-      return text({ success: true, courseId, isPublic });
+        run: async () => {
+          await readable("setCoursePublic", () =>
+            updateCourse(userId, { courseId, allowAnonymous: isPublic }),
+          );
+          return { success: true, courseId, isPublic };
+        },
+      };
     },
   );
 }
