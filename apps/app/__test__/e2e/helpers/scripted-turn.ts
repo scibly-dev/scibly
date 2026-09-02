@@ -96,8 +96,6 @@ export const compaction = (data: "summarizing" | "done" | "failed") => ({
  */
 export const asksToDeleteScene = (scene: {
   id: string;
-  title: string;
-  lessonId: string;
   courseId: string;
 }): TurnStep[] => [
   {
@@ -107,9 +105,7 @@ export const asksToDeleteScene = (scene: {
     input: {
       courseId: scene.courseId,
       reason: "Diese Szene wiederholt die vorherige.",
-      scenes: [
-        { sceneId: scene.id, title: scene.title, lessonId: scene.lessonId },
-      ],
+      sceneIds: [scene.id],
     },
   },
   { type: "tool-approval-request", approvalId: "appr-1", toolCallId: "call-1" },
