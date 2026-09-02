@@ -48,7 +48,7 @@ export const COURSE_TOOL_METADATA = {
   deleteLessons: {
     iconId: "edit",
     getStepPresentation: ({ input, isDone }) => {
-      const count = input.lessons?.length;
+      const count = input.lessonIds?.length;
       return {
         label: isDone ? "Removed lessons" : "Removing lessons",
         detail:

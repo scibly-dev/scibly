@@ -10,7 +10,11 @@ import {
   getNotebookSkills,
 } from "@/features/notebook/server";
 
+import { registerCourseTools } from "./course-tools";
+import { registerDeletionTools } from "./deletion-tools";
+import { registerPublishingTools } from "./publishing-tools";
 import { registerSceneContentTools } from "./scene-content-tools";
+import { text } from "./tool-response";
 import { MCP_TOOL_NAMES, mcpToolInput } from "./tool-surface";
 
 /** MCP has no transcript, so a tool that actually streams needs a real writer before it is allow-listed. */
@@ -54,10 +58,7 @@ export async function handleMcpRequest(
   grant: McpGrant,
 ): Promise<Response> {
   const registry: ToolSet = await buildToolRegistry(
-    // No organization: the agent names one per call, the way it names a course
-    // or a lesson, and every tool that takes one authorizes it for this user.
     { caller: grant.caller, session: grant.session, dataStream: NO_STREAM },
-    // `loadSkill` names the available skills in its own input schema.
     await getNotebookSkills(),
   );
 
@@ -81,12 +82,15 @@ export async function handleMcpRequest(
           messages: [],
           context: undefined,
         });
-        return { content: [{ type: "text", text: JSON.stringify(output) }] };
+        return text(output);
       },
     );
   }
 
   registerSceneContentTools(server, grant.session.user);
+  registerCourseTools(server, grant.session.user.id);
+  registerDeletionTools(server, grant.session.user.id);
+  registerPublishingTools(server, grant.session.user.id);
 
   return createMcpHandler(() => server, { legacy: "stateless" }).fetch(request);
 }

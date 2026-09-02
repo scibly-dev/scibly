@@ -28,7 +28,7 @@ const PENDING_APPROVAL: Part = {
   type: "tool-deleteLessons",
   toolCallId: "call-delete",
   state: "approval-requested",
-  input: { courseId: "course-1", lessons: [] },
+  input: { courseId: "course-1", lessonIds: ["lesson-1"] },
   approval: { id: "approval-1" },
 };
 

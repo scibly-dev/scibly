@@ -89,7 +89,7 @@ function approvalRequested(): Part {
     type: "tool-deleteLessons",
     toolCallId: "call-delete",
     state: "approval-requested",
-    input: { courseId: "course-1", lessons: [] },
+    input: { courseId: "course-1", lessonIds: ["lesson-1"] },
     approval: { id: "approval-1" },
   };
 }
@@ -99,7 +99,7 @@ function approvalAnswered(): Part {
     type: "tool-deleteLessons",
     toolCallId: "call-delete",
     state: "output-available",
-    input: { courseId: "course-1", lessons: [] },
+    input: { courseId: "course-1", lessonIds: ["lesson-1"] },
     approval: { id: "approval-1", approved: true },
     output: {
       success: true,

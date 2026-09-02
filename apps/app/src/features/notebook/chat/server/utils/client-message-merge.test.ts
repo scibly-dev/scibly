@@ -15,7 +15,7 @@ type Part = NotebookMessage["parts"][number];
 
 const DELETE_LESSONS_INPUT = {
   courseId: "course-1",
-  lessons: [{ lessonId: "lesson-1", title: "Photosynthesis" }],
+  lessonIds: ["lesson-1"],
 };
 
 function approvalRequested(toolCallId = "call-delete"): Part {
@@ -65,14 +65,7 @@ function deletionClaimedDone(toolCallId = "call-delete"): Part {
 
 const DELETE_SCENES_INPUT = {
   courseId: "course-1",
-  scenes: [
-    {
-      sceneId: "scene-1",
-      title: "Cell structure",
-      lessonId: "lesson-1",
-      lessonTitle: "Photosynthesis",
-    },
-  ],
+  sceneIds: ["scene-1"],
 };
 
 // The merge branches on `state`, never on tool name, so every approval-gated
@@ -364,10 +357,7 @@ describe("what a client may say about a call the server issued", () => {
       state: "approval-responded",
       input: {
         courseId: "course-1",
-        lessons: [
-          { lessonId: "lesson-1", title: "Photosynthesis" },
-          { lessonId: "lesson-2", title: "Respiration" },
-        ],
+        lessonIds: ["lesson-1", "lesson-2"],
       },
       approval: { id: "approval-1", approved: true },
     };
@@ -386,7 +376,7 @@ describe("what a client may say about a call the server issued", () => {
       toolCallId: "call-delete",
       state: "approval-responded",
       input: {
-        lessons: [{ title: "Photosynthesis", lessonId: "lesson-1" }],
+        lessonIds: ["lesson-1"],
         courseId: "course-1",
       },
       approval: { id: "approval-1", approved: true },

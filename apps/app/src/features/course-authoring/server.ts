@@ -11,6 +11,7 @@ export {
   getCourseDashboardAnalytics,
   getCourseStats,
 } from "./analytics/server/analytics";
+export { updateCourseSchema } from "./courses/api/course.schema";
 export {
   getCoursePreview,
   getPreviewSceneContent,
@@ -23,6 +24,14 @@ export {
   listCourses,
   updateCourse,
 } from "./courses/server/courses";
+export {
+  deletionIdsSchema,
+  deletionReasonSchema,
+} from "./deletion/api/deletion.schema";
+export {
+  resolveLessonDeletion,
+  resolveSceneDeletion,
+} from "./deletion/server/deletion-resolvers";
 export {
   enrollCourseMembers,
   listAvailableMembers,
@@ -60,7 +69,6 @@ export {
 } from "./scenes/server/scene-mutations";
 export { reorderDraftScenes } from "./scenes/server/scene-ordering";
 export {
-  getDeletionNavigationContext,
   getSceneContent,
   getSceneLineage,
   getSceneLocation,

@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-// The collaborative writer is mocked; these tests cover only the routing —
-// which failures are the caller's to fix, and what a refused write leaves behind.
+// The collaborative writer is mocked, so only the routing is covered.
 
 const db = vi.hoisted(() => ({
   scene: { update: vi.fn() },

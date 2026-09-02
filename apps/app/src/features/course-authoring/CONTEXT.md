@@ -81,6 +81,14 @@ would — never anything published, never the notebook's conversation — and wh
 it writes cites no sources, so freshness never watches it.
 _Avoid_: MCP client, bot, integration, service account
 
+**Approval**:
+The author's yes that stands between an agent asking to delete and the deletion
+happening. Asked one act at a time, never given by the agent, and never implied
+by the instruction that led to it — an author who said "tidy this up" has not
+approved whatever tidying turns out to mean. Said only of deletion.
+_Avoid_: confirmation, consent, permission (organizations' word, and about what
+a role may do at all rather than about this one act)
+
 ### What a published scene is made of
 
 **Author document**:

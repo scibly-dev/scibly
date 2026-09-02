@@ -261,7 +261,7 @@ describe("folding the conversation", () => {
       type: "tool-deleteLessons",
       toolCallId: "call-1",
       state: "output-available",
-      input: { courseId: "course-1", lessons: [] },
+      input: { courseId: "course-1", lessonIds: ["lesson-1"] },
       output: {
         success: true,
         courseId: "course-1",

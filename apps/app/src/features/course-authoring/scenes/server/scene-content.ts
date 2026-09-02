@@ -41,10 +41,6 @@ export async function updateDraftScene(
   return { ...mapAuthoringScene(updated), courseId: scene.lesson.courseId };
 }
 
-/**
- * The one write path for scene content — editor agent tools, generated media,
- * external agents over MCP — so validation, size limits and normalization run once.
- */
 export async function writeSceneContent(
   user: SceneUser,
   input: { sceneId: string; html: string; mode?: SceneWriteMode },
@@ -68,8 +64,7 @@ async function applySceneHtml(
   const result = await writeSceneHtml({ sceneId, html, mode, user });
   if (result.success) return;
 
-  // Content the editor would not accept is the caller's to fix; a write that
-  // never reached the room is ours.
+  // Content the editor would not accept is the caller's to fix; a write that never reached the room is ours.
   throw result.refused
     ? new AppError({
         code: "BAD_REQUEST",

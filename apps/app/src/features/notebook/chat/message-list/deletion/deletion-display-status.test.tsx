@@ -1,6 +1,7 @@
 import type {
   DeletionDisplayStatus,
   DeletionInvocation,
+  DeletionResolution,
 } from "./deletion.types";
 
 import { render, screen } from "@testing-library/react";
@@ -9,10 +10,19 @@ import { describe, expect, it, vi } from "vitest";
 import { notebookTranslations } from "../__tests__/scripted-chat";
 import { DeletionConfirmationCard } from "./deletion-confirmation-card";
 
-// One card per status, so only what the status draws is real here: the
-// approval round trip has its own suite, and navigation has nothing to say
-// about a card that is only being read.
 const approval = { isResponding: false, localError: null as string | null };
+
+const RESOLVED: DeletionResolution = {
+  courseTitle: "Biology",
+  items: [{ id: "scene-1", title: "Intro" }],
+};
+
+const lookup = {
+  isResolving: false,
+  resolution: RESOLVED as DeletionResolution | null,
+};
+
+const bounced = vi.fn();
 
 vi.mock("./use-deletion-approval", () => ({
   useDeletionApproval: () => ({
@@ -22,15 +32,19 @@ vi.mock("./use-deletion-approval", () => ({
     isResponding: approval.isResponding,
     localError: approval.localError,
   }),
+  useBounceUnresolvedDeletion: (
+    _invocation: DeletionInvocation,
+    isUnresolved: boolean,
+  ) => {
+    if (isUnresolved) bounced();
+  },
 }));
 
-vi.mock("./use-deletion-navigation-context", () => ({
-  useDeletionNavigationContext: () => ({
-    courseId: "course-1",
-    courseTitle: undefined,
-    focusLesson: undefined,
+vi.mock("./use-deletion-resolution", () => ({
+  useDeletionResolution: () => ({
+    isResolving: lookup.isResolving,
+    resolution: lookup.resolution,
     isCourseOpenInBuilder: true,
-    isNavigationLoading: false,
   }),
 }));
 
@@ -43,7 +57,7 @@ function invocation(status: DeletionDisplayStatus): DeletionInvocation {
   return {
     key: "deletion-0",
     kind: "scene",
-    items: [{ id: "scene-1", title: "Intro" }],
+    ids: ["scene-1"],
     courseId: "course-1",
     approval: { approvalId: "approval-1", toolCallId: "call-1" },
     partIndex: 0,
@@ -54,10 +68,14 @@ function invocation(status: DeletionDisplayStatus): DeletionInvocation {
 
 function renderStatus(
   status: DeletionDisplayStatus,
-  overrides: Partial<typeof approval> = {},
+  overrides: Partial<typeof approval & typeof lookup> = {},
 ) {
   approval.isResponding = overrides.isResponding ?? false;
   approval.localError = overrides.localError ?? null;
+  lookup.isResolving = overrides.isResolving ?? false;
+  lookup.resolution =
+    overrides.resolution === undefined ? RESOLVED : overrides.resolution;
+  bounced.mockClear();
   return render(
     <DeletionConfirmationCard invocation={invocation(status)} t={t} />,
   );
@@ -105,5 +123,19 @@ describe("every deletion status draws exactly one thing", () => {
   it("a deletion that landed stays deleted even if a later call failed", () => {
     renderStatus("deleted", { localError: "Network unavailable." });
     expect(screen.queryByText(cb.deletionSceneCompleted)).not.toBeNull();
+  });
+
+  it("a card still looking up its names holds the in-flight banner", () => {
+    renderStatus("awaiting-approval", { isResolving: true });
+    expect(screen.queryByText(cb.deletionProcessing)).not.toBeNull();
+    expect(screen.queryByText(cb.confirmDelete)).toBeNull();
+  });
+
+  it("names that never resolved draw nothing and go back to the model", () => {
+    const { container } = renderStatus("awaiting-approval", {
+      resolution: null,
+    });
+    expect(container.innerHTML).toBe("");
+    expect(bounced).toHaveBeenCalled();
   });
 });

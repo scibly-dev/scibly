@@ -2,6 +2,8 @@ import { z } from "zod";
 
 import { updateSceneUpdatesSchema } from "@/shared/content/course/scene-validation";
 
+import { deletionIdsSchema } from "../../deletion/api/deletion.schema";
+
 const sourceIdsSchema = z
   .array(z.string())
   .min(1)
@@ -65,11 +67,11 @@ export const getSceneContentSchema = z.object({
 });
 
 export const deleteSceneSchema = z.object({
-  sceneIds: z.array(z.string()).min(1).max(30),
+  sceneIds: deletionIdsSchema,
 });
 
-export const getDeletionNavigationContextSchema = z.object({
-  sceneIds: z.array(z.string()).min(1).max(30),
+export const resolveSceneDeletionSchema = z.object({
+  sceneIds: deletionIdsSchema,
 });
 
 export const cloneSceneSchema = z.object({

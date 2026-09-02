@@ -99,7 +99,7 @@ export const EDITOR_TOOL_METADATA = {
   deleteScenes: {
     iconId: "edit",
     getStepPresentation: ({ input, isDone }) => {
-      const count = input.scenes?.length;
+      const count = input.sceneIds?.length;
       return {
         label: isDone ? "Removed lesson scenes" : "Removing lesson scenes",
         detail:

@@ -7,9 +7,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { handleMcpRequest, jsonRpcError, mcpUnauthorized } from "./handler";
 import { MCP_TOOL_NAMES } from "./tool-surface";
 
-// The content tools are the one pair the registry cannot supply, so their
-// collaborators are doubled here: the scene content query, the collab room (its
-// own test file boots a real server against it) and the scene access policy.
+// The content tools are the one pair the registry cannot supply, so their collaborators are doubled here.
 const getSceneContent = vi.hoisted(() => vi.fn());
 const writeSceneHtml = vi.hoisted(() => vi.fn());
 const requireDraftSceneContentAccess = vi.hoisted(() => vi.fn());
@@ -35,7 +33,18 @@ vi.mock(
   }),
 );
 
-/** A draft scene the author may write to. */
+const updateCourse = vi.hoisted(() => vi.fn(async () => ({ id: "course-1" })));
+
+vi.mock("@/features/course-authoring/server", async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  updateCourse,
+  getCourse: async () => ({
+    title: "Spotting phishing",
+    allowAnonymous: false,
+    versions: [{ version: 1 }],
+  }),
+}));
+
 function draftScene() {
   requireDraftSceneContentAccess.mockResolvedValue({
     lesson: { course: { organizationId: "org-1" } },
@@ -44,7 +53,6 @@ function draftScene() {
 
 const COURSES = { items: [{ id: "course-1", title: "Spotting phishing" }] };
 
-/** The tools' own procedures are doubled, nothing between them is. */
 function fakeCaller() {
   const list = vi.fn(async () => COURSES);
   const courses = new Map<string, { id: string; title: string }>(
@@ -138,12 +146,17 @@ function fakeCaller() {
   };
 }
 
-async function post(body: unknown, caller: TrpcCaller) {
+async function post(
+  body: unknown,
+  caller: TrpcCaller,
+  headers: Record<string, string> = {},
+) {
   const request = new Request("https://app.scibly.com/api/mcp", {
     method: "POST",
     headers: {
       "content-type": "application/json",
       accept: "application/json, text/event-stream",
+      ...headers,
     },
     body: JSON.stringify(body),
   });
@@ -156,7 +169,6 @@ async function post(body: unknown, caller: TrpcCaller) {
   return { response, body: await readRpc(response) };
 }
 
-/** A 2025-era exchange comes back as one SSE frame; a modern one as plain JSON. */
 async function readRpc(response: Response) {
   const text = await response.text();
   const frame = text.match(/^data: (.*)$/m);
@@ -171,14 +183,17 @@ const rpc = (method: string, params?: unknown) => ({
 });
 
 describe("the tool surface an external agent sees", () => {
-  // Spelled out rather than compared to MCP_TOOL_NAMES: a test that reads the
-  // allow-list cannot notice the allow-list is missing a tool.
+  // Spelled out rather than compared to MCP_TOOL_NAMES, which cannot notice itself missing a tool.
   const EXPECTED_SURFACE = [
     "createCourse",
     "createLesson",
     "createScene",
+    "deleteCourse",
+    "deleteLessons",
+    "deleteScenes",
     "getAvailableMembers",
     "getCourseById",
+    "getCourseEmbed",
     "getCourseStats",
     "getDashboardStats",
     "getEditorSchema",
@@ -194,8 +209,11 @@ describe("the tool surface an external agent sees", () => {
     "listMyOrganizations",
     "listScenes",
     "loadSkill",
+    "publishCourse",
     "reorderLessons",
     "reorderScenes",
+    "setCoursePublic",
+    "updateCourse",
     "updateLesson",
     "updateScene",
   ];
@@ -206,19 +224,33 @@ describe("the tool surface an external agent sees", () => {
     expect(
       body.result.tools.map((tool: { name: string }) => tool.name).sort(),
     ).toEqual(EXPECTED_SURFACE);
-    // The content tools are registered beside the allow-list, not from it.
     expect(
-      [...MCP_TOOL_NAMES, "getSceneContent", "insertContent"].sort(),
+      [
+        ...MCP_TOOL_NAMES,
+        "getSceneContent",
+        "insertContent",
+        "deleteScenes",
+        "deleteLessons",
+        "deleteCourse",
+        "updateCourse",
+        "publishCourse",
+        "getCourseEmbed",
+        "setCoursePublic",
+      ].sort(),
     ).toEqual(EXPECTED_SURFACE);
   });
 
-  it("MCP3: withholds the delete tools an author has to confirm in person", async () => {
+  it("MCP3: marks the delete tools destructive, since approval is the client's to ask (ADR 0006)", async () => {
     const { body } = await post(rpc("tools/list"), fakeCaller().caller);
 
-    const names = body.result.tools.map((tool: { name: string }) => tool.name);
+    const deletes = body.result.tools.filter((tool: { name: string }) =>
+      tool.name.startsWith("delete"),
+    );
 
-    expect(names).not.toContain("deleteScenes");
-    expect(names).not.toContain("deleteLessons");
+    expect(deletes).toHaveLength(3);
+    for (const tool of deletes) {
+      expect(tool.annotations?.destructiveHint).toBe(true);
+    }
   });
 
   it("MCP4: takes scene content through the content tool and nowhere else", async () => {
@@ -248,8 +280,6 @@ describe("the tool surface an external agent sees", () => {
   });
 
   it("MCP1: lets an agent name the organization, and name the ones it may", async () => {
-    // The endpoint names no organization, so an agent passes one per call, the
-    // way the in-app agent does; the procedure behind each tool authorizes it.
     const { body } = await post(rpc("tools/list"), fakeCaller().caller);
 
     const tools: { name: string; inputSchema: { properties?: object } }[] =
@@ -294,8 +324,6 @@ describe("calling a tool over MCP", () => {
       caller,
     );
 
-    // Nothing is substituted on the way through: `course.list` refuses an
-    // organization this user is not a member of, exactly as it does in the app.
     expect(list).toHaveBeenCalledWith(
       expect.objectContaining({ orgSlug: "rival" }),
     );
@@ -468,7 +496,10 @@ describe("calling a tool over MCP", () => {
 
   it("MCP1: does not expose a tool that was left off the surface", async () => {
     const { body } = await post(
-      rpc("tools/call", { name: "deleteCourse", arguments: { courseId: "c" } }),
+      rpc("tools/call", {
+        name: "setSceneLineage",
+        arguments: { sceneId: "scene-1", sourceIds: ["source-1"] },
+      }),
       fakeCaller().caller,
     );
 
@@ -570,6 +601,53 @@ describe("writing and reading scene content from outside", () => {
 
     expect(body.result.isError).toBe(true);
     expect(body.result.content[0].text).toContain("quiz");
+  });
+});
+
+describe("asking the author for approval over the wire", () => {
+  const MODERN_HEADERS = {
+    "mcp-protocol-version": "2026-07-28",
+    "mcp-method": "tools/call",
+    "mcp-name": "setCoursePublic",
+  };
+
+  const MODERN_ENVELOPE = {
+    "io.modelcontextprotocol/protocolVersion": "2026-07-28",
+    "io.modelcontextprotocol/clientCapabilities": { elicitation: {} },
+  };
+
+  const SET_PUBLIC = {
+    name: "setCoursePublic",
+    arguments: { courseId: "course-1", isPublic: true },
+  };
+
+  beforeEach(() => updateCourse.mockClear());
+
+  it("PUB5: hands a 2026-era client the elicitation to show its author", async () => {
+    const { body } = await post(
+      rpc("tools/call", { ...SET_PUBLIC, _meta: MODERN_ENVELOPE }),
+      fakeCaller().caller,
+      MODERN_HEADERS,
+    );
+
+    expect(body.result.resultType).toBe("input_required");
+    expect(body.result.inputRequests.confirm.method).toBe("elicitation/create");
+    expect(body.result.requestState).toBe(
+      JSON.stringify(["setCoursePublic", "course-1", ["true"]]),
+    );
+    expect(updateCourse).not.toHaveBeenCalled();
+  });
+
+  it("PUB5: answers a 2025-era client in words, since it can never be asked", async () => {
+    const { body } = await post(
+      rpc("tools/call", SET_PUBLIC),
+      fakeCaller().caller,
+    );
+
+    const output = JSON.parse(body.result.content[0].text);
+    expect(output.success).toBe(false);
+    expect(output.message).toContain("cannot be asked");
+    expect(updateCourse).not.toHaveBeenCalled();
   });
 });
 

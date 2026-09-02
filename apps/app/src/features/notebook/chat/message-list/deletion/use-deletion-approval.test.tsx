@@ -4,7 +4,7 @@ import type {
   AgentDeleteScenesInput,
 } from "@/features/notebook/chat/tools/deletion-schemas";
 import type { ScriptedChat } from "../__tests__/scripted-chat";
-import type { DeletionInvocation } from "./deletion.types";
+import type { DeletionInvocation, DeletionResolution } from "./deletion.types";
 
 import { act, waitFor } from "@testing-library/react";
 import { useEffect } from "react";
@@ -16,7 +16,7 @@ import { renderScripted, scriptChat } from "../__tests__/scripted-chat";
 import { getDeletionInvocations } from "./deletion-utils";
 import { useDeletionApproval } from "./use-deletion-approval";
 
-// The approval round trip is the thing under test — the card answers a real `tool-approval-request` and the runtime decides on its own whether the turn continues; only the network (the transport and the two mutations) is faked.
+// Only the network is faked: the transport and the two mutations.
 
 const { deleteScene, deleteLesson, applyCourseBuilderDeletionEffects } =
   vi.hoisted(() => ({
@@ -50,25 +50,26 @@ const KEPT = "Left everything in place.";
 const SCENES: AgentDeleteScenesInput = {
   courseId: COURSE,
   reason: "Both scenes repeat the lesson intro.",
-  scenes: [
-    {
-      sceneId: "scene-1",
-      title: "Intro",
-      lessonId: "l1",
-      lessonTitle: "Lesson 1",
-    },
-    {
-      sceneId: "scene-2",
-      title: "Outro",
-      lessonId: "l1",
-      lessonTitle: "Lesson 1",
-    },
-  ],
+  sceneIds: ["scene-1", "scene-2"],
 };
 
 const LESSONS: AgentDeleteLessonsInput = {
   courseId: COURSE,
-  lessons: [{ lessonId: "lesson-1", title: "Cell division" }],
+  lessonIds: ["lesson-1"],
+};
+
+const SCENE_RESOLUTION: DeletionResolution = {
+  courseTitle: "Biology",
+  focusLesson: { id: "l1", title: "Lesson 1" },
+  items: [
+    { id: "scene-1", title: "Intro", subtitle: "Lesson 1", lessonId: "l1" },
+    { id: "scene-2", title: "Outro", subtitle: "Lesson 1", lessonId: "l1" },
+  ],
+};
+
+const LESSON_RESOLUTION: DeletionResolution = {
+  courseTitle: "Biology",
+  items: [{ id: "lesson-1", title: "Cell division" }],
 };
 
 function followUp(toolCall: { denied?: boolean } | undefined) {
@@ -101,29 +102,45 @@ type DeletionHandle = ReturnType<typeof useDeletionApproval>;
 
 function DeletionCard({
   invocation,
+  resolution,
   intoRef,
 }: {
   invocation: DeletionInvocation;
+  resolution: DeletionResolution | null;
   intoRef: { current: DeletionHandle };
 }) {
-  const handle = useDeletionApproval({ invocation, cb });
+  const handle = useDeletionApproval({ invocation, resolution, cb });
   useEffect(() => {
     intoRef.current = handle;
   });
   return null;
 }
 
-/**
- * Reads the invocation off the transcript the way the real card does, so every
- * state the assertions rely on is one the runtime actually produced.
- */
-function DeletionGate({ intoRef }: { intoRef: { current: DeletionHandle } }) {
+function DeletionGate({
+  intoRef,
+  resolution,
+}: {
+  intoRef: { current: DeletionHandle };
+  resolution?: DeletionResolution | null;
+}) {
   const { messages } = useNotebookState();
   const invocation = messages.flatMap((message) =>
     getDeletionInvocations(message),
   )[0];
   if (!invocation) return null;
-  return <DeletionCard invocation={invocation} intoRef={intoRef} />;
+  return (
+    <DeletionCard
+      invocation={invocation}
+      resolution={
+        resolution === undefined
+          ? invocation.kind === "scene"
+            ? SCENE_RESOLUTION
+            : LESSON_RESOLUTION
+          : resolution
+      }
+      intoRef={intoRef}
+    />
+  );
 }
 
 function deletionPart(messages: NotebookMessage[]) {
@@ -143,12 +160,15 @@ function transcriptText(messages: NotebookMessage[]) {
     .join(" ");
 }
 
-async function openCard(chat: ScriptedChat) {
+async function openCard(
+  chat: ScriptedChat,
+  resolution?: DeletionResolution | null,
+) {
   const handle = { current: null as unknown as DeletionHandle };
   const onToolOutput = vi.fn();
   const view = renderScripted(chat, {
     onToolOutput,
-    children: <DeletionGate intoRef={handle} />,
+    children: <DeletionGate intoRef={handle} resolution={resolution} />,
   });
 
   await act(async () => {
@@ -344,19 +364,14 @@ describe("a deletion the server refuses", () => {
     });
   });
 
-  it("a lesson deletion with no course to run against is an error, not silence", async () => {
-    const view = await openCard(
-      lessonsTurn({ lessons: LESSONS.lessons } as AgentDeleteLessonsInput),
-    );
+  it("a deletion whose names never resolved cannot be approved at all", async () => {
+    const view = await openCard(scenesTurn(), null);
 
+    expect(view.handle.current.canRespond).toBe(false);
     await respond(view, true);
-    await waitForFollowUp(view, DONE);
 
-    expect(deleteLesson).not.toHaveBeenCalled();
-    expect(view.handle.current.localError).toContain("course");
-    expect(deletionPart(view.state.current.messages)).toMatchObject({
-      state: "output-error",
-    });
+    expect(deleteScene).not.toHaveBeenCalled();
+    expect(view.onToolOutput).not.toHaveBeenCalled();
   });
 });
 

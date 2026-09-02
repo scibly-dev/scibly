@@ -34,7 +34,15 @@ function parseDeletionPart(
 
   if (!part.input) return null;
 
-  const common = {
+  const { courseId, reason } = part.input;
+  // Transcripts written before deletions became ids-only carry no id list.
+  const ids =
+    part.type === "tool-deleteScenes"
+      ? part.input.sceneIds
+      : part.input.lessonIds;
+  if (!Array.isArray(ids) || ids.length === 0 || !courseId) return null;
+
+  return {
     key: `deletion-${partIndex}`,
     partIndex,
     approval: approvalId
@@ -42,55 +50,13 @@ function parseDeletionPart(
       : undefined,
     status: deletionStatus(part),
     errorText: part.state === "output-error" ? part.errorText : undefined,
-  };
-
-  if (part.type === "tool-deleteScenes") {
-    const { scenes, reason, courseId } = part.input;
-    if (!scenes.length) return null;
-
-    const firstSceneWithLesson = scenes.find((scene) => scene.lessonId);
-
-    return {
-      ...common,
-      kind: "scene",
-      items: scenes.map((scene) => ({
-        id: scene.sceneId,
-        title: scene.title,
-        subtitle: scene.lessonTitle,
-        lessonId: scene.lessonId,
-      })),
-      reason: reason?.trim() || undefined,
-      courseId,
-      focusLesson:
-        firstSceneWithLesson?.lessonId != null
-          ? {
-              id: firstSceneWithLesson.lessonId,
-              title: firstSceneWithLesson.lessonTitle,
-            }
-          : undefined,
-    };
-  }
-
-  const { lessons, reason, courseId } = part.input;
-  if (!lessons.length) return null;
-
-  return {
-    ...common,
-    kind: "lesson",
-    items: lessons.map((lesson) => ({
-      id: lesson.lessonId,
-      title: lesson.title,
-    })),
-    reason: reason?.trim() || undefined,
+    kind: part.type === "tool-deleteScenes" ? "scene" : "lesson",
+    ids,
     courseId,
-    focusLesson:
-      lessons.length === 1
-        ? { id: lessons[0]!.lessonId, title: lessons[0]!.title }
-        : undefined,
+    reason: reason?.trim() || undefined,
   };
 }
 
-// One card per tool call, never a merge of several, so what the author reads above Approve is the whole of what that click deletes — merging calls would mean consent to something unread.
 export function getDeletionInvocations(
   message?: NotebookMessage,
 ): DeletionInvocation[] {

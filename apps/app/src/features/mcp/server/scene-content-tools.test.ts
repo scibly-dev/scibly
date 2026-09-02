@@ -13,9 +13,7 @@ import {
   vi,
 } from "vitest";
 
-// Runs the composed content path for real — handler, access policy, content
-// query, headless writer, collab server — because the seam tests either side
-// double their neighbours, so nothing else catches the halves failing to meet.
+// Runs the composed content path for real, because the seam tests either side double their neighbours.
 
 const COLLAB_PORT = vi.hoisted(() => {
   process.env.COLLAB_WS_URL = "ws://127.0.0.1:4572";
@@ -30,8 +28,7 @@ vi.mock("@/features/course-authoring/access/server/policy", () => ({
   requireCourseEnrollment: vi.fn(),
 }));
 
-// The only thing keeping an agent out of another organization now that the
-// endpoint names none, so it answers for real rather than always saying yes.
+// Answers for real rather than always saying yes: it is the only thing keeping an agent out of another organization.
 vi.mock("@/features/organizations/server", async (importOriginal) => {
   const { AppError } = await import("@scibly/api/application-error");
   return {
@@ -57,7 +54,6 @@ vi.mock(
   }),
 );
 
-/** The one `scene` row, serving the collab server and the access policy both. */
 const row = vi.hoisted(() => ({
   documentState: null as Uint8Array | null,
   courseVersionId: null as string | null,
@@ -120,7 +116,6 @@ beforeEach(() => {
 
 type ToolOutput = { sceneId: string; html?: string; success?: boolean };
 
-/** Calls a tool the way an external agent does, over the wire format. */
 async function call(
   name: string,
   args: { html?: string; mode?: "replace" | "append" },
@@ -153,7 +148,6 @@ async function call(
     : { output: JSON.parse(text) as ToolOutput };
 }
 
-/** A second author with the scene open, connected the way the editor connects. */
 async function openAsAuthor() {
   const provider = new HocuspocusProvider({
     name: scene,
@@ -178,15 +172,11 @@ describe("an external agent working on a draft scene", () => {
     ).toEqual({ output: { sceneId: scene, success: true } });
 
     const read = await call("getSceneContent", {});
-    // No sourceIds: an external agent cannot write lineage back, and scenes it
-    // writes carry none (docs/adr/0005-external-scenes-carry-no-lineage.md).
     expect(read.output).toEqual({
       sceneId: scene,
       html: '<h2>Outline</h2><p style="display: block;">Hi</p>',
     });
 
-    // The write reached the author's own copy, which is the point of going
-    // through the room rather than the row.
     expect(author.document.getXmlFragment("default").toString()).toBe(
       '<heading level="2">Outline</heading><paragraph>Hi</paragraph>',
     );
@@ -224,8 +214,6 @@ describe("scenes an external agent must not reach", () => {
     expect((await call("insertContent", { html: "<p>x</p>" })).error).toContain(
       "published",
     );
-    // A published scene has no room behind it: the row is the frozen copy, and
-    // reading it is what an agent may do with it, as in the app.
     expect((await call("getSceneContent", {})).output).toEqual({
       sceneId: scene,
       html: "<p>Frozen</p>",

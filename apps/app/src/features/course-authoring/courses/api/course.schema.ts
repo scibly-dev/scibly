@@ -7,6 +7,8 @@ import {
 } from "@/shared/content/course/course-validation";
 import { lessonDescriptionSchema } from "@/shared/content/learning/lesson-description";
 
+import { deletionIdsSchema } from "../../deletion/api/deletion.schema";
+
 export const getCourseByIdSchema = z.object({ courseId: z.string() });
 
 export const listEnrollmentsSchema = z.object({
@@ -160,7 +162,11 @@ export const updateLessonOrderSchema = z.object({
 
 export const deleteLessonSchema = z.object({
   courseId: z.string(),
-  lessonIds: z.array(z.string()).min(1).max(30),
+  lessonIds: deletionIdsSchema,
+});
+
+export const resolveLessonDeletionSchema = z.object({
+  lessonIds: deletionIdsSchema,
 });
 
 export const deleteCourseSchema = z.object({ courseId: z.string() });

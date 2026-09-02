@@ -15,6 +15,7 @@
     "studio": "pnpm exec prisma studio",
     "seed": "pnpm exec prisma db seed",
     "clear": "tsx ./seeds/clear-db.ts",
+    "mcp:token": "tsx ./seeds/mint-mcp-token.ts",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "lint": "eslint ."
   },

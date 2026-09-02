@@ -1,9 +1,9 @@
 "use client";
 
 import type { NotebookCourseBuilderTranslations } from "../../../course-builder/i18n/course-builder.types";
-import type { DeletionInvocation } from "./deletion.types";
+import type { DeletionInvocation, DeletionResolution } from "./deletion.types";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { api } from "@/shared/api/trpc/client";
@@ -20,6 +20,7 @@ type CourseBuilderStrings = NotebookCourseBuilderTranslations["courseBuilder"];
 
 interface UseDeletionApprovalOptions {
   invocation: DeletionInvocation;
+  resolution: DeletionResolution | null;
   cb: CourseBuilderStrings;
 }
 
@@ -31,23 +32,19 @@ type DeletionAttempt =
 
 async function executeSceneDeletion(
   invocation: DeletionInvocation,
+  resolution: DeletionResolution,
   utils: TrpcUtils,
 ): Promise<DeletionAttempt> {
   const result = await utils.client.scene.deleteScene.mutate({
-    sceneIds: invocation.items.map((item) => item.id),
+    sceneIds: invocation.ids,
   });
   if (!result.success) {
     return { ok: false, error: result.message };
   }
-  const courseId =
-    invocation.courseId ?? result.deleted[0]?.courseId ?? undefined;
-  if (!courseId) {
-    return { ok: false, error: "Missing course ID for this scene deletion." };
-  }
   applyCourseBuilderDeletionEffects({
     kind: "scene",
     deletedIds: result.deleted.map((entry) => entry.sceneId),
-    courseId,
+    courseId: invocation.courseId,
     lessonIds: [...new Set(result.deleted.map((entry) => entry.lessonId))],
     utils,
   });
@@ -55,23 +52,20 @@ async function executeSceneDeletion(
     ok: true,
     output: buildClientDeletionToolOutput(
       invocation,
+      resolution,
       result.deleted.map((entry) => entry.sceneId),
-      courseId,
     ),
   };
 }
 
 async function executeLessonDeletion(
   invocation: DeletionInvocation,
+  resolution: DeletionResolution,
   utils: TrpcUtils,
 ): Promise<DeletionAttempt> {
-  const courseId = invocation.courseId;
-  if (!courseId) {
-    return { ok: false, error: "Missing course ID for this lesson deletion." };
-  }
   const result = await utils.client.course.deleteLesson.mutate({
-    courseId,
-    lessonIds: invocation.items.map((item) => item.id),
+    courseId: invocation.courseId,
+    lessonIds: invocation.ids,
   });
   if (!result.success) {
     return { ok: false, error: result.message };
@@ -79,15 +73,15 @@ async function executeLessonDeletion(
   applyCourseBuilderDeletionEffects({
     kind: "lesson",
     deletedIds: result.deletedLessonIds,
-    courseId,
+    courseId: invocation.courseId,
     utils,
   });
   return {
     ok: true,
     output: buildClientDeletionToolOutput(
       invocation,
+      resolution,
       result.deletedLessonIds,
-      courseId,
     ),
   };
 }
@@ -157,8 +151,38 @@ function useApprovalResponse(params: {
   };
 }
 
+const UNRESOLVED_REASON = {
+  scene:
+    "Those scene IDs no longer name draft scenes in that course, so the user was not asked. " +
+    "Call listScenes and retry with the exact ids.",
+  lesson:
+    "Those lesson IDs no longer name lessons in that course, so the user was not asked. " +
+    "Call listLessons and retry with the exact ids.",
+} satisfies Record<DeletionInvocation["kind"], string>;
+
+/** Denial only, never `addToolOutput`: the transport resubmits a denied call while the part sits in `approval-responded`, and an output would strand the turn. */
+export function useBounceUnresolvedDeletion(
+  invocation: DeletionInvocation,
+  isUnresolved: boolean,
+) {
+  const { addToolApprovalResponse } = useNotebookActions();
+  const sent = useRef(false);
+  const approvalId = invocation.approval?.approvalId;
+
+  useEffect(() => {
+    if (!isUnresolved || !approvalId || sent.current) return;
+    sent.current = true;
+    addToolApprovalResponse({
+      id: approvalId,
+      approved: false,
+      reason: UNRESOLVED_REASON[invocation.kind],
+    });
+  }, [isUnresolved, approvalId, invocation.kind, addToolApprovalResponse]);
+}
+
 export function useDeletionApproval({
   invocation,
+  resolution,
   cb,
 }: UseDeletionApprovalOptions) {
   const { addToolApprovalResponse, addToolOutput } = useNotebookActions();
@@ -169,13 +193,17 @@ export function useDeletionApproval({
   const canRespond =
     invocation.status === "awaiting-approval" &&
     Boolean(invocation.approval) &&
+    resolution != null &&
     !isResponding;
 
   const executeDeletion = useCallback(async (): Promise<DeletionAttempt> => {
+    if (!resolution) {
+      return { ok: false, error: "Could not confirm what to delete." };
+    }
     const attempt =
       invocation.kind === "scene"
-        ? await executeSceneDeletion(invocation, utils)
-        : await executeLessonDeletion(invocation, utils);
+        ? await executeSceneDeletion(invocation, resolution, utils)
+        : await executeLessonDeletion(invocation, resolution, utils);
     if (attempt.ok) {
       const count = deletedCount(attempt);
       toast.success(
@@ -183,7 +211,7 @@ export function useDeletionApproval({
       );
     }
     return attempt;
-  }, [invocation, utils, cb]);
+  }, [invocation, resolution, utils, cb]);
 
   const { handleApprove, handleDeny } = useApprovalResponse({
     invocation,

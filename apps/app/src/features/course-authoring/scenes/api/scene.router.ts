@@ -4,12 +4,12 @@ import {
   cloneDraftScene,
   createDraftScene,
   deleteDraftScenes,
-  getDeletionNavigationContext,
   getSceneContent,
   getSceneLineage,
   getSceneLocation,
   listLessonScenes,
   reorderDraftScenes,
+  resolveSceneDeletion,
   setDraftSceneLineage,
   updateDraftScene,
   writeSceneContent,
@@ -19,10 +19,10 @@ import {
   cloneSceneSchema,
   createSceneSchema,
   deleteSceneSchema,
-  getDeletionNavigationContextSchema,
   getLessonScenesSchema,
   getSceneContentSchema,
   reorderScenesSchema,
+  resolveSceneDeletionSchema,
   setSceneLineageSchema,
   updateSceneSchema,
   writeSceneContentSchema,
@@ -53,10 +53,10 @@ export const sceneRouter = createTRPCRouter({
       deleteDraftScenes(ctx.session.user.id, input.sceneIds),
     ),
 
-  getDeletionNavigationContext: protectedProcedure
-    .input(getDeletionNavigationContextSchema)
+  resolveSceneDeletion: protectedProcedure
+    .input(resolveSceneDeletionSchema)
     .query(({ ctx, input }) =>
-      getDeletionNavigationContext(ctx.session.user.id, input.sceneIds),
+      resolveSceneDeletion(ctx.session.user.id, input.sceneIds),
     ),
 
   reorderScenes: protectedProcedure

@@ -4,11 +4,9 @@ import type * as DbModule from "@scibly/db";
 import { createTestPrismaClient } from "@scibly/db/test-client";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
-// Runs against real Postgres through the real tRPC procedures, unlike MCP1/MCP3's mocked caller — no mock can prove an agent's write lands in the endpoint's organization. Opt in via MCP_INT_TEST_DATABASE_URL (docs/integration-tests.md).
+// Opt in via MCP_INT_TEST_DATABASE_URL (docs/integration-tests.md).
 const url = vi.hoisted(() => process.env.MCP_INT_TEST_DATABASE_URL ?? "");
 
-// The procedures behind the tools read the app's singleton client, pinned to a
-// fake URL in the test setup — point it at the disposable database instead.
 vi.mock("@scibly/db", async (importOriginal) => ({
   ...(await importOriginal<typeof DbModule>()),
   db: (await import("@scibly/db/test-client")).createTestPrismaClient(url),
@@ -127,8 +125,6 @@ describe.runIf(url !== "")("IT2 — an external agent building a course", () => 
       title: TITLE,
     });
 
-    // The procedure is the boundary, not the URL: the tool call comes back as
-    // an error, and nothing lands in the organization the agent aimed at.
     expect(body.result?.isError ?? body.error).toBeTruthy();
     await expect(
       db.course.count({ where: { organizationId: OTHER_ORG } }),
