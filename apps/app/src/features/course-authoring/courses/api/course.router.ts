@@ -28,6 +28,7 @@ import {
   publishCourse,
   removeCourseEnrollment,
   reorderDraftLessons,
+  resolveLessonDeletion,
   updateCourse,
   updateDraftLesson,
 } from "@/features/course-authoring/server";
@@ -61,6 +62,7 @@ import {
   listLessonsSchema,
   publishCourseSchema,
   removeEnrollmentSchema,
+  resolveLessonDeletionSchema,
   updateCourseSchema,
   updateLessonOrderSchema,
   updateLessonSchema,
@@ -165,6 +167,12 @@ export const courseRouter = createTRPCRouter({
   deleteLesson: protectedProcedure
     .input(deleteLessonSchema)
     .mutation(({ input, ctx }) => deleteDraftLessons(userId(ctx), input)),
+
+  resolveLessonDeletion: protectedProcedure
+    .input(resolveLessonDeletionSchema)
+    .query(({ input, ctx }) =>
+      resolveLessonDeletion(userId(ctx), input.lessonIds),
+    ),
 
   delete: protectedProcedure
     .input(deleteCourseSchema)

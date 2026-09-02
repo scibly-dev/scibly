@@ -1,3 +1,8 @@
+export {
+  deletionIdsSchema,
+  deletionReasonSchema,
+} from "./deletion/api/deletion.schema";
+
 import type analyticsTranslations from "./analytics/i18n/analytics.i18n.en.json";
 import type courseAdminTranslations from "./courses/admin/i18n/course-admin.i18n.en.json";
 import type courseListTranslations from "./courses/list/i18n/course-list.i18n.en.json";

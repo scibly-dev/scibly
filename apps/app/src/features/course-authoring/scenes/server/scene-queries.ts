@@ -54,49 +54,6 @@ export async function listLessonScenes(
   return scenes.map(mapAuthoringScene);
 }
 
-export async function getDeletionNavigationContext(
-  userId: string,
-  sceneIdsInput: readonly string[],
-) {
-  const sceneIds = [...new Set(sceneIdsInput)];
-  const scenes = await db.scene.findMany({
-    where: { id: { in: sceneIds } },
-    select: {
-      id: true,
-      lesson: {
-        select: {
-          id: true,
-          title: true,
-          course: {
-            select: { id: true, title: true, organizationId: true },
-          },
-        },
-      },
-    },
-  });
-  if (scenes.length === 0) return null;
-
-  for (const organizationId of new Set(
-    scenes.map((scene) => scene.lesson.course.organizationId),
-  )) {
-    await requireOrgMember(organizationId, userId, "admin_or_owner");
-  }
-
-  const firstScene = scenes[0]!;
-  const lessonIds = new Set(scenes.map((scene) => scene.lesson.id));
-  return {
-    courseId: firstScene.lesson.course.id,
-    courseTitle: firstScene.lesson.course.title,
-    focusLesson:
-      lessonIds.size === 1
-        ? {
-            id: firstScene.lesson.id,
-            title: firstScene.lesson.title,
-          }
-        : undefined,
-  };
-}
-
 export async function getSceneLocation(userId: string, sceneId: string) {
   const scene = await requireSceneContentAccess(sceneId, userId);
   return {
@@ -106,11 +63,6 @@ export async function getSceneLocation(userId: string, sceneId: string) {
   };
 }
 
-/**
- * For a draft the live collab document is authoritative and `documentState`
- * only its last flush; a published scene has no room behind it, so the row is
- * the frozen copy.
- */
 export async function getSceneContent(user: SceneUser, sceneId: string) {
   const scene = await requireSceneContentAccess(sceneId, user.id);
   const sourceIds = await sceneLineageService.getLineageForScene(sceneId);

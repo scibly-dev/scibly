@@ -20,7 +20,7 @@ function deleteScenesPart(
     approval: { id: `approval-${sceneIds.join("-")}` },
     input: {
       courseId: "course-1",
-      scenes: sceneIds.map((sceneId) => ({ sceneId, title: sceneId })),
+      sceneIds,
     },
     ...overrides,
   } as Part;
@@ -37,7 +37,7 @@ function deleteLessonsPart(
     approval: { id: `approval-${lessonIds.join("-")}` },
     input: {
       courseId: "course-1",
-      lessons: lessonIds.map((lessonId) => ({ lessonId, title: lessonId })),
+      lessonIds,
     },
     ...overrides,
   } as Part;
@@ -57,8 +57,8 @@ describe("one card answers exactly one tool call", () => {
     );
 
     expect(invocations).toHaveLength(2);
-    expect(invocations[0]?.items.map((item) => item.id)).toEqual(["scene-1"]);
-    expect(invocations[1]?.items.map((item) => item.id)).toEqual(["scene-2"]);
+    expect(invocations[0]?.ids).toEqual(["scene-1"]);
+    expect(invocations[1]?.ids).toEqual(["scene-2"]);
   });
 
   it("each card answers only its own approval", () => {
@@ -113,8 +113,8 @@ describe("one card answers exactly one tool call", () => {
       ]),
     );
 
-    expect(invocations[0]?.items).toHaveLength(3);
-    expect(invocations[1]?.items).toHaveLength(1);
+    expect(invocations[0]?.ids).toHaveLength(3);
+    expect(invocations[1]?.ids).toHaveLength(1);
   });
 
   it("answering one call leaves the other pending", () => {
@@ -128,7 +128,7 @@ describe("one card answers exactly one tool call", () => {
       ]),
     ]);
 
-    expect(pending?.items.map((item) => item.id)).toEqual(["scene-2"]);
+    expect(pending?.ids).toEqual(["scene-2"]);
   });
 
   it("a turn with nothing left to decide has no pending card", () => {
@@ -237,6 +237,21 @@ describe("what a card reports about its own state", () => {
   it("a deletion call naming nothing produces no card", () => {
     const invocations = getDeletionInvocations(
       assistantTurn([deleteScenesPart([])]),
+    );
+
+    expect(invocations).toEqual([]);
+  });
+
+  it("a transcript written before ids-only deletions stops rendering", () => {
+    const invocations = getDeletionInvocations(
+      assistantTurn([
+        deleteScenesPart(["scene-1"], {
+          input: {
+            courseId: "course-1",
+            scenes: [{ sceneId: "scene-1", title: "Intro" }],
+          },
+        } as Partial<Part>),
+      ]),
     );
 
     expect(invocations).toEqual([]);

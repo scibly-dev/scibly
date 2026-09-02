@@ -65,7 +65,10 @@ export async function getCourse(userId: string, courseId: string) {
         select: { version: true, publishedAt: true },
       },
       _count: {
-        select: { lessons: { where: { courseVersionId: null } } },
+        select: {
+          lessons: { where: { courseVersionId: null } },
+          enrollments: true,
+        },
       },
       lessons: {
         where: { courseVersionId: null },

@@ -9,7 +9,7 @@ type DeletionKind = "scene" | "lesson";
 
 export type DeletionItem = {
   id: string;
-  title?: string;
+  title: string;
   subtitle?: string;
   lessonId?: string;
 };
@@ -24,11 +24,7 @@ type DeletionApprovalRef = {
   toolCallId: string;
 };
 
-/**
- * Deliberately not the SDK's state names: an approved call already reads as
- * deleted here, because the browser runs the mutation and settles before the
- * continuation stream turns the part into `output-available`.
- */
+/** Not the SDK's state names: the browser runs the mutation, so an approved call reads as deleted before the stream turns the part into `output-available`. */
 export type DeletionDisplayStatus =
   | "streaming"
   | "awaiting-approval"
@@ -40,13 +36,18 @@ export type DeletionDisplayStatus =
 export type DeletionInvocation = {
   key: string;
   kind: DeletionKind;
-  items: DeletionItem[];
+  ids: string[];
+  courseId: string;
   reason?: string;
-  courseId?: string;
-  focusLesson?: DeletionFocusLesson;
 
   approval?: DeletionApprovalRef;
   partIndex: number;
   status: DeletionDisplayStatus;
   errorText?: string;
+};
+
+export type DeletionResolution = {
+  items: DeletionItem[];
+  courseTitle: string;
+  focusLesson?: DeletionFocusLesson;
 };

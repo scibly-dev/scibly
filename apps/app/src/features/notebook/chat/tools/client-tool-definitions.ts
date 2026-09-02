@@ -122,8 +122,7 @@ export const CLIENT_ONLY_NOTEBOOK_TOOLS = {
       "Permanently delete one or more lessons and all their draft scenes. " +
         "Call this tool immediately when deletion is appropriate. Pass every lesson in one call when removing multiple lessons. " +
         "Use this when a lesson (or its only remaining scene) should be removed entirely — deleteScenes cannot remove the last scene in a lesson. " +
-        "Include lesson titles for the confirmation UI. " +
-        "If the tool returns success:false with missingLessonIds, verify lesson IDs and retry. " +
+        "Use the exact lesson `id` from listLessons — Scibly looks up the titles it shows the user, so never send one. " +
         "Provide a shared reason when the user did not explicitly ask to delete",
     ),
     inputSchema: agentDeleteLessonsSchema,
@@ -136,10 +135,8 @@ export const CLIENT_ONLY_NOTEBOOK_TOOLS = {
         "Include the course `courseId` from the active course context. " +
         "Every lesson must keep at least one scene — call listScenes first. " +
         "If a lesson has only one scene and the whole lesson should go, use deleteLessons instead. " +
-        "Include title and lessonTitle from listScenes for the confirmation UI. " +
-        "Include lessonId when available so the course builder can focus the correct lesson. " +
-        "Use the exact scene `id` from listScenes as sceneId — never invent or guess IDs. " +
-        "If the tool returns success:false with missingSceneIds, call listScenes and retry with corrected IDs. " +
+        "Use the exact scene `id` from listScenes — never invent or guess IDs, and never send titles: Scibly looks up the names it shows the user. " +
+        "If the deletion comes back denied because ids did not resolve, call listScenes and retry with corrected IDs. " +
         "Provide a shared reason when the user did not explicitly ask to delete",
     ),
     inputSchema: agentDeleteScenesSchema,

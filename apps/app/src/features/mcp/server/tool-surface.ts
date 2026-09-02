@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { createSceneSchema } from "@/features/course-authoring/server";
 
-/** Deletes never join this list: the in-app confirmation gate has no MCP equivalent. */
+/** Deletes never join this list: they ask the author first, so they are registered by hand in deletion-tools.ts (ADR 0006). */
 export const MCP_TOOL_NAMES = [
   "createCourse",
   "listCourses",
@@ -39,9 +39,7 @@ export function mcpToolInput(
   if (!(inputSchema instanceof z.ZodObject)) {
     throw new Error("An MCP tool must declare a zod object input schema.");
   }
-  // An external agent has no notebook, so any lineage it cited would be
-  // fiction (ADR 0005). `.omit` is checked against the schema, so renaming the
-  // field breaks the build instead of silently re-opening it.
+  // An external agent has no notebook, so any lineage it cited would be fiction (ADR 0005).
   return name === "createScene"
     ? createSceneSchema.omit({ sourceIds: true })
     : inputSchema;

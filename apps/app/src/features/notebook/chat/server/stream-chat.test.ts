@@ -115,7 +115,7 @@ type Part = NotebookMessage["parts"][number];
 
 const DELETE_LESSONS_INPUT = {
   courseId: "course-1",
-  lessons: [{ lessonId: "lesson-1", title: "Photosynthesis" }],
+  lessonIds: ["lesson-1"],
 };
 
 function text(value: string): Part {

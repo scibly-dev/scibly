@@ -4,6 +4,7 @@ import type { NotebookTranslations } from "../../../i18n/notebook.types";
 import type {
   DeletionDisplayStatus,
   DeletionInvocation,
+  DeletionResolution,
 } from "./deletion.types";
 
 import { Button } from "@scibly/ui/components/button";
@@ -18,8 +19,11 @@ import {
 } from "../components/inline-tool-card-parts";
 import { deletionLabel } from "./deletion-label";
 import { openDeletionInCourseBuilder } from "./open-deletion-in-builder";
-import { useDeletionApproval } from "./use-deletion-approval";
-import { useDeletionNavigationContext } from "./use-deletion-navigation-context";
+import {
+  useBounceUnresolvedDeletion,
+  useDeletionApproval,
+} from "./use-deletion-approval";
+import { useDeletionResolution } from "./use-deletion-resolution";
 
 interface DeletionConfirmationCardProps {
   invocation: DeletionInvocation;
@@ -27,26 +31,29 @@ interface DeletionConfirmationCardProps {
 }
 
 const DeletionItems = ({
-  invocation,
+  resolution,
+  isScene,
+  reason,
   cb,
   openCourseButton,
   showOpenCourse,
 }: {
-  invocation: DeletionInvocation;
+  resolution: DeletionResolution;
+  isScene: boolean;
+  reason?: string;
   cb: NotebookTranslations["studio"]["courseBuilder"];
   openCourseButton: React.ReactNode;
   showOpenCourse: boolean;
 }) => {
-  const isScene = invocation.kind === "scene";
   return (
     <div className="space-y-2 p-3">
-      {invocation.items.map((item) => (
+      {resolution.items.map((item) => (
         <div
           key={item.id}
           className="rounded-lg border border-red-200/80 bg-white p-3 dark:border-red-900/40 dark:bg-neutral-950"
         >
           <p className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
-            {item.title ??
+            {item.title ||
               (isScene ? cb.deletionFallbackScene : cb.deletionFallbackLesson)}
           </p>
           {item.subtitle ? (
@@ -56,9 +63,9 @@ const DeletionItems = ({
           ) : null}
         </div>
       ))}
-      {invocation.reason ? (
+      {reason ? (
         <p className="px-0.5 text-xs leading-relaxed text-neutral-600 dark:text-neutral-300">
-          {invocation.reason}
+          {reason}
         </p>
       ) : null}
       {showOpenCourse ? (
@@ -73,18 +80,18 @@ const DeletionItems = ({
   );
 };
 
-/**
- * The two things the tool part cannot know: the mutation this browser has in
- * flight, and an error the tool call has not been told about yet.
- */
 function displayStatus(
   invocation: DeletionInvocation,
   isResponding: boolean,
+  isResolving: boolean,
   localError: string | null,
 ): DeletionDisplayStatus {
   if (invocation.status === "deleted") return "deleted";
   if (localError) return "failed";
-  if (invocation.status === "awaiting-approval" && isResponding)
+  if (
+    invocation.status === "awaiting-approval" &&
+    (isResponding || isResolving)
+  )
     return "deleting";
   return invocation.status;
 }
@@ -137,7 +144,9 @@ function deletionStatusBanner({
 }
 
 const DeletionApprovalCard = ({
-  invocation,
+  resolution,
+  isScene,
+  reason,
   cb,
   title,
   description,
@@ -147,7 +156,9 @@ const DeletionApprovalCard = ({
   onDeny,
   onApprove,
 }: {
-  invocation: DeletionInvocation;
+  resolution: DeletionResolution;
+  isScene: boolean;
+  reason?: string;
   cb: NotebookTranslations["studio"]["courseBuilder"];
   title: string;
   description: string;
@@ -168,7 +179,9 @@ const DeletionApprovalCard = ({
         </p>
       </div>
       <DeletionItems
-        invocation={invocation}
+        resolution={resolution}
+        isScene={isScene}
+        reason={reason}
         cb={cb}
         openCourseButton={openCourseButton}
         showOpenCourse={showOpenCourse}
@@ -193,27 +206,29 @@ const DeletionApprovalCard = ({
           onClick={onApprove}
         >
           <Trash2 className="mr-1.5 h-3.5 w-3.5" />
-          {invocation.items.length > 1 ? cb.confirmDeleteAll : cb.confirmDelete}
+          {resolution.items.length > 1 ? cb.confirmDeleteAll : cb.confirmDelete}
         </Button>
       </div>
     </DestructiveApprovalCardShell>
   );
 };
 
-function useOpenCourseButton(invocation: DeletionInvocation, label: string) {
+function useOpenCourseButton(
+  invocation: DeletionInvocation,
+  resolution: DeletionResolution | null,
+  isCourseOpenInBuilder: boolean,
+  label: string,
+) {
   const utils = api.useUtils();
   const [isOpening, setIsOpening] = useState(false);
-  const navigation = useDeletionNavigationContext(invocation);
-  const show =
-    Boolean(navigation.courseId) && !navigation.isCourseOpenInBuilder;
+  const show = !isCourseOpenInBuilder;
   const open = async () => {
-    if (!navigation.courseId) return;
     setIsOpening(true);
     try {
       await openDeletionInCourseBuilder(utils, {
-        courseId: navigation.courseId,
-        courseTitle: navigation.courseTitle,
-        focusLesson: navigation.focusLesson,
+        courseId: invocation.courseId,
+        courseTitle: resolution?.courseTitle,
+        focusLesson: resolution?.focusLesson,
       });
     } finally {
       setIsOpening(false);
@@ -227,7 +242,7 @@ function useOpenCourseButton(invocation: DeletionInvocation, label: string) {
         variant="outline"
         size="sm"
         className="h-8 text-xs"
-        disabled={isOpening || navigation.isNavigationLoading}
+        disabled={isOpening}
         onClick={() => void open()}
       >
         <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
@@ -242,46 +257,57 @@ export function DeletionConfirmationCard({
   t,
 }: DeletionConfirmationCardProps) {
   const cb = t.studio.courseBuilder;
+  const { isResolving, resolution, isCourseOpenInBuilder } =
+    useDeletionResolution(invocation);
   const openCourse = useOpenCourseButton(
     invocation,
+    resolution,
+    isCourseOpenInBuilder,
     cb.deletionOpenCourseBuilder,
   );
   const { canRespond, handleApprove, handleDeny, isResponding, localError } =
-    useDeletionApproval({
-      invocation,
-      cb,
-    });
+    useDeletionApproval({ invocation, resolution, cb });
 
-  const { kind, items } = invocation;
-  const isScene = kind === "scene";
-  const count = items.length;
-  const isBatch = count > 1;
+  useBounceUnresolvedDeletion(
+    invocation,
+    invocation.status === "awaiting-approval" && !isResolving && !resolution,
+  );
 
-  const status = displayStatus(invocation, isResponding, localError);
+  const isScene = invocation.kind === "scene";
+  const count = resolution?.items.length ?? invocation.ids.length;
+
+  const status = displayStatus(
+    invocation,
+    isResponding,
+    isResolving,
+    localError,
+  );
   const banner = deletionStatusBanner({
     status,
     invocation,
     cb,
     localError,
-    completedLabel: deletionLabel(isScene, isBatch, count, cb, true),
+    completedLabel: deletionLabel(isScene, count > 1, count, cb, true),
     openCourseButton: openCourse.button,
   });
   if (banner) return banner;
 
-  if (status !== "awaiting-approval" || !invocation.approval) return null;
-
-  const title = deletionLabel(isScene, isBatch, count, cb, false);
-
-  const description = isScene
-    ? cb.deletionConfirmSceneDescription
-    : cb.deletionConfirmLessonDescription;
+  if (status !== "awaiting-approval" || !invocation.approval || !resolution) {
+    return null;
+  }
 
   return (
     <DeletionApprovalCard
-      invocation={invocation}
+      resolution={resolution}
+      isScene={isScene}
+      reason={invocation.reason}
       cb={cb}
-      title={title}
-      description={description}
+      title={deletionLabel(isScene, count > 1, count, cb, false)}
+      description={
+        isScene
+          ? cb.deletionConfirmSceneDescription
+          : cb.deletionConfirmLessonDescription
+      }
       openCourseButton={openCourse.button}
       showOpenCourse={openCourse.show}
       canRespond={canRespond}

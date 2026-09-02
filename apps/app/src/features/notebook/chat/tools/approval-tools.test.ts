@@ -21,7 +21,7 @@ function deletionPart(overrides: DeletionPartOverrides = {}): Part {
     toolCallId: "call-1",
     state: "approval-requested",
     approval: { id: "approval-1" },
-    input: { courseId: "course-1", scenes: [{ sceneId: "scene-1" }] },
+    input: { courseId: "course-1", sceneIds: ["scene-1"] },
     ...overrides,
   } as Part;
 }

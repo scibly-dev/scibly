@@ -132,9 +132,21 @@ export async function cloneDraftScene(userId: string, sceneId: string) {
 }
 
 async function loadDeletionScenes(sceneIds: string[]) {
+  // Selected field by field: `include` would drag every scene's Yjs `documentState` blob into memory just to delete the row.
   return db.scene.findMany({
     where: { id: { in: sceneIds } },
-    include: { lesson: { include: { course: true } } },
+    select: {
+      id: true,
+      lessonId: true,
+      courseVersionId: true,
+      lesson: {
+        select: {
+          courseId: true,
+          courseVersionId: true,
+          course: { select: { organizationId: true } },
+        },
+      },
+    },
   });
 }
 

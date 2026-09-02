@@ -43,7 +43,7 @@ function deletionPart(state: string): Part {
     type: "tool-deleteLessons",
     toolCallId: "call-delete",
     state,
-    input: { courseId: "course-1", lessons: [] },
+    input: { courseId: "course-1", lessonIds: ["lesson-1"] },
     approval: { id: "approval-1", approved: state !== "output-denied" },
   } as Part;
 }

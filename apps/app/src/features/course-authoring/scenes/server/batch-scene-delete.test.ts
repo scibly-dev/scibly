@@ -1,7 +1,6 @@
 import { AppError } from "@scibly/api/application-error";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-// Covers which organizations are consulted, in what order relative to what the caller is told, and what gets deleted.
 const db = vi.hoisted(() => ({
   scene: {
     findMany: vi.fn(),

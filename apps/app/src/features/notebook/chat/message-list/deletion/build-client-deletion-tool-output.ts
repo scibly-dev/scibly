@@ -1,4 +1,4 @@
-import type { DeletionInvocation } from "./deletion.types";
+import type { DeletionInvocation, DeletionResolution } from "./deletion.types";
 
 type SceneDeleteToolOutput = {
   success: true;
@@ -26,13 +26,14 @@ export type ClientDeletionToolOutput =
   | SceneDeleteToolOutput
   | LessonDeleteToolOutput;
 
-// `deletedIds` is the server's answer, not the request — a delete can drop fewer ids than asked (e.g. one published between read and write) — so the card's items supply only the titles, which the server doesn't return.
+// The last chance to write the titles down: after this no id resolves to a name again.
 export function buildClientDeletionToolOutput(
   invocation: DeletionInvocation,
+  resolution: DeletionResolution,
   deletedIds: string[],
-  courseId: string,
 ): ClientDeletionToolOutput {
-  const shownById = new Map(invocation.items.map((item) => [item.id, item]));
+  const { courseId } = invocation;
+  const shownById = new Map(resolution.items.map((item) => [item.id, item]));
 
   if (invocation.kind === "scene") {
     return {
