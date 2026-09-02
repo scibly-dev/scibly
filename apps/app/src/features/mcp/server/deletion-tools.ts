@@ -14,21 +14,10 @@ import {
   resolveSceneDeletion,
 } from "@/features/course-authoring/server";
 
-import { approval, type ApprovalRefusals, approvalToken } from "./approval";
+import { registerApprovedTool } from "./approval";
 import { readable, text } from "./tool-response";
 
-const REFUSALS: ApprovalRefusals = {
-  cancelled:
-    "The author did not answer; nothing was deleted. Ask again if this still needs doing.",
-  declined: "The author declined. Nothing was deleted.",
-  mismatched:
-    "This approval was given for a different set of items, so nothing was deleted. " +
-    "Call the tool again with what you actually mean to remove, and the author will be asked about that.",
-};
-
-const APPROVAL_NOTE =
-  "The calling client shows the author an approval listing exactly what would go, so never ask for approval in plain text — call the tool and let it ask. " +
-  "A declined deletion comes back as success:false with nothing deleted; that is an answer, not a failure, so do not call again.";
+const UNDONE = "nothing was deleted";
 
 const reasonSchema = deletionReasonSchema
   .optional()
@@ -87,22 +76,23 @@ function withReason(lines: string[], reason: string | undefined): string {
 }
 
 export function registerDeletionTools(server: McpServer, userId: string) {
-  server.registerTool(
-    "deleteScenes",
+  registerApprovedTool(
+    server,
     {
+      name: "deleteScenes",
       description:
         "Permanently delete one or more draft scenes. " +
         "Pass every scene in one call — the author approves them together, and one approval beats five. " +
-        "Use the exact scene `id` from listScenes; a lesson cannot be emptied, so reach for deleteLessons when the whole lesson should go. " +
-        APPROVAL_NOTE,
+        "Use the exact scene `id` from listScenes; a lesson cannot be emptied, so reach for deleteLessons when the whole lesson should go.",
       inputSchema: z.object({
         courseId: z.string().describe("The course these scenes belong to."),
         sceneIds: idsSchema("scene", "listScenes"),
         reason: reasonSchema,
       }),
       annotations: { destructiveHint: true, idempotentHint: false },
+      undone: UNDONE,
     },
-    async ({ courseId, sceneIds, reason }, ctx) => {
+    async ({ courseId, sceneIds, reason }) => {
       const ids = [...new Set(sceneIds)];
       const resolved = await readable("deleteScenes", () =>
         resolveSceneDeletion(userId, ids),
@@ -121,9 +111,9 @@ export function registerDeletionTools(server: McpServer, userId: string) {
         byLesson.set(scene.lessonId, lesson);
       }
 
-      const gate = approval(ctx, {
-        token: approvalToken("deleteScenes", courseId, ids),
-        refusals: REFUSALS,
+      return {
+        courseId,
+        ids,
         message: withReason(
           [
             `Permanently delete ${plural(found.length, "scene")} from "${course.title}"? This cannot be undone.`,
@@ -135,31 +125,29 @@ export function registerDeletionTools(server: McpServer, userId: string) {
           ],
           reason,
         ),
-      });
-      if (gate) return gate;
-
-      return text(
-        await readable("deleteScenes", () => deleteDraftScenes(userId, ids)),
-      );
+        run: () =>
+          readable("deleteScenes", () => deleteDraftScenes(userId, ids)),
+      };
     },
   );
 
-  server.registerTool(
-    "deleteLessons",
+  registerApprovedTool(
+    server,
     {
+      name: "deleteLessons",
       description:
         "Permanently delete one or more lessons and every draft scene inside them. " +
         "Pass every lesson in one call — the author approves them together. " +
-        "This is also how a lesson's last scene goes: deleteScenes cannot empty a lesson. " +
-        APPROVAL_NOTE,
+        "This is also how a lesson's last scene goes: deleteScenes cannot empty a lesson.",
       inputSchema: z.object({
         courseId: z.string().describe("The course these lessons belong to."),
         lessonIds: idsSchema("lesson", "listLessons"),
         reason: reasonSchema,
       }),
       annotations: { destructiveHint: true, idempotentHint: false },
+      undone: UNDONE,
     },
-    async ({ courseId, lessonIds, reason }, ctx) => {
+    async ({ courseId, lessonIds, reason }) => {
       const ids = [...new Set(lessonIds)];
       const resolved = await readable("deleteLessons", () =>
         resolveLessonDeletion(userId, ids),
@@ -168,9 +156,9 @@ export function registerDeletionTools(server: McpServer, userId: string) {
       if (refusal) return refusal;
 
       const { course, found } = resolved!;
-      const gate = approval(ctx, {
-        token: approvalToken("deleteLessons", courseId, ids),
-        refusals: REFUSALS,
+      return {
+        courseId,
+        ids,
         message: withReason(
           [
             `Permanently delete ${plural(found.length, "lesson")} from "${course.title}"? Every scene inside goes too, and this cannot be undone.`,
@@ -182,39 +170,36 @@ export function registerDeletionTools(server: McpServer, userId: string) {
           ],
           reason,
         ),
-      });
-      if (gate) return gate;
-
-      return text(
-        await readable("deleteLessons", () =>
-          deleteDraftLessons(userId, { courseId, lessonIds: ids }),
-        ),
-      );
+        run: () =>
+          readable("deleteLessons", () =>
+            deleteDraftLessons(userId, { courseId, lessonIds: ids }),
+          ),
+      };
     },
   );
 
-  server.registerTool(
-    "deleteCourse",
+  registerApprovedTool(
+    server,
     {
+      name: "deleteCourse",
       description:
         "Permanently delete an entire course: every lesson and scene, every published version, and every enrollment with the progress attached to it. " +
-        "This is not how a draft is tidied up — reach for deleteLessons unless the whole course is meant to stop existing. " +
-        APPROVAL_NOTE,
+        "This is not how a draft is tidied up — reach for deleteLessons unless the whole course is meant to stop existing.",
       inputSchema: z.object({
         courseId: z.string().describe("The course to delete."),
         reason: reasonSchema,
       }),
       annotations: { destructiveHint: true, idempotentHint: false },
+      undone: UNDONE,
     },
-    async ({ courseId, reason }, ctx) => {
+    async ({ courseId, reason }) => {
       const course = await readable("deleteCourse", () =>
         getCourse(userId, courseId),
       );
 
       const published = course.versions[0];
-      const gate = approval(ctx, {
-        token: approvalToken("deleteCourse", courseId, []),
-        refusals: REFUSALS,
+      return {
+        courseId,
         message: withReason(
           [
             `Permanently delete the whole course "${course.title}"? This cannot be undone.`,
@@ -236,12 +221,9 @@ export function registerDeletionTools(server: McpServer, userId: string) {
           ],
           reason,
         ),
-      });
-      if (gate) return gate;
-
-      return text(
-        await readable("deleteCourse", () => deleteCourse(userId, courseId)),
-      );
+        run: () =>
+          readable("deleteCourse", () => deleteCourse(userId, courseId)),
+      };
     },
   );
 }
