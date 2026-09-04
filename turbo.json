@@ -1,8 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": [
-    ".env"
-  ],
+  "globalDependencies": [".env"],
   "globalEnv": [
     "SKIP_ENV_VALIDATION",
     "DATABASE_URL",
@@ -50,19 +48,12 @@
     "NEXT_PUBLIC_FREE_ACCESS_FLAG",
     "NEXT_PUBLIC_POSTHOG_KEY",
     "NEXT_PUBLIC_POSTHOG_HOST",
-    "NEXT_PUBLIC_POSTHOG_ENABLED",
-    "APP_PORT",
-    "WEB_PORT"
+    "NEXT_PUBLIC_POSTHOG_ENABLED"
   ],
   "tasks": {
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "$TURBO_DEFAULT$",
-        ".env"
-      ],
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env"],
       "outputs": [
         "!.next/cache/**",
         ".next/**",
@@ -72,7 +63,8 @@
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "env": ["APP_PORT", "WEB_PORT"]
     },
     "start": {
       "cache": true,
@@ -82,23 +74,17 @@
       "cache": false
     },
     "test": {
-      "dependsOn": [
-        "^build"
-      ]
+      "dependsOn": ["^build"]
     },
     "lint": {
-      "dependsOn": [
-        "^lint"
-      ]
+      "dependsOn": ["^lint"]
     },
     "format:check": {},
     "format:write": {
       "cache": false
     },
     "typecheck": {
-      "dependsOn": [
-        "^typecheck"
-      ]
+      "dependsOn": ["^typecheck"]
     }
   }
 }

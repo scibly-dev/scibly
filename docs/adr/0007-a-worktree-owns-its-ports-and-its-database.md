@@ -6,9 +6,10 @@ Several worktrees are open at once and each one hand-copies the same gitignored
 both hold 3001; a migration applied on one branch breaks every other branch's
 Prisma client; and `NEXT_PUBLIC_APP_URL` is baked at build time, so a stack
 booted on a spare port still emits links to 3001 and quietly walks a reviewer
-into another branch's app. A script therefore derives a stable port pair and a
-database name from the worktree name, writes that worktree's `.env`, and
-migrates and seeds its own database.
+into another branch's app. `scripts/worktree-up.mjs` (`pnpm wt:up`) therefore derives a stable port block
+and a database name from the worktree's directory name, writes that worktree's
+five `.env` files, and migrates and seeds its own database.
+`scripts/worktree-down.mjs` (`pnpm wt:down`) is the teardown.
 
 Ports alone were the cheaper fix and were rejected: the baked URL forces us to
 generate the `.env` anyway, and once that file is being written `DATABASE_URL`
@@ -21,3 +22,7 @@ worktree's turbo cache.
 Consequence: databases named `scibly_wt_*` accumulate and outlive their
 worktrees. They are kept on purpose so a human can open the app after an agent
 has reviewed it; reaping them is a separate, explicit teardown step.
+
+The `DATABASE_URL` it copies is checked to point at a local host before any
+`CREATE`/`DROP` runs. That check reads the URL only: a local port forwarded to a
+remote server passes it, and no amount of parsing would catch that.

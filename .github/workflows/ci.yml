@@ -39,9 +39,7 @@ jobs:
       # gitignored, and normally only produced by its predev/prebuild hooks —
       # typecheck/lint need them too (ee/organizations-billing type-checks
       # against apps/app/src directly via a path alias).
-      - run: pnpm --filter @scibly/app run i18n:merge
-      - run: pnpm --filter @scibly/app run schema:generate
-      - run: pnpm --filter @scibly/web run i18n:merge
+      - run: pnpm generate
 
       - run: pnpm check
       - run: pnpm test:unit

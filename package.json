@@ -14,12 +14,12 @@
     "build:web": "turbo run build --filter=./apps/web",
     "install:clean": "pnpm -r exec -- rm -rf node_modules .turbo .next; rm -rf node_modules .turbo && pnpm store prune && pnpm install",
     "check": "turbo run typecheck lint format:check",
+    "generate": "pnpm --filter @scibly/app run i18n:merge && pnpm --filter @scibly/app run schema:generate && pnpm --filter @scibly/web run i18n:merge",
     "format:write": "turbo run format:write",
     "test:unit": "turbo run test",
     "test:int": "bash scripts/int-test.sh",
     "test:e2e": "pnpm --filter @scibly/app run test:e2e && pnpm --filter @scibly/web run test:e2e",
-    "test:all": "pnpm test:unit && pnpm test:e2e",
-    "validate": "pnpm check && pnpm test:all",
+    "validate": "pnpm check && pnpm test:unit && pnpm test:e2e",
     "prebuild": "pnpm check"
   },
   "devDependencies": {

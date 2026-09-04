@@ -119,6 +119,12 @@ every app through Turborepo:
 - `apps/web` → http://localhost:3000 (marketing site)
 - `apps/collab` → ws://localhost:4000 (realtime editor sync)
 
+In a git worktree under `.claude/worktrees/`, run `pnpm wt:up` first. It gives
+the worktree its own `.env` files, its own three ports and its own database, so
+it can run alongside this checkout — use the URLs it prints, not the ones above.
+`pnpm wt:down` stops that stack and drops its database. See
+[ADR 0007](adr/0007-a-worktree-owns-its-ports-and-its-database.md).
+
 To run a single app instead: `pnpm --filter @scibly/app run dev` (or
 `@scibly/web`, `@scibly/collab`).
 
