@@ -1,9 +1,10 @@
 import { questionBlockParserRegistry } from "@/shared/content/editor/assessment/parsing/parser-registry";
+import { isBlankHtmlState } from "@/shared/content/editor/documents/author-document";
 import {
   extractQuestionBlockSnapshotsFromTipTap,
   normalizeAuthorTipTapContent,
 } from "@/shared/content/editor/documents/tiptap-document";
-import { practiceContentHash } from "@/shared/content/practice/practice-content-hash";
+import { checkPracticeScene } from "@/shared/content/practice/check-practice-scene";
 
 type PublishableLesson = Readonly<{
   title: string;
@@ -13,7 +14,6 @@ type PublishableLesson = Readonly<{
     documentState?: Buffer | Uint8Array | null;
     practiceHtml?: string | null;
     practiceSolution?: unknown;
-    practiceValidated?: string | null;
     isOutdated?: boolean;
   }>[];
 }>;
@@ -26,7 +26,7 @@ type UnfinishableQuestion = Readonly<{
   reason: string;
 }>;
 
-type PublishValidationFailure = Readonly<{
+export type PublishValidationFailure = Readonly<{
   code:
     | "NO_LESSONS"
     | "NO_SCENES"
@@ -39,6 +39,8 @@ type PublishValidationFailure = Readonly<{
     | "UNVALIDATED_PRACTICE"
     | "OUTDATED_SCENES";
   message: string;
+  /** The message is English; the client re-renders it from `code` + these. */
+  params?: Readonly<Record<string, string | number>>;
 
   questions?: readonly UnfinishableQuestion[];
 }>;
@@ -95,6 +97,7 @@ function validateQuestionValues(
   return {
     code: "ZERO_VALUE_QUESTIONS",
     message: `Cannot publish: ${zeroed.length} question(s) are worth nothing — ${zeroedListed}. Give them a value above zero, or remove the field to use the default.`,
+    params: { count: zeroed.length, questions: zeroedListed },
     questions: zeroed,
   };
 }
@@ -115,6 +118,7 @@ function validateAnswerKeys(
       return {
         code: "UNREADABLE_SCENE",
         message: `Scene "${sceneTitle}" cannot be read, so it cannot be published. Open the scene and re-save it, then publish again.`,
+        params: { scene: sceneTitle },
       };
     }
 
@@ -143,6 +147,7 @@ function validateAnswerKeys(
   return {
     code: "UNANSWERABLE_QUESTIONS",
     message: `Cannot publish: ${unfinishable.length} question(s) have no complete answer key — ${unfinishableListed}.`,
+    params: { count: unfinishable.length, questions: unfinishableListed },
     questions: unfinishable,
   };
 }
@@ -188,6 +193,7 @@ function validateUniqueBlockIds(
   return {
     code: "DUPLICATE_BLOCK_ID",
     message: `Cannot publish: ${duplicated.length} question(s) share a blockId with another question in the same scene — ${duplicatedListed}.`,
+    params: { count: duplicated.length, questions: duplicatedListed },
     questions: duplicated,
   };
 }
@@ -215,6 +221,7 @@ export function validatePublishableContent(
     return {
       code: "EMPTY_LESSON",
       message: `Lesson "${emptyLesson.title}" has no scenes. Add at least one scene before publishing.`,
+      params: { lesson: emptyLesson.title },
     };
   }
 
@@ -223,28 +230,32 @@ export function validatePublishableContent(
     .find((scene) =>
       scene.kind === "PRACTICE"
         ? !scene.practiceHtml?.trim()
-        : !scene.documentState,
+        : !scene.documentState || isBlankHtmlState(scene.documentState),
     );
   if (emptyScene) {
     return {
       code: "EMPTY_SCENE",
       message: `Scene "${sceneName(emptyScene.title)}" has no content. Add content to all canvas scenes before publishing.`,
+      params: { scene: sceneName(emptyScene.title) },
     };
   }
 
   // Not behind `force`: a broken course, not a stale one.
-  const unvalidatedScene = lessons
+  const broken = lessons
     .flatMap((lesson) => lesson.scenes)
-    .find(
-      (scene) =>
-        scene.kind === "PRACTICE" &&
-        scene.practiceValidated !==
-          practiceContentHash(scene.practiceHtml, scene.practiceSolution),
-    );
-  if (unvalidatedScene) {
+    .flatMap((scene) => {
+      if (scene.kind !== "PRACTICE") return [];
+      const problems = checkPracticeScene(scene);
+      return problems.length > 0
+        ? [`"${sceneName(scene.title)}" — ${problems.join("; ")}`]
+        : [];
+    });
+  if (broken.length > 0) {
+    const brokenListed = broken.join(", ");
     return {
       code: "UNVALIDATED_PRACTICE",
-      message: `Practice scene "${sceneName(unvalidatedScene.title)}" has not passed its self-test since it was last edited. Open the scene and press Validate before publishing.`,
+      message: `Cannot publish: ${broken.length} practice scene(s) are not finished — ${brokenListed}.`,
+      params: { count: broken.length, scenes: brokenListed },
     };
   }
 
@@ -265,6 +276,7 @@ export function validatePublishableContent(
       return {
         code: "OUTDATED_SCENES",
         message: `Cannot publish: ${outdatedCount} scene(s) cite changed sources. Review these scenes, or publish anyway to proceed as-is.`,
+        params: { count: outdatedCount },
       };
     }
   }

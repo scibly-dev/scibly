@@ -13,10 +13,13 @@ import { editorSchemaRegistry } from "@/shared/content/editor/blocks/registry/sh
 // Shared between the Yjs reader and the publish (TipTap) reader, so both give
 // the same document the same answer.
 
+// TipTap serializes an empty document as `<p></p>`; the scene seeder wraps it in a `<div>`.
+const BLANK_HTML = /^(?:<div>)?<p>(?:<br\s*\/?>)?<\/p>(?:<\/div>)?$/;
+
 export function isBlankHtmlState(state: Uint8Array): boolean {
   return (
     isRawHtmlState(state) &&
-    new TextDecoder().decode(state).trim() === "<p></p>"
+    BLANK_HTML.test(new TextDecoder().decode(state).trim())
   );
 }
 

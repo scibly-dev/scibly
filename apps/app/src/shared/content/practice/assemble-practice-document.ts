@@ -113,7 +113,8 @@ function jsonForScript(value: unknown): string {
 function sdkScript({ mode, previous }: PracticeSdkContext): string {
   return `
 window.scibly = (function () {
-  var submitted = false;
+  // Review mode replays a graded attempt: the app's Submit button must be inert.
+  var submitted = ${mode === "review"};
   var previous = ${jsonForScript(previous)};
   // Held until onGraded registers, so an app that subscribes late still gets its verdict.
   var pending = previous && previous.grade ? previous.grade : null;

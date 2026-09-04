@@ -27,7 +27,10 @@ export function registerPublishingTools(server: McpServer, userId: string) {
       description:
         "Publish the course's current draft as a new version, which is what learners open. " +
         "Everything written since the last publish stays invisible to them until this is called. " +
-        "Refused when the draft has no lessons, when any lesson has no scenes, or when nothing has changed since the last version — the message says which.",
+        "Refused when the draft has no lessons, when any lesson has no scenes, when a scene is empty or unreadable, " +
+        "when a PRACTICE scene is unfinished (no self-test hook, no submit, no onGraded, or an " +
+        "answer key the app never mentions — validatePractice reports the same list) " +
+        "or when nothing has changed since the last version — the message says which.",
       inputSchema: z.object({
         courseId: courseIdSchema,
         supersedePrevious: z

@@ -20,9 +20,8 @@ enum SceneAnimation {
   BLUR
 }
 
-/// Why a draft scene was flagged as outdated. The author needs to tell
-/// "the source moved on" from "the source is gone" — the second cannot be
-/// resolved by re-reading the source.
+/// The author needs to tell "the source moved on" from "the source is gone" —
+/// the second cannot be resolved by re-reading the source.
 enum SceneOutdatedReason {
   SOURCE_CHANGED
   SOURCE_REMOVED
@@ -51,10 +50,6 @@ model Scene {
   practiceSolution Json?
   /// PRACTICE draft: released to the learner on every submit, alongside any comparison result.
   practiceExplain  String?
-  /// PRACTICE draft: sha256 of practiceHtml + practiceSolution as of the last
-  /// passing self-test run. Publish re-derives the hash and refuses a mismatch,
-  /// so editing either column retires the stamp without anything clearing it.
-  practiceValidated String?
   /// Immutable, solution-sanitized TipTap JSON (DOCUMENT) or the app fragment (PRACTICE) rendered by learners.
   learnerContent  Json?
   /// Immutable answer key generated with learnerContent at publish time.
@@ -66,7 +61,7 @@ model Scene {
   sp              Int                  @default(0)
   /// True when a cited source has changed since this scene was generated (draft scenes only).
   isOutdated      Boolean              @default(false)
-  /// Why the flag was raised. Null exactly when isOutdated is false.
+  /// Null exactly when isOutdated is false.
   outdatedReason  SceneOutdatedReason?
 
   // Set when this is a published copy belonging to a version; null for draft scenes

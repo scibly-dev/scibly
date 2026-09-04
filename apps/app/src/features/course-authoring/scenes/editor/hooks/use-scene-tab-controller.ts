@@ -5,7 +5,10 @@ import { useDebouncedCallback } from "use-debounce";
 
 import { api } from "@/shared/api/trpc/client";
 import { useQuestionBlockStore } from "@/shared/content/editor/assessment/grading/question-block-store";
-import { getCanvasSceneAvailableSp } from "@/shared/content/learning/scene-sp";
+import {
+  getCanvasSceneAvailableSp,
+  sumPracticeSolutionSp,
+} from "@/shared/content/learning/scene-sp";
 import { useSaveState } from "@/shared/ui/hooks/use-save-state";
 
 export function useSceneTabController(
@@ -15,10 +18,17 @@ export function useSceneTabController(
   const [title, setTitle] = useState(scene.title);
   const [spInput, setSpInput] = useState(scene.sp || 0);
   const questionBlocks = useQuestionBlockStore((state) => state.questionBlocks);
-  const blockSp = Array.from(questionBlocks.values()).reduce(
-    (sum, block) => sum + (block.blockSp ?? 0),
-    0,
+  const isPractice = scene.kind === "PRACTICE";
+  const { data: practice } = api.scene.getPractice.useQuery(
+    { sceneId: scene.id },
+    { enabled: isPractice },
   );
+  const blockSp = isPractice
+    ? sumPracticeSolutionSp(practice?.solution)
+    : Array.from(questionBlocks.values()).reduce(
+        (sum, block) => sum + (block.blockSp ?? 0),
+        0,
+      );
   const availableSp = getCanvasSceneAvailableSp(scene.sp, blockSp);
   const addSave = useSaveState((state) => state.addSave);
   const removeSave = useSaveState((state) => state.removeSave);

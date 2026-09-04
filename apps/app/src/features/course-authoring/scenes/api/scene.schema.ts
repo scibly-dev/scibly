@@ -131,9 +131,10 @@ export const writePracticeSchema = z.object({
   explanation: z
     .string()
     .nullable()
+    .default(null)
     .describe(
       "Shown to the learner under the app with their result, whatever they scored — " +
-        "the only feedback an exploratory (solution: null) scene gives.",
+        "the only feedback an exploratory (solution: null) scene gives. Omit it for no explanation.",
     ),
 });
 
@@ -146,9 +147,4 @@ export const validatePracticeSchema = z.object({
     .describe(
       "The payload submit(work) would send — normally window.__sciblySelfTest()'s return value.",
     ),
-});
-
-/** `selfTest` stamps the publish gate, so only the editor — never MCP — can claim it. */
-export const validatePracticeInputSchema = validatePracticeSchema.extend({
-  selfTest: z.boolean().default(false),
 });

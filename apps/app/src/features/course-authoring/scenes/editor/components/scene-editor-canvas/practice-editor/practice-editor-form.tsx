@@ -17,6 +17,7 @@ import {
   ATTEMPT_SDK,
   toPracticeGrade,
 } from "@/shared/content/practice/assemble-practice-document";
+import { checkPracticeScene } from "@/shared/content/practice/check-practice-scene";
 import { PracticeSceneFrame } from "@/shared/content/practice/practice-scene-frame";
 import { useSaveState } from "@/shared/ui/hooks/use-save-state";
 
@@ -54,22 +55,25 @@ export function PracticeEditorForm({
   const [selfTestRun, setSelfTestRun] = useState(0);
   const [selfTestFailure, setSelfTestFailure] =
     useState<PracticeSelfTestFailure | null>(null);
-  // The frame reports a self-test the same way it reports a manual play.
-  const selfTestPending = useRef(false);
-  // Mirrors scene.practiceValidated, which only goes stale once the debounced save lands.
-  const [validated, setValidated] = useState(initial.validated);
 
-  // The remount resets the frame's props, so a standing Validate has to be stood
-  // down with it or the fresh app self-tests itself on load.
+  // Without the reset the remounted app self-tests itself on load.
   function restartApp() {
     setRunKey((key) => key + 1);
     setSelfTestRun(0);
-    selfTestPending.current = false;
   }
 
   const solution = useMemo(
     () => parseSolution(draft.solutionText),
     [draft.solutionText],
+  );
+
+  const problems = useMemo(
+    () =>
+      checkPracticeScene({
+        practiceHtml: draft.html,
+        practiceSolution: solution.status === "ok" ? solution.value : null,
+      }),
+    [draft.html, solution],
   );
 
   const gradedFields = validatePractice.data?.gradedFields;
@@ -88,7 +92,6 @@ export function PracticeEditorForm({
     setDraft(incoming);
     setPreviewHtml(incoming.html);
     setSelfTestFailure(null);
-    setValidated(initial.validated);
     restartApp();
   }, [initial]);
 
@@ -103,7 +106,6 @@ export function PracticeEditorForm({
     if (appChanged || keyChanged) {
       validatePractice.reset();
       setSelfTestFailure(null);
-      setValidated(false);
     }
     if (appChanged) {
       setPreviewHtml(next.html);
@@ -172,7 +174,6 @@ export function PracticeEditorForm({
         size="sm"
         onClick={() => {
           setSelfTestFailure(null);
-          selfTestPending.current = true;
           setSelfTestRun((run) => run + 1);
         }}
       >
@@ -201,21 +202,13 @@ export function PracticeEditorForm({
         html={previewHtml}
         sdk={ATTEMPT_SDK}
         onSubmit={(work) => {
-          const selfTest = selfTestPending.current;
-          selfTestPending.current = false;
-          validatePractice
-            .mutateAsync({ sceneId, work, selfTest })
-            .then((result) => setValidated(result.validated))
-            // The banner below reads validatePractice.error.
-            .catch(() => null);
+          // The banner below reads validatePractice.error.
+          validatePractice.mutateAsync({ sceneId, work }).catch(() => null);
         }}
         grade={previewGrade}
         submitError={validatePractice.error?.message ?? null}
         selfTestRun={selfTestRun}
-        onSelfTestFailed={(failure) => {
-          selfTestPending.current = false;
-          setSelfTestFailure(failure);
-        }}
+        onSelfTestFailed={setSelfTestFailure}
         className="border-hairline shrink-0 overflow-hidden rounded-xl border-2 bg-white dark:border-neutral-800"
       />
       {selfTestFailure ? (
@@ -234,10 +227,12 @@ export function PracticeEditorForm({
         <p
           className={cn(
             "shrink-0 text-[12px] font-medium",
-            validated ? "text-emerald-600" : "text-ink-faint",
+            problems.length === 0 ? "text-emerald-600" : "text-ink-faint",
           )}
         >
-          {validated ? copy.validated : copy.notValidated}
+          {problems.length === 0
+            ? copy.validated
+            : copy.notValidated.replace("{problems}", problems.join("; "))}
         </p>
       )}
       <GradingReport

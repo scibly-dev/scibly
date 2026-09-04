@@ -3,7 +3,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { basename, dirname, join } from "node:path";
 
-const EXT = /\.(ts|tsx|js|jsx|mjs|cjs)$/;
+const EXT = /\.(ts|tsx|js|jsx|mjs|cjs|prisma)$/;
 const SKIP = /(^|\/)(node_modules|\.next|\.turbo|dist|build|coverage|generated)(\/|$)|\.d\.ts$|\.gen\./;
 
 const args = process.argv.slice(2);
@@ -180,11 +180,9 @@ function scanFile(file) {
     if (kind[i] !== "comment") continue;
     let j = i;
     while (j + 1 < lines.length && kind[j + 1] === "comment") j++;
-    const text = lines
-      .slice(i, j + 1)
-      .join(" ")
-      .replace(/[/*]+/g, " ")
-      .trim();
+    const block = lines.slice(i, j + 1);
+    const text = block.join(" ").replace(/[/*]+/g, " ").trim();
+    const prismaDoc = file.endsWith(".prisma") && block.some((l) => l.trim().startsWith("///"));
     // code the block introduces: lines until the next blank or comment
     let k = j + 1;
     let subject = "";
@@ -194,7 +192,7 @@ function scanFile(file) {
       subjectLines++;
       k++;
     }
-    runs.push({ start: i + 1, lines: j - i + 1, text, subject, subjectLines });
+    runs.push({ start: i + 1, lines: j - i + 1, text, subject, subjectLines, prismaDoc });
     i = j;
   }
 
@@ -206,6 +204,9 @@ function scanFile(file) {
 function tag(run) {
   const tags = [];
   const t = run.text;
+  // `///` is generated into the Prisma client and shows on hover, so it has a
+  // reader a `//` does not. Scores 0: this labels the block, it does not rank it.
+  if (run.prismaDoc) tags.push("prisma-doc");
   if (run.lines <= 2 && /[─=*#\-_]{6,}/.test(t)) tags.push("banner");
   if (/@(param|returns?|throws)\b/.test(t)) {
     const restated = (t.match(/@param\s+(\w+)\s+([^@]*)/g) ?? []).some((m) => {
@@ -232,6 +233,7 @@ function tag(run) {
 }
 
 const WEIGHT = {
+  "prisma-doc": 0,
   banner: 6,
   "jsdoc-restate": 8,
   "step-narration": 5,
@@ -249,8 +251,9 @@ for (const f of files) {
   fileStats.push(r);
   for (const run of r.runs) {
     const tags = tag(run);
-    if (run.lines < 3 && tags.length === 0) continue;
     const score = run.lines * 2 + tags.reduce((s, t) => s + WEIGHT[t], 0);
+    // A zero-weight tag labels a block without nominating it.
+    if (run.lines < 3 && score === run.lines * 2) continue;
     results.push({
       file: r.file,
       line: run.start,

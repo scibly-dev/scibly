@@ -60,6 +60,7 @@ function assertDraftChanged(
       code: "BAD_REQUEST",
       applicationCode: "api.bad_request",
       message: "No changes have been made since the last published version.",
+      details: { code: "NO_CHANGES" },
     });
   }
 }
@@ -85,7 +86,6 @@ function toPublishedSceneCreateInput(
     "practiceHtml",
     "practiceSolution",
     "practiceExplain",
-    "practiceValidated",
   ] as const);
   const base = {
     ...sceneFields,
@@ -179,6 +179,7 @@ export async function publishCourseSnapshot(
       message: validationFailure.message,
       details: {
         code: validationFailure.code,
+        params: validationFailure.params,
         questions: validationFailure.questions,
       },
     });

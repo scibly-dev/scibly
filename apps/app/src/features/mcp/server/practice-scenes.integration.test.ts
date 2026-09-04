@@ -28,8 +28,6 @@ vi.mock("next/server", async (importOriginal) => ({
 const { handleMcpRequest } = await import("./handler");
 const { createTRPCContext } = await import("@scibly/api/trpc");
 const { createCaller } = await import("@/server/api/root");
-const { practiceContentHash } =
-  await import("@/shared/content/practice/practice-content-hash");
 
 const RUN_ID = `int-practice-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 const ORG = `${RUN_ID}-org`;
@@ -110,6 +108,11 @@ const EXPLORATORY_HTML = `<div id="stage"></div>
   document.body.append(slider);
   draw();
 </script>`;
+
+const BROKEN_HTML = PRACTICE_HTML.replace(
+  "window.__sciblySelfTest =",
+  "const hook =",
+);
 
 const SOLUTION = {
   order: { value: "fetch(url) > await res.json() > render(data)", points: 10 },
@@ -199,7 +202,7 @@ describe.runIf(url !== "")(
       });
 
       const response = await handleMcpRequest(
-        new Request("https://app.scibly.com/api/mcp", {
+        new Request("http://localhost:3000/api/mcp", {
           method: "POST",
           headers,
           body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params }),
@@ -242,22 +245,13 @@ describe.runIf(url !== "")(
       return JSON.parse(payloadText(body)) as T;
     }
 
-    /** The stamp validatePractice refuses to give an agent, applied the way the editor would. */
-    async function stampValidated(sceneId: string) {
-      const scene = await db.scene.findUniqueOrThrow({
-        where: { id: sceneId },
-        select: { practiceHtml: true, practiceSolution: true },
+    const writeApp = (html: string) =>
+      call("writePractice", {
+        sceneId: gradedSceneId,
+        html,
+        solution: SOLUTION,
+        explanation: EXPLANATION,
       });
-      await db.scene.update({
-        where: { id: sceneId },
-        data: {
-          practiceValidated: practiceContentHash(
-            scene.practiceHtml,
-            scene.practiceSolution,
-          ),
-        },
-      });
-    }
 
     it("IT3: advertises the four practice tools, and a createScene that accepts PRACTICE", async () => {
       const body = await rpc("tools/list", {});
@@ -280,11 +274,9 @@ describe.runIf(url !== "")(
         "sourceIds",
       );
 
-      // Both are `.nullable()` without `.optional()`, so an agent that omits
-      // either gets a schema error rather than a default.
       const writePractice = advertised.get("writePractice")!;
       expect(writePractice.inputSchema.required).toEqual(
-        expect.arrayContaining(["sceneId", "html", "solution", "explanation"]),
+        expect.arrayContaining(["sceneId", "html", "solution"]),
       );
     });
 
@@ -334,7 +326,7 @@ describe.runIf(url !== "")(
         html: "",
         solution: null,
         explanation: null,
-        validated: false,
+        problems: ["it has no app html yet"],
       });
     });
 
@@ -353,16 +345,16 @@ describe.runIf(url !== "")(
         html: PRACTICE_HTML,
         solution: SOLUTION,
         explanation: EXPLANATION,
-        validated: false,
+        problems: [],
       });
     });
 
-    it("IT3: grades a correct and a wrong payload without stamping the publish gate", async () => {
+    it("IT3: grades a correct and a wrong payload against the stored key", async () => {
       const right = await call<{
         gradedFields: { achievedPoints: number; maxPoints: number }[];
         totalSpEarned: number;
         explanation: string;
-        validated: boolean;
+        problems: string[];
       }>("validatePractice", { sceneId: gradedSceneId, work: CORRECT_WORK });
 
       expect(right.gradedFields).toEqual([
@@ -377,24 +369,33 @@ describe.runIf(url !== "")(
       ]);
       expect(right.totalSpEarned).toBe(10);
       expect(right.explanation).toBe(EXPLANATION);
-      // Full marks, and still unvalidated: only the editor's self-test stamps.
-      expect(right.validated).toBe(false);
+      expect(right.problems).toEqual([]);
 
       const wrong = await call<{
         gradedFields: { achievedPoints: number }[];
         totalSpEarned: number;
-        validated: boolean;
+        problems: string[];
       }>("validatePractice", { sceneId: gradedSceneId, work: WRONG_WORK });
       expect(wrong.gradedFields[0]?.achievedPoints).toBe(0);
       expect(wrong.totalSpEarned).toBe(0);
-      expect(wrong.validated).toBe(false);
+      expect(wrong.problems).toEqual([]);
+    });
 
-      await expect(
-        db.scene.findUniqueOrThrow({
-          where: { id: gradedSceneId },
-          select: { practiceValidated: true },
-        }),
-      ).resolves.toEqual({ practiceValidated: null });
+    it("IT3: reports the same problems publishCourse would refuse the scene for", async () => {
+      await writeApp(BROKEN_HTML);
+
+      const reported = await call<{ problems: string[] }>("validatePractice", {
+        sceneId: gradedSceneId,
+        work: CORRECT_WORK,
+      });
+      expect(reported.problems.join(" ")).toContain("__sciblySelfTest");
+
+      await writeApp(PRACTICE_HTML);
+      const cleared = await call<{ problems: string[] }>("validatePractice", {
+        sceneId: gradedSceneId,
+        work: CORRECT_WORK,
+      });
+      expect(cleared.problems).toEqual([]);
     });
 
     it("IT3: accepts an exploratory scene with no solution and grades nothing", async () => {
@@ -422,14 +423,14 @@ describe.runIf(url !== "")(
         gradedFields: unknown[];
         totalSpEarned: number;
         explanation: string;
-        validated: boolean;
+        problems: string[];
       }>("validatePractice", { sceneId: exploratorySceneId, work: null });
       expect(graded.gradedFields).toEqual([]);
       expect(graded.totalSpEarned).toBe(0);
       expect(graded.explanation).toBe(
         "Period grows with the square root of mass.",
       );
-      expect(graded.validated).toBe(false);
+      expect(graded.problems).toEqual([]);
     });
 
     it("IT3: refuses insertContent on a PRACTICE scene and names the tool to use", async () => {
@@ -448,38 +449,21 @@ describe.runIf(url !== "")(
       expect(document).not.toContain("writePractice");
     }, 30_000);
 
-    it("IT3: getSceneContent says nothing useful about a PRACTICE scene", async () => {
-      // No collab server here, so this is the timeout path; in production the room returns "".
+    it("IT3: getSceneContent refuses a PRACTICE scene and names the tool to use", async () => {
       const message = await refusal("getSceneContent", {
         sceneId: gradedSceneId,
       });
-      expect(message).not.toContain("writePractice");
-      expect(message).not.toContain("PRACTICE");
-    }, 30_000);
-
-    it("IT3: refuses to publish an unvalidated practice scene", async () => {
-      const refused = await refusal("publishCourse", { courseId });
-
-      expect(refused).toContain("has not passed its self-test");
-      expect(refused).toContain("press Validate");
-      await expect(
-        db.courseVersion.count({ where: { courseId } }),
-      ).resolves.toBe(0);
+      expect(message).toContain("getPractice");
     });
 
     it("IT3: refuses to publish the Introduction scene createLesson made, until something writes it", async () => {
-      await stampValidated(gradedSceneId);
-      await stampValidated(exploratorySceneId);
-
-      // createLesson's auto-created scene parks raw HTML publish calls unreadable
-      // until insertContent (or a browser) converts it.
       const refused = await refusal("publishCourse", { courseId });
 
-      expect(refused).toContain('Scene "Introduction" cannot be read');
-      expect(refused).toContain("Open the scene and re-save it");
+      expect(refused).toContain('Scene "Introduction" has no content');
+      expect(refused).not.toContain("re-save");
     });
 
-    it("IT3: publishes the practice scenes, html, solution and explanation included", async () => {
+    it("IT3: refuses to publish an app the agent never finished, naming what is missing", async () => {
       // The only way past the Introduction scene without a collab server.
       const asked = await call<{ confirmationToken: string }>("deleteScenes", {
         courseId,
@@ -491,6 +475,14 @@ describe.runIf(url !== "")(
         confirmationToken: asked.confirmationToken,
       });
 
+      await writeApp(BROKEN_HTML);
+      expect(await refusal("publishCourse", { courseId })).toContain(
+        "__sciblySelfTest",
+      );
+      await writeApp(PRACTICE_HTML);
+    });
+
+    it("IT3: publishes the practice scenes, html, solution and explanation included", async () => {
       const published = await call<{ version?: { version: number } }>(
         "publishCourse",
         { courseId },

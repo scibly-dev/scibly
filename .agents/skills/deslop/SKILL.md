@@ -38,7 +38,7 @@ node .claude/skills/deslop/scripts/scan-comments.mjs --out=<scratchpad>/deslop <
 The ledger is a folder, so no one reader loads all of it:
 
 - `index.md` — scope, the comment-line totals, and a table routing to every batch: file count, block count, link.
-- `batches/<dir>.md` — one directory's blocks, a checkbox each: `L<line>`, `<comment lines>c/<code lines>L`, tags, preview. Tags are `top-heavy` (block dwarfs the code under it), `banner`, `jsdoc-restate`, `step-narration`, `history`, `echo`.
+- `batches/<dir>.md` — one directory's blocks, a checkbox each: `L<line>`, `<comment lines>c/<code lines>L`, tags, preview. Tags are `top-heavy` (block dwarfs the code under it), `banner`, `jsdoc-restate`, `step-narration`, `history`, `echo`, and `prisma-doc` — a `///` schema comment, which is generated into the Prisma client and shows on hover, so it is a label, not a strike.
 
 Read `index.md`, then work one batch file at a time. Rank is a reading order, not a verdict: a flagged block can be load-bearing and an unflagged one can be pure slop, so the tags say where to look first — the source file still has to be read. Tick each box as you settle it and write the outcome on the line: `cut`, or `keep — <evidence>`. The ledger is then the inventory step 4 reports against, and the one place parallel subagents hand their verdicts back to.
 
