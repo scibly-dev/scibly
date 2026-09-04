@@ -2,12 +2,11 @@ import { db, Prisma } from "@scibly/db";
 
 import { broadcastCourseSync } from "@/features/course-authoring/collaboration/server/broadcast-course-sync";
 import { getEffectiveSceneSp } from "@/shared/content/learning/scene-sp";
+import { checkPracticeScene } from "@/shared/content/practice/check-practice-scene";
 import {
   gradePracticeSubmission,
-  isFieldCorrect,
   type PracticeGradingManifest,
 } from "@/shared/content/practice/grade-practice-submission";
-import { practiceContentHash } from "@/shared/content/practice/practice-content-hash";
 
 import { requireDraftSceneContentAccess } from "./scene-access";
 
@@ -19,7 +18,6 @@ function readPracticeColumns(sceneId: string) {
       practiceHtml: true,
       practiceSolution: true,
       practiceExplain: true,
-      practiceValidated: true,
     },
   });
 }
@@ -33,9 +31,7 @@ export async function getPractice(userId: string, sceneId: string) {
     // SAFETY: this is exactly the JSON shape `writePractice` wrote.
     solution: scene.practiceSolution as PracticeGradingManifest["solution"],
     explanation: scene.practiceExplain,
-    validated:
-      scene.practiceValidated ===
-      practiceContentHash(scene.practiceHtml, scene.practiceSolution),
+    problems: checkPracticeScene(scene),
   };
 }
 
@@ -71,7 +67,7 @@ export async function writePractice(
 
 export async function validatePractice(
   userId: string,
-  input: { sceneId: string; work: unknown; selfTest: boolean },
+  input: { sceneId: string; work: unknown },
 ) {
   const scene = await requireDraftSceneContentAccess(input.sceneId, userId);
   const practice = await readPracticeColumns(input.sceneId);
@@ -86,20 +82,10 @@ export async function validatePractice(
     getEffectiveSceneSp(scene.sp),
   );
 
-  // An open-ended practice grades no fields, so reaching this line is its whole test.
-  const validated =
-    input.selfTest && gradedFields.every((field) => isFieldCorrect(field));
-  if (validated) {
-    await db.scene.update({
-      where: { id: input.sceneId },
-      select: { id: true },
-      data: {
-        practiceValidated: practiceContentHash(
-          practice.practiceHtml,
-          practice.practiceSolution,
-        ),
-      },
-    });
-  }
-  return { gradedFields, totalSpEarned, explanation, validated };
+  return {
+    gradedFields,
+    totalSpEarned,
+    explanation,
+    problems: checkPracticeScene(practice),
+  };
 }

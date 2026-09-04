@@ -30,7 +30,7 @@ import {
   resolveSceneDeletionSchema,
   setSceneLineageSchema,
   updateSceneSchema,
-  validatePracticeInputSchema,
+  validatePracticeSchema,
   writePracticeSchema,
   writeSceneContentSchema,
 } from "./scene.schema";
@@ -143,6 +143,6 @@ export const sceneRouter = createTRPCRouter({
     .mutation(({ ctx, input }) => writePractice(ctx.session.user, input)),
 
   validatePractice: protectedProcedure
-    .input(validatePracticeInputSchema)
+    .input(validatePracticeSchema)
     .mutation(({ ctx, input }) => validatePractice(ctx.session.user.id, input)),
 });

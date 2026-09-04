@@ -8,7 +8,6 @@ import * as Y from "yjs";
 
 import { INPUT_FIELD_NODE_NAME } from "@/shared/content/editor/blocks/questions/input-field/schema";
 import { MULTIPLE_CHOICE_NODE_NAME } from "@/shared/content/editor/blocks/questions/multiple-choice/schema";
-import { practiceContentHash } from "@/shared/content/practice/practice-content-hash";
 
 import { publishCourseSnapshot } from "./publish-course-snapshot";
 
@@ -369,7 +368,12 @@ describe("PCS5: supersedePrevious cascade", () => {
 describe("P0.1: a published PRACTICE row", () => {
   const PRACTICE_SOLUTION = { answer: { value: 42, points: 3 } };
 
-  const PRACTICE_HTML = "<div>app</div>";
+  const PRACTICE_HTML =
+    '<div id="app"></div><script>' +
+    "window.scibly.submit({ answer: 42 });" +
+    "window.scibly.onGraded(() => {});" +
+    "window.__sciblySelfTest = () => ({ answer: 42 });" +
+    "</script>";
 
   type PracticeOverrides = {
     practiceHtml?: string;
@@ -386,7 +390,6 @@ describe("P0.1: a published PRACTICE row", () => {
       practiceHtml: PRACTICE_HTML,
       practiceSolution: PRACTICE_SOLUTION,
       practiceExplain: "Because 42.",
-      practiceValidated: practiceContentHash(PRACTICE_HTML, PRACTICE_SOLUTION),
       ...overrides,
     } as unknown as Partial<typeof DRAFT_SCENE>);
   }
@@ -413,7 +416,7 @@ describe("P0.1: a published PRACTICE row", () => {
 
   it("carries the app fragment as learnerContent and the key as gradingManifest", async () => {
     const published = await publishPractice();
-    expect(published.learnerContent).toBe("<div>app</div>");
+    expect(published.learnerContent).toBe(PRACTICE_HTML);
     expect(published.gradingManifest).toEqual({
       solution: PRACTICE_SOLUTION,
       explain: "Because 42.",
@@ -433,21 +436,20 @@ describe("P0.1: a published PRACTICE row", () => {
     expect(published.practiceSolution).toBeUndefined();
     expect(published.practiceHtml).toBeUndefined();
     expect(published.practiceExplain).toBeUndefined();
-    expect(published.practiceValidated).toBeUndefined();
   });
 
-  it("refuses to publish once the app has been edited past its last passing run", async () => {
+  it("refuses an app rewritten into something that no longer submits", async () => {
     await expect(
       publishPractice({ practiceHtml: "<div>rewritten</div>" }),
-    ).rejects.toThrow(/has not passed its self-test/);
+    ).rejects.toThrow(/never calls window.scibly.submit/);
   });
 
-  it("refuses to publish when the answer key moved under the stamp", async () => {
+  it("refuses an answer key the app never mentions", async () => {
     await expect(
       publishPractice({
-        practiceSolution: { answer: { value: 7, points: 3 } },
+        practiceSolution: { verdict: { value: 7, points: 3 } },
       }),
-    ).rejects.toThrow(/has not passed its self-test/);
+    ).rejects.toThrow(/never mentions the solution field/);
   });
 
   it("publishes when only the explanation changed — prose cannot break the app", async () => {

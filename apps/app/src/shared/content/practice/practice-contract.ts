@@ -119,14 +119,20 @@ calls submit MUST also define:
 
   window.__sciblySelfTest = () => ({ /* the exact payload a correct play submits */ })
 
-This is what the author's Validate button, and the validatePractice tool,
-run the app against — proof submit is actually wired to something, not just
-that the answer key is well-formed. Its return value must equal what a
-learner who does everything right would pass to submit(work).
+This is what the author's Validate button, and the validatePractice tool, run
+the app against — proof submit is actually wired to something, not just that
+the answer key is well-formed. Its return value must equal what a learner who
+does everything right would pass to submit(work).
 
-The author's Validate button feeds it to your own window.scibly.submit(), and
-a run that scores full marks is what makes the scene publishable. Editing the
-html or the solution afterwards retires that, so leave the hook correct.
+## What publishing checks
+
+publishCourse reads every practice scene and refuses the ones that are not
+finished. With no browser to run the app in, it reads the source: a scene with
+a solution must assign __sciblySelfTest, call submit(work), call onGraded(),
+and mention every field id in its solution. Nothing has to be validated by
+hand first — but validatePractice returns that same list under "problems", so
+call it once with your __sciblySelfTest() payload and you learn both whether
+the app scores full marks and whether publishing will take it.
 
 ## Allowed CDN
 

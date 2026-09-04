@@ -6,6 +6,19 @@
       "toastPublishFailed": "Failed to publish course.",
       "publish": "Publish",
       "publishing": "Publishing...",
+      "publishErrors": {
+        "NO_CHANGES": "No changes have been made since the last published version.",
+        "NO_LESSONS": "A course with no lessons cannot be published.",
+        "NO_SCENES": "A course where no lesson has any scenes cannot be published.",
+        "EMPTY_LESSON": "Lesson “{{lesson}}” has no scenes. Add at least one scene before publishing.",
+        "EMPTY_SCENE": "Scene “{{scene}}” has no content. Add content to every scene before publishing.",
+        "UNREADABLE_SCENE": "Scene “{{scene}}” cannot be read. Open the scene, save it again, then publish.",
+        "UNVALIDATED_PRACTICE": "Cannot publish: {{count}} practice scene(s) are not finished — {{scenes}}.",
+        "UNANSWERABLE_QUESTIONS": "{{count}} question(s) have no complete answer key — {{questions}}.",
+        "ZERO_VALUE_QUESTIONS": "{{count}} question(s) are worth nothing — {{questions}}. Give them a value above zero, or remove the field to use the default.",
+        "DUPLICATE_BLOCK_ID": "{{count}} question(s) share a blockId with another question in the same scene — {{questions}}.",
+        "OUTDATED_SCENES": "{{count}} scene(s) cite sources that changed. Review those scenes, or publish anyway to proceed as-is."
+      },
       "publishDialog": {
         "title": "Publish Course",
         "description": "This will create a new published version of the course. Members currently enrolled will remain on their existing version.",

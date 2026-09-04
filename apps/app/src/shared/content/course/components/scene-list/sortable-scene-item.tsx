@@ -78,7 +78,8 @@ export const ScenePosition = ({
 export const SceneTypeIcon = ({
   compact,
   isActive,
-}: Pick<SceneItemCardProps, "compact" | "isActive">) => {
+  scene,
+}: Pick<SceneItemCardProps, "compact" | "isActive" | "scene">) => {
   return (
     <div
       className={cn(
@@ -87,16 +88,20 @@ export const SceneTypeIcon = ({
         sceneIconStateClassName(isActive, compact ?? false),
       )}
     >
-      <SceneIcon className={compact ? "h-3 w-3" : "h-4 w-4"} />
+      <SceneIcon
+        kind={scene.kind}
+        className={compact ? "h-3 w-3" : "h-4 w-4"}
+      />
     </div>
   );
 };
 
 function getSceneDetailsLabels(props: SceneItemCardProps) {
+  const isPractice = props.scene.kind === "PRACTICE";
   return {
     interactiveCanvasLabel: withDefaultLabel(
-      props.interactiveCanvasLabel,
-      "Interactive canvas",
+      isPractice ? props.practiceSceneLabel : props.interactiveCanvasLabel,
+      isPractice ? "Practice app" : "Interactive canvas",
     ),
     sceneOutdatedLabel: withDefaultLabel(
       props.sceneOutdatedLabel,
@@ -246,7 +251,11 @@ export function SceneItemCard(props: SceneItemCardProps) {
         index={props.index}
         isActive={isActive}
       />
-      <SceneTypeIcon compact={compact} isActive={isActive} />
+      <SceneTypeIcon
+        compact={compact}
+        isActive={isActive}
+        scene={props.scene}
+      />
       <SceneDetails {...props} />
       <SceneActions {...props} />
     </div>

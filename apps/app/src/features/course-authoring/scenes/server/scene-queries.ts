@@ -66,6 +66,14 @@ export async function getSceneLocation(userId: string, sceneId: string) {
 
 export async function getSceneContent(user: SceneUser, sceneId: string) {
   const scene = await requireSceneContentAccess(sceneId, user.id);
+  if (scene.kind === "PRACTICE") {
+    throw new AppError({
+      code: "BAD_REQUEST",
+      applicationCode: "api.bad_request",
+      message:
+        "This is a PRACTICE scene — use getPractice instead of getSceneContent.",
+    });
+  }
   const sourceIds = await sceneLineageService.getLineageForScene(sceneId);
 
   if (scene.courseVersionId == null) {

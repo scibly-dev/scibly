@@ -17,7 +17,7 @@ import { SceneNavigatorList } from "./scene-navigator-list";
 export type SceneNavigatorItem = SceneListItem;
 
 export type SceneNavigatorActions = {
-  create: (title: string) => void;
+  create: (title: string, kind?: "PRACTICE") => void;
   clone: (sceneId: string) => void;
   delete: (sceneId: string) => Promise<boolean>;
   reorder: (sceneIds: string[]) => void;

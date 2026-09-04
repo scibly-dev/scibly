@@ -125,33 +125,31 @@ an ADR.
 
 ## Validation
 
-The agent writes the app blind and cannot see it render, so `validatePractice`
-alone (payload vs. solution) would pass an app whose Submit button is wired to
-nothing. Every generated app therefore also exports:
+The agent writes the app blind and cannot see it render, so grading a payload
+against the solution would pass an app whose Submit button is wired to nothing.
+One pure function, `checkPracticeScene({ practiceHtml, practiceSolution })`,
+reads the app's source and returns what is wrong with it: no html, no
+`window.__sciblySelfTest` assignment, no `scibly.submit(work)` call, no
+`scibly.onGraded()` call, or a solution field the html never mentions. A scene
+that grades nothing is exploratory and passes on having html at all.
 
-```js
-window.__sciblySelfTest = () => ({ /* the payload a correct play submits */ })
-```
+Every caller runs that same function:
 
-The editor's preview iframe is already rendering the app, so **Validate** runs
-there: the frame asks the app for `__sciblySelfTest()` and passes the result to
-`window.scibly.submit()`, the same call a learner's Submit button makes. An app
-missing the export, or one that throws, reports back instead. No headless
-browser in production.
+- **publish** — any problem is `UNVALIDATED_PRACTICE`, naming the scene and
+  what is missing. Not behind `force`: an app whose submit is wired to nothing
+  strands the learner on the scene.
+- **MCP `validatePractice`** — grades the agent's payload against the solution
+  and returns `problems` alongside, so the agent sees the exact sentence
+  publish would refuse with.
+- **the editor** — the same list, recomputed live under the preview.
 
-A run that scores every point stamps `scene.practiceValidated` with
-`sha256(practiceHtml + practiceSolution)`, and publish re-derives that hash:
-a mismatch is `UNVALIDATED_PRACTICE`, so editing either column retires the
-stamp without any write having to clear it. The explanation is outside the
-hash — it is prose shown after grading and cannot invalidate a run. An
-open-ended practice grades no fields and passes on submitting at all, which is
-the only thing there is to prove about it. The gate is not behind `force`: an
-app whose submit is wired to nothing strands the learner on the scene.
+Nothing is stamped and nothing is stored. The check derives from the two
+columns, so editing either re-derives it, and publish needs neither a browser
+nor a UI visit first.
 
-The MCP `validatePractice` stays payload-only — useful to the agent, not the
-gate. `selfTest` lives on the tRPC input schema alone, so only the editor,
-which ran the payload through the live app, can stamp; a payload the agent
-invented proves nothing about whether the app is wired to send it.
+**Known ceiling:** string checks, not a parser. An app with all four markers
+that still throws at runtime gets through; the upgrade path is a headless
+Chromium run behind the same function.
 
 ## MCP surface
 

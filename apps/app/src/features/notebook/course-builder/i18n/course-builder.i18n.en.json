@@ -57,6 +57,7 @@
         "sceneSources": "Sources",
         "sceneOutdatedHint": "Source material changed",
         "interactiveCanvas": "Interactive canvas",
+        "practiceScene": "Practice app",
         "moreSources": "+{{count}} more",
         "courseTitlePlaceholder": "Course title...",
         "linkNotebookFailed": "Failed to link notebook to course.",

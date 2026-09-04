@@ -79,7 +79,7 @@ describe.runIf(url !== "")("IT2 — an external agent building a course", () => 
     });
 
     const response = await handleMcpRequest(
-      new Request("https://app.scibly.com/api/mcp", {
+      new Request("http://localhost:3000/api/mcp", {
         method: "POST",
         headers,
         body: JSON.stringify({

@@ -88,4 +88,50 @@ describe("review path", () => {
     expect(notCompleted.sc1?.blocks).toEqual(expectedBlocks);
     expect(completed.sc1?.blocks).toEqual(expectedBlocks);
   });
+
+  it("RP4: rebuilds the submitted practice work from the graded fields, so a reload can replay the app", () => {
+    const practice = [
+      {
+        blockId: "guess",
+        blockType: "practice",
+        learnerAnswer: 42,
+        achievedPoints: 1,
+        maxPoints: 1,
+        spEarned: 1,
+        correctAnswer: 42,
+      },
+      {
+        blockId: "steps",
+        blockType: "practice",
+        learnerAnswer: ["a", "b"],
+        achievedPoints: 0,
+        maxPoints: 2,
+        spEarned: 0,
+        correctAnswer: ["b", "a"],
+      },
+    ];
+    const analytics = [{ sceneId: "sc1", spEarned: 1, gradedBlocks: practice }];
+
+    expect(
+      derivePendingSubmissions(
+        dbProgress({ completedSceneIds: ["sc1"], sceneAnalytics: analytics }),
+      ).sc1?.practiceWork,
+    ).toEqual({ guess: 42, steps: ["a", "b"] });
+
+    expect(
+      derivePendingSubmissions(
+        dbProgress({ completedSceneIds: [], sceneAnalytics: analytics }),
+      ).sc1?.practiceWork,
+    ).toBeUndefined();
+    expect(
+      derivePendingSubmissions(
+        dbProgress({
+          completedSceneIds: ["sc1"],
+          sceneAnalytics: [
+            { sceneId: "sc1", spEarned: 0, gradedBlocks: [WRONG_ANSWER_BLOCK] },
+          ],
+        }),
+      ).sc1?.practiceWork,
+    ).toBeUndefined();
+  });
 });
