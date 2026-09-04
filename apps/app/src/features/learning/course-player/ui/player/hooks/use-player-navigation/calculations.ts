@@ -77,12 +77,23 @@ export function derivePendingSubmissions(
       correctAnswer: b.correctAnswer,
     }));
 
+    // A graded practice field's blockId is its solution field id, so the pair
+    // rebuilds the work object the scene was graded on.
+    const practiceFields = blocksArray.filter(
+      (b) => b.blockType === "practice",
+    );
+    const completed = dbProgress.completedSceneIds.includes(sa.sceneId);
+
     submissions[sa.sceneId] = {
       sceneId: sa.sceneId,
       blocks,
-      gradedBlocks: dbProgress.completedSceneIds.includes(sa.sceneId)
-        ? gradedBlocks
-        : undefined,
+      gradedBlocks: completed ? gradedBlocks : undefined,
+      practiceWork:
+        completed && practiceFields.length > 0
+          ? Object.fromEntries(
+              practiceFields.map((b) => [b.blockId, b.learnerAnswer]),
+            )
+          : undefined,
     };
   }
   return submissions;

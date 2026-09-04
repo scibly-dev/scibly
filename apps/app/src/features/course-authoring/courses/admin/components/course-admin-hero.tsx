@@ -16,6 +16,11 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 import { type CoursesTranslations } from "@/features/course-authoring/contracts";
+import {
+  FORCEABLE_PUBLISH_FAILURE,
+  type PublishFailure,
+  translatePublishFailure,
+} from "@/features/course-authoring/publishing/publish-failure";
 import { type GateDecision } from "@/features/organizations/contracts";
 import { useTranslation } from "@/i18n/hooks/use-translation";
 import { api } from "@/shared/api/trpc/client";
@@ -74,12 +79,14 @@ export function PublishGateNotice({
 
 export function PublishDialogActions({
   blockedReason,
+  canForce = false,
   onClose,
   onPublish,
   pending,
   t,
 }: {
   blockedReason: string | null;
+  canForce?: boolean;
   onClose: () => void;
   onPublish: () => void;
   pending: boolean;
@@ -92,7 +99,7 @@ export function PublishDialogActions({
       </Button>
       <Button
         onClick={onPublish}
-        disabled={pending}
+        disabled={pending || (Boolean(blockedReason) && !canForce)}
         className="gap-2"
         variant={blockedReason ? "destructive" : "default"}
       >
@@ -101,7 +108,7 @@ export function PublishDialogActions({
         ) : (
           <>
             <Upload className="h-4 w-4" />
-            {blockedReason
+            {canForce
               ? t.detail.publishDialog.confirmForce
               : t.detail.publishDialog.confirmPublish}
           </>
@@ -113,6 +120,7 @@ export function PublishDialogActions({
 
 export function PublishCourseDialog({
   blockedReason,
+  canForce,
   gate,
   supersedePrevious,
   onClose,
@@ -125,7 +133,7 @@ export function PublishCourseDialog({
   t,
 }: {
   blockedReason: string | null;
-
+  canForce?: boolean;
   gate: GateDecision | null;
   supersedePrevious: boolean;
   onClose: () => void;
@@ -153,6 +161,7 @@ export function PublishCourseDialog({
         ) : (
           <PublishCourseDialogBody
             blockedReason={blockedReason}
+            canForce={canForce}
             supersedePrevious={supersedePrevious}
             onClose={onClose}
             onSupersedeChange={onSupersedeChange}
@@ -168,6 +177,7 @@ export function PublishCourseDialog({
 
 export function PublishCourseDialogBody({
   blockedReason,
+  canForce,
   supersedePrevious,
   onClose,
   onSupersedeChange,
@@ -176,6 +186,7 @@ export function PublishCourseDialogBody({
   t,
 }: {
   blockedReason: string | null;
+  canForce?: boolean;
   supersedePrevious: boolean;
   onClose: () => void;
   onSupersedeChange: (checked: boolean) => void;
@@ -210,6 +221,7 @@ export function PublishCourseDialogBody({
       ) : null}
       <PublishDialogActions
         blockedReason={blockedReason}
+        canForce={canForce}
         onClose={onClose}
         onPublish={onPublish}
         pending={pending}
@@ -227,9 +239,10 @@ export function CourseAdminHero({ courseId, orgSlug }: CourseAdminHeroProps) {
   const [showPublishDialog, setShowPublishDialog] = useState(false);
   const [showShareDialog, setShowShareDialog] = useState(false);
   const [supersedePrevious, setSupersedePrevious] = useState(false);
-  const [publishBlockedReason, setPublishBlockedReason] = useState<
-    string | null
-  >(null);
+  const [publishFailure, setPublishFailure] = useState<PublishFailure | null>(
+    null,
+  );
+  const canForce = publishFailure?.code === FORCEABLE_PUBLISH_FAILURE;
   const publishMutation = api.course.publishCourse.useMutation({
     onSuccess: ({ version }) => {
       toast.success(
@@ -237,12 +250,16 @@ export function CourseAdminHero({ courseId, orgSlug }: CourseAdminHeroProps) {
       );
       setShowPublishDialog(false);
       setSupersedePrevious(false);
-      setPublishBlockedReason(null);
+      setPublishFailure(null);
       invalidateCourseAdmin(utils, courseId);
     },
     onError: (error) => {
-      if (error.message.startsWith("Cannot publish:")) {
-        setPublishBlockedReason(error.message);
+      const failure = translatePublishFailure(
+        error.data,
+        t.detail.publishErrors,
+      );
+      if (failure) {
+        setPublishFailure(failure);
         return;
       }
       toast.error(error.message || t.detail.toastPublishFailed);
@@ -302,9 +319,10 @@ export function CourseAdminHero({ courseId, orgSlug }: CourseAdminHeroProps) {
         open={showPublishDialog}
         onOpenChange={(open) => {
           setShowPublishDialog(open);
-          if (!open) setPublishBlockedReason(null);
+          if (!open) setPublishFailure(null);
         }}
-        blockedReason={publishBlockedReason}
+        blockedReason={publishFailure?.message ?? null}
+        canForce={canForce}
         gate={publishGate}
         orgSlug={orgSlug}
         supersedePrevious={supersedePrevious}
@@ -314,7 +332,7 @@ export function CourseAdminHero({ courseId, orgSlug }: CourseAdminHeroProps) {
           publishMutation.mutate({
             courseId,
             supersedePrevious,
-            force: Boolean(publishBlockedReason),
+            force: canForce,
           })
         }
         pending={publishMutation.isPending}

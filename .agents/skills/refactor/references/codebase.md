@@ -193,6 +193,20 @@ void persistId(id);
 const items = orderItemsSchema.parse(data);
 ```
 
+A `// SAFETY:` comment guarding an `as` cast is a suppression too, and falls
+under the same rule. It marks a place where a parse belongs. At an untrusted
+boundary reach for the local idiom instead — a Zod `safeParse` returning
+`null`, as in `course-sync-events.ts`'s `parseSyncEvent` or
+`practice/parse-practice-message.ts`. A cast is only defensible over a value
+this codebase itself wrote and a schema cannot re-derive (a JSON column read
+straight back, say).
+
+### Agent-tooling markers must not ship
+
+`ponytail:`, and any successor marker, belongs in a prompt, not in a source
+comment. If a simplification has a real ceiling worth recording, write the
+ceiling and the upgrade path as an ordinary comment.
+
 ## AI features (Vercel AI SDK, `ai`, `@ai-sdk/*`)
 
 - Streaming endpoints must handle abort/disconnect (leaked generations cost

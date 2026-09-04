@@ -7,8 +7,9 @@ import {
   applySceneResult,
   completedSceneIdSet,
   createLessonProgressionContext,
-  currentSceneKind,
+  currentScenePlayMode,
   feedbackFor,
+  hasExplanation,
   hasFeedback,
   highestReachableSceneIndex,
   isCompleted,
@@ -32,7 +33,7 @@ export type {
   LessonProgressionInput,
   LessonSessionSnapshot,
   PendingSceneSubmission,
-  SceneKind,
+  ScenePlayMode,
   SceneResult,
   SceneSubmissionCommand,
   SubmitScene,
@@ -93,24 +94,29 @@ export const lessonProgressionMachine = setup({
     shouldRouteToAdvance: ({ context }) =>
       isEligibleToLeave(context) && !isFinalScene(context),
     isAssessmentScene: ({ context }) =>
-      currentSceneKind(context) === "assessment",
-    isPitchScene: ({ context }) => currentSceneKind(context) === "pitch",
+      currentScenePlayMode(context) === "assessment",
+    isPitchScene: ({ context }) => currentScenePlayMode(context) === "pitch",
     shouldCelebrateAfterSubmit: ({ context }) =>
-      currentSceneKind(context) !== "assessment" && isFinalScene(context),
+      currentScenePlayMode(context) !== "assessment" &&
+      !hasExplanation(context) &&
+      isFinalScene(context),
     shouldAdvanceAfterSubmit: ({ context }) =>
-      currentSceneKind(context) !== "assessment" && !isFinalScene(context),
+      currentScenePlayMode(context) !== "assessment" &&
+      !hasExplanation(context) &&
+      !isFinalScene(context),
     canSubmitAssessment: ({ context, event }) =>
       event.type === "SUBMIT" &&
-      currentSceneKind(context) === "assessment" &&
-      Boolean(event.command.blocks?.length) &&
+      currentScenePlayMode(context) === "assessment" &&
+      (Boolean(event.command.blocks?.length) ||
+        event.command.practiceWork !== undefined) &&
       canSubmitCurrentScene(context, event),
     canSubmitContent: ({ context, event }) =>
       event.type === "SUBMIT" &&
-      currentSceneKind(context) === "content" &&
+      currentScenePlayMode(context) === "content" &&
       canSubmitCurrentScene(context, event),
     canSubmitPitch: ({ context, event }) =>
       event.type === "SUBMIT" &&
-      currentSceneKind(context) === "pitch" &&
+      currentScenePlayMode(context) === "pitch" &&
       canSubmitCurrentScene(context, event),
     canGoToScene: ({ context, event }) =>
       event.type === "GO_TO_SCENE" &&

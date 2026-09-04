@@ -5,6 +5,7 @@ export type SceneListItem = {
   title: string;
   isOutdated: boolean;
   sources: readonly SceneSourceInfo[];
+  kind?: "DOCUMENT" | "PRACTICE";
 };
 
 export interface SortableSceneItemProps {
@@ -21,5 +22,6 @@ export interface SortableSceneItemProps {
   deleteSceneLabel?: string;
   sceneOutdatedLabel?: string;
   interactiveCanvasLabel?: string;
+  practiceSceneLabel?: string;
   hideOutdatedIndicators?: boolean;
 }

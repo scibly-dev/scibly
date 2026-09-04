@@ -57,6 +57,7 @@
         "sceneSources": "Quellen",
         "sceneOutdatedHint": "Quellenmaterial geändert",
         "interactiveCanvas": "Interaktive Leinwand",
+        "practiceScene": "Übungs-App",
         "moreSources": "+{{count}} weitere",
         "courseTitlePlaceholder": "Kurstitel...",
         "linkNotebookFailed": "Notebook konnte nicht mit dem Kurs verknüpft werden.",

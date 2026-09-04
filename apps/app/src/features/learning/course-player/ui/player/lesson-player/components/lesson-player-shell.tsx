@@ -59,6 +59,13 @@ function LessonPlayerStageComponent({
           currentScene={currentScene}
           variant={variant}
           guideReaction={guideReaction}
+          onPracticeSubmit={(work) =>
+            actions.submitPracticeWork(currentScene.id, work)
+          }
+          gradedBlocks={scene.sceneGradedBlocks}
+          explanation={scene.sceneExplanation}
+          practiceWork={scene.scenePracticeWork}
+          submitError={submission.submissionError}
           t={t}
         />
       )}

@@ -1,9 +1,11 @@
 import { createTRPCRouter, protectedProcedure } from "@scibly/api/trpc";
 
+import { broadcastCourseSync } from "@/features/course-authoring/collaboration/server/broadcast-course-sync";
 import {
   cloneDraftScene,
   createDraftScene,
   deleteDraftScenes,
+  getPractice,
   getSceneContent,
   getSceneLineage,
   getSceneLocation,
@@ -12,6 +14,8 @@ import {
   resolveSceneDeletion,
   setDraftSceneLineage,
   updateDraftScene,
+  validatePractice,
+  writePractice,
   writeSceneContent,
 } from "@/features/course-authoring/server";
 
@@ -20,13 +24,22 @@ import {
   createSceneSchema,
   deleteSceneSchema,
   getLessonScenesSchema,
+  getPracticeSchema,
   getSceneContentSchema,
   reorderScenesSchema,
   resolveSceneDeletionSchema,
   setSceneLineageSchema,
   updateSceneSchema,
+  validatePracticeSchema,
+  writePracticeSchema,
   writeSceneContentSchema,
 } from "./scene.schema";
+
+// Broadcast from the server, not the browser: an agent editing over MCP has no browser.
+const SCENES_CHANGED = [
+  { type: "invalidate_scenes" },
+  { type: "invalidate_course" },
+] as const;
 
 export const sceneRouter = createTRPCRouter({
   getLessonScenes: protectedProcedure
@@ -35,23 +48,47 @@ export const sceneRouter = createTRPCRouter({
 
   updateScene: protectedProcedure
     .input(updateSceneSchema)
-    .mutation(({ ctx, input }) => updateDraftScene(ctx.session.user, input)),
+    .mutation(async ({ ctx, input }) => {
+      const scene = await updateDraftScene(ctx.session.user, input);
+      if (input.updates) {
+        broadcastCourseSync(ctx.session.user, scene.courseId, {
+          type: "update_scene",
+          sceneId: input.sceneId,
+          updates: input.updates,
+        });
+      }
+      return scene;
+    }),
 
   createScene: protectedProcedure
     .input(createSceneSchema)
-    .mutation(({ ctx, input }) => createDraftScene(ctx.session.user.id, input)),
+    .mutation(async ({ ctx, input }) => {
+      const scene = await createDraftScene(ctx.session.user.id, input);
+      broadcastCourseSync(ctx.session.user, scene.courseId, ...SCENES_CHANGED);
+      return scene;
+    }),
 
   cloneScene: protectedProcedure
     .input(cloneSceneSchema)
-    .mutation(({ ctx, input }) =>
-      cloneDraftScene(ctx.session.user.id, input.sceneId),
-    ),
+    .mutation(async ({ ctx, input }) => {
+      const scene = await cloneDraftScene(ctx.session.user.id, input.sceneId);
+      broadcastCourseSync(ctx.session.user, scene.courseId, ...SCENES_CHANGED);
+      return scene;
+    }),
 
   deleteScene: protectedProcedure
     .input(deleteSceneSchema)
-    .mutation(({ ctx, input }) =>
-      deleteDraftScenes(ctx.session.user.id, input.sceneIds),
-    ),
+    .mutation(async ({ ctx, input }) => {
+      const result = await deleteDraftScenes(
+        ctx.session.user.id,
+        input.sceneIds,
+      );
+      const courseId = result.deleted[0]?.courseId;
+      if (courseId) {
+        broadcastCourseSync(ctx.session.user, courseId, ...SCENES_CHANGED);
+      }
+      return result;
+    }),
 
   resolveSceneDeletion: protectedProcedure
     .input(resolveSceneDeletionSchema)
@@ -61,9 +98,13 @@ export const sceneRouter = createTRPCRouter({
 
   reorderScenes: protectedProcedure
     .input(reorderScenesSchema)
-    .mutation(({ ctx, input }) =>
-      reorderDraftScenes(ctx.session.user.id, input),
-    ),
+    .mutation(async ({ ctx, input }) => {
+      const result = await reorderDraftScenes(ctx.session.user.id, input);
+      broadcastCourseSync(ctx.session.user, result.courseId, {
+        type: "invalidate_scenes",
+      });
+      return result;
+    }),
 
   setSceneLineage: protectedProcedure
     .input(setSceneLineageSchema)
@@ -92,4 +133,16 @@ export const sceneRouter = createTRPCRouter({
     .query(({ ctx, input }) =>
       getSceneLocation(ctx.session.user.id, input.sceneId),
     ),
+
+  getPractice: protectedProcedure
+    .input(getPracticeSchema)
+    .query(({ ctx, input }) => getPractice(ctx.session.user.id, input.sceneId)),
+
+  writePractice: protectedProcedure
+    .input(writePracticeSchema)
+    .mutation(({ ctx, input }) => writePractice(ctx.session.user, input)),
+
+  validatePractice: protectedProcedure
+    .input(validatePracticeSchema)
+    .mutation(({ ctx, input }) => validatePractice(ctx.session.user.id, input)),
 });

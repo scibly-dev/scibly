@@ -1,0 +1,34 @@
+{
+  "editorUi": {
+    "practice": {
+      "appTab": "App",
+      "appHint": "A self-contained HTML fragment. Call window.scibly.submit(work) when the learner is done — an exploratory scene skips submit entirely.",
+      "solutionTab": "Solution",
+      "solutionHint": "Answer key, keyed by the field ids submit(work) sends. Leave empty for an exploratory scene that needs no submit.",
+      "explanationTab": "Explanation",
+      "explanationHint": "Shown to the learner under the app with their result, whatever they scored.",
+      "testRunTab": "Test run",
+      "testRunHint": "The real sandboxed app. Submitting inside it grades against your draft solution.",
+      "validate": "Validate",
+      "restart": "Restart",
+      "saveFailed": "Couldn't save your last change. Nothing is lost — keep editing and it retries.",
+      "validated": "Ready to publish — nothing is missing from this app.",
+      "notValidated": "Not ready to publish: {problems}",
+      "selfTestMissing": "The app defines no window.__sciblySelfTest().",
+      "selfTestThrew": "window.__sciblySelfTest() threw: {error}",
+      "solutionInvalidJson": "Not valid JSON.",
+      "solutionInvalid": "Invalid solution.",
+      "solutionNotSaved": "{message} Not saved.",
+      "solutionValidOne": "Valid JSON · 1 graded field",
+      "solutionValid": "Valid JSON · {count} graded fields",
+      "solutionEmpty": "Empty — the scene awards full SP on any submit.",
+      "grading": "Grading…",
+      "gradingFailed": "Grading failed. Submit inside the app again to retry.",
+      "gradingEmpty": "Submit inside the app above to grade it against your solution. Exploratory scenes never submit — nothing lands here.",
+      "result": "Result",
+      "ungradedScene": "Ungraded scene — every submit awards the full SP.",
+      "expectedAnswer": "expected {value}",
+      "learnerReads": "What the learner reads"
+    }
+  }
+}

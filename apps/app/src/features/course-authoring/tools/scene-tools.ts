@@ -23,7 +23,8 @@ const LIST_SCENES_DESCRIPTION =
 const CREATE_SCENE_DESCRIPTION =
   "Create a new scene in a lesson. The new scene is appended after all existing scenes. " +
   "Every lesson already has a default Introduction scene at order 0 — call listScenes first and populate that scene before creating additional ones. " +
-  "This tool is strictly for scene structure and metadata creation. To write content, call insertContent afterwards.";
+  "This tool is strictly for scene structure and metadata creation. Write the content afterwards: " +
+  "insertContent for a DOCUMENT scene, writePractice for a PRACTICE one.";
 const SET_LINEAGE_DESCRIPTION =
   "Record which notebook sources ground a draft scene's current content and mark the scene fresh (clears isOutdated). " +
   "Only call after insertContent actually rewrote the scene — never to dismiss outdated scenes without updating content. " +

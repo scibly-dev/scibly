@@ -1,6 +1,7 @@
 import type { PublishArtifacts } from "@/shared/content/contracts";
+import type { PracticeGradingManifest } from "@/shared/content/practice/grade-practice-submission";
 
-import { getCanvasSceneAvailableSp } from "./scene-sp";
+import { getCanvasSceneAvailableSp, sumPracticeSolutionSp } from "./scene-sp";
 
 type PublishedScenePointSummary = {
   hasQuestions: boolean;
@@ -18,5 +19,15 @@ export function summarizePublishedGradingManifest(
   return {
     hasQuestions: gradingManifest.length > 0,
     maxSp: getCanvasSceneAvailableSp(sp, questionSp),
+  };
+}
+
+export function summarizePublishedPracticeManifest(
+  sp: number | null | undefined,
+  solution: PracticeGradingManifest["solution"],
+): PublishedScenePointSummary {
+  return {
+    hasQuestions: Object.keys(solution ?? {}).length > 0,
+    maxSp: getCanvasSceneAvailableSp(sp, sumPracticeSolutionSp(solution)),
   };
 }

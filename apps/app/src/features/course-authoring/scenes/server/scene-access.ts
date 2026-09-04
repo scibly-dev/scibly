@@ -13,7 +13,24 @@ export async function requireSceneContentAccess(
 ) {
   const scene = await db.scene.findUnique({
     where: { id: sceneId },
-    include: { lesson: { include: { course: true } } },
+    // No content columns: this runs on every gated call, including a practice
+    // autosave twice a second.
+    select: {
+      id: true,
+      title: true,
+      kind: true,
+      sp: true,
+      lessonId: true,
+      courseVersionId: true,
+      lesson: {
+        select: {
+          id: true,
+          title: true,
+          courseId: true,
+          course: { select: { id: true, title: true, organizationId: true } },
+        },
+      },
+    },
   });
   if (!scene) {
     throw new AppError({

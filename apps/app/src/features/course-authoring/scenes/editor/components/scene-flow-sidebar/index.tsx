@@ -10,9 +10,14 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { useHocuspocusProvider } from "@hocuspocus/provider-react";
 import { Button } from "@scibly/ui/components/button";
-import { Plus } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@scibly/ui/components/dropdown-menu";
+import { FileText, FlaskConical, Plus } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -100,20 +105,37 @@ export const SceneSortableList = ({
   );
 };
 
-export const SceneListHeader = ({ onCreate }: { onCreate: () => void }) => {
+export const SceneListHeader = ({
+  onCreate,
+}: {
+  onCreate: (kind?: "PRACTICE") => void;
+}) => {
   return (
     <div className="flex items-center justify-between px-4 py-3">
       <h2 className="text-ink-faint text-[11px] font-bold tracking-wider uppercase">
         Scenes
       </h2>
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={onCreate}
-        className="hover:bg-ground h-6 w-6 rounded-[8px] dark:hover:bg-neutral-800"
-      >
-        <Plus className="text-ink-muted h-4 w-4" />
-      </Button>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="hover:bg-ground h-6 w-6 rounded-[8px] dark:hover:bg-neutral-800"
+          >
+            <Plus className="text-ink-muted h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-52">
+          <DropdownMenuItem onClick={() => onCreate()}>
+            <FileText className="mr-2 h-3.5 w-3.5" />
+            Interactive canvas
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => onCreate("PRACTICE")}>
+            <FlaskConical className="mr-2 h-3.5 w-3.5" />
+            Practice app
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 };
@@ -129,11 +151,6 @@ export function SceneFlowSidebar({
 
   const addSave = useSaveState((state) => state.addSave);
   const removeSave = useSaveState((state) => state.removeSave);
-  const provider = useHocuspocusProvider();
-
-  const collaborationInvalidate = () => {
-    provider.sendStateless(JSON.stringify({ type: "invalidate_scenes" }));
-  };
 
   const {
     createScene: { mutate: createSceneMutation },
@@ -145,7 +162,6 @@ export function SceneFlowSidebar({
     setScenes,
     activeSceneId,
     setActiveSceneId,
-    collaborationInvalidate,
     saveState: { start: addSave, end: removeSave },
     onDeleteFailed: (message) => {
       toast.error(message || "Failed to delete scene.");
@@ -165,8 +181,10 @@ export function SceneFlowSidebar({
   });
 
   return (
-    <aside className="bg-ground-soft flex h-full w-full shrink-0 flex-col pt-2 dark:bg-neutral-900/10">
-      <SceneListHeader onCreate={() => createSceneMutation({ lessonId })} />
+    <aside className="flex h-full w-full shrink-0 flex-col bg-white pt-2 dark:bg-neutral-950">
+      <SceneListHeader
+        onCreate={(kind) => createSceneMutation({ lessonId, kind })}
+      />
 
       <div className="no-scrollbar flex-1 overflow-y-auto px-2 pb-4">
         <SceneSortableList

@@ -13,6 +13,7 @@ import {
   type Scene,
 } from "../../../../lessons/builder/components/lesson-builder";
 import { lessonDesign } from "../right-sidebar/design-tab";
+import { PracticeEditor } from "./practice-editor";
 import { TemplateDock } from "./template-dock";
 
 const VIBE_GROUND = {
@@ -52,6 +53,19 @@ export function SceneEditorCanvas({
   const customStyles = editorStyles(design);
 
   const editor = useQuestionBlockStore((s) => s.editor);
+
+  if (scene.kind === "PRACTICE") {
+    return (
+      <main
+        className={cn(
+          "relative flex min-w-0 flex-1 flex-col transition-colors duration-500",
+          VIBE_GROUND[vibe],
+        )}
+      >
+        <PracticeEditor sceneId={scene.id} />
+      </main>
+    );
+  }
 
   return (
     <main

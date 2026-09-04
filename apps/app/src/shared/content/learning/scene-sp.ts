@@ -16,6 +16,15 @@ export function getCanvasSceneAvailableSp(
   return getEffectiveSceneSp(sceneSp) + questionSp;
 }
 
+export function sumPracticeSolutionSp(
+  solution: Record<string, { points: number }> | null | undefined,
+): number {
+  return Object.values(solution ?? {}).reduce(
+    (total, field) => total + field.points,
+    0,
+  );
+}
+
 function isQuestionBlockFlag(value: unknown): boolean {
   return value === true || value === "true";
 }

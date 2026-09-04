@@ -272,6 +272,26 @@ describe("SOL9: a scene that cannot be read is refused, and said so honestly", (
   });
 });
 
+describe("SOL9b: a scene nobody has written in yet is empty, not unreadable", () => {
+  it.each([
+    ["what the lesson seeder writes", "<div><p></p></div>"],
+    ["what an empty editor serializes to", "<p></p>"],
+    ["a placeholder line break", "<div><p><br></p></div>"],
+  ])("%s asks for content instead of a re-save", (_case, html) => {
+    const failure = validatePublishableContent(
+      [
+        lessonOf("Geography", [
+          { title: "Introduction", documentState: Buffer.from(html) },
+        ]),
+      ],
+      {},
+    );
+
+    expect(failure?.code).toBe("EMPTY_SCENE");
+    expect(failure?.message).toContain("Introduction");
+  });
+});
+
 describe("SOL10: a course that is structurally broken says so first", () => {
   it.each([
     ["a course with no lessons at all", [], "NO_LESSONS"],
@@ -377,6 +397,57 @@ describe("SOL12: a course that asks nothing is not an incomplete course", () => 
             { title: "Intro", documentState: proseDocument() },
             { title: "Background", documentState: proseDocument() },
           ]),
+        ],
+        {},
+      ),
+    ).toBeNull();
+  });
+});
+
+describe("SOL12b: the practice gate names every scene, and what is wrong with it", () => {
+  it("reports all unfinished practice scenes in one pass, so nothing bounces twice", () => {
+    const practice = (title: string) => ({
+      title,
+      kind: "PRACTICE" as const,
+      documentState: null,
+      practiceHtml: "<button>go</button>",
+      practiceSolution: { answer: { value: 1, points: 1 } },
+    });
+
+    const failure = validatePublishableContent(
+      [
+        { title: "Lab", scenes: [practice("Titration")] },
+        { title: "Field", scenes: [practice("Pendulum")] },
+      ],
+      {},
+    );
+
+    expect(failure?.code).toBe("UNVALIDATED_PRACTICE");
+    expect(failure?.params?.count).toBe(2);
+    expect(failure?.message).toContain("Titration");
+    expect(failure?.message).toContain("Pendulum");
+    expect(failure?.message).toContain("__sciblySelfTest");
+  });
+
+  it("takes a finished app without asking anyone to press anything", () => {
+    expect(
+      validatePublishableContent(
+        [
+          {
+            title: "Lab",
+            scenes: [
+              {
+                title: "Titration",
+                kind: "PRACTICE" as const,
+                documentState: null,
+                practiceHtml:
+                  "<script>window.scibly.submit({ answer: 1 });" +
+                  "window.scibly.onGraded(() => {});" +
+                  "window.__sciblySelfTest = () => ({ answer: 1 });</script>",
+                practiceSolution: { answer: { value: 1, points: 1 } },
+              },
+            ],
+          },
         ],
         {},
       ),

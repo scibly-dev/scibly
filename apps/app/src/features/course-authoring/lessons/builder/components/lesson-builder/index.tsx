@@ -9,13 +9,21 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@scibly/ui/components/resizable";
-import { ArrowLeft, CheckCircle2, Edit2, Loader2 } from "lucide-react";
+import {
+  ArrowLeft,
+  CheckCircle2,
+  Edit2,
+  Loader2,
+  Maximize2,
+  Minimize2,
+} from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import "@/shared/content/editor/styles/base-editor.css";
 
 import { RightSidebar } from "../../../../scenes/editor/components/right-sidebar";
+import { DesignTab } from "../../../../scenes/editor/components/right-sidebar/design-tab";
 import { SceneEditorCanvas } from "../../../../scenes/editor/components/scene-editor-canvas";
 import { SceneFlowSidebar } from "../../../../scenes/editor/components/scene-flow-sidebar";
 
@@ -40,7 +48,6 @@ import { useSaveState } from "@/shared/ui/hooks/use-save-state";
 import { useSyncedState } from "@/shared/ui/hooks/use-synced-state";
 
 import { LessonSheet } from "../../../admin/components/lesson-sheet";
-import { type LessonMetadataUpdateVariables } from "../../../admin/hooks/use-lesson-metadata-form";
 
 function useLessonBuilderState(props: LessonBuilderProps) {
   const { data: queryScenes } = api.scene.getLessonScenes.useQuery(
@@ -57,6 +64,7 @@ function useLessonBuilderState(props: LessonBuilderProps) {
     queryScenes,
   );
   const [lessonSheetOpen, setLessonSheetOpen] = useState(false);
+  const [focusMode, setFocusMode] = useState(false);
   const initialSceneId =
     sceneIdParam &&
     props.initialScenes.some((scene) => scene.id === sceneIdParam)
@@ -69,22 +77,14 @@ function useLessonBuilderState(props: LessonBuilderProps) {
     courseId: props.courseId,
     lessonId: props.lessonId,
   });
-  useEffect(() => {
-    if (
-      activeSceneId &&
-      scenes.length > 0 &&
-      !scenes.some((scene) => scene.id === activeSceneId)
-    ) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setActiveSceneId(scenes[0].id);
-    }
-  }, [scenes, activeSceneId]);
   useEventListener("keydown", (event: KeyboardEvent) => {
     if ((event.metaKey || event.ctrlKey) && event.key === "s") {
       event.preventDefault();
       triggerDummySave();
     }
   });
+  // Derived, not synced through an effect: the fallback for a scene deleted
+  // under us has to land in this render.
   const activeScene =
     scenes.find((scene) => scene.id === activeSceneId) || scenes[0];
   const updateScene = (id: string, updates: Partial<Scene>) =>
@@ -96,7 +96,7 @@ function useLessonBuilderState(props: LessonBuilderProps) {
   return {
     scenes,
     setScenes,
-    activeSceneId,
+    activeSceneId: activeScene?.id ?? "",
     setActiveSceneId,
     activeScene,
     updateScene,
@@ -105,6 +105,8 @@ function useLessonBuilderState(props: LessonBuilderProps) {
     activeLesson: queryLesson ?? props.lesson,
     lessonSheetOpen,
     setLessonSheetOpen,
+    focusMode,
+    setFocusMode,
   };
 }
 
@@ -113,80 +115,76 @@ export const BuilderHeader = ({
   courseId,
   title,
   isSaving,
+  focusMode,
+  onEditLesson,
+  onToggleFocusMode,
 }: {
   orgSlug: string;
   courseId: string;
   title: string;
   isSaving: boolean;
+  focusMode: boolean;
+  onEditLesson: () => void;
+  onToggleFocusMode: () => void;
 }) => {
   return (
-    <header className="border-hairline flex h-14 shrink-0 items-center justify-between border-b-2 bg-white px-4 dark:border-neutral-800/60 dark:bg-neutral-950">
-      <div className="flex items-center gap-3">
-        <Link href={routes.app.profile.org(orgSlug).courses.detail(courseId)}>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="text-ink-muted hover:text-ink h-8 w-8 rounded-[10px]"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-        </Link>
-        <h1 className="text-ink text-[14px] font-semibold dark:text-neutral-100">
-          {title}
-        </h1>
-        <span className="border-hairline bg-ground text-ink-muted rounded-[10px] border-2 px-2 py-0.5 text-[11px] font-semibold dark:bg-neutral-900">
-          Draft
-        </span>
-        <div className="text-ink-faint flex items-center gap-1.5 text-[12px]">
-          {isSaving ? (
-            <>
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              Saving...
-            </>
+    <header className="border-hairline flex h-14 shrink-0 items-center gap-3 border-b-2 bg-white px-4 dark:border-neutral-800/60 dark:bg-neutral-950">
+      <Link href={routes.app.profile.org(orgSlug).courses.detail(courseId)}>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-ink-muted hover:text-ink h-8 w-8 rounded-[10px]"
+        >
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
+      </Link>
+      <h1 className="text-ink truncate text-[14px] font-semibold dark:text-neutral-100">
+        {title}
+      </h1>
+      <span className="border-hairline bg-ground text-ink-muted shrink-0 rounded-[10px] border-2 px-2 py-0.5 text-[11px] font-semibold dark:bg-neutral-900">
+        Draft
+      </span>
+      <div className="text-ink-faint flex shrink-0 items-center gap-1.5 text-[12px]">
+        {isSaving ? (
+          <>
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            Saving...
+          </>
+        ) : (
+          <>
+            <CheckCircle2 className="h-3.5 w-3.5" />
+            All changes saved
+          </>
+        )}
+      </div>
+      {/* Lesson settings used to own a second full-width bar under this one.
+          Two bars, each a label at one edge and a control at the other, is all
+          gap on a wide display — one bar with a trailing action is not. */}
+      <div className="ml-auto flex shrink-0 items-center gap-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onToggleFocusMode}
+          title={focusMode ? "Show side panels" : "Hide side panels"}
+          className="text-ink-muted hover:text-ink h-8 gap-1.5 rounded-[10px]"
+        >
+          {focusMode ? (
+            <Minimize2 className="h-3.5 w-3.5" />
           ) : (
-            <>
-              <CheckCircle2 className="h-3.5 w-3.5" />
-              All changes saved
-            </>
+            <Maximize2 className="h-3.5 w-3.5" />
           )}
-        </div>
+          {focusMode ? "Exit focus" : "Focus"}
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={onEditLesson}
+          className="h-8 gap-1.5 rounded-[10px]"
+        >
+          <Edit2 className="h-3.5 w-3.5" /> Edit lesson
+        </Button>
       </div>
     </header>
-  );
-};
-
-export const LessonSettingsHeader = ({
-  courseId,
-  state,
-}: {
-  courseId: string;
-  state: ReturnType<typeof useLessonBuilderState>;
-}) => {
-  return (
-    <div className="border-hairline z-10 flex h-12 shrink-0 items-center justify-between border-b-2 bg-white px-4 dark:border-neutral-800/60 dark:bg-neutral-950">
-      <span className="text-ink-faint text-[10px] font-bold tracking-wider uppercase">
-        Lesson Settings
-      </span>
-      <Button
-        variant="outline"
-        size="sm"
-        className="h-8 gap-1.5 rounded-[10px]"
-        onClick={() => state.setLessonSheetOpen(true)}
-      >
-        <Edit2 className="h-3.5 w-3.5" /> Edit lesson
-      </Button>
-      <LessonSheet
-        courseId={courseId}
-        open={state.lessonSheetOpen}
-        onOpenChange={state.setLessonSheetOpen}
-        lesson={state.activeLesson}
-        onUpdateSuccess={(variables: LessonMetadataUpdateVariables) =>
-          state.provider.sendStateless(
-            JSON.stringify({ type: "update_lesson", updates: variables }),
-          )
-        }
-      />
-    </div>
   );
 };
 
@@ -212,58 +210,87 @@ export function LessonBuilder({
       <BuilderHeader
         orgSlug={orgSlug}
         courseId={courseId}
-        title={lesson.title}
+        title={state.activeLesson.title}
         isSaving={state.isSaving}
+        focusMode={state.focusMode}
+        onEditLesson={() => state.setLessonSheetOpen(true)}
+        onToggleFocusMode={() => state.setFocusMode(!state.focusMode)}
       />
 
-      {/* Main Workspace */}
+      <LessonSheet
+        courseId={courseId}
+        open={state.lessonSheetOpen}
+        onOpenChange={state.setLessonSheetOpen}
+        lesson={state.activeLesson}
+        designSlot={
+          <DesignTab courseId={courseId} lesson={state.activeLesson} />
+        }
+      />
+
+      {/* Was 20/50/30. The rail only holds scene rows and the inspector only
+          holds a handful of fields, so at 1728px both were padding the middle
+          panel out of the width its editors actually need. */}
       <ResizablePanelGroup
         orientation="horizontal"
         className="flex-1 bg-white dark:bg-neutral-950"
       >
-        <ResizablePanel defaultSize="20%" minSize="15%" maxSize="30%">
-          <SceneFlowSidebar
-            lessonId={lessonId}
-            scenes={scenes}
-            setScenes={setScenes}
-            activeSceneId={activeSceneId}
-            setActiveSceneId={setActiveSceneId}
-          />
-        </ResizablePanel>
-
-        <ResizableHandle className="bg-hairline w-px cursor-col-resize transition-all hover:w-1 hover:bg-[#0066FF]/50 hover:delay-100 active:w-1 active:bg-[#0066FF] dark:bg-neutral-800/60" />
-
-        <ResizablePanel defaultSize="50%" minSize="40%">
-          <main className="bg-ground flex h-full flex-col overflow-hidden dark:bg-neutral-900/50">
-            <LessonSettingsHeader courseId={courseId} state={state} />
-
-            <div className="relative flex flex-1 overflow-hidden">
-              <SceneEditorCanvas
-                lesson={state.activeLesson}
-                scene={activeScene}
-                totalScenes={scenes.length}
-                currentIndex={scenes.findIndex((s) => s.id === activeScene.id)}
-                onSceneUpdate={state.updateScene}
+        {state.focusMode ? null : (
+          <>
+            <ResizablePanel
+              id="scene-rail"
+              defaultSize="18%"
+              minSize="14%"
+              maxSize="30%"
+            >
+              <SceneFlowSidebar
+                lessonId={lessonId}
+                scenes={scenes}
+                setScenes={setScenes}
+                activeSceneId={activeSceneId}
+                setActiveSceneId={setActiveSceneId}
               />
-            </div>
-          </main>
-        </ResizablePanel>
+            </ResizablePanel>
 
-        <ResizableHandle className="bg-hairline w-px cursor-col-resize transition-all hover:w-1 hover:bg-[#0066FF]/50 hover:delay-100 active:w-1 active:bg-[#0066FF] dark:bg-neutral-800/60" />
+            <ResizableHandle className="bg-hairline w-px cursor-col-resize transition-all hover:w-1 hover:bg-[#0066FF]/50 hover:delay-100 active:w-1 active:bg-[#0066FF] dark:bg-neutral-800/60" />
+          </>
+        )}
 
-        <ResizablePanel defaultSize="30%" minSize="25%" maxSize="45%">
-          <aside className="relative z-10 flex h-full w-full shrink-0 flex-col bg-white dark:bg-neutral-950">
-            <RightSidebar
-              courseId={courseId}
-              orgSlug={orgSlug}
+        <ResizablePanel id="canvas" defaultSize="56%" minSize="40%">
+          <div className="bg-ground relative flex h-full overflow-hidden dark:bg-neutral-900/50">
+            <SceneEditorCanvas
               lesson={state.activeLesson}
               scene={activeScene}
-              scenes={scenes}
-              sceneIndex={scenes.findIndex((s) => s.id === activeScene.id)}
+              totalScenes={scenes.length}
+              currentIndex={scenes.findIndex((s) => s.id === activeScene.id)}
               onSceneUpdate={state.updateScene}
             />
-          </aside>
+          </div>
         </ResizablePanel>
+
+        {state.focusMode ? null : (
+          <>
+            <ResizableHandle className="bg-hairline w-px cursor-col-resize transition-all hover:w-1 hover:bg-[#0066FF]/50 hover:delay-100 active:w-1 active:bg-[#0066FF] dark:bg-neutral-800/60" />
+
+            <ResizablePanel
+              id="inspector"
+              defaultSize="26%"
+              minSize="20%"
+              maxSize="40%"
+            >
+              <aside className="relative z-10 flex h-full w-full shrink-0 flex-col bg-white dark:bg-neutral-950">
+                <RightSidebar
+                  courseId={courseId}
+                  orgSlug={orgSlug}
+                  lesson={state.activeLesson}
+                  scene={activeScene}
+                  scenes={scenes}
+                  sceneIndex={scenes.findIndex((s) => s.id === activeScene.id)}
+                  onSceneUpdate={state.updateScene}
+                />
+              </aside>
+            </ResizablePanel>
+          </>
+        )}
       </ResizablePanelGroup>
     </div>
   );

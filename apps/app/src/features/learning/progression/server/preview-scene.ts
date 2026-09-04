@@ -7,10 +7,19 @@ import "server-only";
 import { requireOrgMember } from "@/features/organizations/server";
 import { gradeSceneBlocks } from "@/shared/content/editor/server";
 import { getEffectiveSceneSp } from "@/shared/content/learning/scene-sp";
+import {
+  gradePracticeSubmission,
+  type PracticeGradingManifest,
+} from "@/shared/content/practice/grade-practice-submission";
 
 export async function previewScene(
   userId: string,
-  input: { lessonId: string; sceneId: string; blocks?: BlockSubmission[] },
+  input: {
+    lessonId: string;
+    sceneId: string;
+    blocks?: BlockSubmission[];
+    practiceWork?: unknown;
+  },
 ) {
   const lesson = await db.lesson.findUnique({
     where: { id: input.lessonId },
@@ -34,7 +43,13 @@ export async function previewScene(
       lessonId: input.lessonId,
       courseVersionId: null,
     },
-    select: { documentState: true, sp: true },
+    select: {
+      documentState: true,
+      sp: true,
+      kind: true,
+      practiceSolution: true,
+      practiceExplain: true,
+    },
   });
   if (!scene) {
     throw new AppError({
@@ -42,6 +57,24 @@ export async function previewScene(
       applicationCode: "api.not_found",
       message: "Scene not found.",
     });
+  }
+  if (scene.kind === "PRACTICE") {
+    const manifest: PracticeGradingManifest = {
+      // SAFETY: only ever written by writePractice via `practiceSolutionSchema`.
+      solution: scene.practiceSolution as PracticeGradingManifest["solution"],
+      explain: scene.practiceExplain,
+    };
+    const result = gradePracticeSubmission(
+      input.practiceWork,
+      manifest,
+      getEffectiveSceneSp(scene.sp),
+    );
+    return {
+      success: true,
+      gradedBlocks: result.gradedFields,
+      spEarned: result.totalSpEarned,
+      explanation: result.explanation,
+    };
   }
   const result = gradeSceneBlocks(
     input.blocks,

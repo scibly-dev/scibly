@@ -13,6 +13,11 @@ import {
   getEffectiveSceneSp,
   sumPublishedScenesMaxSp,
 } from "@/shared/content/learning/scene-sp";
+import {
+  gradePracticeSubmission,
+  type PracticeGradedField,
+  type PracticeGradingManifest,
+} from "@/shared/content/practice/grade-practice-submission";
 import { gradeContentSubmissions } from "@/shared/content/server";
 
 export type SceneGradingResult = {
@@ -20,7 +25,11 @@ export type SceneGradingResult = {
   lessonId: string;
   courseVersionId: string | null;
   spEarned: number;
-  gradedBlocks: ReturnType<typeof gradeContentSubmissions>["gradedBlocks"];
+  gradedBlocks: (
+    | ReturnType<typeof gradeContentSubmissions>["gradedBlocks"][number]
+    | PracticeGradedField
+  )[];
+  explanation?: string | null;
 };
 
 export async function computeCourseMaxSp(
@@ -39,6 +48,7 @@ export async function gradeSceneSubmissions(
   submissions: readonly {
     sceneId: string;
     blocks?: BlockSubmission[];
+    practiceWork?: unknown;
   }[],
 ): Promise<{ results: SceneGradingResult[]; totalSpEarned: number }> {
   if (submissions.length === 0) {
@@ -50,6 +60,7 @@ export async function gradeSceneSubmissions(
       id: true,
       lessonId: true,
       courseVersionId: true,
+      kind: true,
       sp: true,
       gradingManifest: true,
 
@@ -66,8 +77,31 @@ export async function gradeSceneSubmissions(
         message: "Scene does not belong to this lesson.",
       });
     }
-    // SAFETY: this is the answer key the publish step wrote alongside
 
+    if (scene.kind === "PRACTICE") {
+      // SAFETY: this is the { solution, explain } answer key publish wrote.
+      const manifest =
+        (scene.gradingManifest as PracticeGradingManifest | null) ?? {
+          solution: null,
+          explain: null,
+        };
+      const { gradedFields, totalSpEarned, explanation } =
+        gradePracticeSubmission(
+          submission.practiceWork,
+          manifest,
+          getEffectiveSceneSp(scene.sp),
+        );
+      return {
+        sceneId: scene.id,
+        lessonId: scene.lessonId,
+        courseVersionId: scene.courseVersionId,
+        gradedBlocks: gradedFields,
+        spEarned: totalSpEarned,
+        explanation,
+      };
+    }
+
+    // SAFETY: the answer key publish wrote on the same immutable row.
     const manifest =
       (scene.gradingManifest as StoredGradingManifest | null) ?? [];
 
@@ -97,27 +131,37 @@ export async function gradeSceneSubmissions(
   };
 }
 
-// Question metadata (blockType, etc.) comes from the graded manifest, not the
-// submission — the submission only supplies the learner's answer (SC24, GR15).
+// A PRACTICE scene has no per-block submission list, just one `work` object keyed by solution field.
 function buildAnalyticsBlocks(
   gradedBlocks: SceneGradingResult["gradedBlocks"],
   submissions: BlockSubmission[] | undefined,
+  practiceWork: unknown,
 ) {
   const submissionById = new Map(
     (submissions ?? []).map((submission) => [submission.blockId, submission]),
   );
+  // SAFETY: opaque JSON, same trust boundary as `BlockSubmission.learnerAnswer`.
+  const practiceWorkByField =
+    typeof practiceWork === "object" &&
+    practiceWork !== null &&
+    !Array.isArray(practiceWork)
+      ? (practiceWork as Record<string, Prisma.JsonValue>)
+      : {};
   return gradedBlocks.map((graded) => {
     const submission = submissionById.get(graded.blockId);
-    // SAFETY: both answers arrived as JSON — one parsed off the request body,
-
+    const learnerAnswer =
+      graded.blockType === "practice"
+        ? (practiceWorkByField[graded.blockId] ?? null)
+        : (submission?.learnerAnswer ?? null);
     return {
       blockId: graded.blockId,
       blockType: graded.blockType,
-      learnerAnswer: (submission?.learnerAnswer ??
-        null) as Prisma.InputJsonValue,
+      // SAFETY: both arrived as JSON — one off the request body, one out of `practiceWorkByField`.
+      learnerAnswer: learnerAnswer as Prisma.InputJsonValue,
       achievedPoints: graded.achievedPoints,
       maxPoints: graded.maxPoints,
       spEarned: graded.spEarned,
+      // SAFETY: `correctAnswer` on both graded-block shapes is JSON-serializable.
       correctAnswer: (graded.correctAnswer ?? null) as Prisma.InputJsonValue,
     };
   });
@@ -128,6 +172,7 @@ type SceneAnalyticsDetails = {
   attempt: number;
   result: SceneGradingResult;
   blocks?: BlockSubmission[];
+  practiceWork?: unknown;
 };
 
 function analyticsData(params: SceneAnalyticsDetails) {
@@ -135,6 +180,7 @@ function analyticsData(params: SceneAnalyticsDetails) {
   const gradedBlocks = buildAnalyticsBlocks(
     params.result.gradedBlocks,
     params.blocks,
+    params.practiceWork,
   ) as Prisma.InputJsonValue;
   return {
     spEarned: params.result.spEarned,

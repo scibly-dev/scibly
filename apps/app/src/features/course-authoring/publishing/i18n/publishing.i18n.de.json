@@ -6,6 +6,19 @@
       "toastPublishFailed": "Fehler beim Veröffentlichen des Kurses.",
       "publish": "Veröffentlichen",
       "publishing": "Wird veröffentlicht...",
+      "publishErrors": {
+        "NO_CHANGES": "Seit der letzten veröffentlichten Version wurde nichts geändert.",
+        "NO_LESSONS": "Ein Kurs ohne Lektionen kann nicht veröffentlicht werden.",
+        "NO_SCENES": "Ein Kurs, in dem keine Lektion Szenen hat, kann nicht veröffentlicht werden.",
+        "EMPTY_LESSON": "Die Lektion „{{lesson}}“ hat keine Szenen. Füge mindestens eine Szene hinzu, bevor du veröffentlichst.",
+        "EMPTY_SCENE": "Die Szene „{{scene}}“ hat keinen Inhalt. Fülle jede Szene, bevor du veröffentlichst.",
+        "UNREADABLE_SCENE": "Die Szene „{{scene}}“ kann nicht gelesen werden. Öffne die Szene, speichere sie erneut und veröffentliche dann.",
+        "UNVALIDATED_PRACTICE": "Veröffentlichen nicht möglich: {{count}} Übungsszene(n) sind nicht fertig — {{scenes}}.",
+        "UNANSWERABLE_QUESTIONS": "{{count}} Frage(n) haben keinen vollständigen Lösungsschlüssel — {{questions}}.",
+        "ZERO_VALUE_QUESTIONS": "{{count}} Frage(n) sind nichts wert — {{questions}}. Gib ihnen einen Wert über null oder entferne das Feld, um den Standardwert zu verwenden.",
+        "DUPLICATE_BLOCK_ID": "{{count}} Frage(n) teilen sich eine blockId mit einer anderen Frage derselben Szene — {{questions}}.",
+        "OUTDATED_SCENES": "{{count}} Szene(n) verweisen auf geänderte Quellen. Prüfe diese Szenen oder veröffentliche sie unverändert."
+      },
       "publishDialog": {
         "title": "Kurs veröffentlichen",
         "description": "Dadurch wird eine neue veröffentlichte Version des Kurses erstellt. Aktuell eingeschriebene Mitglieder verbleiben in ihrer bestehenden Version.",

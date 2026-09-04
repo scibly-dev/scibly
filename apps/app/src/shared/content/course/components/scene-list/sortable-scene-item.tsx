@@ -78,7 +78,8 @@ export const ScenePosition = ({
 export const SceneTypeIcon = ({
   compact,
   isActive,
-}: Pick<SceneItemCardProps, "compact" | "isActive">) => {
+  scene,
+}: Pick<SceneItemCardProps, "compact" | "isActive" | "scene">) => {
   return (
     <div
       className={cn(
@@ -87,16 +88,20 @@ export const SceneTypeIcon = ({
         sceneIconStateClassName(isActive, compact ?? false),
       )}
     >
-      <SceneIcon className={compact ? "h-3 w-3" : "h-4 w-4"} />
+      <SceneIcon
+        kind={scene.kind}
+        className={compact ? "h-3 w-3" : "h-4 w-4"}
+      />
     </div>
   );
 };
 
 function getSceneDetailsLabels(props: SceneItemCardProps) {
+  const isPractice = props.scene.kind === "PRACTICE";
   return {
     interactiveCanvasLabel: withDefaultLabel(
-      props.interactiveCanvasLabel,
-      "Interactive canvas",
+      isPractice ? props.practiceSceneLabel : props.interactiveCanvasLabel,
+      isPractice ? "Practice app" : "Interactive canvas",
     ),
     sceneOutdatedLabel: withDefaultLabel(
       props.sceneOutdatedLabel,
@@ -162,7 +167,7 @@ export const SceneActions = (props: SceneItemCardProps) => {
   const { deleteSceneLabel, duplicateSceneLabel } = getSceneActionLabels(props);
 
   return (
-    <div className="flex items-center opacity-0 transition-opacity group-hover:opacity-100">
+    <div className="pointer-events-none absolute top-1/2 right-1.5 flex -translate-y-1/2 items-center rounded-[8px] bg-inherit pl-2 opacity-0 transition-opacity group-hover:pointer-events-auto group-hover:opacity-100">
       {onClone ? (
         <button
           type="button"
@@ -226,7 +231,7 @@ export function SceneItemCard(props: SceneItemCardProps) {
       {...attributes}
       {...listeners}
       className={cn(
-        "group flex cursor-grab items-center active:cursor-grabbing",
+        "group relative flex cursor-grab items-center active:cursor-grabbing",
         !isDragging && !isOverlay ? "transition-all" : undefined,
         "border-2",
         compact ? "gap-1.5 rounded-[10px] p-1.5" : "gap-2 rounded-xl p-2",
@@ -246,7 +251,11 @@ export function SceneItemCard(props: SceneItemCardProps) {
         index={props.index}
         isActive={isActive}
       />
-      <SceneTypeIcon compact={compact} isActive={isActive} />
+      <SceneTypeIcon
+        compact={compact}
+        isActive={isActive}
+        scene={props.scene}
+      />
       <SceneDetails {...props} />
       <SceneActions {...props} />
     </div>

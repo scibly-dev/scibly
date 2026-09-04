@@ -17,66 +17,51 @@ ul > * {
   }
 }
 .tiptap.ProseMirror {
-/* This should do the trick for the beginning, since adding an extra plugin would be a bit overkill for this simple task. */
+  ol {
+    list-style-type: decimal;
+  }
 
-/* Level 1: Decimal (1., 2., 3., ...) */
-ol {
-  list-style-type: decimal;
-}
+  ol ol {
+    list-style-type: lower-alpha;
+  }
 
-/* Level 2: Lower alpha (a., b., c., ...) */
-ol ol {
-  list-style-type: lower-alpha;
-}
+  ol ol ol {
+    list-style-type: lower-roman;
+  }
 
-/* Level 3: Lower roman numerals (i., ii., iii., ...) */
-ol ol ol {
-  list-style-type: lower-roman;
-}
+  ol ol ol ol {
+    list-style-type: decimal;
+  }
 
-/* Level 4: Repeat back to decimal (1., 2., 3., ...) */
-ol ol ol ol {
-  list-style-type: decimal;
-}
+  ol ol ol ol ol {
+    list-style-type: lower-alpha;
+  }
 
-/* Level 5: Lower alpha (a., b., c., ...) */
-ol ol ol ol ol {
-  list-style-type: lower-alpha;
-}
+  ol ol ol ol ol ol {
+    list-style-type: lower-roman;
+  }
 
-/* Level 6: Lower roman numerals (i., ii., iii., ...) */
-ol ol ol ol ol ol {
-  list-style-type: lower-roman;
-}
+  ol ol ol ol ol ol ol {
+    list-style-type: decimal;
+  }
 
-/* Level 7: Repeat back to decimal (1., 2., 3., ...) */
-/* And so on, continuing for each level */
-ol ol ol ol ol ol ol {
-  list-style-type: decimal;
-}
+  ol ol ol ol ol ol ol ol {
+    list-style-type: lower-alpha;
+  }
 
-/* Level 8: Lower alpha (a., b., c., ...) */
-ol ol ol ol ol ol ol ol {
-  list-style-type: lower-alpha;
-}
+  ol ol ol ol ol ol ol ol ol {
+    list-style-type: lower-roman;
+  }
 
-/* Level 9: Lower roman numerals (i., ii., iii., ...) */
-ol ol ol ol ol ol ol ol ol {
-  list-style-type: lower-roman;
-}
+  ol ol ol ol ol ol ol ol ol ol {
+    list-style-type: decimal;
+  }
 
-/* Level 10: Repeat back to decimal (1., 2., 3., ...) */
-ol ol ol ol ol ol ol ol ol ol {
-  list-style-type: decimal;
-}
+  ol ol ol ol ol ol ol ol ol ol ol {
+    list-style-type: lower-alpha;
+  }
 
-/* Level 11: Lower alpha (a., b., c., ...) */
-ol ol ol ol ol ol ol ol ol ol ol {
-  list-style-type: lower-alpha;
-}
-
-/* Level 12: Lower roman numerals (i., ii., iii., ...) */
-ol ol ol ol ol ol ol ol ol ol ol ol {
-  list-style-type: lower-roman;
-}
+  ol ol ol ol ol ol ol ol ol ol ol ol {
+    list-style-type: lower-roman;
+  }
 }

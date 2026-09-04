@@ -56,11 +56,12 @@ export function SceneNavigator({
         ? {
             mode: "editable" as const,
             actions: {
-              create: (title) => {
+              create: (title, kind) => {
                 authorEditedCourse();
                 mutations.createScene.mutate({
                   lessonId: activeLessonId,
                   title,
+                  kind,
                 });
               },
               clone: (sceneId) => {

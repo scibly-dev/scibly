@@ -31,6 +31,14 @@ export const createSceneSchema = z.object({
     .describe(
       "The title of the scene. Defaults to 'New Scene' if not provided.",
     ),
+  kind: z
+    .enum(["DOCUMENT", "PRACTICE"])
+    .optional()
+    .describe(
+      "Scene content type. DOCUMENT (default) holds rich-text/question content, edited via insertContent. " +
+        "PRACTICE holds an interactive mini-app the learner operates (not a form of input fields), " +
+        "edited via writePractice — call getPracticeContract first.",
+    ),
   sourceIds: sourceIdsSchema.optional(),
 });
 
@@ -81,4 +89,62 @@ export const cloneSceneSchema = z.object({
 export const reorderScenesSchema = z.object({
   lessonId: z.string(),
   sceneIds: z.array(z.string()).max(200),
+});
+
+const practiceSolutionFieldSchema = z.object({
+  value: z.unknown().describe("The expected value for this field."),
+  // A zero-point field can never be answered correctly (see isFieldCorrect).
+  points: z
+    .number()
+    .positive()
+    .describe("Points awarded when this field matches."),
+  eps: z
+    .number()
+    .optional()
+    .describe("Tolerance for a numeric value; ignored for non-numeric values."),
+});
+
+export const practiceSolutionSchema = z
+  .record(z.string(), practiceSolutionFieldSchema)
+  .nullable()
+  .describe(
+    "Answer key keyed by field id, matching the keys submit(work) will send. " +
+      "null for an open-ended practice — no score, explanation only.",
+  );
+
+export const getPracticeSchema = z.object({
+  sceneId: z.string().describe("The ID of the draft PRACTICE scene to read."),
+});
+
+export const writePracticeSchema = z.object({
+  sceneId: z
+    .string()
+    .describe("The ID of the draft PRACTICE scene to write to."),
+  html: z
+    .string()
+    // Generous for an app that pulls its libraries from a CDN; the column is otherwise unbounded.
+    .max(500_000)
+    .describe(
+      "The practice app's HTML fragment. Call getPracticeContract first for the full contract.",
+    ),
+  solution: practiceSolutionSchema,
+  explanation: z
+    .string()
+    .nullable()
+    .default(null)
+    .describe(
+      "Shown to the learner under the app with their result, whatever they scored — " +
+        "the only feedback an exploratory (solution: null) scene gives. Omit it for no explanation.",
+    ),
+});
+
+export const validatePracticeSchema = z.object({
+  sceneId: z
+    .string()
+    .describe("The ID of the draft PRACTICE scene to validate against."),
+  work: z
+    .unknown()
+    .describe(
+      "The payload submit(work) would send — normally window.__sciblySelfTest()'s return value.",
+    ),
 });

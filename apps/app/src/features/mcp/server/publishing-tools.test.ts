@@ -52,7 +52,8 @@ const UNANSWERED = {
   },
 };
 
-const UNASKABLE = {
+/** A 2025-era client: no capability envelope reaches the handler at all. */
+const LEGACY = {
   mcpReq: { inputResponses: undefined, requestState: () => undefined },
 };
 
@@ -80,6 +81,8 @@ type ToolOutput = {
   html?: string;
   isPublic?: boolean;
   requestState?: string;
+  needsConfirmation?: boolean;
+  confirmationToken?: string;
 };
 
 type ToolArgs = {
@@ -87,6 +90,7 @@ type ToolArgs = {
   supersedePrevious?: boolean;
   heightPx?: number;
   isPublic?: boolean;
+  confirmationToken?: string;
 };
 
 const tools = new Map<string, Tool>();
@@ -259,16 +263,50 @@ describe("setCoursePublic", () => {
     expect(result.success).toBe(false);
   });
 
-  it("PUB5: answers a client it cannot ask, rather than opening the course anyway (ADR 0006)", async () => {
+  it("PUB5: asks a client it cannot elicit over two calls, rather than opening the course on the first (ADR 0006)", async () => {
     const result = await call(
       "setCoursePublic",
       { courseId: "course-private", isPublic: true },
-      UNASKABLE,
+      LEGACY,
     );
 
     expect(updateCourse).not.toHaveBeenCalled();
     expect(result.success).toBe(false);
-    expect(result.message).toContain("cannot be asked");
+    expect(result.needsConfirmation).toBe(true);
+    expect(result.message).toContain('Make "Onboarding" public?');
+
+    const confirmed = await call(
+      "setCoursePublic",
+      {
+        courseId: "course-private",
+        isPublic: true,
+        confirmationToken: result.confirmationToken,
+      },
+      LEGACY,
+    );
+
+    expect(confirmed.success).toBe(true);
+    expect(updateCourse).toHaveBeenCalledTimes(1);
+  });
+
+  it("PUB5: a token the author never saw this summary for changes nothing", async () => {
+    const result = await call(
+      "setCoursePublic",
+      {
+        courseId: "course-private",
+        isPublic: true,
+        confirmationToken: JSON.stringify([
+          "setCoursePublic",
+          "course-private",
+          ["false"],
+        ]),
+      },
+      LEGACY,
+    );
+
+    expect(updateCourse).not.toHaveBeenCalled();
+    expect(result.success).toBe(false);
+    expect(result.needsConfirmation).toBeUndefined();
   });
 
   it("PUB6: does not ask about a course that is already public", async () => {

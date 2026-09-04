@@ -11,7 +11,13 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { Loader2, Plus } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@scibly/ui/components/dropdown-menu";
+import { FileText, FlaskConical, Loader2, Plus } from "lucide-react";
 import { createPortal } from "react-dom";
 
 import {
@@ -70,19 +76,31 @@ export const AddSceneButton = ({
   cb: NotebookTranslations["studio"]["courseBuilder"];
   count: number;
 }) => {
+  const title = cb.sceneLabel.replace("{n}", String(count + 1));
   return (
-    <button
-      type="button"
-      id="course-builder-add-scene"
-      disabled={actions.isCreating}
-      onClick={() =>
-        actions.create(cb.sceneLabel.replace("{n}", String(count + 1)))
-      }
-      className="border-edge text-ink-faint hover:text-ink-muted mt-1 flex w-full items-center justify-center gap-1 rounded-[10px] border-2 border-dashed py-1.5 text-[10px] font-semibold transition-colors hover:border-[#b9d7ff] hover:bg-[#eff5ff] disabled:opacity-40 dark:border-neutral-800 dark:hover:border-neutral-700 dark:hover:bg-neutral-800/50"
-    >
-      <Plus className="h-3 w-3" />
-      {cb.addScene}
-    </button>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button
+          type="button"
+          id="course-builder-add-scene"
+          disabled={actions.isCreating}
+          className="border-edge text-ink-faint hover:text-ink-muted mt-1 flex w-full items-center justify-center gap-1 rounded-[10px] border-2 border-dashed py-1.5 text-[10px] font-semibold transition-colors hover:border-[#b9d7ff] hover:bg-[#eff5ff] disabled:opacity-40 dark:border-neutral-800 dark:hover:border-neutral-700 dark:hover:bg-neutral-800/50"
+        >
+          <Plus className="h-3 w-3" />
+          {cb.addScene}
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-52">
+        <DropdownMenuItem onClick={() => actions.create(title)}>
+          <FileText className="mr-2 h-3.5 w-3.5" />
+          {cb.interactiveCanvas}
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => actions.create(title, "PRACTICE")}>
+          <FlaskConical className="mr-2 h-3.5 w-3.5" />
+          {cb.practiceScene}
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 
@@ -104,6 +122,7 @@ export const SceneItems = ({ props }: { props: SceneNavigatorListProps }) => {
           deleteSceneLabel={props.cb.deleteScene}
           sceneOutdatedLabel={props.cb.sceneOutdatedHint}
           interactiveCanvasLabel={props.cb.interactiveCanvas}
+          practiceSceneLabel={props.cb.practiceScene}
           hideOutdatedIndicators={props.hideOutdated}
           onClick={() => props.onSelect({ id: scene.id, title: scene.title })}
           onClone={

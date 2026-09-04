@@ -20,7 +20,7 @@
     "test:scripts": "node --test \"scripts/*.test.mjs\"",
     "test:int": "bash scripts/int-test.sh",
     "test:e2e": "pnpm --filter @scibly/app run test:e2e && pnpm --filter @scibly/web run test:e2e",
-    "test:all": "pnpm test:scripts && pnpm test:unit && pnpm test:e2e",
+    "test:all": "pnpm test:scripts && pnpm test:unit && pnpm test:e2e && pnpm test:int",
     "validate": "pnpm check && pnpm test:all",
     "prebuild": "pnpm check"
   },

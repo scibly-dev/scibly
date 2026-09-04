@@ -14,17 +14,17 @@
   margin-bottom: 0;
 }
 
-[data-guide-layout='top'] .guide-speech-bubble {
+[data-guide-layout="top"] .guide-speech-bubble {
   max-width: 100%;
 }
 
-[data-guide-layout='inline'] .guide-speech-content {
+[data-guide-layout="inline"] .guide-speech-content {
   min-height: 3.25rem;
 }
 
 @media (max-width: 480px) {
-  [data-guide-layout='left'] .guide-speech-tail,
-  [data-guide-layout='right'] .guide-speech-tail {
+  [data-guide-layout="left"] .guide-speech-tail,
+  [data-guide-layout="right"] .guide-speech-tail {
     display: none;
   }
 }
