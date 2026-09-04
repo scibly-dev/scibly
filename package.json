@@ -4,6 +4,8 @@
   },
   "scripts": {
     "dev": "node scripts/dev.mjs",
+    "wt:up": "node scripts/worktree-up.mjs",
+    "wt:down": "node scripts/worktree-down.mjs",
     "start": "turbo run start --filter=./apps/*",
     "start:app": "turbo run start --filter=./apps/app",
     "start:web": "turbo run start --filter=./apps/web",

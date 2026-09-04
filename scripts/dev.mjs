@@ -16,10 +16,27 @@ if (!collabTokenSecret || collabTokenSecret.length < 32) {
   );
 }
 
+/**
+ * Both Next apps take their port from the URLs already in `apps/app/.env`, so a
+ * worktree that `scripts/worktree-up.mjs` moved off 3000/3001 actually boots
+ * there. Reading the URL rather than a separate port variable keeps one source
+ * of truth — a port here that disagreed with `NEXT_PUBLIC_APP_URL` would serve
+ * the app somewhere it does not believe it lives.
+ */
+const portOf = (url, fallback) => {
+  try {
+    return new URL(url).port || fallback;
+  } catch {
+    return fallback;
+  }
+};
+
 const child = spawn("pnpm", ["exec", "turbo", "run", "dev"], {
   env: {
     ...process.env,
     COLLAB_TOKEN_SECRET: collabTokenSecret,
+    APP_PORT: portOf(appEnv.NEXT_PUBLIC_APP_URL, "3001"),
+    WEB_PORT: portOf(appEnv.NEXT_PUBLIC_WEB_URL, "3000"),
   },
   stdio: "inherit",
 });
