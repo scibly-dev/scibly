@@ -2,7 +2,7 @@ import type { Actor } from "xstate";
 import type {
   LessonProgressionInput,
   PendingSceneSubmission,
-  SceneKind,
+  ScenePlayMode,
   SceneResult,
   SubmitScene,
 } from "./lesson-progression.model";
@@ -50,7 +50,7 @@ function deferredSubmit() {
 }
 
 interface LessonOptions {
-  kinds?: SceneKind[];
+  kinds?: ScenePlayMode[];
   completedSceneIds?: string[];
   initialSceneIndex?: number;
   initialPendingSubmissions?: Record<string, PendingSceneSubmission>;
@@ -62,13 +62,13 @@ interface LessonOptions {
 function buildInput(options: LessonOptions = {}): LessonProgressionInput {
   const kinds = options.kinds ?? ["assessment", "assessment"];
   const sceneIds = kinds.map((_, index) => `s${index + 1}`);
-  const sceneKinds: Record<string, SceneKind> = {};
+  const scenePlayModes: Record<string, ScenePlayMode> = {};
   sceneIds.forEach((sceneId, index) => {
-    sceneKinds[sceneId] = kinds[index]!;
+    scenePlayModes[sceneId] = kinds[index]!;
   });
   return {
     sceneIds,
-    sceneKinds,
+    scenePlayModes,
     initialSceneIndex: options.initialSceneIndex,
     initialPendingSubmissions: options.initialPendingSubmissions,
     completedSceneIds: options.completedSceneIds,
@@ -189,7 +189,7 @@ describe("lesson progression machine", () => {
       expect(() =>
         createLessonProgressionContext({
           sceneIds: ["s1", "s2"],
-          sceneKinds: { s1: "assessment" },
+          scenePlayModes: { s1: "assessment" },
           submitScene: vi.fn<SubmitScene>(),
           onComplete: vi.fn(),
         }),
@@ -243,6 +243,23 @@ describe("lesson progression machine", () => {
       await settle();
 
       expect(actor.getSnapshot().matches("celebrating")).toBe(true);
+    });
+
+    it("LP11: an ungraded practice with an explanation holds the learner on it", async () => {
+      const { actor } = startLesson({
+        kinds: ["content", "content"],
+        submitScene: vi.fn<SubmitScene>(async () => ({
+          spEarned: 10,
+          gradedBlocks: [],
+          explanation: "Heavier wings stall earlier.",
+        })),
+      });
+
+      submitCurrentScene(actor);
+      await settle();
+
+      expect(currentSceneId(actor)).toBe("s1");
+      expect(actor.getSnapshot().hasTag("canAdvance")).toBe(true);
     });
 
     it("LP13: an assessment scene that is not the last holds the learner on their feedback", async () => {
@@ -579,7 +596,7 @@ describe("scene results", () => {
   beforeEach(() => {
     context = createLessonProgressionContext({
       sceneIds: ["s1", "s2"],
-      sceneKinds: { s1: "assessment", s2: "assessment" },
+      scenePlayModes: { s1: "assessment", s2: "assessment" },
       submitScene: vi.fn<SubmitScene>(),
       onComplete: vi.fn(),
     });

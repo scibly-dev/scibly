@@ -47,6 +47,7 @@ export function useSubmitScene(options: UseSubmitSceneOptions): SubmitScene {
         lessonId: options.lessonId,
         sceneId: command.sceneId,
         blocks: command.blocks,
+        practiceWork: command.practiceWork,
       };
       if (options.mode === "preview") {
         return previewScene.mutateAsync(input);

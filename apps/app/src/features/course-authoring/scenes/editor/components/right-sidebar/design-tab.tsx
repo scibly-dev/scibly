@@ -1,4 +1,4 @@
-import { useHocuspocusProvider } from "@hocuspocus/provider-react";
+import { useMemo } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
 import { api } from "@/shared/api/trpc/client";
@@ -28,9 +28,8 @@ export function lessonDesign(lesson: Lesson): LessonDesign {
 function useDesignState({ courseId, lesson }: DesignTabProps) {
   const addSave = useSaveState((state) => state.addSave);
   const removeSave = useSaveState((state) => state.removeSave);
-  const provider = useHocuspocusProvider();
   const utils = api.useUtils();
-  const design = lessonDesign(lesson);
+  const design = useMemo(() => lessonDesign(lesson), [lesson]);
 
   const { mutate } = api.course.updateLesson.useMutation({
     onMutate: ({ design: next }) => {
@@ -38,11 +37,6 @@ function useDesignState({ courseId, lesson }: DesignTabProps) {
       utils.course.getLesson.setData(
         { courseId, lessonId: lesson.id },
         (old) => (old ? { ...old, design: next ?? null } : old),
-      );
-    },
-    onSuccess: (_, variables) => {
-      provider.sendStateless(
-        JSON.stringify({ type: "update_lesson", updates: variables }),
       );
     },
     onError: (error) => {

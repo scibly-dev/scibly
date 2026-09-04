@@ -1,4 +1,5 @@
 import type { CourseVersion } from "@scibly/db";
+import type { PracticeGradingManifest } from "@/shared/content/practice/grade-practice-submission";
 
 import { AppError } from "@scibly/api/application-error";
 import { Prisma } from "@scibly/db";
@@ -6,7 +7,10 @@ import { randomUUID } from "crypto";
 
 import "server-only";
 import { buildPublishedSceneArtifacts } from "@/shared/content/editor/server";
-import { summarizePublishedGradingManifest } from "@/shared/content/learning/published-scene-summary";
+import {
+  summarizePublishedGradingManifest,
+  summarizePublishedPracticeManifest,
+} from "@/shared/content/learning/published-scene-summary";
 import { validatePublishableContent } from "@/shared/content/server";
 
 function omitObjectKeys<T extends object, K extends keyof T>(
@@ -15,7 +19,6 @@ function omitObjectKeys<T extends object, K extends keyof T>(
 ): Omit<T, K> {
   const omitted = new Set<PropertyKey>(keys);
   // SAFETY: `Object.fromEntries` always types its result `{ [k: string]: … }`.
-
   return Object.fromEntries(
     Object.entries(object).filter(([key]) => !omitted.has(key)),
   ) as Omit<T, K>;
@@ -68,17 +71,6 @@ function toPublishedSceneCreateInput(
   lessonId: string,
   courseVersionId: string,
 ): Prisma.SceneCreateManyInput {
-  let artifacts: ReturnType<typeof buildPublishedSceneArtifacts>;
-  try {
-    artifacts = buildPublishedSceneArtifacts(scene.documentState);
-  } catch (error) {
-    console.error("Failed to build published scene artifacts", scene.id, error);
-    throw new AppError({
-      code: "INTERNAL_SERVER_ERROR",
-      applicationCode: "api.internal_server_error",
-      message: `Failed to process scene "${scene.title}". Please try again.`,
-    });
-  }
   const sceneFields = omitObjectKeys(scene, [
     "id",
     "lessonId",
@@ -90,28 +82,64 @@ function toPublishedSceneCreateInput(
     "outdatedReason",
     "learnerContent",
     "gradingManifest",
+    "practiceHtml",
+    "practiceSolution",
+    "practiceExplain",
+    "practiceValidated",
   ] as const);
-  const summary = summarizePublishedGradingManifest(
-    scene.sp,
-    artifacts.gradingManifest,
-  );
-  return {
+  const base = {
     ...sceneFields,
     id: randomUUID(),
     lessonId,
     courseVersionId,
     sourceSceneId: scene.id,
-    // SAFETY: both are built in-process by `buildPublishedSceneArtifacts` — a
+    integration: sceneFields.integration ?? Prisma.DbNull,
+    isOutdated: false,
+    outdatedReason: null,
+  };
 
+  if (scene.kind === "PRACTICE") {
+    // SAFETY: `writePractice` wrote all three columns as JSON, and the publish gate refused an empty practiceHtml.
+    const solution =
+      scene.practiceSolution as PracticeGradingManifest["solution"];
+    const summary = summarizePublishedPracticeManifest(scene.sp, solution);
+    return {
+      ...base,
+      // SAFETY: the publish gate already refused an empty practiceHtml.
+      learnerContent: scene.practiceHtml as Prisma.InputJsonValue,
+      // SAFETY: `writePractice` only ever writes JSON through these columns.
+      gradingManifest: {
+        solution,
+        explain: scene.practiceExplain,
+      } as Prisma.InputJsonValue,
+      hasQuestions: summary.hasQuestions,
+      maxSp: summary.maxSp,
+    };
+  }
+
+  let artifacts: ReturnType<typeof buildPublishedSceneArtifacts>;
+  try {
+    artifacts = buildPublishedSceneArtifacts(scene.documentState);
+  } catch (error) {
+    console.error("Failed to build published scene artifacts", scene.id, error);
+    throw new AppError({
+      code: "INTERNAL_SERVER_ERROR",
+      applicationCode: "api.internal_server_error",
+      message: `Failed to process scene "${scene.title}". Please try again.`,
+    });
+  }
+  const summary = summarizePublishedGradingManifest(
+    scene.sp,
+    artifacts.gradingManifest,
+  );
+  return {
+    ...base,
+    // SAFETY: both are built in-process by `buildPublishedSceneArtifacts`, never learner input.
     learnerContent: artifacts.learnerContent as Prisma.InputJsonValue,
     // SAFETY: as above.
     gradingManifest: artifacts.gradingManifest as Prisma.InputJsonValue,
     hasQuestions: summary.hasQuestions,
     maxSp: summary.maxSp,
-
-    integration: sceneFields.integration ?? Prisma.DbNull,
-    isOutdated: false,
-    outdatedReason: null,
   };
 }
 
@@ -188,7 +216,6 @@ export async function publishCourseSnapshot(
       sourceLessonId: lesson.id,
 
       // SAFETY: `?? undefined` has already removed the only value the write
-
       design: (lesson.design ?? undefined) as Prisma.InputJsonValue | undefined,
     })),
   });

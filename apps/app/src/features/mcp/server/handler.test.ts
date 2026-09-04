@@ -198,6 +198,8 @@ describe("the tool surface an external agent sees", () => {
     "getDashboardStats",
     "getEditorSchema",
     "getOrganization",
+    "getPractice",
+    "getPracticeContract",
     "getSceneContent",
     "insertContent",
     "listCourses",
@@ -216,6 +218,8 @@ describe("the tool surface an external agent sees", () => {
     "updateCourse",
     "updateLesson",
     "updateScene",
+    "validatePractice",
+    "writePractice",
   ];
 
   it("MCP3: offers exactly the reads and the structure mutations", async () => {
@@ -253,7 +257,7 @@ describe("the tool surface an external agent sees", () => {
     }
   });
 
-  it("MCP4: takes scene content through the content tool and nowhere else", async () => {
+  it("MCP4: takes scene content through the content tools and nowhere else", async () => {
     const { body } = await post(rpc("tools/list"), fakeCaller().caller);
 
     const takingHtml = body.result.tools
@@ -262,9 +266,10 @@ describe("the tool surface an external agent sees", () => {
           (tool.inputSchema as { properties?: object }).properties ?? {},
         ).includes("html"),
       )
-      .map((tool: { name: string }) => tool.name);
+      .map((tool: { name: string }) => tool.name)
+      .sort();
 
-    expect(takingHtml).toEqual(["insertContent"]);
+    expect(takingHtml).toEqual(["insertContent", "writePractice"]);
   });
 
   it("MCP3: offers no way to cite a source (ADR 0005)", async () => {

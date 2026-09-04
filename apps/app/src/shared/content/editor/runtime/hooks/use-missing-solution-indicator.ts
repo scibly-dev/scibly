@@ -3,9 +3,9 @@
 import type { QuestionBlocksType } from "@/shared/content/editor/blocks/registry/shared";
 
 import { useEffect, useRef, useState } from "react";
+import isEqual from "react-fast-compare";
 import { useDebouncedCallback } from "use-debounce";
 
-import { deepEqual } from "@/shared/content/editor/assessment/parsing/base-parser/parser";
 import { questionBlockParserRegistry } from "@/shared/content/editor/assessment/parsing/parser-registry";
 
 const SETTLE_MS = 800;
@@ -40,7 +40,7 @@ export function useMissingSolutionIndicator<Q>({
       return;
     }
     if (!hasBeenEdited.current) {
-      if (deepEqual(questionData, initialQuestionData.current)) return;
+      if (isEqual(questionData, initialQuestionData.current)) return;
       hasBeenEdited.current = true;
     }
     settle(questionData);

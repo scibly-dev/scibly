@@ -15,19 +15,24 @@ export type PendingSceneSubmission = {
   blocks: BlockSubmission[] | undefined;
   gradedBlocks?: DisplayedGrade[];
   feedbackSummary?: SceneFeedbackSummary;
+  explanation?: string | null;
+  /** The payload submit(work) sent, replayed into the app on a revisit. */
+  practiceWork?: unknown;
 };
 
 export interface SceneResult {
   spEarned: number;
   gradedBlocks?: DisplayedGrade[] | null;
+  explanation?: string | null;
 }
 
-export type SceneKind = "assessment" | "content" | "pitch";
+export type ScenePlayMode = "assessment" | "content" | "pitch";
 
 export interface SceneSubmissionCommand {
   requestId: string;
   sceneId: string;
   blocks: BlockSubmission[] | undefined;
+  practiceWork?: unknown;
 }
 
 export type SubmitScene = (
@@ -45,7 +50,7 @@ export interface LessonSessionSnapshot {
 
 export interface LessonProgressionContext {
   sceneIds: string[];
-  sceneKinds: Record<string, SceneKind>;
+  scenePlayModes: Record<string, ScenePlayMode>;
   sceneIndex: number;
   pendingSubmissions: Record<string, PendingSceneSubmission>;
   completedSceneIdsInSession: Record<string, true>;
@@ -82,7 +87,7 @@ export async function retryBackoff({ attempt }: RetryDelayInput) {
 
 export interface LessonProgressionInput {
   sceneIds: string[];
-  sceneKinds: Record<string, SceneKind>;
+  scenePlayModes: Record<string, ScenePlayMode>;
   initialSceneIndex?: number;
   initialPendingSubmissions?: Record<string, PendingSceneSubmission>;
   completedSceneIds?: string[];
@@ -163,13 +168,13 @@ export function highestReachableSceneIndex(
   );
 }
 
-function buildSceneKindsFromIds(
+function buildScenePlayModesFromIds(
   sceneIds: readonly string[],
-  sceneKinds: Record<string, SceneKind>,
+  scenePlayModes: Record<string, ScenePlayMode>,
 ) {
-  const map: Record<string, SceneKind> = {};
+  const map: Record<string, ScenePlayMode> = {};
   for (const sceneId of sceneIds) {
-    const kind = sceneKinds[sceneId];
+    const kind = scenePlayModes[sceneId];
     if (!kind) {
       throw new Error(`Missing scene kind for "${sceneId}".`);
     }
@@ -182,11 +187,11 @@ export function currentSceneId(context: LessonProgressionContext) {
   return context.sceneIds[context.sceneIndex];
 }
 
-export function currentSceneKind(
+export function currentScenePlayMode(
   context: LessonProgressionContext,
-): SceneKind | undefined {
+): ScenePlayMode | undefined {
   const sceneId = currentSceneId(context);
-  return sceneId ? context.sceneKinds[sceneId] : undefined;
+  return sceneId ? context.scenePlayModes[sceneId] : undefined;
 }
 
 export function hasFeedback(
@@ -198,6 +203,14 @@ export function hasFeedback(
     context.pendingSubmissions[sceneId]?.gradedBlocks &&
     context.pendingSubmissions[sceneId].gradedBlocks.length > 0,
   );
+}
+
+// An ungraded practice produces no other feedback, so the scene must not auto-advance past it.
+export function hasExplanation(
+  context: LessonProgressionContext,
+  sceneId = currentSceneId(context),
+) {
+  return Boolean(sceneId && context.pendingSubmissions[sceneId]?.explanation);
 }
 
 export function isCompleted(
@@ -265,6 +278,8 @@ export function applySceneResult(
         blocks: request.blocks ?? existing?.blocks,
         gradedBlocks: result.gradedBlocks ?? undefined,
         feedbackSummary: feedbackFor(result),
+        explanation: result.explanation ?? null,
+        practiceWork: request.practiceWork ?? existing?.practiceWork,
       },
     },
     completedSceneIdsInSession: alreadyCompleted
@@ -283,14 +298,14 @@ export function applySceneResult(
 // only when a completed real scene after it proves a prior session passed it.
 function seedPassedPitchScenes(
   sceneIds: readonly string[],
-  sceneKinds: Record<string, SceneKind>,
+  scenePlayModes: Record<string, ScenePlayMode>,
   completedSceneIds: readonly string[],
 ): string[] {
   const completed = new Set(completedSceneIds);
   const seeded = [...completedSceneIds];
   let unproven: string[] = [];
   for (const sceneId of sceneIds) {
-    if (sceneKinds[sceneId] === "pitch") {
+    if (scenePlayModes[sceneId] === "pitch") {
       unproven.push(sceneId);
     } else if (completed.has(sceneId)) {
       seeded.push(...unproven);
@@ -305,10 +320,13 @@ function seedPassedPitchScenes(
 export function createLessonProgressionContext(
   input: LessonProgressionInput,
 ): LessonProgressionContext {
-  const sceneKinds = buildSceneKindsFromIds(input.sceneIds, input.sceneKinds);
+  const scenePlayModes = buildScenePlayModesFromIds(
+    input.sceneIds,
+    input.scenePlayModes,
+  );
   const completedSceneIds = seedPassedPitchScenes(
     input.sceneIds,
-    sceneKinds,
+    scenePlayModes,
     input.completedSceneIds ?? [],
   );
   const lastSceneIndex = input.sceneIds.length - 1;
@@ -327,7 +345,7 @@ export function createLessonProgressionContext(
   );
   return {
     sceneIds: input.sceneIds,
-    sceneKinds,
+    scenePlayModes,
     sceneIndex,
     pendingSubmissions: input.initialPendingSubmissions ?? {},
     completedSceneIdsInSession: Object.fromEntries(

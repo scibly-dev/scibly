@@ -6,7 +6,10 @@ const db = vi.hoisted(() => ({
     findUnique: vi.fn(),
     groupBy: vi.fn(),
     deleteMany: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
   },
+  sceneSourceLineage: { findMany: vi.fn(), createMany: vi.fn() },
   lesson: { updateMany: vi.fn() },
   $transaction: vi.fn(),
 }));
@@ -23,6 +26,11 @@ beforeEach(() => {
   vi.clearAllMocks();
   db.scene.deleteMany.mockResolvedValue({ count: 0 });
   db.scene.findMany.mockResolvedValue([]);
+  db.scene.create.mockImplementation(({ data }) => ({
+    id: "clone-1",
+    ...data,
+  }));
+  db.sceneSourceLineage.findMany.mockResolvedValue([]);
   db.lesson.updateMany.mockResolvedValue({ count: 0 });
   db.$transaction.mockImplementation((fn) => fn(db));
   requireOrgMember.mockResolvedValue({ id: "m1", role: "admin" });
@@ -246,6 +254,7 @@ function makeCloneSource(
     scenePublished?: boolean;
     lessonPublished?: boolean;
     organizationId?: string;
+    practice?: boolean;
   } = {},
 ) {
   return {
@@ -257,10 +266,17 @@ function makeCloneSource(
     animation: "FADE",
     sp: 10,
     isOutdated: false,
+    outdatedReason: null,
     integration: null,
     documentState: null,
     learnerContent: null,
     gradingManifest: null,
+    kind: opts.practice ? "PRACTICE" : "DOCUMENT",
+    practiceHtml: opts.practice ? "<div>app</div>" : null,
+    practiceSolution: opts.practice
+      ? { answer: { value: 42, points: 3 } }
+      : null,
+    practiceExplain: opts.practice ? "Because 42." : null,
     courseVersionId: opts.scenePublished ? "cv1" : null,
     lesson: {
       courseVersionId: opts.lessonPublished ? "cv1" : null,
@@ -326,5 +342,41 @@ describe("cloneDraftScene", () => {
       code: "BAD_REQUEST",
     });
     expect(db.$transaction).not.toHaveBeenCalled();
+  });
+
+  // `db.scene.create` is a bare vi.fn() here, so its argument comes back
+  // untyped; this names the one shape the clone path ever passes.
+  const createdSceneData = () =>
+    db.scene.create.mock.calls[0]![0].data as {
+      kind: string;
+      practiceHtml: string | null;
+      practiceSolution: unknown;
+      practiceExplain: string | null;
+    };
+
+  // P0.5 — a PRACTICE source must clone as a PRACTICE scene. Copying only
+  // documentState/learnerContent left the copy an empty DOCUMENT (BC-3).
+  it("CDS4: carries kind and every practice column onto the clone", async () => {
+    db.scene.findUnique.mockResolvedValueOnce(
+      makeCloneSource({ practice: true }),
+    );
+
+    await cloneDraftScene("u1", "s1");
+
+    const data = createdSceneData();
+    expect(data.kind).toBe("PRACTICE");
+    expect(data.practiceHtml).toBe("<div>app</div>");
+    expect(data.practiceSolution).toEqual({ answer: { value: 42, points: 3 } });
+    expect(data.practiceExplain).toBe("Because 42.");
+  });
+
+  it("CDS4: leaves the practice columns unset when cloning a DOCUMENT scene", async () => {
+    db.scene.findUnique.mockResolvedValueOnce(makeCloneSource());
+
+    await cloneDraftScene("u1", "s1");
+
+    const data = createdSceneData();
+    expect(data.kind).toBe("DOCUMENT");
+    expect(data.practiceHtml ?? null).toBeNull();
   });
 });

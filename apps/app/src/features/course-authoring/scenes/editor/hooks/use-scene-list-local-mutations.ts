@@ -11,7 +11,6 @@ interface SceneListLocalMutationsOptions {
   setScenes: (scenes: LessonScene[]) => void;
   activeSceneId: string;
   setActiveSceneId: (id: string) => void;
-  collaborationInvalidate: () => void;
   saveState: {
     start: () => void;
     end: () => void;
@@ -26,7 +25,6 @@ function useCreateScene(options: SceneListLocalMutationsOptions) {
     onSuccess: (newScene) => {
       options.setScenes([...options.scenes, newScene]);
       options.setActiveSceneId(newScene.id);
-      options.collaborationInvalidate();
     },
     onError: console.error,
     onSettled: () => options.saveState.end(),
@@ -60,7 +58,6 @@ function useCloneScene(options: SceneListLocalMutationsOptions) {
         nextScenes.map((scene, order) => ({ ...scene, order })),
       );
       options.setActiveSceneId(clonedScene.id);
-      options.collaborationInvalidate();
     },
     onError: (error, variables, context) => {
       console.error("Failed to clone scene", {
@@ -102,7 +99,6 @@ function useDeleteScene(options: SceneListLocalMutationsOptions) {
         );
         return;
       }
-      options.collaborationInvalidate();
       options.onDeleteSuccess?.();
     },
     onError: (error, variables, context) => {
@@ -132,7 +128,6 @@ export function useSceneListLocalMutations(
       options.saveState.start();
       return { previousScenes: options.scenes };
     },
-    onSuccess: options.collaborationInvalidate,
     onError: (err, variables, context) => {
       console.error("Failed to reorder scenes", {
         lessonId: variables.lessonId,

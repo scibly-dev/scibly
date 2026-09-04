@@ -34,8 +34,15 @@ export const sceneProgressRouter = createTRPCRouter({
   completeScene: publicProcedure
     .input(completeSceneSchema)
     .mutation(async ({ input, ctx }) => {
-      const { enrollmentId, courseId, anonymousId, lessonId, sceneId, blocks } =
-        input;
+      const {
+        enrollmentId,
+        courseId,
+        anonymousId,
+        lessonId,
+        sceneId,
+        blocks,
+        practiceWork,
+      } = input;
 
       if (enrollmentId) {
         if (!ctx.session?.user) {
@@ -54,6 +61,7 @@ export const sceneProgressRouter = createTRPCRouter({
             lessonId,
             sceneId,
             blocks,
+            practiceWork,
           },
         );
       }
@@ -67,6 +75,7 @@ export const sceneProgressRouter = createTRPCRouter({
           lessonId,
           sceneId,
           blocks,
+          practiceWork,
         },
       );
     }),

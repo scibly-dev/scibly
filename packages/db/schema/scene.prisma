@@ -1,3 +1,11 @@
+/// DOCUMENT is the tiptap-edited scene every learner has seen so far. PRACTICE
+/// is an agent-generated interactive mini-app, graded against a stored
+/// solution instead of question blocks — see docs/plans/practice-scenes.md.
+enum SceneKind {
+  DOCUMENT
+  PRACTICE
+}
+
 enum SceneVibe {
   NEUTRAL
   URGENT
@@ -30,13 +38,24 @@ model Scene {
   order    Int    @default(0)
 
   title       String         @default("New Scene")
+  kind        SceneKind      @default(DOCUMENT)
   vibe        SceneVibe      @default(NEUTRAL)
   animation   SceneAnimation @default(FADE)
   integration Json?
 
-  /// Collaborative authoring state. Never returned by learner APIs.
+  /// Collaborative authoring state. Never returned by learner APIs. DOCUMENT scenes only.
   documentState   Bytes?
-  /// Immutable, solution-sanitized TipTap JSON rendered by learners.
+  /// PRACTICE draft: the agent's HTML fragment. Assembled into a full document at render time — see docs/plans/practice-scenes.md.
+  practiceHtml     String?
+  /// PRACTICE draft: { field: { value, points, eps? } }, or absent for an open-ended practice.
+  practiceSolution Json?
+  /// PRACTICE draft: released to the learner on every submit, alongside any comparison result.
+  practiceExplain  String?
+  /// PRACTICE draft: sha256 of practiceHtml + practiceSolution as of the last
+  /// passing self-test run. Publish re-derives the hash and refuses a mismatch,
+  /// so editing either column retires the stamp without anything clearing it.
+  practiceValidated String?
+  /// Immutable, solution-sanitized TipTap JSON (DOCUMENT) or the app fragment (PRACTICE) rendered by learners.
   learnerContent  Json?
   /// Immutable answer key generated with learnerContent at publish time.
   gradingManifest Json?

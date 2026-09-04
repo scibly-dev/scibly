@@ -1,6 +1,5 @@
 import type { Scene } from "../../../lessons/builder/components/lesson-builder";
 
-import { useHocuspocusProvider } from "@hocuspocus/provider-react";
 import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -23,7 +22,6 @@ export function useSceneTabController(
   const availableSp = getCanvasSceneAvailableSp(scene.sp, blockSp);
   const addSave = useSaveState((state) => state.addSave);
   const removeSave = useSaveState((state) => state.removeSave);
-  const provider = useHocuspocusProvider();
   const { mutate } = api.scene.updateScene.useMutation({
     onMutate: ({ sceneId, updates }) => {
       addSave();
@@ -36,14 +34,6 @@ export function useSceneTabController(
       onSceneUpdate(sceneId, optimistic);
       return { previousScene: scene };
     },
-    onSuccess: (_, variables) =>
-      provider.sendStateless(
-        JSON.stringify({
-          type: "update_scene",
-          sceneId: variables.sceneId,
-          updates: variables.updates,
-        }),
-      ),
     onError: (error, variables, context) => {
       console.error(error);
       if (context) onSceneUpdate(variables.sceneId, context.previousScene);

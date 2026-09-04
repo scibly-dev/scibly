@@ -3,7 +3,7 @@ import type { NavigationTranslations } from "../utils/lesson-progression-helpers
 import type { lessonProgressionMachine as LessonProgressionMachine } from "./lesson-progression.machine";
 import type {
   PendingSceneSubmission,
-  SceneKind,
+  ScenePlayMode,
   SceneResult,
   SubmitScene,
 } from "./lesson-progression.model";
@@ -40,7 +40,7 @@ const ANSWER = [
 ] as const;
 
 interface LessonOptions {
-  kinds?: SceneKind[];
+  kinds?: ScenePlayMode[];
   completedSceneIds?: string[];
   initialSceneIndex?: number;
   initialPendingSubmissions?: Record<string, PendingSceneSubmission>;
@@ -51,14 +51,14 @@ interface LessonOptions {
 function startLesson(options: LessonOptions = {}): LessonActor {
   const kinds = options.kinds ?? ["assessment", "assessment"];
   const sceneIds = kinds.map((_, index) => `s${index + 1}`);
-  const sceneKinds: Record<string, SceneKind> = {};
+  const scenePlayModes: Record<string, ScenePlayMode> = {};
   sceneIds.forEach((sceneId, index) => {
-    sceneKinds[sceneId] = kinds[index]!;
+    scenePlayModes[sceneId] = kinds[index]!;
   });
   const actor = createActor(lessonProgressionMachine, {
     input: {
       sceneIds,
-      sceneKinds,
+      scenePlayModes,
       initialSceneIndex: options.initialSceneIndex,
       initialPendingSubmissions: options.initialPendingSubmissions,
       completedSceneIds: options.completedSceneIds,
@@ -76,8 +76,9 @@ function startLesson(options: LessonOptions = {}): LessonActor {
 const snapshots = {
   answering: (): ProgressionSnapshot => startLesson().getSnapshot(),
 
-  viewing: (kinds: SceneKind[] = ["content", "content"]): ProgressionSnapshot =>
-    startLesson({ kinds }).getSnapshot(),
+  viewing: (
+    kinds: ScenePlayMode[] = ["content", "content"],
+  ): ProgressionSnapshot => startLesson({ kinds }).getSnapshot(),
 
   readyToAdvance: (): ProgressionSnapshot => {
     const actor = startLesson({

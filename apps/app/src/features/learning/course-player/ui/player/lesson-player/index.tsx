@@ -164,8 +164,8 @@ export function LessonPlayer(props: LessonPlayerProps) {
   );
 }
 
+// No `kind`/`learnerContent`: a pitch scene has no content row to load.
 const PITCH_SCENE_CONTENT: SceneContentQueryResult = {
-  learnerContent: null,
   isLoading: false,
   isRefetching: false,
   error: null,

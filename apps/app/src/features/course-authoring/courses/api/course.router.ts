@@ -4,6 +4,7 @@ import {
   publicProcedure,
 } from "@scibly/api/trpc";
 
+import { broadcastCourseSync } from "@/features/course-authoring/collaboration/server/broadcast-course-sync";
 import {
   createCourse,
   createDraftLesson,
@@ -108,7 +109,14 @@ export const courseRouter = createTRPCRouter({
 
   update: protectedProcedure
     .input(updateCourseSchema)
-    .mutation(({ input, ctx }) => updateCourse(userId(ctx), input)),
+    .mutation(async ({ input, ctx }) => {
+      const course = await updateCourse(userId(ctx), input);
+      broadcastCourseSync(ctx.session.user, input.courseId, {
+        type: "update_course",
+        updates: input,
+      });
+      return course;
+    }),
 
   create: protectedProcedure
     .input(createCourseSchema)
@@ -142,11 +150,26 @@ export const courseRouter = createTRPCRouter({
 
   createLesson: protectedProcedure
     .input(createLessonSchema)
-    .mutation(({ input, ctx }) => createDraftLesson(userId(ctx), input)),
+    .mutation(async ({ input, ctx }) => {
+      const lesson = await createDraftLesson(userId(ctx), input);
+      broadcastCourseSync(ctx.session.user, input.courseId, {
+        type: "invalidate_lessons",
+      });
+      return lesson;
+    }),
 
   updateLesson: protectedProcedure
     .input(updateLessonSchema)
-    .mutation(({ input, ctx }) => updateDraftLesson(userId(ctx), input)),
+    .mutation(async ({ input, ctx }) => {
+      const lesson = await updateDraftLesson(userId(ctx), input);
+      broadcastCourseSync(
+        ctx.session.user,
+        input.courseId,
+        { type: "update_lesson", updates: input },
+        { type: "invalidate_lessons" },
+      );
+      return lesson;
+    }),
 
   getLesson: protectedProcedure
     .input(getLessonSchema)
@@ -162,11 +185,23 @@ export const courseRouter = createTRPCRouter({
 
   updateLessonOrder: protectedProcedure
     .input(updateLessonOrderSchema)
-    .mutation(({ input, ctx }) => reorderDraftLessons(userId(ctx), input)),
+    .mutation(async ({ input, ctx }) => {
+      const result = await reorderDraftLessons(userId(ctx), input);
+      broadcastCourseSync(ctx.session.user, input.courseId, {
+        type: "invalidate_lessons",
+      });
+      return result;
+    }),
 
   deleteLesson: protectedProcedure
     .input(deleteLessonSchema)
-    .mutation(({ input, ctx }) => deleteDraftLessons(userId(ctx), input)),
+    .mutation(async ({ input, ctx }) => {
+      const result = await deleteDraftLessons(userId(ctx), input);
+      broadcastCourseSync(ctx.session.user, input.courseId, {
+        type: "invalidate_lessons",
+      });
+      return result;
+    }),
 
   resolveLessonDeletion: protectedProcedure
     .input(resolveLessonDeletionSchema)

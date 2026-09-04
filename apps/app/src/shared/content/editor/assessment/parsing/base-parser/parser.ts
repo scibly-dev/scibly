@@ -60,28 +60,6 @@ export function countWords(text?: string | null): number {
     .filter((word) => word.length > 0).length;
 }
 
-export function deepEqual(left: unknown, right: unknown): boolean {
-  if (Object.is(left, right)) return true;
-  if (
-    !left ||
-    !right ||
-    typeof left !== "object" ||
-    typeof right !== "object"
-  ) {
-    return false;
-  }
-
-  const leftEntries = Object.entries(left);
-  const rightEntries = new Map<string, unknown>(Object.entries(right));
-  return (
-    leftEntries.length === rightEntries.size &&
-    leftEntries.every(
-      ([key, value]) =>
-        rightEntries.has(key) && deepEqual(value, rightEntries.get(key)),
-    )
-  );
-}
-
 export function assertKnownParts(
   answer: Record<string, string>,
   parts: { placed: Iterable<string>; targets: Iterable<string> },

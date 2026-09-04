@@ -6,4 +6,5 @@ export const previewSceneSchema = z.object({
   lessonId: z.string(),
   sceneId: z.string(),
   blocks: z.array(blockSubmissionSchema).optional(),
+  practiceWork: z.unknown().optional(),
 });

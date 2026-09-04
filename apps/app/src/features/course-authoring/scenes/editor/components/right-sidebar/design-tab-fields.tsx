@@ -156,7 +156,7 @@ export function DesignTabFields({
   return (
     <div key="design" className="flex flex-col gap-8 p-6">
       <p className="text-ink-muted text-[13px] dark:text-neutral-400">
-        Applies to every scene in this lesson.
+        Applies to every scene in this lesson. Saves as you edit.
       </p>
       <PresetPicker
         currentPreset={currentPreset}

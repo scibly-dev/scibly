@@ -1,3 +1,4 @@
+import type { Content } from "@tiptap/core";
 import type { QuestionBlocksType } from "@/shared/content/editor/blocks/registry/shared";
 
 import { z } from "zod";
@@ -9,10 +10,6 @@ export const QUESTION_BLOCK_AUTHORING_FIELDS = [
   "sp",
 ] as const;
 
-/**
- * A block with `maxPoints`/`sp` of 0 still reads as a block here; publishing's
- * `ZERO_VALUE_QUESTIONS` gate refuses it, not this reader.
- */
 export const questionBlockAttributesBaseSchema = z
   .object({
     optional: z.boolean().optional(),
@@ -71,9 +68,14 @@ export type PublishArtifacts = Readonly<{
 }>;
 
 /**
- * `blockType` is a plain `string` here: it comes off the DB by cast, not a
- * parse, so grading validates it rather than trusting it.
+ * `kind` is the discriminator, not the runtime type of `learnerContent`: a
+ * legacy raw-HTML DOCUMENT scene is a bare string too.
  */
+export type PublishedSceneContent =
+  | { kind: "PRACTICE"; learnerContent: string }
+  | { kind: "DOCUMENT"; learnerContent: Content };
+
+/** `blockType` comes off the DB by cast, not a parse, so grading validates it. */
 export type StoredGradingManifest = readonly Readonly<
   Omit<PublishArtifacts["gradingManifest"][number], "blockType"> & {
     blockType: string;
@@ -88,10 +90,6 @@ export const blockSubmissionSchema = z.object({
 
 export type BlockSubmission = z.infer<typeof blockSubmissionSchema>;
 
-/**
- * `blockType` here comes from the frozen manifest, not the learner's
- * submission — that's the trust boundary grading enforces.
- */
 export type GradedBlock = {
   blockId: string;
   blockType: QuestionBlocksType;
@@ -106,10 +104,7 @@ export type GradingResult = {
   totalSpEarned: number;
 };
 
-/**
- * Rows written before a field existed fall back via `.catch()`; a row with
- * no `blockId` names no question, so it is dropped instead.
- */
+/** Rows predating a field fall back via `.catch()`; one with no `blockId` names no question. */
 export const persistedGradedBlockSchema = z.object({
   blockId: z.string(),
   blockType: z.string().catch(""),

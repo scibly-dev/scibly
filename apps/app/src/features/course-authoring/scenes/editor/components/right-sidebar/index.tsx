@@ -7,7 +7,6 @@ import {
   type Lesson,
   type Scene,
 } from "../../../../lessons/builder/components/lesson-builder";
-import { DesignTab } from "./design-tab";
 import {
   type Device,
   DEVICE_CATEGORIES,
@@ -16,7 +15,7 @@ import {
 } from "./preview-tab";
 import { SceneTab } from "./scene-tab";
 
-type SidebarTab = "scene" | "design" | "preview";
+type SidebarTab = "scene" | "preview";
 
 export const SidebarTabs = ({
   active,
@@ -28,7 +27,7 @@ export const SidebarTabs = ({
   return (
     <div className="border-hairline shrink-0 border-b-2 p-4 dark:border-neutral-800/60">
       <div className="bg-ground flex items-center rounded-xl p-1 dark:bg-neutral-900">
-        {(["scene", "design", "preview"] as const).map((tab) => (
+        {(["scene", "preview"] as const).map((tab) => (
           <button
             key={tab}
             onClick={() => onChange(tab)}
@@ -80,9 +79,6 @@ export function RightSidebar({
       <div className="no-scrollbar flex-1 overflow-y-auto">
         {activeTab === "scene" && (
           <SceneTab scene={scene} onSceneUpdate={onSceneUpdate} />
-        )}
-        {activeTab === "design" && (
-          <DesignTab courseId={courseId} lesson={lesson} />
         )}
         {activeTab === "preview" && (
           <PreviewTab

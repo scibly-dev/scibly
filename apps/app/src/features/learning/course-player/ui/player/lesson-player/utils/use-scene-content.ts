@@ -1,5 +1,6 @@
 "use client";
 
+import type { PublishedSceneContent } from "@/shared/content/contracts";
 import type { ProgressionMode } from "../../utils/player-types";
 
 import { useEffect } from "react";
@@ -12,13 +13,12 @@ import {
   type SceneContentFetchInput,
 } from "./scene-content-query";
 
-export interface SceneContentQueryResult {
-  learnerContent: unknown;
+export type SceneContentQueryResult = {
   isLoading: boolean;
   isRefetching: boolean;
   error: unknown;
   refetch: () => void;
-}
+} & (PublishedSceneContent | { kind?: undefined; learnerContent?: undefined });
 
 export type MemberSceneContentSource = {
   mode: "member";
@@ -91,7 +91,7 @@ function prefetchSceneContent(
 
 function useActiveSceneContent(
   query: {
-    data: { sceneId: string; learnerContent: unknown } | undefined;
+    data: ({ sceneId: string } & PublishedSceneContent) | undefined;
     isLoading: boolean;
     isFetching: boolean;
     error: unknown;
@@ -99,17 +99,29 @@ function useActiveSceneContent(
   },
   sceneId: string,
 ): SceneContentQueryResult {
-  const activeData = query.data;
-  return {
-    learnerContent:
-      activeData && activeData.sceneId === sceneId
-        ? activeData.learnerContent
-        : undefined,
+  const active =
+    query.data?.sceneId === sceneId ? query.data : { kind: undefined };
+  const status = {
     isLoading: query.isLoading,
     isRefetching: query.isFetching && !query.isLoading,
     error: query.error,
     refetch: query.refetch,
   };
+  if (active.kind === "PRACTICE") {
+    return {
+      ...status,
+      kind: active.kind,
+      learnerContent: active.learnerContent,
+    };
+  }
+  if (active.kind === "DOCUMENT") {
+    return {
+      ...status,
+      kind: active.kind,
+      learnerContent: active.learnerContent,
+    };
+  }
+  return status;
 }
 
 export function useMemberSceneContent(source: MemberSceneContentSource) {

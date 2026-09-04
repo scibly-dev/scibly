@@ -3,12 +3,17 @@ import {
   extractQuestionBlockSnapshotsFromTipTap,
   normalizeAuthorTipTapContent,
 } from "@/shared/content/editor/documents/tiptap-document";
+import { practiceContentHash } from "@/shared/content/practice/practice-content-hash";
 
 type PublishableLesson = Readonly<{
   title: string;
   scenes: readonly Readonly<{
     title?: string | null;
+    kind?: "DOCUMENT" | "PRACTICE";
     documentState?: Buffer | Uint8Array | null;
+    practiceHtml?: string | null;
+    practiceSolution?: unknown;
+    practiceValidated?: string | null;
     isOutdated?: boolean;
   }>[];
 }>;
@@ -31,6 +36,7 @@ type PublishValidationFailure = Readonly<{
     | "UNANSWERABLE_QUESTIONS"
     | "ZERO_VALUE_QUESTIONS"
     | "DUPLICATE_BLOCK_ID"
+    | "UNVALIDATED_PRACTICE"
     | "OUTDATED_SCENES";
   message: string;
 
@@ -214,11 +220,31 @@ export function validatePublishableContent(
 
   const emptyScene = lessons
     .flatMap((lesson) => lesson.scenes)
-    .find((scene) => !scene.documentState);
+    .find((scene) =>
+      scene.kind === "PRACTICE"
+        ? !scene.practiceHtml?.trim()
+        : !scene.documentState,
+    );
   if (emptyScene) {
     return {
       code: "EMPTY_SCENE",
       message: `Scene "${sceneName(emptyScene.title)}" has no content. Add content to all canvas scenes before publishing.`,
+    };
+  }
+
+  // Not behind `force`: a broken course, not a stale one.
+  const unvalidatedScene = lessons
+    .flatMap((lesson) => lesson.scenes)
+    .find(
+      (scene) =>
+        scene.kind === "PRACTICE" &&
+        scene.practiceValidated !==
+          practiceContentHash(scene.practiceHtml, scene.practiceSolution),
+    );
+  if (unvalidatedScene) {
+    return {
+      code: "UNVALIDATED_PRACTICE",
+      message: `Practice scene "${sceneName(unvalidatedScene.title)}" has not passed its self-test since it was last edited. Open the scene and press Validate before publishing.`,
     };
   }
 
