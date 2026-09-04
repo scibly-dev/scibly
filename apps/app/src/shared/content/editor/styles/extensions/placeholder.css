@@ -46,21 +46,30 @@
   }
 }
 
-[data-locale="en"] .ProseMirror.ProseMirror-focused p.is-empty.has-focus::before {
+[data-locale="en"]
+  .ProseMirror.ProseMirror-focused
+  p.is-empty.has-focus::before {
   content: 'Craft your scene... ("/" for widgets)';
 }
 
 @media screen and (max-width: 768px) {
-  [data-locale="en"] .ProseMirror.ProseMirror-focused p.is-empty.has-focus::before {
+  [data-locale="en"]
+    .ProseMirror.ProseMirror-focused
+    p.is-empty.has-focus::before {
     content: '"/" for commands';
   }
 }
 
-[data-locale="en"] .ProseMirror.ProseMirror-focused li p.is-empty.has-focus::before {
+[data-locale="en"]
+  .ProseMirror.ProseMirror-focused
+  li
+  p.is-empty.has-focus::before {
   content: "List";
 }
 
-[data-locale="en"] .ProseMirror.ProseMirror-focused h1:not([data-type="custom-page-title"]).is-empty::before {
+[data-locale="en"]
+  .ProseMirror.ProseMirror-focused
+  h1:not([data-type="custom-page-title"]).is-empty::before {
   content: "Heading 1";
 }
 
