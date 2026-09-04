@@ -185,7 +185,7 @@ review.
 ## When the feature is done
 
 ```bash
-pnpm wt:down
+pnpm wt:down --yes
 ```
 
 Stops this worktree's servers and drops its database. The stack is deliberately
