@@ -18,6 +18,7 @@ packages/db/seeds/constants/prod-seed-data.local.json
 **/.DS_Store
 
 # Test & report output
+**/.reviews/**
 **/playwright-report/**
 **/test-results/**
 **/coverage/**

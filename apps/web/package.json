@@ -13,7 +13,7 @@
     "db:seed": "dotenv-flow -e .env -- pnpm --filter @scibly/db run seed",
     "db:studio": "dotenv-flow -e .env -- pnpm --filter @scibly/db run studio",
     "migrate": "dotenv-flow -e .env -- pnpm --filter @scibly/db run migrate",
-    "dev": "next dev --turbo --port 3000 --hostname 0.0.0.0",
+    "dev": "next dev --turbo --port ${WEB_PORT:-3000} --hostname 0.0.0.0",
     "dev:db": "concurrently --raw \"pnpm dev\" \"pnpm db:studio\"",
     "dev:email": "email dev",
     "lint": "eslint .",

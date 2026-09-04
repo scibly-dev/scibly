@@ -63,7 +63,8 @@
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "env": ["APP_PORT", "WEB_PORT"]
     },
     "start": {
       "cache": true,
