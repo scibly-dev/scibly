@@ -2,6 +2,7 @@
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import {
+  chmodSync,
   lstatSync,
   readFileSync,
   readdirSync,
@@ -11,15 +12,9 @@ import {
 import path from "node:path";
 import { parseEnv } from "node:util";
 
-/** The one env file that carries `DATABASE_URL`. */
 export const DB_ENV_FILE = "packages/db/.env";
 
-/**
- * Every `.env` in the repo is gitignored, so a fresh worktree starts with none
- * of them and someone hand-copies whichever ones they notice are missing. These
- * five are the whole set; the main worktree is the source of truth for all of
- * them.
- */
+/** Every `.env` in the repo, all gitignored, all copied from the main worktree. */
 export const ENV_FILES = [
   ".env",
   "apps/app/.env",
@@ -34,11 +29,7 @@ const MAIN_PORTS = { web: 3000, app: 3001, collab: 4000 };
 /** Ports a worktree must not land on: the main checkout's, the docs app, Postgres, Prisma Studio. */
 const RESERVED_PORTS = new Set([3000, 3001, 3002, 4000, 5432, 5433, 5555]);
 
-/**
- * Every three-port block from 3200 up that holds no reserved port — about 900
- * of them. It was 90, which put six worktrees at a ~15% chance of two sharing a
- * block; two of them did.
- */
+/** Every three-port block from 3200 up that holds no reserved port, ~900 of them. */
 const SLOTS = (() => {
   /** @type {number[]} */
   const slots = [];
@@ -57,9 +48,8 @@ const git = (args, cwd) =>
   execFileSync("git", args, { cwd, encoding: "utf8" }).trim();
 
 /**
- * The worktree we were invoked in, and the main checkout it was cut from.
- * `--git-common-dir` is the one path shared by every worktree — it resolves to
- * the main checkout's `.git`, which no other git command hands you directly.
+ * `--git-common-dir` resolves to the main checkout's `.git` from any worktree,
+ * which no other git command hands you directly.
  *
  * @param {string} [cwd]
  */
@@ -74,9 +64,8 @@ export function worktreePaths(cwd = process.cwd()) {
 }
 
 /**
- * Three consecutive ports and a database name, both from the worktree's
- * directory name, so the same worktree always gets the same ones — a port that
- * moved between runs would mean rewriting `.env`, and `.env` is a
+ * Ports and database name are hashed from the directory name so they never move
+ * between runs: a moved port means rewriting `.env`, and `.env` is a
  * `globalDependencies` entry in `turbo.json`.
  *
  * @param {string} dirName the worktree directory's basename
@@ -85,18 +74,16 @@ export function worktreeConfig(dirName) {
   const digest = createHash("sha1").update(dirName).digest();
   const web = SLOTS[digest.readUInt32BE(0) % SLOTS.length];
   const slug = dirName.replace(/[^a-zA-Z0-9]/g, "_").toLowerCase();
-  // The slug is not injective — `feat-x`, `feat_x`, `Feat.x` and `feat/x` all
-  // flatten to `feat_x` — and Postgres truncates identifiers at 63 bytes
-  // silently, so two long names sharing a prefix collide too. The digest
-  // answers both, which is why it is unconditional rather than a fallback.
-  // 10 + 44 + 1 + 8 = 63, the limit exactly.
+  // `feat-x`, `feat_x`, `Feat.x` and `feat/x` all flatten to `feat_x`, and
+  // Postgres truncates at 63 bytes silently, so the digest is unconditional
+  // rather than a fallback. 10 + 44 + 1 + 8 = 63, the limit exactly.
   const db = `scibly_wt_${slug.slice(0, 44)}_${digest.toString("hex").slice(0, 8)}`;
   return { name: dirName, ports: { web, app: web + 1, collab: web + 2 }, db };
 }
 
 /**
- * The other worktrees beside this one. Empty when `root` is not inside a
- * directory of worktrees, which is the normal case for a plain clone.
+ * Empty when `root` is not inside a directory of worktrees, the normal case for
+ * a plain clone.
  *
  * @param {string} root
  * @returns {string[]}
@@ -114,9 +101,9 @@ function siblingNames(root) {
 }
 
 /**
- * Two worktrees hashing to the same block get the same three ports and simply
- * fight over them; nothing downstream can tell the difference. Every sibling's
- * ports come from its directory name, so the clash is cheap to see coming.
+ * Two worktrees hashing to the same block fight over the ports and nothing
+ * downstream can tell. Sibling ports come from their directory names, so the
+ * clash is cheap to see coming.
  *
  * @param {{name: string, ports: Record<string, number>}} config
  * @param {string} root
@@ -137,8 +124,6 @@ export function assertPortsFree(config, root) {
 }
 
 /**
- * Swap the database name in a connection string, leaving host and credentials alone.
- *
  * @param {string} url
  * @param {string} name
  */
@@ -148,7 +133,7 @@ export function withDatabase(url, name) {
   return parsed.toString();
 }
 
-/** Node reports an IPv6 host bracketed, so the bare `::1` form never matched. */
+/** `new URL().hostname` brackets IPv6, so a bare `::1` entry would never match. */
 const LOCAL_HOSTS = ["localhost", "127.0.0.1", "[::1]", "host.docker.internal"];
 
 /**
@@ -178,9 +163,7 @@ export function assertLocal(url) {
 }
 
 /**
- * Read `DATABASE_URL` out of an env file's text. `parseEnv` is the same stdlib
- * parser `scripts/dev.mjs` uses, and unlike a line regex it knows what a quote
- * and a trailing comment are.
+ * `parseEnv` over a line regex: it knows what a quote and a trailing comment are.
  *
  * @param {string} text
  */
@@ -198,13 +181,10 @@ const APP_BY_MAIN_PORT = new Map(
 );
 
 /**
- * Rewrite one env file for this worktree. Ports are substituted wherever a
- * loopback host is followed by one of the main checkout's ports — which means
+ * Substitutes wherever a loopback host is followed by a main-checkout port, so
  * `NEXT_PUBLIC_BASE_URL` lands on the app port in `apps/app/.env` and the web
- * port in `apps/web/.env` without either being named here.
- *
- * One pass over the text rather than a chain of them, so no substitution can
- * re-match another's output.
+ * port in `apps/web/.env` without either being named here. One pass, so no
+ * substitution can re-match another's output.
  *
  * @param {string} text
  * @param {{ports: Record<string, number>, db: string}} config
@@ -230,11 +210,9 @@ export function rewriteEnv(text, { ports, db }) {
         return `${key}"${withDatabase(value, db)}"${trailing}`;
       },
     );
-  // A host spelled some way the pattern above does not know survives the
-  // rewrite silently, and `dev.mjs` then parses the main checkout's port back
-  // out of it and boots this worktree on top of the main one. Fail here
-  // instead: a written file is what makes that collision permanent.
-  // Ports this worktree was itself given are not misses. Real slots never
+  // A host spelling the pattern does not know survives silently, and `dev.mjs`
+  // then boots this worktree on the main checkout's port. Fail before writing.
+  // Ports this worktree was itself given are not misses; real slots never
   // include a main port, but a test may hand us one.
   const stale = Object.values(MAIN_PORTS).filter(
     (p) => !Object.values(ports).includes(p),
@@ -252,15 +230,11 @@ export function rewriteEnv(text, { ports, db }) {
 
 /**
  * `writeFileSync` follows symlinks. A worktree cut before this script existed
- * can have its `.env` symlinked back into the main checkout, and writing
- * through one overwrites the very file we just read — after which the main
- * checkout no longer holds 3000/3001/4000, `rewriteEnv` is a silent no-op for
- * the next worktree, and it copies these ports verbatim. That is exactly the
- * collision this script exists to prevent.
- *
- * The read-back in the caller cannot notice: through the same link it sees its
- * own output and reports "unchanged". So the link has to go before anything
- * reads.
+ * can have its `.env` symlinked back into the main checkout, and writing through
+ * one overwrites the file we just read, after which the main checkout no longer
+ * holds 3000/3001/4000 and every later worktree copies these ports verbatim.
+ * The caller's read-back cannot notice, since through the same link it sees its
+ * own output and reports "unchanged", so the link goes before anything reads.
  *
  * @param {string} target absolute path this worktree should own
  * @param {string} source absolute path in the main checkout it was copied from
@@ -275,8 +249,8 @@ export function detachFromSource(target, source, rel) {
     rmSync(target);
     return true;
   }
-  // Not a symlink, but a hard link reaches the same inode — and `realpathSync`
-  // resolves symlinks only, so it cannot see that.
+  // A hard link reaches the same inode, and `realpathSync` resolves symlinks
+  // only, so it cannot see that.
   const src = statSync(source, { throwIfNoEntry: false });
   if (src && stat.dev === src.dev && stat.ino === src.ino) {
     throw new Error(
@@ -284,6 +258,18 @@ export function detachFromSource(target, source, rel) {
     );
   }
   return false;
+}
+
+/**
+ * `writeFileSync`'s `mode` applies only when the file is created and is ignored
+ * when it already exists, so a file first written at 0644 keeps 0644 through
+ * every later rewrite. These carry BETTER_AUTH_SECRET, COLLAB_TOKEN_SECRET and a
+ * credentialed DATABASE_URL, so chmod explicitly.
+ *
+ * @param {string} target
+ */
+export function secureEnvFile(target) {
+  chmodSync(target, 0o600);
 }
 
 /** Credentials go to `psql` in argv, so they come back in its failure message too. */
@@ -317,8 +303,7 @@ export function psql(admin, sql) {
 export const adminUrl = (url) => withDatabase(url, "postgres");
 
 /**
- * The main checkout's `DATABASE_URL`, verified local — the one place that path,
- * that read and that check live.
+ * The main checkout's `DATABASE_URL`, verified local.
  *
  * @param {string} main
  */
@@ -346,10 +331,9 @@ export function databaseExists(admin, name) {
 }
 
 /**
- * The working directory a process was started in, or `null` if it is gone or
- * `lsof` will not say. `wt:down` kills by port, and two worktrees deriving the
- * same block (see `assertPortsFree`) means the port alone does not identify
- * whose dev server it is.
+ * The directory a process was started in, or `null` if it is gone or `lsof` will
+ * not say. `wt:down` kills by port, and a port alone does not identify whose dev
+ * server it is.
  *
  * @param {string} pid
  * @returns {string | null}
@@ -368,9 +352,8 @@ export function processCwd(pid) {
 }
 
 /**
- * PIDs listening on a port, or none. A missing `lsof` is not "nothing is
- * listening" — it is a question we could not ask, and the caller kills
- * processes based on the answer.
+ * PIDs listening on a port. A missing `lsof` is not "nothing is listening", and
+ * the caller kills processes based on the answer.
  *
  * @param {number} port
  * @returns {string[]}

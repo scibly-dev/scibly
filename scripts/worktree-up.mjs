@@ -1,18 +1,13 @@
 #!/usr/bin/env node
 // @ts-check
 /**
- * Give this worktree its own ports, its own `.env` files and its own database.
+ * Give this worktree its own ports, its own `.env` files and its own database:
+ * copy all five `.env` files from the main checkout, then rewrite the ports and
+ * the database name to ones only this worktree uses.
  *
- * Every `.env` is gitignored, so a fresh worktree has none and inherits nothing;
- * copying them by hand is how worktrees end up half-configured, and copying them
- * verbatim is how they end up all fighting over port 3001 and `scibly-dev`. This
- * does both halves: copy all five from the main checkout, then rewrite the ports
- * and the database name to ones only this worktree uses.
- *
- * The five `.env` files are written only when their content actually changes,
- * because `.env` is a `globalDependencies` entry in `turbo.json` and touching
- * one invalidates this worktree's entire turbo cache. Nothing else here is
- * conditional — `.claude/launch.json` is rewritten every run.
+ * The `.env` files are written only when their content changes, because `.env`
+ * is a `globalDependencies` entry in `turbo.json` and touching one invalidates
+ * this worktree's whole turbo cache. `.claude/launch.json` is rewritten always.
  *
  *   node scripts/worktree-up.mjs [--no-seed]
  */
@@ -29,6 +24,7 @@ import {
   portOwner,
   psql,
   rewriteEnv,
+  secureEnvFile,
   worktreeConfig,
   worktreePaths,
 } from "./worktree-lib.mjs";
@@ -47,8 +43,8 @@ if (isMain) {
 const wt = worktreeConfig(path.basename(root));
 assertPortsFree(wt, root);
 
-// Read every source file before writing anything, so a missing one fails the
-// run rather than leaving the worktree half-configured.
+// Read every source before writing any target, so a missing one fails the run
+// rather than leaving the worktree half-configured.
 const sources = ENV_FILES.map((rel) => {
   try {
     return { rel, text: readFileSync(path.join(main, rel), "utf8") };
@@ -74,11 +70,15 @@ for (const { rel, text } of sources) {
       /* not written yet */
     }
   }
-  if (current === next) continue;
+  if (current === next) {
+    // The mode is part of the invariant too, and a file left at 0644 by an
+    // older run never gets rewritten.
+    secureEnvFile(target);
+    continue;
+  }
   mkdirSync(path.dirname(target), { recursive: true });
-  // These carry BETTER_AUTH_SECRET, COLLAB_TOKEN_SECRET and a credentialed
-  // DATABASE_URL; the default 0644 puts them in reach of every account here.
   writeFileSync(target, next, { mode: 0o600 });
+  secureEnvFile(target);
   changed += 1;
   console.log(`  wrote ${rel}`);
 }
@@ -88,13 +88,11 @@ console.log(
     : `env: ${changed} file${changed === 1 ? "" : "s"} rewritten`,
 );
 
-// The launch config is gitignored too, so it is this worktree's to generate.
-// `wt.ports` keys are exactly the three package names, so one entry per port,
-// and each package reads its port from `<NAME>_PORT`. Without `env` the `port`
-// field is decorative: `apps/app` falls back to `${APP_PORT:-3001}` and boots
-// on the main checkout's port while the debugger waits on this worktree's.
-// `scripts/dev.mjs` is what normally sets these, and launching from here
-// bypasses it entirely.
+// `wt.ports` keys are exactly the three package names, and each package reads
+// its port from `<NAME>_PORT`. Without `env` the `port` field is decorative:
+// launching from here bypasses `scripts/dev.mjs`, so `apps/app` falls back to
+// `${APP_PORT:-3001}` and boots on the main checkout's port while the debugger
+// waits on this worktree's.
 writeFileSync(
   path.join(root, ".claude/launch.json"),
   `${JSON.stringify(
@@ -130,28 +128,23 @@ const run = (label, args) => {
   execFileSync("pnpm", args, { cwd: root, stdio: "inherit" });
 };
 
-// A worktree's node_modules is its own and starts empty, or stale from before
-// the branch added a dependency — which surfaces as dozens of "cannot find
-// module" type errors that look like the branch is broken. It runs first
-// because `prisma generate` is `@scibly/db`'s postinstall, and migrate and seed
-// below are `prisma` invocations. No `--frozen-lockfile`: the stale-lockfile
-// case named above is exactly the one that flag refuses.
+// Runs first because `prisma generate` is `@scibly/db`'s postinstall and
+// migrate and seed below are prisma invocations. No `--frozen-lockfile`: a
+// branch that added a dependency is exactly the case that flag refuses.
 run("install", ["install"]);
 
 run("migrate", ["--filter", "@scibly/db", "run", "migrate:deploy"]);
 if (seed) run("seed", ["--filter", "@scibly/db", "run", "seed"]);
 
-// The i18n dictionaries and the editor html-schema are generated and gitignored,
-// and are normally produced only by the apps' own predev/prebuild hooks — which
-// `turbo run typecheck` does not trigger. Without them `pnpm validate` fails on
-// a clean worktree for reasons that have nothing to do with the branch. `ci.yml`
-// runs the same root script for the same reason.
+// The i18n dictionaries and editor html-schema are gitignored and normally come
+// from the apps' predev/prebuild hooks, which `turbo run typecheck` skips.
+// Without them `pnpm validate` fails for reasons unrelated to the branch.
+// `ci.yml` runs the same root script for the same reason.
 run("generate", ["run", "generate"]);
 
 // Next writes a route validator into .next/dev/types from whatever was checked
-// out at the time. A worktree reused for a second branch still has the first
-// one's routes in there, and typecheck fails on pages the branch never had.
-// `next dev` rebuilds it.
+// out at the time, so a worktree reused for a second branch fails typecheck on
+// pages the branch never had. `next dev` rebuilds it.
 for (const app of ["app", "web"]) {
   rmSync(path.join(root, `apps/${app}/.next/dev/types`), {
     recursive: true,

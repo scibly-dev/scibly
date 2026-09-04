@@ -20,6 +20,7 @@ import {
   mkdtempSync,
   readFileSync,
   rmSync,
+  statSync,
   symlinkSync,
   writeFileSync,
 } from "node:fs";
@@ -33,6 +34,7 @@ import {
   detachFromSource,
   readDatabaseUrl,
   rewriteEnv,
+  secureEnvFile,
   withDatabase,
   worktreeConfig,
 } from "./worktree-lib.mjs";
@@ -418,6 +420,50 @@ describe("detachFromSource (B1 — the symlink write-through)", () => {
       );
     } finally {
       cleanup();
+    }
+  });
+});
+
+describe("secureEnvFile (B14 — the mode that never took)", () => {
+  const mode = (/** @type {string} */ f) => statSync(f).mode & 0o777;
+
+  it("FIXED(B14): tightens a file already on disk at 0644", () => {
+    const dir = mkdtempSync(path.join(tmpdir(), "wt-mode-"));
+    try {
+      const target = path.join(dir, ".env");
+      writeFileSync(target, "A=1", { mode: 0o644 });
+      secureEnvFile(target);
+      assert.equal(mode(target), 0o600);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("pins why the chmod is needed: writeFileSync's mode is ignored on an existing file", () => {
+    const dir = mkdtempSync(path.join(tmpdir(), "wt-mode-"));
+    try {
+      const target = path.join(dir, ".env");
+      writeFileSync(target, "A=1", { mode: 0o644 });
+      writeFileSync(target, "A=2", { mode: 0o600 });
+      assert.equal(
+        mode(target),
+        0o644,
+        "if this ever fails, Node changed and secureEnvFile's rationale is stale",
+      );
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("leaves an already-0600 file where it is", () => {
+    const dir = mkdtempSync(path.join(tmpdir(), "wt-mode-"));
+    try {
+      const target = path.join(dir, ".env");
+      writeFileSync(target, "A=1", { mode: 0o600 });
+      secureEnvFile(target);
+      assert.equal(mode(target), 0o600);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
     }
   });
 });
