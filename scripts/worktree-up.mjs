@@ -19,8 +19,10 @@ import {
   ENV_FILES,
   assertPortsFree,
   databaseExists,
+  dropDatabase,
   detachFromSource,
   mainAdminUrl,
+  orphanDatabases,
   portOwner,
   psql,
   rewriteEnv,
@@ -111,6 +113,14 @@ writeFileSync(
     2,
   )}\n`,
 );
+
+// A deleted worktree leaves its database behind with nothing pointing at it,
+// and nothing observes a directory disappearing. Sweeping here means the next
+// `wt:up` in any worktree collects them, so at most one generation survives.
+for (const db of orphanDatabases(admin, main)) {
+  dropDatabase(admin, db);
+  console.log(`db:  dropped ${db} (its worktree is gone)`);
+}
 
 if (!databaseExists(admin, wt.db)) {
   psql(admin, `CREATE DATABASE "${wt.db}"`);

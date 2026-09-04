@@ -32,6 +32,8 @@ import {
   assertLocal,
   assertPortsFree,
   detachFromSource,
+  dropDatabase,
+  parseWorktreeList,
   readDatabaseUrl,
   rewriteEnv,
   secureEnvFile,
@@ -465,5 +467,40 @@ describe("secureEnvFile (B14 — the mode that never took)", () => {
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
+  });
+});
+
+describe("parseWorktreeList", () => {
+  const entry = (dir, ...extra) =>
+    [`worktree ${dir}`, "HEAD abc123", "detached", ...extra].join("\n");
+
+  it("leaves out the main checkout, which has no worktree database", () => {
+    const text = [entry("/repo"), entry("/repo/.claude/worktrees/alive")].join(
+      "\n\n",
+    );
+    assert.deepEqual(parseWorktreeList(text, "/repo"), ["alive"]);
+  });
+
+  it("treats a prunable entry as gone — that is what orphans a database", () => {
+    const text = [
+      entry("/repo"),
+      entry("/repo/.claude/worktrees/alive"),
+      entry("/tmp/gone", "prunable gitdir file points to non-existent location"),
+    ].join("\n\n");
+    assert.deepEqual(parseWorktreeList(text, "/repo"), ["alive"]);
+  });
+
+  it("sees a worktree added outside the worktrees directory, which a readdir cannot", () => {
+    const text = [entry("/repo"), entry("/elsewhere/detour")].join("\n\n");
+    assert.deepEqual(parseWorktreeList(text, "/repo"), ["detour"]);
+  });
+});
+
+describe("dropDatabase", () => {
+  it("refuses a name no worktree could have derived, before reaching psql", () => {
+    assert.throws(
+      () => dropDatabase("postgres://localhost/postgres", "scibly"),
+      /not a worktree database/,
+    );
   });
 });

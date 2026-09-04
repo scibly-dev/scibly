@@ -19,9 +19,18 @@ content actually changes: `.env` is a `globalDependencies` entry in
 `turbo.json`, so touching it on every invocation would invalidate the whole
 worktree's turbo cache.
 
-Consequence: databases named `scibly_wt_*` accumulate and outlive their
-worktrees. They are kept on purpose so a human can open the app after an agent
-has reviewed it; reaping them is a separate, explicit teardown step.
+Consequence: a database outlives the agent that made it. That is the point —
+the stack is left up so a human can open the app and see what a review meant, so
+reaping it is a separate, explicit step (`pnpm wt:down`).
+
+It must not outlive the worktree, which is a leak rather than a decision: once
+the directory is gone nothing points at the database and nothing will name it
+again. `pnpm wt:prune` drops every `scibly_wt_*` database no worktree derives,
+and `wt:up` runs the same sweep before provisioning, so at most one generation
+survives without anyone having to remember. Liveness comes from `git worktree
+list --porcelain`, not from reading the worktrees directory: it is the only
+source that sees a worktree added elsewhere, and the only one that distinguishes
+a deleted directory (`prunable`) from one that was never there.
 
 The `DATABASE_URL` it copies is checked to point at a local host before any
 `CREATE`/`DROP` runs. That check reads the URL only: a local port forwarded to a

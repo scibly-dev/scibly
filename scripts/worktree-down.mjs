@@ -15,10 +15,10 @@ import { createInterface } from "node:readline/promises";
 
 import {
   databaseExists,
+  dropDatabase,
   mainAdminUrl,
   portOwner,
   processCwd,
-  psql,
   worktreeConfig,
   worktreePaths,
 } from "./worktree-lib.mjs";
@@ -101,10 +101,5 @@ if (!assumeYes) {
   }
 }
 
-// Prisma Studio and stale dev servers hold connections that would make DROP fail.
-psql(
-  admin,
-  `SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '${wt.db}' AND pid <> pg_backend_pid()`,
-);
-psql(admin, `DROP DATABASE IF EXISTS "${wt.db}"`);
+dropDatabase(admin, wt.db);
 console.log(`dropped ${wt.db}`);

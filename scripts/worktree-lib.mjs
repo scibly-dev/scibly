@@ -331,6 +331,89 @@ export function databaseExists(admin, name) {
 }
 
 /**
+ * Terminate whatever is connected, then drop. Prisma Studio and stale dev
+ * servers hold connections that would make the `DROP` fail.
+ *
+ * The prefix check is not the same one `wt:down` makes: that one refuses before
+ * killing anything, this one is the last thing between a caller's arithmetic and
+ * an arbitrary `DROP`.
+ *
+ * @param {string} admin
+ * @param {string} name
+ */
+export function dropDatabase(admin, name) {
+  if (!name.startsWith("scibly_wt_")) {
+    throw new Error(`Refusing to drop ${name}: not a worktree database.`);
+  }
+  psql(
+    admin,
+    `SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '${name}' AND pid <> pg_backend_pid()`,
+  );
+  psql(admin, `DROP DATABASE IF EXISTS "${name}"`);
+}
+
+/**
+ * The worktree directory names git still knows about, minus the main checkout.
+ *
+ * `git worktree list` rather than reading the worktrees directory: it is the
+ * only source that sees a worktree added somewhere else entirely, and the only
+ * one that can tell a worktree whose directory has been deleted (`prunable`)
+ * from one that is simply not where it was expected.
+ *
+ * @param {string} main
+ * @returns {string[]}
+ */
+export function liveWorktreeNames(main) {
+  return parseWorktreeList(git(["worktree", "list", "--porcelain"], main), main);
+}
+
+/**
+ * The parsing half of `liveWorktreeNames`, split out because the two things it
+ * has to get right are both invisible from the outside: a `prunable` entry is a
+ * worktree whose directory git can no longer find, which is exactly the state
+ * that orphans a database, and the main checkout is in the list too.
+ *
+ * @param {string} porcelain `git worktree list --porcelain` output
+ * @param {string} main
+ * @returns {string[]}
+ */
+export function parseWorktreeList(porcelain, main) {
+  /** @type {string[]} */
+  const names = [];
+  for (const block of porcelain.trim().split("\n\n")) {
+    const dir = block.match(/^worktree (.+)$/m)?.[1];
+    if (!dir || /^prunable( |$)/m.test(block)) continue;
+    if (path.resolve(dir) === path.resolve(main)) continue;
+    names.push(path.basename(dir));
+  }
+  return names;
+}
+
+/**
+ * Worktree databases no live worktree derives.
+ *
+ * A worktree's database is meant to outlive the agent that made it, so a human
+ * can still open the app and see what a review meant. It is not meant to outlive
+ * the worktree: once the directory is gone, nothing points at the database and
+ * nothing will ever name it again.
+ *
+ * @param {string} admin
+ * @param {string} main
+ * @returns {string[]}
+ */
+export function orphanDatabases(admin, main) {
+  const live = new Set(liveWorktreeNames(main).map((n) => worktreeConfig(n).db));
+  return psql(
+    admin,
+    `SELECT datname FROM pg_database WHERE datname LIKE 'scibly\\_wt\\_%'`,
+  )
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .filter((db) => !live.has(db));
+}
+
+/**
  * The directory a process was started in, or `null` if it is gone or `lsof` will
  * not say. `wt:down` kills by port, and a port alone does not identify whose dev
  * server it is.
