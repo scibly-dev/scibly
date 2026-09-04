@@ -2,7 +2,7 @@ import type { Prisma } from "@scibly/db";
 
 import { AppError } from "@scibly/api/application-error";
 import { db } from "@scibly/db";
-import { SceneAnimation, SceneVibe } from "@scibly/db/enums";
+import { SceneAnimation, SceneKind, SceneVibe } from "@scibly/db/enums";
 import { encodeHtmlBytes } from "@scibly/lib";
 
 import { sceneLineageService } from "@/features/course-authoring/scenes/server/scene-lineage";
@@ -19,9 +19,11 @@ export async function createDraftScene(
     lessonId: string;
     title?: string;
     sourceIds?: string[];
+    kind?: SceneKind;
   },
 ) {
   const lesson = await requireDraftLesson(db, input.lessonId, userId);
+  const kind = input.kind ?? SceneKind.DOCUMENT;
   const newScene = await db.$transaction(async (tx) => {
     const order = await getNextDraftSceneOrder(tx, input.lessonId);
     return tx.scene.create({
@@ -32,7 +34,11 @@ export async function createDraftScene(
         vibe: SceneVibe.NEUTRAL,
         animation: SceneAnimation.FADE,
         sp: DEFAULT_SCENE_SP,
-        documentState: Buffer.from(encodeHtmlBytes("<p></p>")),
+        kind,
+        documentState:
+          kind === SceneKind.DOCUMENT
+            ? Buffer.from(encodeHtmlBytes("<p></p>"))
+            : undefined,
       },
     });
   });
@@ -75,6 +81,7 @@ async function createSceneClone(source: CloneSource) {
         lessonId: source.lessonId,
         order: insertOrder,
         title: `${source.title} (Copy)`,
+        kind: source.kind,
         vibe: source.vibe,
         animation: source.animation,
         sp: source.sp,
@@ -86,6 +93,9 @@ async function createSceneClone(source: CloneSource) {
           : undefined,
         learnerContent: source.learnerContent ?? undefined,
         gradingManifest: source.gradingManifest ?? undefined,
+        practiceHtml: source.practiceHtml,
+        practiceSolution: source.practiceSolution ?? undefined,
+        practiceExplain: source.practiceExplain,
       },
     });
     const lineageRows = await tx.sceneSourceLineage.findMany({
@@ -128,7 +138,10 @@ export async function cloneDraftScene(userId: string, sceneId: string) {
 
   const clonedScene = await createSceneClone(source);
 
-  return mapAuthoringScene(clonedScene);
+  return {
+    ...mapAuthoringScene(clonedScene),
+    courseId: source.lesson.courseId,
+  };
 }
 
 async function loadDeletionScenes(sceneIds: string[]) {

@@ -10,7 +10,6 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { useHocuspocusProvider } from "@hocuspocus/provider-react";
 import { Button } from "@scibly/ui/components/button";
 import { Plus } from "lucide-react";
 import { useState } from "react";
@@ -129,11 +128,6 @@ export function SceneFlowSidebar({
 
   const addSave = useSaveState((state) => state.addSave);
   const removeSave = useSaveState((state) => state.removeSave);
-  const provider = useHocuspocusProvider();
-
-  const collaborationInvalidate = () => {
-    provider.sendStateless(JSON.stringify({ type: "invalidate_scenes" }));
-  };
 
   const {
     createScene: { mutate: createSceneMutation },
@@ -145,7 +139,6 @@ export function SceneFlowSidebar({
     setScenes,
     activeSceneId,
     setActiveSceneId,
-    collaborationInvalidate,
     saveState: { start: addSave, end: removeSave },
     onDeleteFailed: (message) => {
       toast.error(message || "Failed to delete scene.");
@@ -165,7 +158,7 @@ export function SceneFlowSidebar({
   });
 
   return (
-    <aside className="bg-ground-soft flex h-full w-full shrink-0 flex-col pt-2 dark:bg-neutral-900/10">
+    <aside className="flex h-full w-full shrink-0 flex-col bg-white pt-2 dark:bg-neutral-950">
       <SceneListHeader onCreate={() => createSceneMutation({ lessonId })} />
 
       <div className="no-scrollbar flex-1 overflow-y-auto px-2 pb-4">

@@ -49,12 +49,22 @@ export {
 } from "./lessons/server/lessons";
 export { publishCourse } from "./publishing/server/publish-course";
 export { publishCourseSnapshot } from "./publishing/server/publish-course-snapshot";
-export { createSceneSchema } from "./scenes/api/scene.schema";
+export {
+  createSceneSchema,
+  getPracticeSchema,
+  validatePracticeSchema,
+  writePracticeSchema,
+} from "./scenes/api/scene.schema";
 export { writeSceneHtml } from "./scenes/editor/document-synchronization/server/scene-document";
 export {
   getOutdatedScenes,
   getStaleSourcesForNotebook,
 } from "./scenes/review/server/source-status";
+export {
+  getPractice,
+  validatePractice,
+  writePractice,
+} from "./scenes/server/practice-content";
 export { requireDraftSceneContentAccess } from "./scenes/server/scene-access";
 export {
   setDraftSceneLineage,

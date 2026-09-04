@@ -293,7 +293,7 @@ export async function getLearnerSceneContent(
       courseVersionId: enrollment.courseVersionId,
       lesson: { courseId, courseVersionId: enrollment.courseVersionId },
     },
-    select: { id: true, learnerContent: true },
+    select: { id: true, kind: true, learnerContent: true },
   });
   if (!scene?.learnerContent) {
     throw new AppError({
@@ -302,10 +302,17 @@ export async function getLearnerSceneContent(
       message: "Scene content not found.",
     });
   }
-  // SAFETY: this is the JSON column the publish step wrote from a TipTap
-
+  // SAFETY: publish wrote this column to match `kind`.
   return {
     sceneId: scene.id,
-    learnerContent: scene.learnerContent as JSONContent,
+    ...(scene.kind === "PRACTICE"
+      ? {
+          kind: "PRACTICE" as const,
+          learnerContent: scene.learnerContent as string,
+        }
+      : {
+          kind: "DOCUMENT" as const,
+          learnerContent: scene.learnerContent as JSONContent,
+        }),
   };
 }

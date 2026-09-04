@@ -1,16 +1,11 @@
 "use client";
 
 import type { Ref } from "react";
-import type {
-  EditorProps,
-  MountedEditorCommands,
-} from "@/features/course-authoring/client";
+import type { MountedEditorCommands } from "@/features/course-authoring/client";
 import type { RouterOutputs } from "@/shared/api/trpc/client";
 import type { NotebookTranslations } from "../../i18n/notebook.types";
 
 import { routes } from "@scibly/routes";
-import { Loader2 } from "lucide-react";
-import dynamic from "next/dynamic";
 import { useCallback } from "react";
 
 import { api } from "@/shared/api/trpc/client";
@@ -20,28 +15,12 @@ import { useCourseBuilderStore } from "../course-builder-store";
 import { authorEditedCourse } from "../hooks/author-attention";
 import { SceneEditorBody, SceneEditorHeader } from "./scene-editor-view-parts";
 
-export const sceneEditorPane = dynamic<EditorProps>(
-  () =>
-    import("@/features/course-authoring/client").then(
-      (courseAuthoring) => courseAuthoring.AuthoringEditor,
-    ),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="flex min-h-[280px] flex-1 items-center justify-center">
-        <div className="animate-spin">
-          <Loader2 className="text-ink-faint h-5 w-5" />
-        </div>
-      </div>
-    ),
-  },
-);
-
 type LessonScene = RouterOutputs["scene"]["getLessonScenes"][number];
 
 export type SceneEditorScene = {
   id: string;
   title: string;
+  kind?: LessonScene["kind"];
   sources: readonly SceneSourceInfo[];
   previewHtml?: string;
 };

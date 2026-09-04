@@ -24,7 +24,7 @@ import {
   deriveLessonProgressionView,
   deriveSceneAssessment,
   type SceneAssessment,
-  sceneKindFromManifest,
+  scenePlayModeFromManifest,
 } from "../progression/lesson-progression.view-model";
 import { useSubmitScene } from "../progression/use-submit-scene";
 import {
@@ -49,12 +49,12 @@ function useProgressionActor(
     courseId: options.courseId,
   });
   const onComplete = useEventCallback(options.onComplete);
-  const sceneKinds = useMemo(
+  const scenePlayModes = useMemo(
     () =>
       Object.fromEntries(
         options.lesson.scenes.map((scene) => [
           scene.id,
-          sceneKindFromManifest(scene),
+          scenePlayModeFromManifest(scene),
         ]),
       ),
     [options.lesson.scenes],
@@ -66,7 +66,7 @@ function useProgressionActor(
   const [snapshot, machineSend] = useMachine(lessonProgressionMachine, {
     input: {
       sceneIds: options.lesson.scenes.map((scene) => scene.id),
-      sceneKinds,
+      scenePlayModes,
       initialSceneIndex: options.initialSceneIndex,
       initialPendingSubmissions,
       completedSceneIds: options.completedSceneIds,
@@ -105,19 +105,19 @@ function usePrimaryAction({
   assessment,
   snapshot,
   send,
+  nextRequestSequence,
 }: {
   assessment: SceneAssessment;
   snapshot: ProgressionSnapshot;
   send: SendProgressionEvent;
+  nextRequestSequence: () => number;
 }) {
-  const requestSequence = useRef(0);
   const createCommand = useEventCallback(
     (): SceneSubmissionCommand | undefined => {
       if (!assessment.currentScene) return undefined;
-      requestSequence.current += 1;
       return buildSceneSubmissionCommand({
         sceneId: assessment.currentScene.id,
-        requestSequence: requestSequence.current,
+        requestSequence: nextRequestSequence(),
         blocks: assessment.collectBlocks(),
       });
     },
@@ -139,6 +139,21 @@ function usePrimaryAction({
     if (!command) return;
     if (snapshot.hasTag("requiresAnswers") && !command.blocks?.length) return;
     send({ type: "SUBMIT", sceneId: currentScene.id, command });
+  });
+}
+
+function usePracticeSubmit(
+  send: SendProgressionEvent,
+  nextRequestSequence: () => number,
+) {
+  return useEventCallback((sceneId: string, work: unknown) => {
+    const command = buildSceneSubmissionCommand({
+      sceneId,
+      requestSequence: nextRequestSequence(),
+      blocks: undefined,
+      practiceWork: work,
+    });
+    send({ type: "SUBMIT", sceneId, command });
   });
 }
 
@@ -224,7 +239,18 @@ export function useLessonProgression(options: UseLessonProgressionOptions) {
     ? context.pendingSubmissions[currentScene.id]
     : undefined;
   const assessment = useSceneAssessment(currentScene, pendingSubmission);
-  const handleNext = usePrimaryAction({ assessment, snapshot, send });
+  // `requestId` is `${sceneId}:${n}`, so one counter serves every scene.
+  const requestSequence = useRef(0);
+  const nextRequestSequence = useEventCallback(
+    () => (requestSequence.current += 1),
+  );
+  const handleNext = usePrimaryAction({
+    assessment,
+    snapshot,
+    send,
+    nextRequestSequence,
+  });
+  const submitPracticeWork = usePracticeSubmit(send, nextRequestSequence);
   const navigation = useNavigationActions(context, assessment, send);
   useInjectLearnerAnswers({
     editor: assessment.editor,
@@ -254,6 +280,7 @@ export function useLessonProgression(options: UseLessonProgressionOptions) {
     submission: facets.submission,
     actions: {
       handleNext,
+      submitPracticeWork,
       handlePrevious: navigation.handlePrevious,
       showExit: () => sendExit("show"),
       hideExit: () => sendExit("hide"),

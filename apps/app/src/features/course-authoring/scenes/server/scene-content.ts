@@ -45,7 +45,15 @@ export async function writeSceneContent(
   user: SceneUser,
   input: { sceneId: string; html: string; mode?: SceneWriteMode },
 ) {
-  await requireDraftSceneContentAccess(input.sceneId, user.id);
+  const scene = await requireDraftSceneContentAccess(input.sceneId, user.id);
+  if (scene.kind === "PRACTICE") {
+    throw new AppError({
+      code: "BAD_REQUEST",
+      applicationCode: "api.bad_request",
+      message:
+        "This is a PRACTICE scene — use writePractice instead of insertContent.",
+    });
+  }
   await applySceneHtml(
     user,
     input.sceneId,

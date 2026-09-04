@@ -1,5 +1,6 @@
 import type { Editor } from "@tiptap/core";
 import type { SnapshotFrom } from "xstate";
+import type { DisplayedGrade } from "@/shared/content/contracts";
 import type { QuestionBlockMap } from "@/shared/content/editor/assessment/parsing/base-parser/types";
 import type { PlayerLesson } from "../../utils/player-types";
 import type { NavigationTranslations } from "../utils/lesson-progression-helpers";
@@ -7,7 +8,7 @@ import type { SceneFeedbackSummary } from "../utils/scene-feedback-summary";
 import type { lessonProgressionMachine } from "./lesson-progression.machine";
 import type {
   PendingSceneSubmission,
-  SceneKind,
+  ScenePlayMode,
 } from "./lesson-progression.model";
 
 import { getQuestionBlockIdsFromEditor } from "@/shared/content/editor/assessment/grading/question-block-order";
@@ -33,7 +34,7 @@ interface QuestionBlockStoreSnapshot {
 export interface SceneAssessment {
   editor: Editor | null;
   currentScene: PlayerLesson["scenes"][number] | undefined;
-  manifestKind: SceneKind | undefined;
+  manifestKind: ScenePlayMode | undefined;
   sceneQuestionBlocks: QuestionBlockMap;
   sceneBlockIds: string[];
   hasQuestions: boolean;
@@ -44,9 +45,9 @@ export interface SceneAssessment {
   collectBlocks: () => PendingSceneSubmission["blocks"];
 }
 
-export function sceneKindFromManifest(
+export function scenePlayModeFromManifest(
   scene: PlayerLesson["scenes"][number],
-): SceneKind {
+): ScenePlayMode {
   if (
     scene.kind === "assessment" ||
     scene.kind === "content" ||
@@ -64,7 +65,7 @@ export function deriveSceneAssessment(
 ): SceneAssessment {
   const { editor, questionBlocks, checkIfAllAnswered, submitAnswers } = store;
   const manifestKind = currentScene
-    ? sceneKindFromManifest(currentScene)
+    ? scenePlayModeFromManifest(currentScene)
     : undefined;
   const isManifestAssessment = manifestKind === "assessment";
   const editorReady = Boolean(editor && !editor.isDestroyed);
@@ -109,6 +110,9 @@ interface LessonProgressionSceneFacet {
   totalScenes: number;
   canGoBack: boolean;
   sceneFeedbackSummary: SceneFeedbackSummary | null;
+  sceneGradedBlocks: DisplayedGrade[] | null;
+  sceneExplanation: string | null;
+  scenePracticeWork: unknown;
 }
 
 interface LessonProgressionChromeFacet {
@@ -159,6 +163,10 @@ export function deriveLessonProgressionView(
     assessment.hasChecked && pendingSubmission?.feedbackSummary
       ? pendingSubmission.feedbackSummary
       : null;
+  const sceneGradedBlocks =
+    assessment.hasChecked && pendingSubmission?.gradedBlocks?.length
+      ? pendingSubmission.gradedBlocks
+      : null;
   const submissionError = context.submissionError
     ? (t?.submissionError ?? "We couldn't check your answer. Please try again.")
     : null;
@@ -176,6 +184,9 @@ export function deriveLessonProgressionView(
       totalScenes,
       canGoBack: context.sceneIndex > 0,
       sceneFeedbackSummary,
+      sceneGradedBlocks,
+      sceneExplanation: pendingSubmission?.explanation ?? null,
+      scenePracticeWork: pendingSubmission?.practiceWork ?? null,
     },
     chrome: {
       buttonLabel: getButtonLabel(

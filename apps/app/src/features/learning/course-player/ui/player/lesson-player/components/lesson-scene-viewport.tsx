@@ -1,8 +1,10 @@
+import type { DisplayedGrade } from "@/shared/content/contracts";
 import type { GuideCharacterReaction } from "@/shared/content/editor/blocks/guide-character/utils/guide-character-reactions";
 import type { LearningPlayerTranslations } from "../../i18n/learning-player.types";
 import type { PlayerLesson } from "../../utils/player-types";
 import type { SceneContentQueryResult } from "../utils/use-scene-content";
 
+import { cn } from "@scibly/ui/utils";
 import { AnimatePresence } from "framer-motion";
 
 import { type ANIMATION_VARIANTS } from "../../utils/player-helpers";
@@ -16,12 +18,22 @@ export function LessonSceneViewport({
   currentScene,
   variant,
   guideReaction,
+  onPracticeSubmit,
+  gradedBlocks,
+  explanation,
+  practiceWork,
+  submitError,
   t,
 }: {
   sceneContent: SceneContentQueryResult;
   currentScene: PlayerLesson["scenes"][number];
   variant: (typeof ANIMATION_VARIANTS)[keyof typeof ANIMATION_VARIANTS];
   guideReaction: GuideCharacterReaction;
+  onPracticeSubmit?: (work: unknown) => void;
+  gradedBlocks?: DisplayedGrade[] | null;
+  explanation?: string | null;
+  practiceWork?: unknown;
+  submitError?: string | null;
   t: LearningPlayerTranslations;
 }) {
   return (
@@ -48,12 +60,22 @@ export function LessonSceneViewport({
           </button>
         </div>
       ) : sceneContent.learnerContent ? (
-        <div className="relative mx-auto w-full max-w-2xl shrink-0">
+        <div
+          className={cn(
+            "relative mx-auto w-full shrink-0",
+            sceneContent.kind === "PRACTICE" ? "max-w-6xl" : "max-w-2xl",
+          )}
+        >
           <AnimatePresence initial={false}>
             <LessonScenePanel key={currentScene.id} variant={variant}>
               <SceneContent
-                learnerContent={sceneContent.learnerContent}
+                scene={sceneContent}
                 guideReaction={guideReaction}
+                onPracticeSubmit={onPracticeSubmit}
+                gradedBlocks={gradedBlocks}
+                explanation={explanation}
+                practiceWork={practiceWork}
+                submitError={submitError}
               />
             </LessonScenePanel>
           </AnimatePresence>

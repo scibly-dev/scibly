@@ -1,0 +1,34 @@
+{
+  "editorUi": {
+    "practice": {
+      "appTab": "App",
+      "appHint": "Ein eigenständiges HTML-Fragment. Rufe window.scibly.submit(work) auf, wenn die lernende Person fertig ist — eine reine Erkundungsszene kommt ganz ohne submit aus.",
+      "solutionTab": "Lösung",
+      "solutionHint": "Lösungsschlüssel, benannt nach den Feld-IDs, die submit(work) sendet. Lass ihn leer für eine Erkundungsszene, die kein submit braucht.",
+      "explanationTab": "Erklärung",
+      "explanationHint": "Wird der lernenden Person unter der App zusammen mit ihrem Ergebnis gezeigt, unabhängig vom Punktestand.",
+      "testRunTab": "Testlauf",
+      "testRunHint": "Die echte App in der Sandbox. Ein submit darin wird gegen deine Entwurfslösung bewertet.",
+      "validate": "Prüfen",
+      "restart": "Neu starten",
+      "saveFailed": "Deine letzte Änderung konnte nicht gespeichert werden. Nichts geht verloren — schreib weiter, es wird erneut versucht.",
+      "validated": "Geprüft — diese App und dieser Lösungsschlüssel lassen sich veröffentlichen.",
+      "notValidated": "Nicht geprüft. Klicke auf Prüfen, um den Selbsttest der App auszuführen; zum Veröffentlichen ist ein erfolgreicher Lauf nötig.",
+      "selfTestMissing": "Die App definiert kein window.__sciblySelfTest().",
+      "selfTestThrew": "window.__sciblySelfTest() hat einen Fehler geworfen: {error}",
+      "solutionInvalidJson": "Kein gültiges JSON.",
+      "solutionInvalid": "Ungültige Lösung.",
+      "solutionNotSaved": "{message} Nicht gespeichert.",
+      "solutionValidOne": "Gültiges JSON · 1 bewertetes Feld",
+      "solutionValid": "Gültiges JSON · {count} bewertete Felder",
+      "solutionEmpty": "Leer — die Szene vergibt bei jedem submit die vollen SP.",
+      "grading": "Wird bewertet …",
+      "gradingFailed": "Die Bewertung ist fehlgeschlagen. Sende in der App erneut ab, um es noch einmal zu versuchen.",
+      "gradingEmpty": "Sende oben in der App ab, um gegen deine Lösung zu bewerten. Erkundungsszenen senden nie ab — hier landet dann nichts.",
+      "result": "Ergebnis",
+      "ungradedScene": "Unbewertete Szene — jedes submit vergibt die vollen SP.",
+      "expectedAnswer": "erwartet {value}",
+      "learnerReads": "Was die lernende Person liest"
+    }
+  }
+}

@@ -8,6 +8,7 @@ import * as Y from "yjs";
 
 import { INPUT_FIELD_NODE_NAME } from "@/shared/content/editor/blocks/questions/input-field/schema";
 import { MULTIPLE_CHOICE_NODE_NAME } from "@/shared/content/editor/blocks/questions/multiple-choice/schema";
+import { practiceContentHash } from "@/shared/content/practice/practice-content-hash";
 
 import { publishCourseSnapshot } from "./publish-course-snapshot";
 
@@ -362,5 +363,98 @@ describe("PCS5: supersedePrevious cascade", () => {
     );
 
     expect(calls.courseVersionUpdateMany).toBeUndefined();
+  });
+});
+
+describe("P0.1: a published PRACTICE row", () => {
+  const PRACTICE_SOLUTION = { answer: { value: 42, points: 3 } };
+
+  const PRACTICE_HTML = "<div>app</div>";
+
+  type PracticeOverrides = {
+    practiceHtml?: string;
+    practiceSolution?: unknown;
+    practiceExplain?: string;
+  };
+
+  function practiceDraftScene(overrides: PracticeOverrides = {}) {
+    return draftScene({
+      id: "practice-1",
+      updatedAt: new Date("2026-02-01T00:00:00Z"),
+      documentState: null,
+      kind: "PRACTICE",
+      practiceHtml: PRACTICE_HTML,
+      practiceSolution: PRACTICE_SOLUTION,
+      practiceExplain: "Because 42.",
+      practiceValidated: practiceContentHash(PRACTICE_HTML, PRACTICE_SOLUTION),
+      ...overrides,
+    } as unknown as Partial<typeof DRAFT_SCENE>);
+  }
+
+  async function publishPractice(overrides: PracticeOverrides = {}) {
+    const changedAt = new Date("2026-02-01T00:00:00Z");
+    const { tx, calls } = fakeTx({
+      draftLessons: [
+        draftLesson({
+          updatedAt: changedAt,
+          scenes: [practiceDraftScene(overrides)],
+        }),
+      ],
+      latestVersion: null,
+    });
+    await publishCourseSnapshot(
+      tx,
+      { id: "course-1", updatedAt: changedAt },
+      "user-1",
+      { supersedePrevious: false },
+    );
+    return (calls.sceneCreateMany?.data as Prisma.SceneCreateManyInput[])[0]!;
+  }
+
+  it("carries the app fragment as learnerContent and the key as gradingManifest", async () => {
+    const published = await publishPractice();
+    expect(published.learnerContent).toBe("<div>app</div>");
+    expect(published.gradingManifest).toEqual({
+      solution: PRACTICE_SOLUTION,
+      explain: "Because 42.",
+    });
+  });
+
+  it("summarizes hasQuestions/maxSp from the solution's field points", async () => {
+    const published = await publishPractice();
+    expect(published.hasQuestions).toBe(true);
+    // draftScene()'s sp is 5, plus the single 3-point solution field.
+    expect(published.maxSp).toBe(8);
+  });
+
+  it("leaves the draft-only practice columns off the row", async () => {
+    const published = await publishPractice();
+    // A copy here would be a second answer key on a row learner-facing queries reach.
+    expect(published.practiceSolution).toBeUndefined();
+    expect(published.practiceHtml).toBeUndefined();
+    expect(published.practiceExplain).toBeUndefined();
+    expect(published.practiceValidated).toBeUndefined();
+  });
+
+  it("refuses to publish once the app has been edited past its last passing run", async () => {
+    await expect(
+      publishPractice({ practiceHtml: "<div>rewritten</div>" }),
+    ).rejects.toThrow(/has not passed its self-test/);
+  });
+
+  it("refuses to publish when the answer key moved under the stamp", async () => {
+    await expect(
+      publishPractice({
+        practiceSolution: { answer: { value: 7, points: 3 } },
+      }),
+    ).rejects.toThrow(/has not passed its self-test/);
+  });
+
+  it("publishes when only the explanation changed — prose cannot break the app", async () => {
+    const published = await publishPractice({ practiceExplain: "Reworded." });
+    expect(published.gradingManifest).toEqual({
+      solution: PRACTICE_SOLUTION,
+      explain: "Reworded.",
+    });
   });
 });

@@ -114,6 +114,36 @@ export type EditorUiPage = {
     skipBack: string;
     skipForward: string;
   };
+  practice: {
+    appTab: string;
+    appHint: string;
+    solutionTab: string;
+    solutionHint: string;
+    explanationTab: string;
+    explanationHint: string;
+    testRunTab: string;
+    testRunHint: string;
+    validate: string;
+    restart: string;
+    saveFailed: string;
+    validated: string;
+    notValidated: string;
+    selfTestMissing: string;
+    selfTestThrew: string;
+    solutionInvalidJson: string;
+    solutionInvalid: string;
+    solutionNotSaved: string;
+    solutionValidOne: string;
+    solutionValid: string;
+    solutionEmpty: string;
+    grading: string;
+    gradingFailed: string;
+    gradingEmpty: string;
+    result: string;
+    ungradedScene: string;
+    expectedAnswer: string;
+    learnerReads: string;
+  };
   steps: {
     addStep: string;
     removeStep: string;

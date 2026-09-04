@@ -15,7 +15,7 @@ import {
   sceneSchema,
 } from "../editor/document-synchronization/server/scene-html";
 import { requireSceneContentAccess } from "./scene-access";
-import { mapAuthoringScene } from "./scene-mapping";
+import { authoringSceneSelect, mapAuthoringScene } from "./scene-mapping";
 
 export async function listLessonScenes(
   userId: string,
@@ -43,7 +43,8 @@ export async function listLessonScenes(
       courseVersionId: null,
     },
     orderBy: { order: "asc" },
-    include: {
+    select: {
+      ...authoringSceneSelect,
       sourceLineages: {
         select: {
           source: { select: { id: true, name: true, type: true } },
@@ -79,7 +80,15 @@ export async function getSceneContent(user: SceneUser, sceneId: string) {
     return { sceneId, html: result.html, sourceIds };
   }
 
-  return { sceneId, html: frozenSceneHtml(scene.documentState), sourceIds };
+  const published = await db.scene.findUnique({
+    where: { id: sceneId },
+    select: { documentState: true },
+  });
+  return {
+    sceneId,
+    html: frozenSceneHtml(published?.documentState ?? null),
+    sourceIds,
+  };
 }
 
 /** Scenes last saved before collaborative editing are still parked as raw HTML. */

@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const db = vi.hoisted(() => ({
-  scene: { findMany: vi.fn() },
+  scene: { findMany: vi.fn(), findUnique: vi.fn() },
 }));
 
 const requireOrgMember = vi.hoisted(() => vi.fn());
@@ -42,10 +42,7 @@ beforeEach(() => {
 
 describe("getSceneContent", () => {
   it("SC1: reads a draft live from its collab document, never from the row", async () => {
-    requireSceneContentAccess.mockResolvedValue({
-      courseVersionId: null,
-      documentState: yjsBytes("<p>Last flushed</p>"),
-    });
+    requireSceneContentAccess.mockResolvedValue({ courseVersionId: null });
     readSceneHtml.mockResolvedValue({
       success: true,
       html: "<p>Typed since</p>",
@@ -60,21 +57,20 @@ describe("getSceneContent", () => {
       sceneId: "s1",
       user: USER,
     });
+    // The frozen bytes are not even fetched on the draft path.
+    expect(db.scene.findUnique).not.toHaveBeenCalled();
   });
 
   it("SC2: refuses rather than falling back to the stale row when the room is unreachable", async () => {
-    requireSceneContentAccess.mockResolvedValue({
-      courseVersionId: null,
-      documentState: yjsBytes("<p>Last flushed</p>"),
-    });
+    requireSceneContentAccess.mockResolvedValue({ courseVersionId: null });
     readSceneHtml.mockResolvedValue({ success: false, error: "sync timeout" });
 
     await expect(getSceneContent(USER, "s1")).rejects.toThrow("sync timeout");
   });
 
   it("SC3: reads a published scene from its frozen row, as readable HTML", async () => {
-    requireSceneContentAccess.mockResolvedValue({
-      courseVersionId: "v1",
+    requireSceneContentAccess.mockResolvedValue({ courseVersionId: "v1" });
+    db.scene.findUnique.mockResolvedValue({
       documentState: yjsBytes("<p>Published</p>"),
     });
 
@@ -86,8 +82,8 @@ describe("getSceneContent", () => {
   });
 
   it("SC4: reads a published scene saved before collaborative editing", async () => {
-    requireSceneContentAccess.mockResolvedValue({
-      courseVersionId: "v1",
+    requireSceneContentAccess.mockResolvedValue({ courseVersionId: "v1" });
+    db.scene.findUnique.mockResolvedValue({
       documentState: new TextEncoder().encode("<p>Written years ago</p>"),
     });
 

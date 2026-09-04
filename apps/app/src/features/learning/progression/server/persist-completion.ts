@@ -14,6 +14,7 @@ type CompletionDetails = {
   attempt: number;
   result: SceneGradingResult;
   blocks?: BlockSubmission[];
+  practiceWork?: unknown;
 };
 
 export async function persistMemberSceneCompletion(

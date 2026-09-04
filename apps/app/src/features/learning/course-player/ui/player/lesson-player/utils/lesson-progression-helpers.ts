@@ -72,6 +72,7 @@ export function buildPendingSceneSnapshot(
     blocks: blocks ?? existing?.blocks,
     gradedBlocks: existing?.gradedBlocks,
     feedbackSummary: existing?.feedbackSummary,
+    explanation: existing?.explanation,
   };
 }
 
@@ -79,11 +80,13 @@ export function buildSceneSubmissionCommand(options: {
   sceneId: string;
   requestSequence: number;
   blocks: PendingSceneSubmission["blocks"];
+  practiceWork?: unknown;
 }): SceneSubmissionCommand {
   return {
     requestId: `${options.sceneId}:${options.requestSequence}`,
     sceneId: options.sceneId,
     blocks: options.blocks,
+    practiceWork: options.practiceWork,
   };
 }
 

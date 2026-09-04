@@ -4,12 +4,13 @@ import type { SceneEditorPresentation, SceneEditorScene } from "./scene-editor";
 
 import { cn } from "@scibly/ui/utils";
 import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
-import { createElement, useRef } from "react";
+import { useRef } from "react";
 
 import { SceneSourcesInfo } from "@/shared/content/course/components/scene-sources-info";
 import { useInlineEdit } from "@/shared/ui/hooks/use-inline-edit";
 
-import { sceneEditorPane } from "./scene-editor";
+import { PracticeEditorPane } from "./practice-editor-pane";
+import { SceneEditorPane } from "./scene-editor-pane";
 
 type SceneRef = { id: string; title: string };
 
@@ -139,33 +140,40 @@ export function SceneEditorHeader({
   );
 }
 
-function editorElement(
-  presentation: SceneEditorPresentation,
-  scene: SceneRef,
-  previewHtml: string | undefined,
-) {
-  const common = {
-    key: scene.id,
-    variant: { type: "author" as const },
-    wrapperClassName:
-      "flex flex-col min-h-[280px] w-full pl-10 pr-4 pt-2 pb-12",
-    visibilityOptions: { topBar: { enabled: false } },
-  };
-  return presentation.type === "showcase"
-    ? createElement(sceneEditorPane, {
-        ...common,
-        mode: "local",
-        initialContent: previewHtml ?? "",
-        commandRef: presentation.commandRef,
-        capabilities: { mediaUploads: "disabled" },
-        shouldSetStoreEditor: false,
-      })
-    : createElement(sceneEditorPane, {
-        ...common,
-        mode: "collab",
-        documentId: scene.id,
-        capabilities: { mediaUploads: "enabled" },
-      });
+const editorCommon = {
+  variant: { type: "author" as const },
+  wrapperClassName: "flex flex-col min-h-[280px] w-full pl-10 pr-4 pt-2 pb-12",
+  visibilityOptions: { topBar: { enabled: false } },
+};
+
+function SceneEditorSlot({
+  presentation,
+  scene,
+  previewHtml,
+}: {
+  presentation: SceneEditorPresentation;
+  scene: SceneRef;
+  previewHtml: string | undefined;
+}) {
+  return presentation.type === "showcase" ? (
+    <SceneEditorPane
+      key={scene.id}
+      {...editorCommon}
+      mode="local"
+      initialContent={previewHtml ?? ""}
+      commandRef={presentation.commandRef}
+      capabilities={{ mediaUploads: "disabled" }}
+      shouldSetStoreEditor={false}
+    />
+  ) : (
+    <SceneEditorPane
+      key={scene.id}
+      {...editorCommon}
+      mode="collab"
+      documentId={scene.id}
+      capabilities={{ mediaUploads: "enabled" }}
+    />
+  );
 }
 
 export function SceneEditorBody({
@@ -183,6 +191,9 @@ export function SceneEditorBody({
     moreSources: string;
   };
 }) {
+  // The demo runs on local content with no scene row to load a practice from.
+  const isPractice =
+    presentation.type === "production" && data?.kind === "PRACTICE";
   return (
     <>
       {presentation.type === "showcase" ? (
@@ -208,8 +219,22 @@ export function SceneEditorBody({
           />
         </div>
       ) : null}
-      <div className="custom-scrollbar @container flex min-h-0 flex-1 flex-col overflow-y-auto bg-white dark:bg-neutral-950">
-        {editorElement(presentation, scene, data?.previewHtml)}
+      <div
+        className={cn(
+          "@container flex min-h-0 flex-1 flex-col bg-white dark:bg-neutral-950",
+          // The practice editor scrolls inside its own panels.
+          isPractice ? "min-h-[420px]" : "custom-scrollbar overflow-y-auto",
+        )}
+      >
+        {isPractice ? (
+          <PracticeEditorPane sceneId={scene.id} compact />
+        ) : (
+          <SceneEditorSlot
+            presentation={presentation}
+            scene={scene}
+            previewHtml={data?.previewHtml}
+          />
+        )}
       </div>
     </>
   );

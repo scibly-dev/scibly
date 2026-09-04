@@ -36,6 +36,7 @@ type SceneCompletionInput = {
   lessonId: string;
   sceneId: string;
   blocks?: BlockSubmission[];
+  practiceWork?: unknown;
 };
 
 function throwRejectedTransition(
@@ -69,7 +70,11 @@ async function gradeExpectedScene(
   input: SceneCompletionInput,
 ) {
   const { results } = await gradeSceneSubmissions(client, [
-    { sceneId: input.sceneId, blocks: input.blocks },
+    {
+      sceneId: input.sceneId,
+      blocks: input.blocks,
+      practiceWork: input.practiceWork,
+    },
   ]);
   const result = results[0]!;
   if (
@@ -143,6 +148,7 @@ export async function completeMemberScene(
         success: true,
         gradedBlocks: [],
         spEarned: 0,
+        explanation: null,
       };
     }
     const result = await gradeExpectedScene(tx, context, input);
@@ -151,12 +157,14 @@ export async function completeMemberScene(
       attempt: context.attempt,
       result,
       blocks: input.blocks,
+      practiceWork: input.practiceWork,
     });
     await finishMemberCourseWhenComplete(tx, context);
     return {
       success: true,
       gradedBlocks: result.gradedBlocks,
       spEarned: result.spEarned,
+      explanation: result.explanation ?? null,
     };
   });
 }
@@ -189,6 +197,7 @@ async function completeAnonymousSceneWithoutRateLimit(
         success: true,
         gradedBlocks: [],
         spEarned: 0,
+        explanation: null,
       };
     }
     const result = await gradeExpectedScene(tx, context, input);
@@ -197,11 +206,13 @@ async function completeAnonymousSceneWithoutRateLimit(
       attempt: context.attempt,
       result,
       blocks: input.blocks,
+      practiceWork: input.practiceWork,
     });
     return {
       success: true,
       gradedBlocks: result.gradedBlocks,
       spEarned: result.spEarned,
+      explanation: result.explanation ?? null,
     };
   });
 }

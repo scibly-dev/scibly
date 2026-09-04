@@ -13,6 +13,7 @@ import {
 import { Textarea } from "@scibly/ui/components/textarea";
 import { cn } from "@scibly/ui/utils";
 import { Loader2 } from "lucide-react";
+import { type ReactNode } from "react";
 import { Controller } from "react-hook-form";
 
 import {
@@ -149,6 +150,8 @@ interface LessonSheetProps {
   onOpenChange: (open: boolean) => void;
   lesson?: LessonMetadataLesson;
   onUpdateSuccess?: UseLessonMetadataFormParams["onUpdateSuccess"];
+  /** Lesson-wide settings that save themselves, so they sit outside the form. */
+  designSlot?: ReactNode;
 }
 
 export function LessonSheet({
@@ -157,6 +160,7 @@ export function LessonSheet({
   onOpenChange,
   lesson,
   onUpdateSuccess,
+  designSlot,
 }: LessonSheetProps) {
   const { form, isEditing, isPending, submit, sheetT } = useLessonMetadataForm({
     courseId,
@@ -188,13 +192,22 @@ export function LessonSheet({
             {isEditing ? sheetT.descEdit : sheetT.descCreate}
           </SheetDescription>
         </SheetHeader>
-        <form
-          id="lesson-form"
-          onSubmit={submit}
-          className="grid flex-1 content-start gap-6 overflow-y-auto px-6 py-4"
-        >
-          <LessonFormFields form={form} isPending={isPending} sheetT={sheetT} />
-        </form>
+        <div className="flex-1 overflow-y-auto">
+          <form
+            id="lesson-form"
+            onSubmit={submit}
+            className="grid content-start gap-6 px-6 py-4"
+          >
+            <LessonFormFields
+              form={form}
+              isPending={isPending}
+              sheetT={sheetT}
+            />
+          </form>
+          {designSlot ? (
+            <div className="border-hairline border-t-2">{designSlot}</div>
+          ) : null}
+        </div>
         <div className="border-hairline mt-auto flex justify-end gap-3 border-t-2 bg-white px-6 py-4">
           <Button
             variant="outline"
