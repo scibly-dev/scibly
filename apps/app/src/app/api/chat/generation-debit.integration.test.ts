@@ -5,7 +5,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 // Proves two requests racing one credit actually serialize in Postgres, which no mocked
 // client can witness; opt in by setting this to a disposable database (setup: docs/integration-tests.md).
-const url = process.env.ENTITLEMENT_INT_TEST_DATABASE_URL ?? "";
+const url = process.env.INT_TEST_DATABASE_URL ?? "";
 
 const RUN_ID = `int-entitlement-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 const ORG = `${RUN_ID}-org`;

@@ -1,27 +1,21 @@
 import type { SkillMetadata } from "./types";
 
-import path from "node:path";
-
 import "server-only";
+import { env } from "@/env";
+import { agentFilesRoot } from "@/shared/ai/agent-prose";
 
 import { discoverSkills } from "./discover";
 import { nodeSandbox } from "./sandbox";
 
-let cachedSkills: SkillMetadata[] | null = null;
+// discoverSkills swallows every filesystem error it meets, so this can never cache a rejection.
+let cachedSkills: Promise<SkillMetadata[]> | null = null;
 
-export async function getNotebookSkills(): Promise<SkillMetadata[]> {
-  if (process.env.NODE_ENV === "production" && cachedSkills) {
-    return cachedSkills;
-  }
+export function getNotebookSkills(): Promise<SkillMetadata[]> {
+  const walk = () => discoverSkills(nodeSandbox, [agentFilesRoot()]);
 
-  const root = path.join(process.cwd(), "notebook-skills");
-  const skills = await discoverSkills(nodeSandbox, [root]);
+  if (env.NODE_ENV !== "production") return walk();
 
-  if (process.env.NODE_ENV === "production") {
-    cachedSkills = skills;
-  }
-
-  return skills;
+  return (cachedSkills ??= walk());
 }
 
 export function clearNotebookSkillsCache(): void {

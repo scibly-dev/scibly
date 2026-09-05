@@ -4,9 +4,9 @@ import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 import { getUtcBucketStart, withRateLimit } from "./rate-limit";
 
 // A fake DB runs one statement at a time and can't witness the race a real DB settles, so this
-// needs a live database: set RATE_LIMIT_INT_TEST_DATABASE_URL (opt-in, skipped otherwise; see
+// needs a live database: set INT_TEST_DATABASE_URL (opt-in, skipped otherwise; see
 // docs/integration-tests.md).
-const url = process.env.RATE_LIMIT_INT_TEST_DATABASE_URL ?? "";
+const url = process.env.INT_TEST_DATABASE_URL ?? "";
 
 const RUN_ID = `int-rl-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 const ENDPOINT = `${RUN_ID}-endpoint`;

@@ -10,8 +10,8 @@ import type * as NextServer from "next/server";
 import { createTestPrismaClient } from "@scibly/db/test-client";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
-// Opt in via MCP_INT_TEST_DATABASE_URL (docs/integration-tests.md).
-const url = vi.hoisted(() => process.env.MCP_INT_TEST_DATABASE_URL ?? "");
+// Opt in via INT_TEST_DATABASE_URL (docs/integration-tests.md).
+const url = vi.hoisted(() => process.env.INT_TEST_DATABASE_URL ?? "");
 
 vi.mock("@scibly/db", async (importOriginal) => ({
   ...(await importOriginal<typeof DbModule>()),

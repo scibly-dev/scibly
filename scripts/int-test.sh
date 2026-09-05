@@ -44,17 +44,9 @@ fi
 echo "==> schema"
 DATABASE_URL="$INT_DB" pnpm --filter @scibly/db run migrate:deploy >/dev/null
 
-echo "==> apps/app"
-SOURCES_INT_TEST_DATABASE_URL="$INT_DB" \
-ENTITLEMENT_INT_TEST_DATABASE_URL="$INT_DB" \
-MCP_INT_TEST_DATABASE_URL="$INT_DB" \
-  pnpm -C "$ROOT/apps/app" exec vitest run \
-  src/features/notebook/sources/server/search-sources.integration.test.ts \
-  src/app/api/chat/generation-debit.integration.test.ts \
-  src/features/organizations/server/plan-upgrade.integration.test.ts \
-  src/features/mcp/server/create-course.integration.test.ts \
-  src/features/mcp/server/practice-scenes.integration.test.ts
-
-echo "==> packages/api"
-RATE_LIMIT_INT_TEST_DATABASE_URL="$INT_DB" \
-  pnpm -C "$ROOT/packages/api" exec vitest run src/rate-limit.integration.test.ts
+# A substring path filter, not a filename: vitest exits non-zero if it matches nothing.
+for package in apps/app packages/api; do
+  echo "==> $package"
+  INT_TEST_DATABASE_URL="$INT_DB" \
+    pnpm -C "$ROOT/$package" exec vitest run integration.test.ts
+done

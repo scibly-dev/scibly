@@ -1,14 +1,19 @@
+import type * as SkillsModule from "../../../skills";
+
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-// Only the database and the skill catalogue are doubled — the tier decision,
-// the budget arithmetic, and the serialization all run for real.
+// Only the database and the skill *listing* are doubled — the prompt files in
+// notebook-skills/ are read for real, so the snapshots below cover them too.
 const db = vi.hoisted(() => ({
   notebookSource: { findMany: vi.fn() },
   scene: { findMany: vi.fn() },
 }));
 
 vi.mock("@scibly/db", () => ({ db }));
-vi.mock("../../../skills", () => ({ buildSkillsPrompt: () => "" }));
+vi.mock("../../../skills", async (importOriginal) => ({
+  ...(await importOriginal<typeof SkillsModule>()),
+  buildSkillsPrompt: () => "",
+}));
 
 const { buildSystemPrompt } = await import("./context");
 
