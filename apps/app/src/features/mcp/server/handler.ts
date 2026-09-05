@@ -14,7 +14,7 @@ import { registerCourseTools } from "./course-tools";
 import { registerDeletionTools } from "./deletion-tools";
 import { registerPublishingTools } from "./publishing-tools";
 import { registerSceneContentTools } from "./scene-content-tools";
-import { text } from "./tool-response";
+import { readable, text } from "./tool-response";
 import { MCP_TOOL_NAMES, mcpToolInput } from "./tool-surface";
 
 /** MCP has no transcript, so a tool that actually streams needs a real writer before it is allow-listed. */
@@ -76,14 +76,16 @@ export async function handleMcpRequest(
           typeof tool.description === "string" ? tool.description : undefined,
         inputSchema: mcpToolInput(name, tool.inputSchema),
       },
-      async (args) => {
-        const output = await execute(args, {
-          toolCallId: name,
-          messages: [],
-          context: undefined,
-        });
-        return text(output);
-      },
+      async (args) =>
+        text(
+          await readable(name, () =>
+            execute(args, {
+              toolCallId: name,
+              messages: [],
+              context: undefined,
+            }),
+          ),
+        ),
     );
   }
 

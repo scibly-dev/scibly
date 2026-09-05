@@ -3,7 +3,7 @@ import type { NotebookRuntimeContext } from "@/features/notebook/server";
 import { tool } from "ai";
 import { z } from "zod";
 
-import { PRACTICE_CONTRACT } from "@/shared/content/practice/practice-contract";
+import { readAgentProse } from "@/shared/ai/agent-prose";
 
 import {
   getPracticeSchema,
@@ -19,7 +19,9 @@ export function buildPracticeTools(context: NotebookRuntimeContext) {
         "the self-test hook, when a scene needs no submit at all, the CDN allowlist and a worked example. " +
         "You MUST call this BEFORE using writePractice to know the SDK your app must call.",
       inputSchema: z.object({}),
-      execute: async () => ({ contract: PRACTICE_CONTRACT }),
+      execute: async () => ({
+        contract: await readAgentProse("practice-contract.md"),
+      }),
     }),
     getPractice: tool({
       description:

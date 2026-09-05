@@ -9,12 +9,6 @@ import {
 
 import { isApprovalGatedTool } from "./client-tool-definitions";
 
-export const APPROVAL_GATED_TOOLS_SYSTEM_PROMPT = `## Approval-gated tools
-
-Some tools require explicit user approval via an inline confirmation card in chat. Do not duplicate that confirmation in plain text — call the tool and let the UI handle it.
-
-When the user approves and the tool finishes, read the tool result and reply with a brief summary. Stop there unless the user sends a new message asking for more.`;
-
 function isApprovalGatedPart(
   part: UIMessage["parts"][number],
 ): part is ToolUIPart | DynamicToolUIPart {

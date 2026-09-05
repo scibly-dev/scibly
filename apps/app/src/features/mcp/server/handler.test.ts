@@ -499,6 +499,48 @@ describe("calling a tool over MCP", () => {
     });
   });
 
+  it("MCP1: keeps an internal failure inside the server", async () => {
+    const { caller, list } = fakeCaller();
+    list.mockRejectedValue(
+      new Error("ENOENT: /var/task/apps/app/notebook-skills/system-prompt.md"),
+    );
+
+    const { body } = await post(
+      rpc("tools/call", {
+        name: "listCourses",
+        arguments: { orgSlug: "acme" },
+      }),
+      caller,
+    );
+
+    expect(body.result.isError).toBe(true);
+    expect(body.result.content[0].text).toBe(
+      "Scibly could not be reached. Try again.",
+    );
+  });
+
+  it("MCP1: still hands over a refusal the agent can act on", async () => {
+    const { caller, list } = fakeCaller();
+    list.mockRejectedValue(
+      new AppError({
+        code: "FORBIDDEN",
+        applicationCode: "api.forbidden",
+        message: "You are not a member of acme.",
+      }),
+    );
+
+    const { body } = await post(
+      rpc("tools/call", {
+        name: "listCourses",
+        arguments: { orgSlug: "acme" },
+      }),
+      caller,
+    );
+
+    expect(body.result.isError).toBe(true);
+    expect(body.result.content[0].text).toContain("not a member of acme");
+  });
+
   it("MCP1: does not expose a tool that was left off the surface", async () => {
     const { body } = await post(
       rpc("tools/call", {

@@ -4,8 +4,8 @@ import { PLAN_CATALOGUE } from "@scibly/ee-billing/plan-catalogue";
 import { syncSubscription } from "@scibly/ee-billing/sync-subscription";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-// Runs against a real Postgres increment, unlike PC2/PC3's mocked client — no mock can prove a charge survives a concurrent upgrade webhook. Opt in via ENTITLEMENT_INT_TEST_DATABASE_URL (docs/integration-tests.md).
-const url = process.env.ENTITLEMENT_INT_TEST_DATABASE_URL ?? "";
+// Runs against a real Postgres increment, unlike PC2/PC3's mocked client — no mock can prove a charge survives a concurrent upgrade webhook. Opt in via INT_TEST_DATABASE_URL (docs/integration-tests.md).
+const url = process.env.INT_TEST_DATABASE_URL ?? "";
 
 const RUN_ID = `int-upgrade-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 const ORG = `${RUN_ID}-org`;

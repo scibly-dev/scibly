@@ -4,6 +4,7 @@ import {
   quoteSourceName,
   toSourcePassage,
 } from "@/features/notebook/sources/server/source-passage";
+import { readAgentProse } from "@/shared/ai/agent-prose";
 import { estimateTokens } from "@/shared/ai/token-estimate";
 import { outdatedDraftSceneWhere } from "@/shared/content/course/course-outdated";
 import {
@@ -12,7 +13,7 @@ import {
 } from "@/shared/content/sources/constants";
 
 import { buildSkillsPrompt, type SkillMetadata } from "../../../skills";
-import { CORE_SYSTEM_PROMPT, uiContextSection } from "../prompt";
+import { uiContextSection } from "../prompt";
 import { type StreamChatInput } from "./schema";
 
 const FRESHNESS_QUERY =
@@ -245,15 +246,18 @@ export async function buildSystemPrompt(
   }: ChatContextOptions,
   skills: SkillMetadata[],
 ): Promise<{ prompt: string; tier: SourceContextTier }> {
-  const [sources, outdatedScenesContext] = await Promise.all([
-    buildSourceContext({ notebookId, contextWindow }),
-    buildOutdatedScenesContext(courseContext?.course.id, query),
-  ]);
+  const [core, authoringRules, sources, outdatedScenesContext] =
+    await Promise.all([
+      readAgentProse("system-prompt.md"),
+      readAgentProse("authoring-rules.md"),
+      buildSourceContext({ notebookId, contextWindow }),
+      buildOutdatedScenesContext(courseContext?.course.id, query),
+    ]);
 
   const skillsPrompt = buildSkillsPrompt(skills);
 
   const prompt = [
-    CORE_SYSTEM_PROMPT,
+    core,
     skillsPrompt,
 
     sources.block,
@@ -262,6 +266,7 @@ export async function buildSystemPrompt(
       course: courseContext?.course,
       lesson: courseContext?.lesson,
       scene: courseContext?.scene,
+      authoringRules,
     }),
     outdatedScenesContext,
   ]

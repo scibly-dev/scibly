@@ -1,9 +1,9 @@
 import { createTestPrismaClient } from "@scibly/db/test-client";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
-// Opt-in: set SOURCES_INT_TEST_DATABASE_URL to a disposable database (see
+// Opt-in: set INT_TEST_DATABASE_URL to a disposable database (see
 // docs/integration-tests.md); skipped when unset.
-const url = vi.hoisted(() => process.env.SOURCES_INT_TEST_DATABASE_URL ?? "");
+const url = vi.hoisted(() => process.env.INT_TEST_DATABASE_URL ?? "");
 
 // The functions under test read the app's singleton client, which is pinned to
 // a fake URL in the test setup — point it at the disposable database instead.

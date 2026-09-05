@@ -2,11 +2,11 @@ import { isFieldCorrect } from "./grade-practice-submission";
 
 const PRACTICE_CSP = [
   "default-src 'none'",
-  "script-src 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.scibly.app",
-  "style-src 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.scibly.app",
-  "img-src data: blob: https://cdnjs.cloudflare.com https://cdn.scibly.app",
+  "script-src 'unsafe-inline' https://cdnjs.cloudflare.com",
+  "style-src 'unsafe-inline' https://cdnjs.cloudflare.com",
+  "img-src data: blob: https://cdnjs.cloudflare.com",
   "font-src data: https://cdnjs.cloudflare.com",
-  "connect-src https://cdnjs.cloudflare.com https://cdn.scibly.app",
+  "connect-src https://cdnjs.cloudflare.com",
   // Not covered by default-src: a form submit would navigate off the srcdoc document.
   "form-action 'none'",
 ].join("; ");
