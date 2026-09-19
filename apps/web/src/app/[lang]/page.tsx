@@ -14,6 +14,7 @@ import { FaqSection } from "./components/home-page-section/faq/faq";
 import { FounderSection } from "./components/home-page-section/founder/founder";
 import { Hero } from "./components/home-page-section/hero/hero";
 import { HeroComplianceStrip } from "./components/home-page-section/hero/hero-compliance-strip";
+import { HeroPartnersStrip } from "./components/home-page-section/hero/hero-partners-strip";
 import { HeroVideo } from "./components/home-page-section/hero/hero-video";
 import { KnowledgeSourcesSection } from "./components/home-page-section/knowledge-sources/knowledge-sources-section";
 import { OnboardingFlowSection } from "./components/home-page-section/onboarding-flow/onboarding-flow-section";
@@ -92,6 +93,7 @@ export default async function Home(props: {
       </Hero>
       <HeroComplianceStrip t={dict.hero} />
       <HeroVideo t={dict.hero} />
+      <HeroPartnersStrip t={dict.hero} />
       <KnowledgeSourcesSection t={dict.knowledgeSources} />
       <ProblemNumbersSection t={dict.problemNumbers} />
       <OnboardingFlowSection t={dict.onboardingFlow} />
