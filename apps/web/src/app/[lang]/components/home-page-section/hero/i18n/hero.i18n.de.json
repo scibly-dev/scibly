@@ -31,6 +31,9 @@
         "detail": "Deine Daten werden niemals für das Training von KI Modellen verwendet."
       }
     ],
+    "partners": {
+      "label": "Entwickelt mit Unterstützung von"
+    },
     "video": {
       "label": "Produkttour ansehen",
       "play": "Scibly Produkttour abspielen",

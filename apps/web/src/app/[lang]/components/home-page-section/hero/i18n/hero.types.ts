@@ -41,6 +41,9 @@ export type HeroDictionary = {
     label: string;
     detail: string;
   }>;
+  partners: {
+    label: string;
+  };
   video: {
     label: string;
     play: string;

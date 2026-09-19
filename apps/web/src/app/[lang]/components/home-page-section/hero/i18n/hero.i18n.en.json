@@ -31,6 +31,9 @@
         "detail": "Your data is never used to train AI models."
       }
     ],
+    "partners": {
+      "label": "Built with support from"
+    },
     "video": {
       "label": "Watch the product tour",
       "play": "Play the Scibly product tour",
